@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>icons/zoom_in-26.png</file>
+        <file>icons/zoom_out-26.png</file>
+        <file>icons/electrical_threshold-26.png</file>
+        <file>icons/edit-26.png</file>
+        <file>icons/delete-26.png</file>
+        <file>icons/record-26.png</file>
+        <file>icons/expand-26.png</file>
+        <file>icons/screenshot-26.png</file>
+        <file>icons/voice_recognition_scan-26.png</file>
+        <file>icons/settings-26.png</file>
+        <file>icons/image_file-26.png</file>
+        <file>icons/compare-26.png</file>
+        <file>icons/ok-26.png</file>
+        <file>icons/audio_wave-26.png</file>
+        <file>icons/fantasy-26.png</file>
+    </qresource>
+</RCC>
