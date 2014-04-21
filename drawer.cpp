@@ -25,6 +25,8 @@ Drawer::Drawer(QString fname):mglDraw(){
     specMax = 1.0;
     waveMin = pitchMin = DBL_MAX;
     waveMax = pitchMax = DBL_MIN;
+    _waveMin = _pitchMin = DBL_MAX;
+    _waveMax = _pitchMax = DBL_MIN;
     stereo = false;
 
     this->fileName = fname;
@@ -35,7 +37,6 @@ Drawer::Drawer(QString fname):mglDraw(){
     short int bits = littleEndianBytesToUInt16(waveFile->formatChunk->significantBitsPerSample);
     qDebug() << "waveOpenFile";
     vector d_wave = sptk_v2v(waveFile->dataChunk->waveformData, size, bits);
-    waveCloseFile(waveFile);
     qDebug() << "sptk_v2v";
     vector d_pitch = sptk_pitch(d_wave, sptk_settings->pitch);
     qDebug() << "sptk_pitch";
@@ -49,21 +50,29 @@ Drawer::Drawer(QString fname):mglDraw(){
     qDebug() << "sptk_spec";
 
     waveData.Create(d_wave.x);
+    waveDataLen = d_wave.x;
     for(long i=0;i<d_wave.x;i++)
     {
-        waveData.a[i] = d_wave.v[i];
+        double value = d_wave.v[i];
+        waveData.a[i] = value;
+        if(value > _waveMax) _waveMax = value;
+        if(value < _waveMin) _waveMin = value;
     }
-    waveMin = waveData.Min("x").a[0];
-    waveMax = waveData.Max("x").a[0];
-    qDebug() << "waveData Filled " << waveMin << " " << waveMax;
+    waveMin = _waveMin;
+    waveMax = _waveMax;
+    qDebug() << "waveData Filled " << _waveMin << " " << _waveMax;
 
     pitchData.Create(d_pitch.x);
     for(long i=0;i<d_pitch.x;i++)
     {
-        if(d_pitch.v[i] == 0)
-            pitchData.a[i] = NAN;
+        if(d_pitch.v[i] == 0) pitchData.a[i] = NAN;
         else
-            pitchData.a[i] = d_pitch.v[i];
+        {
+            double value = d_pitch.v[i];
+            pitchData.a[i] = value;
+            if(value > _pitchMax) _pitchMax = value;
+            if(value < _pitchMin) _pitchMin = value;
+        }
     }
     pitchMin = sptk_settings->pitch->min_freq;
     pitchMax = sptk_settings->pitch->max_freq;
@@ -91,6 +100,7 @@ Drawer::Drawer(QString fname):mglDraw(){
     freev(d_lpc);
     freev(d_spec);
 
+    waveCloseFile(waveFile);
     qDebug() << "Drawer created";
 }
 
@@ -99,16 +109,21 @@ Drawer::~Drawer()
     qDebug() << "Drawer removed";
 }
 
+int Drawer::getDataLenght()
+{
+    return waveDataLen;
+}
+
 void Drawer::specAuto()
 {
-    specMin = 0.9;
+    specMin = 0.85;
     specMax = 1.0;
 }
 
 void Drawer::pitchAuto()
 {
-    pitchMin = pitchData.Min("xy").a[0];
-    pitchMax = pitchData.Max("xy").a[0];
+    pitchMin = _pitchMin;
+    pitchMax = _pitchMax;
 }
 
 int Drawer::Draw(mglGraph *gr)

@@ -5,9 +5,6 @@
 
 class Drawer: public mglDraw
 {
-private:
-    QString fileName;
-    mglData waveData, pitchData, specData;
 public:
     Drawer(QString fname);
     ~Drawer();
@@ -18,9 +15,16 @@ public:
     void specAuto();
     void pitchAuto();
 
+    int getDataLenght();
+
     int Draw(mglGraph *gr);
     void Reload();
     void Click();
+protected:
+    QString fileName;
+    mglData waveData, pitchData, specData;
+    double _waveMin, _waveMax, _pitchMin, _pitchMax;
+    int waveDataLen;
 };
 
 #endif // DRAWER_H

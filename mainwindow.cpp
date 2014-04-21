@@ -113,6 +113,7 @@ void MainWindow::initUI()
 
 void MainWindow::autoRecording()
 {
+    this->raise();
     if(this->autoRecorder == NULL)
     {
         oal_device * currentDevice = this->settingsDialog->getInputDevice();
@@ -128,6 +129,7 @@ void MainWindow::autoRecording()
 
 void MainWindow::manualRecording()
 {
+    this->setFocus();
     if(this->recorder == NULL)
     {
         oal_device * currentDevice = this->settingsDialog->getInputDevice();
@@ -213,8 +215,18 @@ void MainWindow::compare()
         qDebug() << "Draw graphs for " << path1 << " and " << path2;
         QWidget * window = new QWidget();
         QVBoxLayout *layout = new QVBoxLayout(window);
-        layout->addWidget(this->showGraph(path1));
-        layout->addWidget(this->showGraph(path2));
+        GraphsWindow * first = this->showGraph(path1);
+        GraphsWindow * second = this->showGraph(path2);
+//        second->hideZoomControls();
+//        connect(first, SIGNAL(fitSig()), second, SLOT(fit()));
+//        connect(first, SIGNAL(lessSig(int)), second, SLOT(decrease(int)));
+//        connect(first, SIGNAL(moreSig(int)), second, SLOT(increase(int)));
+
+        connect(first, SIGNAL(autoRec()), this, SLOT(autoRecording()));
+        connect(first, SIGNAL(rec()), this, SLOT(manualRecording()));
+
+        layout->addWidget(first);
+        layout->addWidget(second);
         window->show();
     }
 }
@@ -230,7 +242,12 @@ void MainWindow::openGraph(QListWidgetItem* item)
     QString path = QApplication::applicationDirPath() + DATA_PATH;
     path += item->text();
     qDebug() << "Draw graphs for " << path;
-    this->showGraph(path)->show();
+    GraphsWindow * graph = this->showGraph(path);
+
+    connect(graph, SIGNAL(autoRec()), this, SLOT(autoRecording()));
+    connect(graph, SIGNAL(rec()), this, SLOT(manualRecording()));
+
+    graph->show();
 }
 
 GraphsWindow * MainWindow::showGraph(QString path)

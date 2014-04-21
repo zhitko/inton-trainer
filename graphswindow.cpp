@@ -36,6 +36,9 @@ GraphsWindow::GraphsWindow(QString path, QWidget *parent) :
     connect(this->ui->specAutoBtn, SIGNAL(clicked()), this, SLOT(specAuto()));
     connect(this->ui->to3DBtn, SIGNAL(clicked()), this, SLOT(stereo()));
 
+    connect(this->ui->recordBtn, SIGNAL(clicked()), this, SLOT(_rec()));
+    connect(this->ui->autoRecordBtn, SIGNAL(clicked()), this, SLOT(_autoRec()));
+
     connect(this->ui->lessBtn, SIGNAL(clicked()), this, SLOT(decrease()));
     connect(this->ui->moreBtn, SIGNAL(clicked()), this, SLOT(increase()));
     connect(this->ui->fitBtn, SIGNAL(clicked()), this, SLOT(fit()));
@@ -46,6 +49,16 @@ GraphsWindow::GraphsWindow(QString path, QWidget *parent) :
     this->ui->pitchMaxSpin->setValue(sptk_settings->pitch->max_freq);
 
     this->ui->fileNameLabel->setText(QUrl(path).fileName());
+}
+
+void GraphsWindow::_autoRec()
+{
+    emit autoRec();
+}
+
+void GraphsWindow::_rec()
+{
+    emit rec();
 }
 
 GraphsWindow::~GraphsWindow()
@@ -89,32 +102,60 @@ void GraphsWindow::showGraph(QString path)
     QMGL->enableMouse = false;
     drawer = new Drawer(path);
     QMGL->setDraw(drawer);
-    scrollArea = new QScrollArea(this);
+    scrollArea = new QScrollArea(this);\
+    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     this->ui->horizontalLayout_2->addWidget(scrollArea, 0);
     scrollArea->setBackgroundRole(QPalette::Light);
     scrollArea->setWidget(QMGL);
-    QMGL->setSize(GRAPH_WIGHT, GRAPH_HEIGHT);
+    QMGL->setSize(drawer->getDataLenght()/GRAPH_WIGHT_K, GRAPH_HEIGHT);
+}
+
+void GraphsWindow::hideZoomControls()
+{
+    this->ui->lessBtn->hide();
+    this->ui->moreBtn->hide();
+    this->ui->fitBtn->hide();
+    this->ui->scaleStepSpin->hide();
+    this->ui->sizeLabel->hide();
+    this->ui->recordLabel->hide();
+    this->ui->autoRecordBtn->hide();
+    this->ui->recordBtn->hide();
 }
 
 void GraphsWindow::increase()
 {
+    int by = this->ui->scaleStepSpin->value();
+    this->increase(by);
+}
+
+void GraphsWindow::increase(int by)
+{
     QSize size = this->scrollArea->maximumViewportSize();
-    int new_size = this->QMGL->width() + this->ui->scaleStepSpin->value();
+    int new_size = this->QMGL->width() + by;
     this->QMGL->setSize(new_size, size.height());
+    emit this->moreSig(by);
 }
 
 void GraphsWindow::decrease()
 {
+    int by = this->ui->scaleStepSpin->value();
+    this->decrease(by);
+}
+
+void GraphsWindow::decrease(int by)
+{
     QSize size = this->scrollArea->maximumViewportSize();
-    int new_size = this->QMGL->width() - this->ui->scaleStepSpin->value();
+    int new_size = this->QMGL->width() - by;
     if(new_size <= 0) new_size = 1;
     this->QMGL->setSize(new_size, size.height());
+    emit this->lessSig(by);
 }
 
 void GraphsWindow::fit()
 {
     QSize size = this->scrollArea->maximumViewportSize();
-    this->QMGL->setSize(size.width(), size.height());
+    this->QMGL->setSize(drawer->getDataLenght()/GRAPH_WIGHT_K, size.height());
+    emit this->fitSig();
 }
 
 void GraphsWindow::saveImage()

@@ -6,7 +6,7 @@
 #include <mgl2/qmathgl.h>
 
 #define GRAPH_HEIGHT 500
-#define GRAPH_WIGHT 500
+#define GRAPH_WIGHT_K 5
 
 namespace Ui {
     class GraphsWindow;
@@ -22,6 +22,7 @@ class GraphsWindow : public QWidget
 public:
     explicit GraphsWindow(QString path, QWidget *parent = 0);
     ~GraphsWindow();
+    void hideZoomControls();
 
 private:
     Ui::GraphsWindow *ui;
@@ -31,14 +32,28 @@ private:
     QString fileName;
     QString lastImageFile;
     void showGraph(QString path);
-private slots:
+
+signals:
+    void lessSig(int by);
+    void moreSig(int by);
+    void fitSig();
+
+    void autoRec();
+    void rec();
+
+public slots:
     void rangeChanged();
     void pitchAuto();
     void specAuto();
 
+    void _autoRec();
+    void _rec();
+
     void stereo();
     void increase();
     void decrease();
+    void increase(int by);
+    void decrease(int by);
     void fit();
     void saveImage();
     void openImage();
