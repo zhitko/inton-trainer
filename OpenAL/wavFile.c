@@ -1,12 +1,26 @@
 #include "wavFile.h"
 
+WaveFile * initWaveFile()
+{
+    WaveFile * waveFile = (WaveFile *) malloc(sizeof(WaveFile));
+
+    waveFile->file = NULL;
+    waveFile->formatChunk = NULL;
+    waveFile->waveHeader = NULL;
+    waveFile->dataChunk = NULL;
+    waveFile->cueChunk = NULL;
+    waveFile->filePath = NULL;
+
+    return waveFile;
+}
+
 WaveFile * waveOpenFile(const char* path)
 {
     ChunkLocation formatChunkExtraBytes = {0,0};
     ChunkLocation dataChunkLocation = {0,0};
     ChunkLocation otherChunkLocation = {0,0};
 
-    WaveFile * waveFile = (WaveFile *) malloc(sizeof(WaveFile));
+    WaveFile * waveFile = initWaveFile();
     if(waveFile == NULL)
     {
         fprintf(stderr, "Memory Allocation Error: Could not allocate memory for Wave File\n");

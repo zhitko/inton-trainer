@@ -65,6 +65,8 @@ typedef struct {
     CueChunk *cueChunk;
 } WaveFile;
 
+WaveFile * initWaveFile();
+
 // Open WaveFile
 WaveFile * waveOpenFile(const char*);
 
