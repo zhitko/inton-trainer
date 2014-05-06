@@ -102,6 +102,9 @@ Drawer::Drawer(QString fname):mglDraw(){
 
     waveCloseFile(waveFile);
     qDebug() << "Drawer created";
+
+    this->specAuto();
+    this->pitchAuto();
 }
 
 Drawer::~Drawer()
@@ -141,7 +144,7 @@ int Drawer::Draw(mglGraph *gr)
     qDebug() << "pitchData";
     gr->MultiPlot(1, 16, 3, 1, 6, "#");
     gr->SetRange('y', pitchMin, pitchMax);
-    gr->Plot(pitchData);
+    gr->Plot(pitchData, "-G6");
     gr->Axis("Y", "");
     gr->Grid("y", "W", "");
 

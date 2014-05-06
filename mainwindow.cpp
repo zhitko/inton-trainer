@@ -9,6 +9,7 @@
 #include <QLabel>
 #include <QDateTime>
 #include <QDir>
+#include <QDirIterator>
 #include <QStringList>
 #include <QApplication>
 #include <QList>
@@ -33,7 +34,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     this->initUI();
     this->updateFileList();
-//    this->settingsDialog = new SettingsDialog(this);
     this->settingsDialog = SettingsDialog::getInstance(this);
 }
 
@@ -184,14 +184,33 @@ void MainWindow::recordFinished(SoundRecorder * recorder)
     this->recorder = NULL;
     this->autoRecorder = NULL;
     this->updateFileList();
+
+    if(SettingsDialog::getInstance()->getMathGLSettings()->autoOpen)
+        this->showGraph(path)->show();
+}
+
+QStringList scanDirIter(QDir dir)
+{
+    QStringList files;
+    QString path = dir.absolutePath();
+    qDebug() << "Search in " << path;
+    QDirIterator iterator(path, QDirIterator::Subdirectories);
+    while (iterator.hasNext()) {
+        iterator.next();
+        if (!iterator.fileInfo().isDir()) {
+            QString filename = iterator.filePath();
+            if (filename.endsWith(WAVE_TYPE))
+                files.append(filename.remove(path));
+        }
+    }
+    return files;
 }
 
 void MainWindow::updateFileList()
 {
     ui->filesList->clear();
-    QStringList nameFilter(QString("*") + WAVE_TYPE);
     QDir directory(QApplication::applicationDirPath() + DATA_PATH);
-    QStringList files = directory.entryList(nameFilter);
+    QStringList files = scanDirIter(directory);
     for(int i=0; i<files.size();i++)
     {
         ui->filesList->addItem(files.at(i));
@@ -242,17 +261,15 @@ void MainWindow::openGraph(QListWidgetItem* item)
     QString path = QApplication::applicationDirPath() + DATA_PATH;
     path += item->text();
     qDebug() << "Draw graphs for " << path;
-    GraphsWindow * graph = this->showGraph(path);
-
-    connect(graph, SIGNAL(autoRec()), this, SLOT(autoRecording()));
-    connect(graph, SIGNAL(rec()), this, SLOT(manualRecording()));
-
-    graph->show();
+    this->showGraph(path)->show();
 }
 
 GraphsWindow * MainWindow::showGraph(QString path)
 {
-    return new GraphsWindow(path);
+    GraphsWindow * graph = new GraphsWindow(path);
+    connect(graph, SIGNAL(autoRec()), this, SLOT(autoRecording()));
+    connect(graph, SIGNAL(rec()), this, SLOT(manualRecording()));
+    return graph;
 }
 
 void MainWindow::updateVolume()

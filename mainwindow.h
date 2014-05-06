@@ -8,7 +8,7 @@ extern "C" {
     #include "./OpenAL/wavFile.h"
 }
 
-#define DATA_PATH "/data/"
+#define DATA_PATH "/data"
 #define WAVE_TYPE ".wav"
 
 namespace Ui {

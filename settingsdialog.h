@@ -17,7 +17,7 @@ namespace Ui {
 typedef struct _MathGLSettings
 {
     int quality;
-    bool realtime;
+    bool autoOpen;
 } MathGLSettings;
 
 class SettingsDialog : public QDialog

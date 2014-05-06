@@ -111,6 +111,7 @@ MathGLSettings * SettingsDialog::getMathGLSettings()
     MathGLSettings * settings = new MathGLSettings();
     SettingsDialog * instance = getInstance();
     settings->quality = instance->ui->mathGLQualitySpin->value();
+    settings->autoOpen = instance->ui->isAutoOpen->isChecked();
     return settings;
 }
 
@@ -142,6 +143,8 @@ void SettingsDialog::loadSettings()
 //        this->ui->lpcOrderSpin->setValue(settings.value("spec/order").toInt());
     if(settings.contains("mathGL/quality"))
         this->ui->mathGLQualitySpin->setValue(settings.value("mathGL/quality").toInt());
+    if(settings.contains("mathGL/autoOpen"))
+        this->ui->isAutoOpen->setChecked(settings.value("mathGL/autoOpen").toBool());
 
 }
 
@@ -163,4 +166,5 @@ void SettingsDialog::saveSettings()
     settings.setValue("spec/order", this->ui->lpcOrderSpin->value());
 
     settings.setValue("mathGL/quality", this->ui->mathGLQualitySpin->value());
+    settings.setValue("mathGL/autoOpen", this->ui->isAutoOpen->isChecked());
 }
