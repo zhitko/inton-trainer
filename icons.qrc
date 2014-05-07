@@ -15,5 +15,6 @@
         <file>icons/ok-26.png</file>
         <file>icons/audio_wave-26.png</file>
         <file>icons/fantasy-26.png</file>
+        <file>icons/speaker-26.png</file>
     </qresource>
 </RCC>

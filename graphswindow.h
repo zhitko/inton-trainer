@@ -29,7 +29,7 @@ private:
     QScrollArea * scrollArea;
     QMathGL *QMGL;
     Drawer * drawer;
-    QString fileName;
+    QString fileName, path;
     QString lastImageFile;
     void showGraph(QString path);
 
@@ -57,6 +57,7 @@ public slots:
     void fit();
     void saveImage();
     void openImage();
+    void playRecord();
 };
 
 #endif // GRAPHSWINDOW_H

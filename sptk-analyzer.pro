@@ -34,7 +34,8 @@ SOURCES += \
     settingsdialog.cpp \
     autosoundrecorder.cpp \
     buffer.cpp \
-    drawer.cpp
+    drawer.cpp \
+    soundplayer.cpp
 
 HEADERS  += \
     mainwindow.h \
@@ -43,7 +44,8 @@ HEADERS  += \
     settingsdialog.h \
     autosoundrecorder.h \
     buffer.h \
-    drawer.h
+    drawer.h \
+    soundplayer.h
 
 # OpenAL
 SOURCES += \

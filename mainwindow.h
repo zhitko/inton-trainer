@@ -47,6 +47,7 @@ private:
     QToolBar *actionToolBar;
     QToolBar *fileToolBar;
 
+    QAction *playAct;
     QAction *recordingAct;
     QAction *autoRecordingAct;
 
@@ -73,6 +74,7 @@ private slots:
     void compare();
     void recordFinished(SoundRecorder*);
     void updateVolume();
+    void playRecord();
 
     void settingsShow();
 

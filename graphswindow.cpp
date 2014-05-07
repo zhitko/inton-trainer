@@ -6,11 +6,13 @@
 
 #include "settingsdialog.h"
 #include "drawer.h"
+#include "soundplayer.h"
 
 #include <QDebug>
 
 extern "C" {
     #include "./OpenAL/wavFile.h"
+    #include "./OpenAL/openal_wrapper.h"
 
     #include "float.h"
 
@@ -26,7 +28,8 @@ extern "C" {
 GraphsWindow::GraphsWindow(QString path, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::GraphsWindow),
-    lastImageFile("")
+    lastImageFile(""),
+    path(path)
 {
     ui->setupUi(this);
     this->fileName = path.left(path.length()-4);
@@ -44,6 +47,9 @@ GraphsWindow::GraphsWindow(QString path, QWidget *parent) :
     connect(this->ui->fitBtn, SIGNAL(clicked()), this, SLOT(fit()));
     connect(this->ui->saveImage, SIGNAL(clicked()), this, SLOT(saveImage()));
     connect(this->ui->openImage, SIGNAL(clicked()), this, SLOT(openImage()));
+
+    connect(this->ui->playBtn, SIGNAL(clicked()), this, SLOT(playRecord()));
+
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
     this->ui->pitchMinSpin->setValue(sptk_settings->pitch->min_freq);
     this->ui->pitchMaxSpin->setValue(sptk_settings->pitch->max_freq);
@@ -178,4 +184,10 @@ void GraphsWindow::stereo()
 {
     this->drawer->stereo = !this->drawer->stereo;
     this->QMGL->update();
+}
+
+void GraphsWindow::playRecord()
+{
+    SoundPlayer * player = new SoundPlayer(path);
+    player->start();
 }

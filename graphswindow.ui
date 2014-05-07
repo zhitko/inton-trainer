@@ -122,6 +122,17 @@
               </property>
              </widget>
             </item>
+            <item row="4" column="0" colspan="2">
+             <widget class="QPushButton" name="playBtn">
+              <property name="text">
+               <string>Play Record</string>
+              </property>
+              <property name="icon">
+               <iconset resource="icons.qrc">
+                <normaloff>:/icons/icons/speaker-26.png</normaloff>:/icons/icons/speaker-26.png</iconset>
+              </property>
+             </widget>
+            </item>
            </layout>
           </widget>
          </item>

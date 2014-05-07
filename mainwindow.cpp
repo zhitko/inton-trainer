@@ -18,6 +18,7 @@
 #include <QMessageBox>
 #include <QInputDialog>
 
+#include "soundplayer.h"
 #include "soundrecorder.h"
 #include "autosoundrecorder.h"
 
@@ -44,7 +45,13 @@ MainWindow::~MainWindow()
 
 void MainWindow::initUI()
 {
-    // Recording actions
+    // sound actions
+    this->playAct = new QAction(tr("&Play"), this);
+    this->playAct->setIcon(QIcon(":/icons/icons/speaker-26.png"));
+    this->playAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_P));
+    this->playAct->setStatusTip(tr("Play current audio"));
+    connect(this->playAct, SIGNAL(triggered()), this, SLOT(playRecord()));
+
     this->recordingAct = new QAction(tr("&Record"), this);
     this->recordingAct->setIcon(QIcon(":/icons/icons/record-26.png"));
     this->recordingAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_R));
@@ -60,6 +67,7 @@ void MainWindow::initUI()
     this->actionToolBar = addToolBar(tr("Actions"));
     this->actionToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     this->actionToolBar->setIconSize(QSize(16,16));
+    this->actionToolBar->addAction(this->playAct);
     this->actionToolBar->addAction(this->recordingAct);
     this->actionToolBar->addAction(this->autoRecordingAct);
 
@@ -329,4 +337,17 @@ void MainWindow::settingsShow()
 {
     if(this->settingsDialog)
         this->settingsDialog->show();
+}
+
+void MainWindow::playRecord()
+{
+    QString path = QApplication::applicationDirPath() + DATA_PATH;
+    QList<QListWidgetItem*> items = ui->filesList->selectedItems();
+    for(int i=0; i<items.size(); i++)
+    {
+        qDebug() << "play file " << items.at(i)->text();
+        QString file = path + items.at(i)->text();
+        SoundPlayer * player = new SoundPlayer(file);
+        player->start();
+    }
 }

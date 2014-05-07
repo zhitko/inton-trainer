@@ -35,6 +35,8 @@ void SettingsDialog::initAudio()
 
     if(inputDevices) currentInputDevice = inputDevices->device;
     if(outputDevices) currentOutputDevice = outputDevices->device;
+    qDebug() << "currentInputDevice " << QString::fromLocal8Bit(this->currentInputDevice->name);
+    qDebug() << "currentOutputDevice " << QString::fromLocal8Bit(this->currentOutputDevice->name);
 }
 
 void SettingsDialog::inputDeviceChanged(int index)
