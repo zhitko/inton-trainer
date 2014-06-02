@@ -35,7 +35,9 @@ SOURCES += \
     autosoundrecorder.cpp \
     buffer.cpp \
     drawer.cpp \
-    soundplayer.cpp
+    soundplayer.cpp \
+    graphsevalwindow.cpp \
+    drawereval.cpp
 
 HEADERS  += \
     mainwindow.h \
@@ -45,7 +47,10 @@ HEADERS  += \
     autosoundrecorder.h \
     buffer.h \
     drawer.h \
-    soundplayer.h
+    soundplayer.h \
+    graphsevalwindow.h \
+    drawereval.h \
+    abstractdrawer.h
 
 # OpenAL
 SOURCES += \

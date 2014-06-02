@@ -68,6 +68,7 @@ typedef struct {
 WaveFile * initWaveFile();
 
 // Open WaveFile
+WaveFile * waveOpenHFile(int);
 WaveFile * waveOpenFile(const char*);
 
 // Close WaveFile
@@ -78,6 +79,7 @@ WaveHeader * makeWaveHeader();
 FormatChunk * makeFormatChunk(uint16_t numberOfChannels, uint32_t sampleRate, uint16_t significantBitsPerSample);
 DataChunk * makeDataChunk(uint32_t chunkDataSize, char *waveformData);
 WaveFile * makeWaveFile(WaveHeader *waveHeader, FormatChunk *formatChunk, DataChunk *dataChunk);
+ WaveFile * makeWaveFileFromData(char *waveformData, uint32_t chunkDataSize, uint16_t numberOfChannels, uint32_t sampleRate, uint16_t significantBitsPerSample);
 void saveWaveFile(WaveFile *waveFile, const char *filePath);
 
 // All data in a Wave file must be little endian.

@@ -23,6 +23,7 @@
 #include "autosoundrecorder.h"
 
 #include "graphswindow.h"
+#include "graphsevalwindow.h"
 #include "settingsdialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -45,6 +46,25 @@ MainWindow::~MainWindow()
 
 void MainWindow::initUI()
 {
+    // trainig tool bar
+    this->triningAct = new QAction(tr("&Training"), this);
+    this->triningAct->setIcon(QIcon(":/icons/icons/guru-26.png"));
+    this->triningAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_T));
+    this->triningAct->setStatusTip(tr("Start manual training"));
+    connect(this->triningAct, SIGNAL(triggered()), this, SLOT(training()));    
+
+    this->ratingAct = new QAction(tr("&Evaluation"), this);
+    this->ratingAct->setIcon(QIcon(":/icons/icons/trophy-26.png"));
+    this->ratingAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_E));
+    this->ratingAct->setStatusTip(tr("Start manual training"));
+    connect(this->ratingAct, SIGNAL(triggered()), this, SLOT(evaluation()));
+
+    this->trainingToolBar = addToolBar(tr("Training"));
+    this->trainingToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    this->trainingToolBar->setIconSize(QSize(16,16));
+    this->trainingToolBar->addAction(this->triningAct);
+    this->trainingToolBar->addAction(this->ratingAct);
+
     // sound actions
     this->playAct = new QAction(tr("&Play"), this);
     this->playAct->setIcon(QIcon(":/icons/icons/speaker-26.png"));
@@ -54,22 +74,20 @@ void MainWindow::initUI()
 
     this->recordingAct = new QAction(tr("&Record"), this);
     this->recordingAct->setIcon(QIcon(":/icons/icons/record-26.png"));
-    this->recordingAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_R));
     this->recordingAct->setStatusTip(tr("Start/Stop recording audio"));
     connect(this->recordingAct, SIGNAL(triggered()), this, SLOT(manualRecording()));
 
     this->autoRecordingAct = new QAction(tr("&Auto Record"), this);
     this->autoRecordingAct->setIcon(QIcon(":/icons/icons/voice_recognition_scan-26.png"));
-    this->autoRecordingAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_A));
     this->recordingAct->setStatusTip(tr("Start/Stop auto recording audio"));
     connect(this->autoRecordingAct, SIGNAL(triggered()), this, SLOT(autoRecording()));
 
     this->actionToolBar = addToolBar(tr("Actions"));
     this->actionToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     this->actionToolBar->setIconSize(QSize(16,16));
-    this->actionToolBar->addAction(this->playAct);
     this->actionToolBar->addAction(this->recordingAct);
     this->actionToolBar->addAction(this->autoRecordingAct);
+    this->actionToolBar->addAction(this->playAct);
 
     // Files' actions
     this->plottingAct = new QAction(tr("Show &Graphs"), this);
@@ -93,6 +111,7 @@ void MainWindow::initUI()
     this->renameAct->setStatusTip(tr("Rename selected file"));
     connect(this->renameAct, SIGNAL(triggered()), this, SLOT(rename()));
 
+    addToolBarBreak();
     this->fileToolBar = addToolBar(tr("Files Operations"));
     this->fileToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     this->fileToolBar->setIconSize(QSize(16,16));
@@ -116,7 +135,8 @@ void MainWindow::initUI()
     connect(timer, SIGNAL(timeout()), this, SLOT(updateVolume()));
     timer->start(200);
 
-    connect( this->ui->filesList, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(openGraph(QListWidgetItem*)) );
+    connect( this->ui->filesList, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
+             this, SLOT(evaluationGraph(QListWidgetItem*)) );
 }
 
 void MainWindow::autoRecording()
@@ -177,18 +197,16 @@ void MainWindow::recordFinished(SoundRecorder * recorder)
     qDebug() << "result size " << size;
 
     QDateTime dateTime = QDateTime::currentDateTime();
-    QString path = dateTime.toString("dd.MM.yyyy hh:mm:ss.zzz");
+    QString path = USER_DATA_PATH + dateTime.toString("dd.MM.yyyy hh:mm:ss.zzz");
 
     path = QApplication::applicationDirPath() + DATA_PATH + path + WAVE_TYPE;
     qDebug() << "write wave to: " << path;
-    WaveHeader *headerChunk = makeWaveHeader();
-    FormatChunk *formatChunk = makeFormatChunk(1, 8000, 16);
-    DataChunk *dataChunk = makeDataChunk(size, (char *)data);
-    WaveFile *waveFile = makeWaveFile(headerChunk, formatChunk, dataChunk);
+
+    WaveFile *waveFile = makeWaveFileFromData((char *)data, size, 1, 8000, 16);
     saveWaveFile(waveFile, path.toLocal8Bit().data());
     waveCloseFile(waveFile);
 
-    delete recorder;
+    recorder->deleteLater();
     this->recorder = NULL;
     this->autoRecorder = NULL;
     this->updateFileList();
@@ -244,13 +262,9 @@ void MainWindow::compare()
         QVBoxLayout *layout = new QVBoxLayout(window);
         GraphsWindow * first = this->showGraph(path1);
         GraphsWindow * second = this->showGraph(path2);
-//        second->hideZoomControls();
-//        connect(first, SIGNAL(fitSig()), second, SLOT(fit()));
-//        connect(first, SIGNAL(lessSig(int)), second, SLOT(decrease(int)));
-//        connect(first, SIGNAL(moreSig(int)), second, SLOT(increase(int)));
 
-        connect(first, SIGNAL(autoRec()), this, SLOT(autoRecording()));
-        connect(first, SIGNAL(rec()), this, SLOT(manualRecording()));
+        connect(first, SIGNAL(changeSig(int)), second, SLOT(setK(int)));
+        connect(second, SIGNAL(changeSig(int)), first, SLOT(setK(int)));
 
         layout->addWidget(first);
         layout->addWidget(second);
@@ -258,18 +272,77 @@ void MainWindow::compare()
     }
 }
 
-void MainWindow::plotting()
+void MainWindow::trainingGraph(QListWidgetItem* item)
 {
-    emit ui->filesList->doubleClicked(ui->filesList->currentIndex());
+    this->training();
 }
 
-void MainWindow::openGraph(QListWidgetItem* item)
+void MainWindow::training()
 {
-    if(!item) return;
     QString path = QApplication::applicationDirPath() + DATA_PATH;
-    path += item->text();
-    qDebug() << "Draw graphs for " << path;
-    this->showGraph(path)->show();
+    QList<QListWidgetItem*> items = ui->filesList->selectedItems();
+    if(items.size() > 0)
+    {
+        QString file = path + items.at(0)->text();
+        qDebug() << "Draw graphs for training " << file;
+        QWidget * window = new QWidget();
+        QVBoxLayout *layout = new QVBoxLayout(window);
+        GraphsWindow * first = this->showGraph(file);
+        GraphsWindow * second = new GraphsWindow();
+
+        connect(first, SIGNAL(changeSig(int)), second, SLOT(setK(int)));
+        connect(second, SIGNAL(changeSig(int)), first, SLOT(setK(int)));
+
+        connect(second, SIGNAL(recFinish()), this, SLOT(updateFileList()));
+
+        connect(second, SIGNAL(autoRec()), this, SLOT(autoRecording()));
+        connect(second, SIGNAL(rec()), this, SLOT(manualRecording()));
+
+        layout->addWidget(first);
+        layout->addWidget(second);
+        window->show();
+    }
+}
+
+void MainWindow::evaluationGraph(QListWidgetItem* item)
+{
+    this->evaluation();
+}
+
+void MainWindow::evaluation()
+{
+    QString path = QApplication::applicationDirPath() + DATA_PATH;
+    QList<QListWidgetItem*> items = ui->filesList->selectedItems();
+    if(items.size() > 0)
+    {
+        QString file = path + items.at(0)->text();
+        qDebug() << "Draw graphs for evaluation " << file;
+        GraphsEvalWindow * window = new GraphsEvalWindow(file);
+
+        connect(window, SIGNAL(autoRec()), this, SLOT(autoRecording()));
+        connect(window, SIGNAL(rec()), this, SLOT(manualRecording()));
+
+        connect(window, SIGNAL(recFinish()), this, SLOT(updateFileList()));
+
+        window->show();
+    }
+}
+
+void MainWindow::plotting()
+{
+    QString path = QApplication::applicationDirPath() + DATA_PATH;
+    QList<QListWidgetItem*> items = ui->filesList->selectedItems();
+    if(items.size() > 0)
+    {
+        QString file = path + items.at(0)->text();
+        qDebug() << "Draw graphs for " << path;
+        this->showGraph(file)->show();
+    }
+}
+
+void MainWindow::plottingGraph(QListWidgetItem*)
+{
+    this->plotting();
 }
 
 GraphsWindow * MainWindow::showGraph(QString path)

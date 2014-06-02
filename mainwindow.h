@@ -9,6 +9,7 @@ extern "C" {
 }
 
 #define DATA_PATH "/data"
+#define USER_DATA_PATH "/RECORDS/"
 #define WAVE_TYPE ".wav"
 
 namespace Ui {
@@ -43,9 +44,13 @@ private:
     SoundRecorder *recorder;
     AutoSoundRecorder *autoRecorder;
 
+    QToolBar *trainingToolBar;
     QToolBar *settingsToolBar;
     QToolBar *actionToolBar;
     QToolBar *fileToolBar;
+
+    QAction *triningAct;
+    QAction *ratingAct;
 
     QAction *playAct;
     QAction *recordingAct;
@@ -58,7 +63,6 @@ private:
     QAction *renameAct;
     QAction *settingsAct;
 
-    void updateFileList();
     void recording(SoundRecorder*);
 
 private:
@@ -66,6 +70,8 @@ private:
     SettingsDialog *settingsDialog;
 
 private slots:
+    void training();
+    void evaluation();
     void remove();
     void rename();
     void autoRecording();
@@ -75,11 +81,14 @@ private slots:
     void recordFinished(SoundRecorder*);
     void updateVolume();
     void playRecord();
+    void updateFileList();
 
     void settingsShow();
 
 private slots:
-    void openGraph(QListWidgetItem*);
+    void plottingGraph(QListWidgetItem*);
+    void trainingGraph(QListWidgetItem*);
+    void evaluationGraph(QListWidgetItem* item);
 };
 
 #endif // MAINWINDOW_H

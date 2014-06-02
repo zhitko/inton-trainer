@@ -3,10 +3,13 @@
 #include <QScrollArea>
 #include <QFileDialog>
 #include <QDesktopServices>
+#include <QDateTime>
 
+#include "mainwindow.h"
 #include "settingsdialog.h"
 #include "drawer.h"
 #include "soundplayer.h"
+#include "autosoundrecorder.h"
 
 #include <QDebug>
 
@@ -25,15 +28,43 @@ extern "C" {
     #include "./SPTK/spec/spec.h"
 }
 
+GraphsWindow::GraphsWindow(QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::GraphsWindow),
+    lastImageFile(""),
+    path(""),
+    fileName(""),
+    k_graph(GRAPH_K_INIT),
+    drawer(NULL)
+{
+    this->initUI();
+    this->ui->fileNameLabel->setText(tr("Training"));
+}
+
 GraphsWindow::GraphsWindow(QString path, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::GraphsWindow),
     lastImageFile(""),
-    path(path)
+    path(path),
+    k_graph(GRAPH_K_INIT),
+    drawer(NULL)
+{
+    this->initUI();
+    this->fileName = path.left(path.length()-4);
+
+    this->ui->fileNameLabel->setText(QUrl(path).fileName());
+
+    this->ui->tabWidget->removeTab(
+        this->ui->tabWidget->indexOf(this->ui->tab_training)
+    );
+
+    this->drawFile(path);
+}
+
+void GraphsWindow::initUI()
 {
     ui->setupUi(this);
-    this->fileName = path.left(path.length()-4);
-    this->showGraph(path);
+
     connect(this->ui->applyBtn, SIGNAL(clicked()), this, SLOT(rangeChanged()));
     connect(this->ui->pitchAutoBtn, SIGNAL(clicked()), this, SLOT(pitchAuto()));
     connect(this->ui->specAutoBtn, SIGNAL(clicked()), this, SLOT(specAuto()));
@@ -50,11 +81,66 @@ GraphsWindow::GraphsWindow(QString path, QWidget *parent) :
 
     connect(this->ui->playBtn, SIGNAL(clicked()), this, SLOT(playRecord()));
 
+    connect(this->ui->setRecordBtn, SIGNAL(clicked()), this, SLOT(startRecord()));
+
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
     this->ui->pitchMinSpin->setValue(sptk_settings->pitch->min_freq);
     this->ui->pitchMaxSpin->setValue(sptk_settings->pitch->max_freq);
 
-    this->ui->fileNameLabel->setText(QUrl(path).fileName());
+    QMGL = new QMathGL(this);
+    QMGL->autoResize = false;
+    QMGL->enableWheel = false;
+    QMGL->enableMouse = false;
+    scrollArea = new QScrollArea(this);
+    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    this->ui->horizontalLayout_2->addWidget(scrollArea, 0);
+    scrollArea->setBackgroundRole(QPalette::Light);
+    scrollArea->setWidget(QMGL);
+}
+
+void GraphsWindow::drawFile(QString path)
+{
+    this->path = path;
+    this->drawer = createNewDrawer(path);
+    this->w_graph = this->drawer->getDataLenght();
+    this->QMGL->setDraw(this->drawer);
+    this->setFitByK();
+}
+
+Drawer * GraphsWindow::createNewDrawer(QString path)
+{
+    if(this->drawer) delete drawer;
+    return new Drawer(path);
+}
+
+void GraphsWindow::startRecord()
+{
+    qDebug() << "GraphsWindow::setRecord";
+    this->ui->setRecordBtn->setEnabled(false);
+    oal_device * currentDevice = SettingsDialog::getInstance()->getInputDevice();
+    AutoSoundRecorder * autoRecorder = new AutoSoundRecorder(currentDevice, sizeof(short int), this);
+    connect(autoRecorder, SIGNAL(resultReady(SoundRecorder *)), this, SLOT(stopRecord(SoundRecorder *)));
+    autoRecorder->startRecording();
+}
+
+void GraphsWindow::stopRecord(SoundRecorder * recorder)
+{
+    qDebug() << "GraphsWindow::stopRecord";
+    this->ui->setRecordBtn->setEnabled(true);
+    char *data;
+    int size = recorder->getData((void**) &data);
+    recorder->deleteLater();
+    QDateTime dateTime = QDateTime::currentDateTime();
+    QString path = USER_DATA_PATH + dateTime.toString("dd.MM.yyyy hh:mm:ss.zzz");
+
+    path = QApplication::applicationDirPath() + DATA_PATH + path + WAVE_TYPE;
+    WaveFile *waveFile = makeWaveFileFromData((char *)data, size, 1, 8000, 16);
+    saveWaveFile(waveFile, path.toLocal8Bit().data());
+    waveCloseFile(waveFile);
+
+    this->drawFile(path);
+    emit this->changeSig(this->k_graph);
+    emit this->recFinish();
 }
 
 void GraphsWindow::_autoRec()
@@ -74,8 +160,6 @@ GraphsWindow::~GraphsWindow()
 
 void GraphsWindow::rangeChanged()
 {
-//    this->QMGL->waveMin =
-//    this->QMGL->waveMax =
     this->drawer->pitchMin =  ((double) this->ui->pitchMinSpin->value());
     this->drawer->pitchMax =  ((double) this->ui->pitchMaxSpin->value());
     this->drawer->specMin =  ((double) this->ui->specMinSpin->value()) / this->ui->specMinSpin->maximum();
@@ -100,22 +184,6 @@ void GraphsWindow::specAuto()
     this->QMGL->update();
 }
 
-void GraphsWindow::showGraph(QString path)
-{
-    QMGL = new QMathGL(this);
-    QMGL->autoResize = false;
-    QMGL->enableWheel = false;
-    QMGL->enableMouse = false;
-    drawer = new Drawer(path);
-    QMGL->setDraw(drawer);
-    scrollArea = new QScrollArea(this);\
-    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    this->ui->horizontalLayout_2->addWidget(scrollArea, 0);
-    scrollArea->setBackgroundRole(QPalette::Light);
-    scrollArea->setWidget(QMGL);
-    QMGL->setSize(drawer->getDataLenght()/GRAPH_WIGHT_K, GRAPH_HEIGHT);
-}
-
 void GraphsWindow::hideZoomControls()
 {
     this->ui->lessBtn->hide();
@@ -136,10 +204,10 @@ void GraphsWindow::increase()
 
 void GraphsWindow::increase(int by)
 {
-    QSize size = this->scrollArea->maximumViewportSize();
-    int new_size = this->QMGL->width() + by;
-    this->QMGL->setSize(new_size, size.height());
-    emit this->moreSig(by);
+    this->k_graph += by;
+    if(this->k_graph > GRAPH_K_MAX) this->k_graph = GRAPH_K_MAX;
+    this->setFitByK();
+    emit this->changeSig(this->k_graph);
 }
 
 void GraphsWindow::decrease()
@@ -150,18 +218,31 @@ void GraphsWindow::decrease()
 
 void GraphsWindow::decrease(int by)
 {
-    QSize size = this->scrollArea->maximumViewportSize();
-    int new_size = this->QMGL->width() - by;
-    if(new_size <= 0) new_size = 1;
-    this->QMGL->setSize(new_size, size.height());
-    emit this->lessSig(by);
+    this->k_graph -= by;
+    if(this->k_graph < 1) this->k_graph = 1;
+    this->setFitByK();
+    emit this->changeSig(this->k_graph);
 }
 
 void GraphsWindow::fit()
 {
+    this->k_graph = GRAPH_K_INIT;
+    this->setFitByK();
+    emit this->changeSig(this->k_graph);
+}
+
+void GraphsWindow::setK(int k)
+{
+    this->k_graph = k;
+    this->setFitByK();
+}
+
+void GraphsWindow::setFitByK()
+{
     QSize size = this->scrollArea->maximumViewportSize();
-    this->QMGL->setSize(drawer->getDataLenght()/GRAPH_WIGHT_K, size.height());
-    emit this->fitSig();
+    if(!this->isVisible()) size.setHeight(GRAPH_HEIGHT);
+    int width = (this->w_graph / GRAPH_K_MAX)* this->k_graph;
+    this->QMGL->setSize(width, size.height());
 }
 
 void GraphsWindow::saveImage()

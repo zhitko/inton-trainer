@@ -5,8 +5,9 @@
 
 #include <mgl2/qmathgl.h>
 
-#define GRAPH_HEIGHT 500
-#define GRAPH_WIGHT_K 5
+#define GRAPH_HEIGHT 300
+#define GRAPH_K_MAX 300
+#define GRAPH_K_INIT 40
 
 namespace Ui {
     class GraphsWindow;
@@ -14,32 +15,36 @@ namespace Ui {
 
 class Drawer;
 class QScrollArea;
+class SoundRecorder;
 
 class GraphsWindow : public QWidget
 {
     Q_OBJECT
 
 public:
+    explicit GraphsWindow(QWidget *parent = 0);
     explicit GraphsWindow(QString path, QWidget *parent = 0);
     ~GraphsWindow();
     void hideZoomControls();
+    void drawFile(QString path);
 
-private:
+protected:
     Ui::GraphsWindow *ui;
     QScrollArea * scrollArea;
     QMathGL *QMGL;
     Drawer * drawer;
     QString fileName, path;
     QString lastImageFile;
-    void showGraph(QString path);
+    int k_graph, w_graph;
+    void initUI();
+    Drawer * createNewDrawer(QString path);
 
 signals:
-    void lessSig(int by);
-    void moreSig(int by);
-    void fitSig();
+    void changeSig(int by);
 
     void autoRec();
     void rec();
+    void recFinish();
 
 public slots:
     void rangeChanged();
@@ -49,12 +54,17 @@ public slots:
     void _autoRec();
     void _rec();
 
+    void startRecord();
+    void stopRecord(SoundRecorder *);
+
     void stereo();
     void increase();
     void decrease();
     void increase(int by);
     void decrease(int by);
     void fit();
+    void setK(int k);
+    void setFitByK();
     void saveImage();
     void openImage();
     void playRecord();

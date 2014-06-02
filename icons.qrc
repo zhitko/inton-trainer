@@ -16,5 +16,8 @@
         <file>icons/audio_wave-26.png</file>
         <file>icons/fantasy-26.png</file>
         <file>icons/speaker-26.png</file>
+        <file>icons/voice_recognition_scan-64.png</file>
+        <file>icons/guru-26.png</file>
+        <file>icons/trophy-26.png</file>
     </qresource>
 </RCC>

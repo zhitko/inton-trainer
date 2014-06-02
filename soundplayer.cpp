@@ -1,6 +1,8 @@
 #include "soundplayer.h"
 
 #include <QDebug>
+#include <QTextCodec>
+#include <QFile>
 
 #include "settingsdialog.h"
 
@@ -17,8 +19,10 @@ SoundPlayer::SoundPlayer(QString path, QObject *parent) :
         return;
     }
     qDebug() << "SoundPlayer: open wav file " << path;
-    this->waveFile = waveOpenFile(path.toLocal8Bit().data());
 
+    QFile file(path);
+    file.open(QIODevice::ReadOnly);
+    this->waveFile = waveOpenHFile(file.handle());
 }
 
 SoundPlayer::~SoundPlayer()

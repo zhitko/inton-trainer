@@ -1,4 +1,5 @@
 #include <QDebug>
+#include <QFile>
 #include "drawer.h"
 
 #include "settingsdialog.h"
@@ -31,7 +32,9 @@ Drawer::Drawer(QString fname):mglDraw(){
 
     this->fileName = fname;
 
-    WaveFile * waveFile = waveOpenFile(fileName.toLocal8Bit().data());
+    QFile file(this->fileName);
+    file.open(QIODevice::ReadOnly);
+    WaveFile * waveFile = waveOpenHFile(file.handle());
 
     int size = littleEndianBytesToUInt32(waveFile->dataChunk->chunkDataSize);
     short int bits = littleEndianBytesToUInt16(waveFile->formatChunk->significantBitsPerSample);
@@ -119,7 +122,7 @@ int Drawer::getDataLenght()
 
 void Drawer::specAuto()
 {
-    specMin = 0.85;
+    specMin = 0.8;
     specMax = 1.0;
 }
 

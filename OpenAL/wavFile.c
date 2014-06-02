@@ -14,12 +14,31 @@ WaveFile * initWaveFile()
     return waveFile;
 }
 
-WaveFile * waveOpenFile(const char* path)
-{
-    ChunkLocation formatChunkExtraBytes = {0,0};
-    ChunkLocation dataChunkLocation = {0,0};
-    ChunkLocation otherChunkLocation = {0,0};
+WaveFile * processFile(WaveFile * waveFile);
 
+WaveFile * waveOpenHFile(int handle)
+{
+    WaveFile * waveFile = initWaveFile();
+    if(waveFile == NULL)
+    {
+        fprintf(stderr, "Memory Allocation Error: Could not allocate memory for Wave File\n");
+        return 0;
+    }
+
+    waveFile->filePath = "";
+
+    waveFile->file = fdopen(handle, "rb");
+    if(waveFile->file == NULL)
+    {
+        fprintf(stderr, "Could not open input file %s\n", waveFile->filePath);
+        waveCloseFile(waveFile);
+        return 0;
+    }
+    return processFile(waveFile);
+}
+
+WaveFile * waveOpenFile(const char* path)
+{    
     WaveFile * waveFile = initWaveFile();
     if(waveFile == NULL)
     {
@@ -37,6 +56,14 @@ WaveFile * waveOpenFile(const char* path)
         waveCloseFile(waveFile);
         return 0;
     }
+    return processFile(waveFile);
+}
+
+WaveFile * processFile(WaveFile * waveFile)
+{
+    ChunkLocation formatChunkExtraBytes = {0,0};
+    ChunkLocation dataChunkLocation = {0,0};
+    ChunkLocation otherChunkLocation = {0,0};
 
     waveFile->waveHeader = (WaveHeader *) malloc(sizeof(WaveHeader));
     if(waveFile->waveHeader == NULL)
@@ -374,7 +401,7 @@ WaveFile * makeWaveFile(WaveHeader *waveHeader, FormatChunk *formatChunk, DataCh
 void saveWaveFile(WaveFile *waveFile, const char *filePath)
 {
     waveFile->filePath = filePath;
-    waveFile->file = fopen(waveFile->filePath, "wb");
+    if (waveFile->file == NULL) waveFile->file = fopen(waveFile->filePath, "wb");
     if (waveFile->file == NULL)
     {
         fprintf(stderr, "Could not open output file %s\n", waveFile->filePath);
@@ -422,6 +449,14 @@ void saveWaveFile(WaveFile *waveFile, const char *filePath)
         }
     }
     fclose(waveFile->file);
+}
+
+WaveFile * makeWaveFileFromData(char *waveformData, uint32_t chunkDataSize, uint16_t numberOfChannels, uint32_t sampleRate, uint16_t significantBitsPerSample)
+{
+    WaveHeader *headerChunk = makeWaveHeader();
+    FormatChunk *formatChunk = makeFormatChunk(numberOfChannels, sampleRate, significantBitsPerSample);
+    DataChunk *dataChunk = makeDataChunk(chunkDataSize, waveformData);
+    return makeWaveFile(headerChunk, formatChunk, dataChunk);
 }
 
 enum HostEndiannessType getHostEndianness()
