@@ -39,6 +39,8 @@ GraphsWindow::GraphsWindow(QWidget *parent) :
 {
     this->initUI();
     this->ui->fileNameLabel->setText(tr("Training"));
+
+    setAttribute( Qt::WA_DeleteOnClose );
 }
 
 GraphsWindow::GraphsWindow(QString path, QWidget *parent) :
@@ -50,6 +52,9 @@ GraphsWindow::GraphsWindow(QString path, QWidget *parent) :
     drawer(NULL)
 {
     this->initUI();
+
+    setAttribute( Qt::WA_DeleteOnClose );
+
     this->fileName = path.left(path.length()-4);
 
     this->ui->fileNameLabel->setText(QUrl(path).fileName());
@@ -59,6 +64,12 @@ GraphsWindow::GraphsWindow(QString path, QWidget *parent) :
     );
 
     this->drawFile(path);
+}
+
+GraphsWindow::~GraphsWindow()
+{
+    delete ui;
+    this->drawer;
 }
 
 void GraphsWindow::initUI()
@@ -101,16 +112,17 @@ void GraphsWindow::initUI()
 void GraphsWindow::drawFile(QString path)
 {
     this->path = path;
-    this->drawer = createNewDrawer(path);
+    this->drawer = this->createNewDrawer(path);
     this->w_graph = this->drawer->getDataLenght();
-    this->QMGL->setDraw(this->drawer);
     this->setFitByK();
 }
 
 Drawer * GraphsWindow::createNewDrawer(QString path)
 {
     if(this->drawer) delete drawer;
-    return new Drawer(path);
+    Drawer * drawer = new Drawer(path);
+    this->QMGL->setDraw(drawer);
+    return drawer;
 }
 
 void GraphsWindow::startRecord()
@@ -151,11 +163,6 @@ void GraphsWindow::_autoRec()
 void GraphsWindow::_rec()
 {
     emit rec();
-}
-
-GraphsWindow::~GraphsWindow()
-{
-    delete ui;
 }
 
 void GraphsWindow::rangeChanged()

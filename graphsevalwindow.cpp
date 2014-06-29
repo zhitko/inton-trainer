@@ -1,15 +1,34 @@
 #include "graphsevalwindow.h"
 
+#include <QDebug>
+
 #include "drawereval.h"
 
 GraphsEvalWindow::GraphsEvalWindow(QString path, QWidget *parent) :
     GraphsWindow(parent)
 {
     this->path = path;
+    this->drawFile(path);
+}
+
+GraphsEvalWindow::~GraphsEvalWindow()
+{
+
 }
 
 Drawer * GraphsEvalWindow::createNewDrawer(QString path)
 {
-    if(this->drawer) delete drawer;
-    return new Drawer(path);
+    qDebug() << "GraphsEvalWindow use DrawerEval";
+    if(this->drawer == NULL)
+    {
+        qDebug() << "GraphsEvalWindow new DrawerEval";
+        this->drawer = new DrawerEval(this->path);
+        this->QMGL->setDraw(this->drawer);
+    }
+    else{
+        qDebug() << "GraphsEvalWindow Proc";
+        ((DrawerEval *)this->drawer)->Proc(path);
+        this->QMGL->update();
+    }
+    return this->drawer;
 }

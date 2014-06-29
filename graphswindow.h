@@ -37,7 +37,7 @@ protected:
     QString lastImageFile;
     int k_graph, w_graph;
     void initUI();
-    Drawer * createNewDrawer(QString path);
+    virtual Drawer * createNewDrawer(QString path);
 
 signals:
     void changeSig(int by);

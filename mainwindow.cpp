@@ -306,7 +306,34 @@ void MainWindow::training()
 
 void MainWindow::evaluationGraph(QListWidgetItem* item)
 {
-    this->evaluation();
+    this->evaluationTest();
+}
+
+void MainWindow::evaluationTest()
+{
+    QStringList items;
+    for(int i=0;i<this->ui->filesList->count();i++)
+        items.append(this->ui->filesList->item(i)->text());
+
+    QListWidgetItem* item = ui->filesList->currentItem();
+    QString path = QApplication::applicationDirPath() + DATA_PATH;
+    QString path1 = path + item->text();
+
+    items.removeAll(item->text());
+    bool ok;
+    QString path2 = path + QInputDialog::getItem(this, tr("Compare with"), tr("Record"), items, 0, false, &ok);
+    if (ok && !path2.isEmpty()){
+        qDebug() << "Draw graphs for evaluation " << path1;
+        GraphsEvalWindow * window = new GraphsEvalWindow(path1);
+
+        connect(window, SIGNAL(autoRec()), this, SLOT(autoRecording()));
+        connect(window, SIGNAL(rec()), this, SLOT(manualRecording()));
+
+        connect(window, SIGNAL(recFinish()), this, SLOT(updateFileList()));
+
+        window->show();
+        window->drawFile(path2);
+    }
 }
 
 void MainWindow::evaluation()

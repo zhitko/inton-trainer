@@ -9,16 +9,18 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+CONFIG  += c++11
+
 TARGET = sptk-analyzer
 TEMPLATE = app
 
 win32{
-    INCLUDEPATH += "c:/Program Files/MathGL-png-release/include"
-    release:LIBS += -L"c:/Program Files/MathGL-png-release/lib" -llibmgl -llibmgl-qt5
-    debug:LIBS += -L"c:/Program Files/MathGL-png-debug/lib" -llibmgl -llibmgl-qt5
+    INCLUDEPATH += "c:/Dev/MathGL/release/include"
+    release:LIBS += -L"c:/Dev/MathGL/release/lib" -llibmgl -llibmgl-qt5
+    debug:LIBS += -L"c:/Dev/MathGL/debug/lib" -llibmgl -llibmgl-qt5
 
-    INCLUDEPATH += "c:/workspace/openal-soft-1.15.1-bin/include"
-    LIBS += -L"c:/workspace/openal-soft-1.15.1-bin/lib/Win32" -llibOpenAL32
+    INCLUDEPATH += "c:/Dev/openal-soft-1.15.1-bin/include"
+    LIBS += -L"c:/Dev/openal-soft-1.15.1-bin/lib/Win32" -llibOpenAL32
 }
 unix{
     INCLUDEPATH += "/home/user/extra headers"
@@ -37,7 +39,8 @@ SOURCES += \
     drawer.cpp \
     soundplayer.cpp \
     graphsevalwindow.cpp \
-    drawereval.cpp
+    drawereval.cpp \
+    DP/vectordp.cpp
 
 HEADERS  += \
     mainwindow.h \
@@ -50,7 +53,9 @@ HEADERS  += \
     soundplayer.h \
     graphsevalwindow.h \
     drawereval.h \
-    abstractdrawer.h
+    abstractdrawer.h \
+    DP/dp.h \
+    DP/vectordp.h
 
 # OpenAL
 SOURCES += \

@@ -32,7 +32,7 @@ SoundPlayer::~SoundPlayer()
     waveCloseFile(waveFile);
 }
 
-void SoundPlayer::run() Q_DECL_OVERRIDE
+void SoundPlayer::run()
 {
     qDebug() << "SoundPlayer: run";
     playSound(

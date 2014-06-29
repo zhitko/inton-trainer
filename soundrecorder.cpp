@@ -83,7 +83,7 @@ void SoundRecorder::allocateNewBuffer()
     }
 }
 
-void SoundRecorder::run() Q_DECL_OVERRIDE
+void SoundRecorder::run()
 {
     this->allocatedSize = 0;
     int currentPos = 0;

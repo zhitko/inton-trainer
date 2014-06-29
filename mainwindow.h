@@ -72,6 +72,7 @@ private:
 private slots:
     void training();
     void evaluation();
+    void evaluationTest();
     void remove();
     void rename();
     void autoRecording();
