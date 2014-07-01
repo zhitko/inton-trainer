@@ -2128,7 +2128,6 @@ vector rapt(float_list *input, int length, double sample_freq, int frame_shift, 
   for (i = 0; i < fnum; i++) {
       switch (otype) {
       case 1:                   /* f0 */
-//          fwrite(tmp + i, sizeof(float), 1, stdout);
           result.v[i] = tmp[i];
           break;
       case 2:                   /* log(f0) */
@@ -2137,14 +2136,12 @@ vector rapt(float_list *input, int length, double sample_freq, int frame_shift, 
           } else {
               tmp[i] = -1.0E10;
           }
-//          fwrite(tmp + i, sizeof(float), 1, stdout);
           result.v[i] = tmp[i];
           break;
       default:                  /* pitch */
           if (tmp[i] != 0.0) {
               tmp[i] = sample_freq / tmp[i];
           }
-//          fwrite(tmp + i, sizeof(float), 1, stdout);
           result.v[i] = tmp[i];
           break;
       }

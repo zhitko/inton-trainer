@@ -197,7 +197,7 @@ void MainWindow::recordFinished(SoundRecorder * recorder)
     qDebug() << "result size " << size;
 
     QDateTime dateTime = QDateTime::currentDateTime();
-    QString path = USER_DATA_PATH + dateTime.toString("dd.MM.yyyy hh:mm:ss.zzz");
+    QString path = USER_DATA_PATH + dateTime.toString("dd.MM.yyyy hh.mm.ss.zzz");
 
     path = QApplication::applicationDirPath() + DATA_PATH + path + WAVE_TYPE;
     qDebug() << "write wave to: " << path;

@@ -102,7 +102,7 @@
 #define SAMPLE_FREQ 8.0 // 16.0
 #define ATYPE 0
 #define OTYPE 1
-#define STR_LEN 255
+#define STR_LEN 256//255
 #define THRESH_RAPT 0.0
 #define THRESH_SWIPE 0.3
 #define NOISEMASK 50.0
@@ -120,6 +120,11 @@ typedef struct _float_list {
 } float_list;
 
 vector sptk_pitch(vector data, PITCH_SETTINGS * settings)
+{
+    return sptk_pitch_spec(data, settings, -1);
+}
+
+vector sptk_pitch_spec(vector data, PITCH_SETTINGS * settings, int count)
 {
    if(!settings) settings = initPitchSettings();
    int length, i,
@@ -154,6 +159,8 @@ vector sptk_pitch(vector data, PITCH_SETTINGS * settings)
        prev = cur;
    }
 
+   if(count != -1)
+      frame_shift = (int) (ceil((double) length / (double) count));
    if (atype == 0) {
       return(rapt(top->next, length, sample_freq, frame_shift, L, H, thresh_rapt, otype));
    } else {

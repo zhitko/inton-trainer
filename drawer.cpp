@@ -35,6 +35,16 @@ extern "C" {
 
         return result;
     }
+
+    vector sptk_fill_empty(vector data)
+    {
+        int i;
+        double v = data.v[0];
+        for(i = 0; i<data.x; i++)
+            if(data.v[i] == 0) data.v[i] = v;
+            else v = data.v[i];
+        return data;
+    }
 }
 
 Drawer::Drawer(QString fname) : mglDraw(),
@@ -57,8 +67,6 @@ Drawer::Drawer(QString fname) : mglDraw(),
     qDebug() << "waveOpenFile";
     d_wave = sptk_v2v(waveFile->dataChunk->waveformData, size, bits);
     qDebug() << "sptk_v2v";
-    d_pitch = sptk_pitch(d_wave, sptk_settings->pitch);
-    qDebug() << "sptk_pitch";
     d_frame = sptk_frame(d_wave, sptk_settings->frame);
     qDebug() << "sptk_frame";
     d_intensive = sptk_intensive(d_frame, sptk_settings->frame);
@@ -69,6 +77,9 @@ Drawer::Drawer(QString fname) : mglDraw(),
     qDebug() << "sptk_lpc";
     d_spec = sptk_spec(d_lpc, sptk_settings->spec);
     qDebug() << "sptk_spec";
+    d_pitch = sptk_pitch_spec(d_wave, sptk_settings->pitch, d_intensive.x);
+    d_pitch = sptk_fill_empty(d_pitch);
+    qDebug() << "sptk_pitch";
 
     waveData.Create(d_wave.x);
     waveDataLen = d_wave.x;
@@ -115,7 +126,6 @@ Drawer::Drawer(QString fname) : mglDraw(),
     int speksize = sptk_settings->spec->leng / 2 + 1;
     int specX = d_spec.x/speksize;
     int specY = speksize;
-    int specZ = 256;
     specData.Create(specX, specY);
     for(long j=0;j<specY;j++)
         for(long i=0;i<specX;i++)
@@ -125,7 +135,7 @@ Drawer::Drawer(QString fname) : mglDraw(),
             specData.a[i0] = d_spec.v[i1];
         }
     specData.Squeeze(mathgl_settings->quality, 1);
-    qDebug() << "specData Filled " << specX << " " << specY << " " << specZ;
+    qDebug() << "specData Filled " << specX << " " << specY;
 
     file.close();
     waveCloseFile(waveFile);

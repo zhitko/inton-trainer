@@ -143,7 +143,7 @@ void GraphsWindow::stopRecord(SoundRecorder * recorder)
     int size = recorder->getData((void**) &data);
     recorder->deleteLater();
     QDateTime dateTime = QDateTime::currentDateTime();
-    QString path = USER_DATA_PATH + dateTime.toString("dd.MM.yyyy hh:mm:ss.zzz");
+    QString path = USER_DATA_PATH + dateTime.toString("dd.MM.yyyy hh.mm.ss.zzz");
 
     path = QApplication::applicationDirPath() + DATA_PATH + path + WAVE_TYPE;
     WaveFile *waveFile = makeWaveFileFromData((char *)data, size, 1, 8000, 16);

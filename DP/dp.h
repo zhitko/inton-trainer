@@ -161,8 +161,10 @@ public:
 
     A applyMask(A array)
     {
-        reinitCache();
-        if(!this->mask) getSignalMask();
+        if(!this->mask){
+            reinitCache();
+            getSignalMask();
+        }
         if(getArraySize(signal) != getArraySize(array)) return array;
 
         int resultSize = getArraySize(pattern);
@@ -177,25 +179,30 @@ public:
         qDebug() << "opNone = 2";
         qDebug() << "opFirst = 3";
         qDebug() << "operation\t global\t local\t signal\t pattern\t next";
-        while(stateStep->next != 0)
+        DPStateOperation operation = opNone;
+        while(stateStep != 0)
+//        while(stateStep->next != 0)
         {
-            stateStep = stateStep->next;
+//            stateStep = stateStep->next;
+            operation = stateStep->value.operation;
             qDebug() << stateStep->value.operation << " \t "
                      << stateStep->value.globalError << " \t "
                      << stateStep->value.localError << " \t "
                      << stateStep->value.signalPos << " \t "
                      << stateStep->value.patternPos << " \t "
                      << stateStep->next;
-            switch (stateStep->value.operation) {
+            switch (operation) {
             case opAdd:
             case opRepeat:
                 setValueAt(result, getValueAt(array, stateStep->value.signalPos), stateStep->value.patternPos);
                 break;
             case opDrop:
+                break;
             default:
                 qDebug() << "opNone";
                 break;
             }
+            stateStep = stateStep->next;
         }
 
         return result;

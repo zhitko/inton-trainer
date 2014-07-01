@@ -26,7 +26,7 @@ DrawerEval::DrawerEval(QString fname) :
     secFileName(""),
     _secWaveMin(DBL_MAX), _secWaveMax(DBL_MIN),
     _secPitchMin(DBL_MAX), _secPitchMax(DBL_MIN),
-    secWaveDataLen(0)
+    secWaveDataLen(0), result(0)
 {
 }
 
@@ -76,6 +76,11 @@ int DrawerEval::Draw(mglGraph *gr)
         gr->MultiPlot(1, 16, 10, 1, 6, "#");
         gr->SetRange('y', 0.0, 1.0);
         gr->Plot(secIntensiveData, "-R6");
+
+        qDebug() << "secIntensiveData";
+        gr->MultiPlot(1, 16, 10, 1, 6, "#");
+        gr->SetRange('y', 0.0, 1.0);
+        gr->Plot(secIntensiveDataOrig, ".R1");
     }
 
     qDebug() << "finish drawing";
@@ -90,6 +95,8 @@ DrawerEval::~DrawerEval()
     freev(dsec_intensive);
     freev(dsec_frame);
     freev(dsec_window);
+    freev(dsec_lpc);
+    freev(dsec_spec);
 }
 
 void DrawerEval::Proc(QString fname)
@@ -101,6 +108,8 @@ void DrawerEval::Proc(QString fname)
 //    freev(dsec_intensive);
 //    freev(dsec_frame);
 //    freev(dsec_window);
+//    freev(dsec_lpc);
+//    freev(dsec_spec);
 
     this->secFileName = fname;
 
@@ -113,22 +122,30 @@ void DrawerEval::Proc(QString fname)
     qDebug() << "secWaveOpenFile";
     dsec_wave = sptk_v2v(waveFile->dataChunk->waveformData, size, bits);
     qDebug() << "secSptk_v2v";
-    dsec_pitch = sptk_pitch(dsec_wave, sptk_settings->pitch);
-    qDebug() << "secSptk_pitch";
     dsec_frame = sptk_frame(dsec_wave, sptk_settings->frame);
     qDebug() << "secSptk_frame";
     dsec_intensive = sptk_intensive(dsec_frame, sptk_settings->frame);
     qDebug() << "secSptk_intensive";
     dsec_window = sptk_window(dsec_frame, sptk_settings->window);
     qDebug() << "secSptk_window";
+    dsec_lpc = sptk_lpc(dsec_frame, sptk_settings->lpc);
+    qDebug() << "sptk_lpc";
+    dsec_spec = sptk_spec(dsec_lpc, sptk_settings->spec);
+    qDebug() << "sptk_spec";
+    dsec_pitch = sptk_pitch_spec(dsec_wave, sptk_settings->pitch, dsec_intensive.x);
+    dsec_pitch = sptk_fill_empty(dsec_pitch);
+    qDebug() << "secSptk_pitch";
 
     qDebug() << " wave:" << dsec_wave.x
              << " pitch:" << dsec_pitch.x
-             << " intensive:" << dsec_intensive.x;
+             << " intensive:" << dsec_intensive.x
+             << " spectr:" << dsec_spec.x/257;
     qDebug() << "Start DP";
     VectorDP dp(d_pitch, dsec_pitch);
     qDebug() << "Apply DP";
     vector newPitch = dp.getScaledSignal();
+    this->result = dp.getSignalMask()->value.globalError;
+    vector newIntensive = dp.applyMask(dsec_intensive);
     qDebug() << "Stop DP";
 
     secWaveData.Create(dsec_wave.x);
@@ -142,18 +159,31 @@ void DrawerEval::Proc(QString fname)
     }
     qDebug() << "secWaveData Filled " << _secWaveMin << " " << _secWaveMax;
 
-    secIntensiveData.Create(dsec_intensive.x);
-    for(long i=0;i<dsec_intensive.x;i++)
+    secIntensiveData.Create(newIntensive.x);
+    for(long i=0;i<newIntensive.x;i++)
     {
-        if(dsec_intensive.v[i] == 0) secIntensiveData.a[i] = NAN;
+        if(newIntensive.v[i] == 0) secIntensiveData.a[i] = NAN;
         else
         {
-            double value = dsec_intensive.v[i];
+            double value = newIntensive.v[i];
             secIntensiveData.a[i] = value;
         }
     }
     secIntensiveData.Norm();
     qDebug() << "secIntensiveData Filled";
+
+    secIntensiveDataOrig.Create(dsec_intensive.x);
+    for(long i=0;i<dsec_intensive.x;i++)
+    {
+        if(dsec_intensive.v[i] == 0) secIntensiveDataOrig.a[i] = NAN;
+        else
+        {
+            double value = dsec_intensive.v[i];
+            secIntensiveDataOrig.a[i] = value;
+        }
+    }
+    secIntensiveDataOrig.Norm();
+    qDebug() << "secIntensiveDataOrig Filled";
 
     secPitchDataOrig.Create(dsec_pitch.x);
     for(long i=0;i<dsec_pitch.x;i++)
@@ -167,7 +197,7 @@ void DrawerEval::Proc(QString fname)
             if(value < _secPitchMin) _secPitchMin = value;
         }
     }
-    qDebug() << "secPitchData Filled " << _secPitchMin << " " << _secPitchMax;
+    qDebug() << "secPitchDataOrig Filled " << _secPitchMin << " " << _secPitchMax;
 
     secPitchData.Create(newPitch.x);
     for(long i=0;i<newPitch.x;i++)

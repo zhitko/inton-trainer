@@ -1,6 +1,7 @@
 #include "graphsevalwindow.h"
 
 #include <QDebug>
+#include <QMessageBox>
 
 #include "drawereval.h"
 
@@ -29,6 +30,7 @@ Drawer * GraphsEvalWindow::createNewDrawer(QString path)
         qDebug() << "GraphsEvalWindow Proc";
         ((DrawerEval *)this->drawer)->Proc(path);
         this->QMGL->update();
+        QMessageBox::information(this, tr("Score"), tr("Your score:\n %1").arg(((DrawerEval *)this->drawer)->result));
     }
     return this->drawer;
 }
