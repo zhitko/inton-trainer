@@ -25,7 +25,7 @@ WaveFile * waveOpenHFile(int handle)
         return 0;
     }
 
-    waveFile->filePath = "";
+    waveFile->filePath = NULL;
 
     waveFile->file = fdopen(handle, "rb");
     if(waveFile->file == NULL)
@@ -400,11 +400,12 @@ WaveFile * makeWaveFile(WaveHeader *waveHeader, FormatChunk *formatChunk, DataCh
 
 void saveWaveFile(WaveFile *waveFile, const char *filePath)
 {
-    waveFile->filePath = filePath;
-    if (waveFile->file == NULL) waveFile->file = fopen(waveFile->filePath, "wb");
+    waveFile->filePath = malloc(1 + strlen(filePath));
+    if(waveFile->filePath) strcpy(waveFile->filePath, filePath);
+    if (waveFile->file == NULL) waveFile->file = fopen(filePath, "wb");
     if (waveFile->file == NULL)
     {
-        fprintf(stderr, "Could not open output file %s\n", waveFile->filePath);
+        fprintf(stderr, "Could not open output file %s\n", filePath);
         return;
     }
     if (waveFile->waveHeader != NULL)

@@ -21,13 +21,17 @@ extern "C" {
     #include "./SPTK/spec/spec.h"
 }
 
-DrawerEval::DrawerEval(QString fname) :
-    Drawer(fname),
+DrawerEval::DrawerEval() :
+    Drawer(),
     secFileName(""),
-    _secWaveMin(DBL_MAX), _secWaveMax(DBL_MIN),
-    _secPitchMin(DBL_MAX), _secPitchMax(DBL_MIN),
-    secWaveDataLen(0), result(0)
+    result(0),
+    first(true)
 {
+}
+
+DrawerEval::~DrawerEval()
+{
+    qDebug() << "DrawerEval removed";
 }
 
 int DrawerEval::Draw(mglGraph *gr)
@@ -38,182 +42,75 @@ int DrawerEval::Draw(mglGraph *gr)
     gr->Clf();
 
     qDebug() << "waveData";
-    gr->MultiPlot(1, 16, 0, 1, 1, "#");
+    gr->MultiPlot(1, 10, 0, 1, 1, "#");
     gr->SetRange('y', waveMin, waveMax);
     gr->Plot(waveData, "-G");
 
     qDebug() << "pitchData";
-    gr->MultiPlot(1, 16, 3, 1, 6, "#");
+    gr->MultiPlot(1, 10, 3, 1, 6, "#");
     gr->SetRange('y', pitchMin, pitchMax);
-    gr->Plot(pitchData, "-G6");
+    gr->Plot(pitchData, "-G4");
     gr->Axis("Y", "");
     gr->Grid("y", "W", "");
 
-    qDebug() << "intensiveData";
-    gr->MultiPlot(1, 16, 10, 1, 6, "#");
-    gr->SetRange('y', 0.0, 1.0);
-    gr->Plot(intensiveData, "-G6");
-    gr->Axis("Y", "");
-    gr->Grid("y", "W", "");
-
-    if(!this->fileName.isEmpty()){
+    if(!this->secFileName.isEmpty()){
         qDebug() << "secWaveData";
-        gr->MultiPlot(1, 16, 1, 1, 1, "#");
-        gr->SetRange('y', _secWaveMin, _secWaveMax);
-        gr->Plot(secWaveData, "R");
+        gr->MultiPlot(1, 10, 1, 1, 1, "#");
+        gr->SetRange('y', waveMin, waveMax);
+        gr->Plot(secWaveData, "B");
 
         qDebug() << "secPitchData";
-        gr->MultiPlot(1, 16, 3, 1, 6, "#");
-        gr->SetRange('y', _secPitchMin, _secPitchMax);
-        gr->Plot(secPitchData, "-R6");
+        gr->MultiPlot(1, 10, 3, 1, 6, "#");
+        gr->SetRange('y', pitchMin, pitchMax);
+        gr->Plot(secPitchData, "-B4");
 
         qDebug() << "secPitchData";
-        gr->MultiPlot(1, 16, 3, 1, 6, "#");
-        gr->SetRange('y', _secPitchMin, _secPitchMax);
-        gr->Plot(secPitchDataOrig, ".R1");
-
-        qDebug() << "secIntensiveData";
-        gr->MultiPlot(1, 16, 10, 1, 6, "#");
-        gr->SetRange('y', 0.0, 1.0);
-        gr->Plot(secIntensiveData, "-R6");
-
-        qDebug() << "secIntensiveData";
-        gr->MultiPlot(1, 16, 10, 1, 6, "#");
-        gr->SetRange('y', 0.0, 1.0);
-        gr->Plot(secIntensiveDataOrig, ".R1");
+        gr->MultiPlot(1, 10, 3, 1, 6, "#");
+        gr->SetRange('y', pitchMin, pitchMax);
+        gr->Plot(secPitchDataOrig, ".B1");
     }
 
     qDebug() << "finish drawing";
     return 0;
 }
 
-DrawerEval::~DrawerEval()
-{
-    qDebug() << "DrawerEval removed";
-    freev(dsec_wave);
-    freev(dsec_pitch);
-    freev(dsec_intensive);
-    freev(dsec_frame);
-    freev(dsec_window);
-    freev(dsec_lpc);
-    freev(dsec_spec);
-}
-
 void DrawerEval::Proc(QString fname)
-{
-    SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
-
-//    freev(dsec_wave);
-//    freev(dsec_pitch);
-//    freev(dsec_intensive);
-//    freev(dsec_frame);
-//    freev(dsec_window);
-//    freev(dsec_lpc);
-//    freev(dsec_spec);
-
-    this->secFileName = fname;
-
-    QFile file(this->secFileName);
-    file.open(QIODevice::ReadOnly);
-    WaveFile * waveFile = waveOpenHFile(file.handle());
-
-    int size = littleEndianBytesToUInt32(waveFile->dataChunk->chunkDataSize);
-    short int bits = littleEndianBytesToUInt16(waveFile->formatChunk->significantBitsPerSample);
-    qDebug() << "secWaveOpenFile";
-    dsec_wave = sptk_v2v(waveFile->dataChunk->waveformData, size, bits);
-    qDebug() << "secSptk_v2v";
-    dsec_frame = sptk_frame(dsec_wave, sptk_settings->frame);
-    qDebug() << "secSptk_frame";
-    dsec_intensive = sptk_intensive(dsec_frame, sptk_settings->frame);
-    qDebug() << "secSptk_intensive";
-    dsec_window = sptk_window(dsec_frame, sptk_settings->window);
-    qDebug() << "secSptk_window";
-    dsec_lpc = sptk_lpc(dsec_frame, sptk_settings->lpc);
-    qDebug() << "sptk_lpc";
-    dsec_spec = sptk_spec(dsec_lpc, sptk_settings->spec);
-    qDebug() << "sptk_spec";
-    dsec_pitch = sptk_pitch_spec(dsec_wave, sptk_settings->pitch, dsec_intensive.x);
-    dsec_pitch = sptk_fill_empty(dsec_pitch);
-    qDebug() << "secSptk_pitch";
-
-    qDebug() << " wave:" << dsec_wave.x
-             << " pitch:" << dsec_pitch.x
-             << " intensive:" << dsec_intensive.x
-             << " spectr:" << dsec_spec.x/257;
-    qDebug() << "Start DP";
-    VectorDP dp(d_pitch, dsec_pitch);
-    qDebug() << "Apply DP";
-    vector newPitch = dp.getScaledSignal();
-    this->result = dp.getSignalMask()->value.globalError;
-    vector newIntensive = dp.applyMask(dsec_intensive);
-    qDebug() << "Stop DP";
-
-    secWaveData.Create(dsec_wave.x);
-    secWaveDataLen = dsec_wave.x;
-    for(long i=0;i<dsec_wave.x;i++)
+{    
+    if(first)
     {
-        double value = dsec_wave.v[i];
-        secWaveData.a[i] = value;
-        if(value > _secWaveMax) _secWaveMax = value;
-        if(value < _secWaveMin) _secWaveMin = value;
+        qDebug() << "Drawer::Proc";
+        Drawer::Proc(fname);
+        first = false;
     }
-    qDebug() << "secWaveData Filled " << _secWaveMin << " " << _secWaveMax;
-
-    secIntensiveData.Create(newIntensive.x);
-    for(long i=0;i<newIntensive.x;i++)
+    else
     {
-        if(newIntensive.v[i] == 0) secIntensiveData.a[i] = NAN;
-        else
-        {
-            double value = newIntensive.v[i];
-            secIntensiveData.a[i] = value;
-        }
-    }
-    secIntensiveData.Norm();
-    qDebug() << "secIntensiveData Filled";
+        qDebug() << "DrawerEval::Proc";
+        this->secFileName = fname;
 
-    secIntensiveDataOrig.Create(dsec_intensive.x);
-    for(long i=0;i<dsec_intensive.x;i++)
-    {
-        if(dsec_intensive.v[i] == 0) secIntensiveDataOrig.a[i] = NAN;
-        else
-        {
-            double value = dsec_intensive.v[i];
-            secIntensiveDataOrig.a[i] = value;
-        }
-    }
-    secIntensiveDataOrig.Norm();
-    qDebug() << "secIntensiveDataOrig Filled";
+        GraphData dataSec = ProcWave2Data(this->secFileName);
+        dataSec.d_pitch = sptk_fill_empty(dataSec.d_pitch);
 
-    secPitchDataOrig.Create(dsec_pitch.x);
-    for(long i=0;i<dsec_pitch.x;i++)
-    {
-        if(dsec_pitch.v[i] == 0) secPitchDataOrig.a[i] = NAN;
-        else
-        {
-            double value = dsec_pitch.v[i];
-            secPitchDataOrig.a[i] = value;
-            if(value > _secPitchMax) _secPitchMax = value;
-            if(value < _secPitchMin) _secPitchMin = value;
-        }
-    }
-    qDebug() << "secPitchDataOrig Filled " << _secPitchMin << " " << _secPitchMax;
+        vectorToData(dataSec.d_wave, &secWaveData);
+        qDebug() << "waveData New Filled";
 
-    secPitchData.Create(newPitch.x);
-    for(long i=0;i<newPitch.x;i++)
-    {
-        if(newPitch.v[i] == 0) secPitchData.a[i] = NAN;
-        else
-        {
-            double value = newPitch.v[i];
-            secPitchData.a[i] = value;
-            if(value > _secPitchMax) _secPitchMax = value;
-            if(value < _secPitchMin) _secPitchMin = value;
-        }
-    }
-    qDebug() << "secPitchData Filled " << _secPitchMin << " " << _secPitchMax;
+        vectorToData(dataSec.d_pitch, &secPitchDataOrig);
+        double min = secPitchDataOrig.Min("x").a[0];
+        double max = secPitchDataOrig.Max("x").a[0];
+        if(pitchMin > min) pitchMin = min;
+        if(pitchMax < max) pitchMax = max;
+        qDebug() << "pitchData New Filled";
 
-    file.close();
-    waveCloseFile(waveFile);
-    qDebug() << "Drawer created";
+        qDebug() << "Start DP";
+        VectorDP dp(data->d_pitch, dataSec.d_pitch);
+        vector newPitch = dp.getScaledSignal();
+        this->result = dp.getSignalMask()->value.globalError;
+        qDebug() << "Stop DP";
+
+        vectorToData(newPitch, &secPitchData);
+        qDebug() << "pitchData New Filled";
+
+        freev(newPitch);
+        freeGraphData(dataSec);
+        qDebug() << "New Data Processed";
+    }
 }

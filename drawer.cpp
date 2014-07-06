@@ -47,84 +47,105 @@ extern "C" {
     }
 }
 
-Drawer::Drawer(QString fname) : mglDraw(),
-    specMin(0.0), specMax(1.0),
-    waveMin(DBL_MAX), pitchMin(DBL_MAX),
-    waveMax(DBL_MIN), pitchMax(DBL_MIN),
-    _waveMin(DBL_MAX), _pitchMin(DBL_MAX),
-    _waveMax(DBL_MIN), _pitchMax(DBL_MIN),
-    stereo(false), fileName(fname)
+GraphData ProcWave2Data(QString fname)
 {
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
-    MathGLSettings * mathgl_settings = SettingsDialog::getMathGLSettings();
 
-    QFile file(this->fileName);
+    GraphData data;
+
+    QFile file(fname);
     file.open(QIODevice::ReadOnly);
     WaveFile * waveFile = waveOpenHFile(file.handle());
 
     int size = littleEndianBytesToUInt32(waveFile->dataChunk->chunkDataSize);
     short int bits = littleEndianBytesToUInt16(waveFile->formatChunk->significantBitsPerSample);
     qDebug() << "waveOpenFile";
-    d_wave = sptk_v2v(waveFile->dataChunk->waveformData, size, bits);
+    data.d_wave = sptk_v2v(waveFile->dataChunk->waveformData, size, bits);
     qDebug() << "sptk_v2v";
-    d_frame = sptk_frame(d_wave, sptk_settings->frame);
+    data.d_frame = sptk_frame(data.d_wave, sptk_settings->frame);
     qDebug() << "sptk_frame";
-    d_intensive = sptk_intensive(d_frame, sptk_settings->frame);
+    data.d_intensive = sptk_intensive(data.d_frame, sptk_settings->frame);
     qDebug() << "sptk_intensive";
-    d_window = sptk_window(d_frame, sptk_settings->window);
+    data.d_window = sptk_window(data.d_frame, sptk_settings->window);
     qDebug() << "sptk_window";
-    d_lpc = sptk_lpc(d_frame, sptk_settings->lpc);
+    data.d_lpc = sptk_lpc(data.d_frame, sptk_settings->lpc);
     qDebug() << "sptk_lpc";
-    d_spec = sptk_spec(d_lpc, sptk_settings->spec);
+    data.d_spec = sptk_spec(data.d_lpc, sptk_settings->spec);
     qDebug() << "sptk_spec";
-    d_pitch = sptk_pitch_spec(d_wave, sptk_settings->pitch, d_intensive.x);
-    d_pitch = sptk_fill_empty(d_pitch);
+    data.d_pitch = sptk_pitch_spec(data.d_wave, sptk_settings->pitch, data.d_intensive.x);
     qDebug() << "sptk_pitch";
 
-    waveData.Create(d_wave.x);
-    waveDataLen = d_wave.x;
-    for(long i=0;i<d_wave.x;i++)
-    {
-        double value = d_wave.v[i];
-        waveData.a[i] = value;
-        if(value > _waveMax) _waveMax = value;
-        if(value < _waveMin) _waveMin = value;
-    }
-    waveMin = _waveMin;
-    waveMax = _waveMax;
+    file.close();
+    waveCloseFile(waveFile);
+
+    return data;
+}
+
+void freeGraphData(GraphData data)
+{
+    freev(data.d_frame);
+    freev(data.d_intensive);
+    freev(data.d_lpc);
+    freev(data.d_pitch);
+    freev(data.d_spec);
+    freev(data.d_wave);
+    freev(data.d_window);
+}
+
+void vectorToData(vector vec, mglData * data)
+{
+    data->Create(vec.x);
+    for(long i=0;i<vec.x;i++)
+        data->a[i] = vec.v[i];
+}
+
+Drawer::Drawer() : mglDraw(),
+    specMin(0.0), specMax(1.0),
+    waveMin(DBL_MAX), pitchMin(DBL_MAX),
+    waveMax(DBL_MIN), pitchMax(DBL_MIN),
+    _waveMin(DBL_MAX), _pitchMin(DBL_MAX),
+    _waveMax(DBL_MIN), _pitchMax(DBL_MIN),
+    data(NULL), stereo(false)
+{
+}
+
+Drawer::~Drawer()
+{
+//    freeGraphData(*data);
+//    free(data);
+    qDebug() << "Drawer removed";
+}
+
+void Drawer::Proc(QString fname)
+{
+    MathGLSettings * mathgl_settings = SettingsDialog::getMathGLSettings();
+    SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
+
+    this->fileName = fname;
+
+    data = (GraphData*) malloc(sizeof(GraphData));
+    *(data) = ProcWave2Data(this->fileName);
+    data->d_pitch = sptk_fill_empty(data->d_pitch);
+
+    vectorToData(data->d_wave, &waveData);
+    waveDataLen = waveData.GetNx();
+    _waveMin = waveMin = waveData.Min("x").a[0];
+    _waveMax = waveMax = waveData.Max("x").a[0];
     qDebug() << "waveData Filled " << _waveMin << " " << _waveMax;
 
-    intensiveData.Create(d_intensive.x);
-    for(long i=0;i<d_intensive.x;i++)
-    {
-        if(d_intensive.v[i] == 0) intensiveData.a[i] = NAN;
-        else
-        {
-            double value = d_intensive.v[i];
-            intensiveData.a[i] = value;
-        }
-    }
+    vectorToData(data->d_intensive, &intensiveData);
     intensiveData.Norm();
     qDebug() << "intensiveData Filled";
 
-    pitchData.Create(d_pitch.x);
-    for(long i=0;i<d_pitch.x;i++)
-    {
-        if(d_pitch.v[i] == 0) pitchData.a[i] = NAN;
-        else
-        {
-            double value = d_pitch.v[i];
-            pitchData.a[i] = value;
-            if(value > _pitchMax) _pitchMax = value;
-            if(value < _pitchMin) _pitchMin = value;
-        }
-    }
+    vectorToData(data->d_pitch, &pitchData);
+    _pitchMin = pitchData.Min("x").a[0];
+    _pitchMax = pitchData.Max("x").a[0];
     pitchMin = sptk_settings->pitch->min_freq;
     pitchMax = sptk_settings->pitch->max_freq;
     qDebug() << "pitchData Filled " << pitchMin << " " << pitchMax;
 
     int speksize = sptk_settings->spec->leng / 2 + 1;
-    int specX = d_spec.x/speksize;
+    int specX = data->d_spec.x/speksize;
     int specY = speksize;
     specData.Create(specX, specY);
     for(long j=0;j<specY;j++)
@@ -132,29 +153,14 @@ Drawer::Drawer(QString fname) : mglDraw(),
         {
             long i0 = i+specX*j;
             long i1 = j+specY*i;
-            specData.a[i0] = d_spec.v[i1];
+            specData.a[i0] = data->d_spec.v[i1];
         }
     specData.Squeeze(mathgl_settings->quality, 1);
     qDebug() << "specData Filled " << specX << " " << specY;
 
-    file.close();
-    waveCloseFile(waveFile);
-    qDebug() << "Drawer created";
-
     this->specAuto();
     this->pitchAuto();
-}
-
-Drawer::~Drawer()
-{
-    qDebug() << "Drawer removed";
-    freev(d_wave);
-    freev(d_pitch);
-    freev(d_intensive);
-    freev(d_frame);
-    freev(d_window);
-    freev(d_lpc);
-    freev(d_spec);
+    qDebug() << "Data Processed";
 }
 
 int Drawer::getDataLenght()

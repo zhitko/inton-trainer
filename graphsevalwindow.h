@@ -7,7 +7,7 @@ class GraphsEvalWindow : public GraphsWindow
 {
     Q_OBJECT
 public:
-    explicit GraphsEvalWindow(QString path, QWidget *parent = 0);
+    explicit GraphsEvalWindow(QString path, Drawer * drawer, QWidget *parent = 0);
     ~GraphsEvalWindow();
 
 protected:

@@ -26,6 +26,8 @@
 #include "graphsevalwindow.h"
 #include "settingsdialog.h"
 
+#include "drawereval.h"
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
       ui(new Ui::MainWindow),
@@ -324,7 +326,7 @@ void MainWindow::evaluationTest()
     QString path2 = path + QInputDialog::getItem(this, tr("Compare with"), tr("Record"), items, 0, false, &ok);
     if (ok && !path2.isEmpty()){
         qDebug() << "Draw graphs for evaluation " << path1;
-        GraphsEvalWindow * window = new GraphsEvalWindow(path1);
+        GraphsEvalWindow * window = new GraphsEvalWindow(path1, new DrawerEval());
 
         connect(window, SIGNAL(autoRec()), this, SLOT(autoRecording()));
         connect(window, SIGNAL(rec()), this, SLOT(manualRecording()));
@@ -344,7 +346,7 @@ void MainWindow::evaluation()
     {
         QString file = path + items.at(0)->text();
         qDebug() << "Draw graphs for evaluation " << file;
-        GraphsEvalWindow * window = new GraphsEvalWindow(file);
+        GraphsEvalWindow * window = new GraphsEvalWindow(file, new DrawerEval());
 
         connect(window, SIGNAL(autoRec()), this, SLOT(autoRecording()));
         connect(window, SIGNAL(rec()), this, SLOT(manualRecording()));
@@ -427,7 +429,7 @@ void MainWindow::rename()
                                              old_name, &ok);
         if (ok && !new_name.isEmpty()){
             QString path = QApplication::applicationDirPath() + DATA_PATH;
-            QFile(path + orig_name).rename(path + new_name + WAVE_TYPE);
+            QFile(path + orig_name).rename(QDir(path).absoluteFilePath(new_name + WAVE_TYPE));
         }
     }
     this->updateFileList();

@@ -10,10 +10,24 @@ extern "C" {
     vector sptk_fill_empty(vector data);
 }
 
+struct GraphData{
+    vector d_wave;
+    vector d_pitch;
+    vector d_intensive;
+    vector d_frame;
+    vector d_window;
+    vector d_lpc;
+    vector d_spec;
+};
+
+void vectorToData(vector vec, mglData * data);
+GraphData ProcWave2Data(QString fname);
+void freeGraphData(GraphData data);
+
 class Drawer: public mglDraw
 {
 public:
-    Drawer(QString fname);
+    Drawer();
     ~Drawer();
 
     double waveMin, waveMax,
@@ -26,15 +40,17 @@ public:
 
     int getDataLenght();
 
-    int Draw(mglGraph *gr);
+    virtual int Draw(mglGraph *gr);
+    virtual void Proc(QString fname);
+
     void Reload();
     void Click();
 protected:
+    GraphData * data;
     QString fileName;
     mglData waveData, pitchData, specData, intensiveData;
     double _waveMin, _waveMax, _pitchMin, _pitchMax;
     int waveDataLen;
-    vector d_wave, d_pitch, d_frame, d_intensive, d_window, d_lpc, d_spec;
 };
 
 #endif // DRAWER_H

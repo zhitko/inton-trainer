@@ -6,7 +6,7 @@
 class DrawerEval : public Drawer
 {
 public:
-    DrawerEval(QString fname);
+    DrawerEval();
     ~DrawerEval();
 
     int Draw(mglGraph *gr);
@@ -14,11 +14,9 @@ public:
     int result;
 
 private:
+    bool first;
     QString secFileName;
-    mglData secWaveData, secPitchData, secIntensiveData, secPitchDataOrig, secIntensiveDataOrig;
-    double _secWaveMin, _secWaveMax, _secPitchMin, _secPitchMax;
-    int secWaveDataLen;
-    vector dsec_wave, dsec_pitch, dsec_frame, dsec_intensive, dsec_window, dsec_lpc, dsec_spec;
+    mglData secWaveData, secPitchData, secPitchDataOrig;
 };
 
 #endif // DRAWEREVAL_H

@@ -115,12 +115,13 @@ void GraphsWindow::drawFile(QString path)
     this->drawer = this->createNewDrawer(path);
     this->w_graph = this->drawer->getDataLenght();
     this->setFitByK();
+    this->QMGL->update();
 }
 
 Drawer * GraphsWindow::createNewDrawer(QString path)
 {
-    if(this->drawer) delete drawer;
-    Drawer * drawer = new Drawer(path);
+    Drawer * drawer = new Drawer();
+    drawer->Proc(path);
     this->QMGL->setDraw(drawer);
     return drawer;
 }
