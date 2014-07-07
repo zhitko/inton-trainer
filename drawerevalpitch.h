@@ -1,13 +1,13 @@
-#ifndef DRAWEREVAL_H
-#define DRAWEREVAL_H
+#ifndef DRAWEREVALPITCH_H
+#define DRAWEREVALPITCH_H
 
 #include "drawer.h"
 
-class DrawerEval : public Drawer
+class DrawerEvalPitch : public Drawer
 {
 public:
-    DrawerEval();
-    ~DrawerEval();
+    DrawerEvalPitch();
+    ~DrawerEvalPitch();
 
     int Draw(mglGraph *gr);
     void Proc(QString fname);
@@ -19,4 +19,4 @@ private:
     mglData secWaveData, secPitchData, secPitchDataOrig;
 };
 
-#endif // DRAWEREVAL_H
+#endif // DRAWEREVALPITCH_H

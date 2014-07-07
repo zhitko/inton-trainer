@@ -1,4 +1,4 @@
-#include "drawereval.h"
+#include "drawerevalpitch.h"
 
 #include <QFile>
 #include <QDebug>
@@ -21,7 +21,7 @@ extern "C" {
     #include "./SPTK/spec/spec.h"
 }
 
-DrawerEval::DrawerEval() :
+DrawerEvalPitch::DrawerEvalPitch() :
     Drawer(),
     secFileName(""),
     result(0),
@@ -29,12 +29,12 @@ DrawerEval::DrawerEval() :
 {
 }
 
-DrawerEval::~DrawerEval()
+DrawerEvalPitch::~DrawerEvalPitch()
 {
     qDebug() << "DrawerEval removed";
 }
 
-int DrawerEval::Draw(mglGraph *gr)
+int DrawerEvalPitch::Draw(mglGraph *gr)
 {
     qDebug() << "start drawing";
 
@@ -74,7 +74,7 @@ int DrawerEval::Draw(mglGraph *gr)
     return 0;
 }
 
-void DrawerEval::Proc(QString fname)
+void DrawerEvalPitch::Proc(QString fname)
 {    
     if(first)
     {

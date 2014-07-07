@@ -3,7 +3,7 @@
 #include <QDebug>
 #include <QMessageBox>
 
-#include "drawereval.h"
+#include "drawerevalpitch.h"
 
 GraphsEvalWindow::GraphsEvalWindow(QString path, Drawer * drawer, QWidget *parent) :
     GraphsWindow(parent)

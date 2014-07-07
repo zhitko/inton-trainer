@@ -22,6 +22,7 @@ class QMenu;
 class QComboBox;
 class QListWidgetItem;
 
+class Drawer;
 class SoundRecorder;
 class AutoSoundRecorder;
 class GraphsWindow;
@@ -44,24 +45,8 @@ private:
     SoundRecorder *recorder;
     AutoSoundRecorder *autoRecorder;
 
-    QToolBar *trainingToolBar;
-    QToolBar *settingsToolBar;
-    QToolBar *actionToolBar;
-    QToolBar *fileToolBar;
-
-    QAction *triningAct;
-    QAction *ratingAct;
-
-    QAction *playAct;
     QAction *recordingAct;
     QAction *autoRecordingAct;
-
-    QAction *plottingAct;
-    QAction *compareAct;
-
-    QAction *removeAct;
-    QAction *renameAct;
-    QAction *settingsAct;
 
     void recording(SoundRecorder*);
 
@@ -71,7 +56,9 @@ private:
 
 private slots:
     void training();
-    void evaluation();
+    void evaluationF0();
+    void evaluationI();
+    void evaluation(Drawer * drawer);
     void evaluationTest();
     void remove();
     void rename();

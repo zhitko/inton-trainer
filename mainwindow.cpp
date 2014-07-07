@@ -5,6 +5,7 @@
 #include <QKeySequence>
 #include <QScrollArea>
 #include <QToolBar>
+#include <QToolButton>
 #include <QComboBox>
 #include <QLabel>
 #include <QDateTime>
@@ -26,7 +27,9 @@
 #include "graphsevalwindow.h"
 #include "settingsdialog.h"
 
-#include "drawereval.h"
+#include "drawer.h"
+#include "drawerevalpitch.h"
+#include "drawerevalenergy.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -49,30 +52,40 @@ MainWindow::~MainWindow()
 void MainWindow::initUI()
 {
     // trainig tool bar
-    this->triningAct = new QAction(tr("&Training"), this);
-    this->triningAct->setIcon(QIcon(":/icons/icons/guru-26.png"));
-    this->triningAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_T));
-    this->triningAct->setStatusTip(tr("Start manual training"));
-    connect(this->triningAct, SIGNAL(triggered()), this, SLOT(training()));    
+    QAction * triningAct = new QAction(tr("&Training"), this);
+    triningAct->setIcon(QIcon(":/icons/icons/guru-26.png"));
+    triningAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_T));
+    triningAct->setStatusTip(tr("Start manual training"));
+    connect(triningAct, SIGNAL(triggered()), this, SLOT(training()));
 
-    this->ratingAct = new QAction(tr("&Evaluation"), this);
-    this->ratingAct->setIcon(QIcon(":/icons/icons/trophy-26.png"));
-    this->ratingAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_E));
-    this->ratingAct->setStatusTip(tr("Start manual training"));
-    connect(this->ratingAct, SIGNAL(triggered()), this, SLOT(evaluation()));
+    QToolButton * ratingButton = new QToolButton(this);
+    ratingButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    ratingButton->setText(tr("&Evaluation"));
+    ratingButton->setIcon(QIcon(":/icons/icons/trophy-26.png"));
+    ratingButton->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_E));
+    ratingButton->setStatusTip(tr("Start manual training"));
+    QMenu * menu = new QMenu(this);
+    QAction * ratingF0Act = new QAction(tr("Show F0"), this);
+    connect(ratingF0Act, SIGNAL(triggered()), this, SLOT(evaluationF0()));
+    QAction * ratingIAct = new QAction(tr("Show Energy"), this);
+    connect(ratingIAct, SIGNAL(triggered()), this, SLOT(evaluationI()));
+    menu->addAction(ratingF0Act);
+    menu->addAction(ratingIAct);
+    ratingButton->setMenu(menu);
+    ratingButton->setPopupMode(QToolButton::InstantPopup);
 
-    this->trainingToolBar = addToolBar(tr("Training"));
-    this->trainingToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    this->trainingToolBar->setIconSize(QSize(16,16));
-    this->trainingToolBar->addAction(this->triningAct);
-    this->trainingToolBar->addAction(this->ratingAct);
+    QToolBar * trainingToolBar = addToolBar(tr("Training"));
+    trainingToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    trainingToolBar->setIconSize(QSize(16,16));
+    trainingToolBar->addAction(triningAct);
+    trainingToolBar->addWidget(ratingButton);
 
     // sound actions
-    this->playAct = new QAction(tr("&Play"), this);
-    this->playAct->setIcon(QIcon(":/icons/icons/speaker-26.png"));
-    this->playAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_P));
-    this->playAct->setStatusTip(tr("Play current audio"));
-    connect(this->playAct, SIGNAL(triggered()), this, SLOT(playRecord()));
+    QAction * playAct = new QAction(tr("&Play"), this);
+    playAct->setIcon(QIcon(":/icons/icons/speaker-26.png"));
+    playAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_P));
+    playAct->setStatusTip(tr("Play current audio"));
+    connect(playAct, SIGNAL(triggered()), this, SLOT(playRecord()));
 
     this->recordingAct = new QAction(tr("&Record"), this);
     this->recordingAct->setIcon(QIcon(":/icons/icons/record-26.png"));
@@ -84,54 +97,54 @@ void MainWindow::initUI()
     this->recordingAct->setStatusTip(tr("Start/Stop auto recording audio"));
     connect(this->autoRecordingAct, SIGNAL(triggered()), this, SLOT(autoRecording()));
 
-    this->actionToolBar = addToolBar(tr("Actions"));
-    this->actionToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    this->actionToolBar->setIconSize(QSize(16,16));
-    this->actionToolBar->addAction(this->recordingAct);
-    this->actionToolBar->addAction(this->autoRecordingAct);
-    this->actionToolBar->addAction(this->playAct);
+    QToolBar * actionToolBar = addToolBar(tr("Actions"));
+    actionToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    actionToolBar->setIconSize(QSize(16,16));
+    actionToolBar->addAction(this->recordingAct);
+    actionToolBar->addAction(this->autoRecordingAct);
+    actionToolBar->addAction(playAct);
 
     // Files' actions
-    this->plottingAct = new QAction(tr("Show &Graphs"), this);
-    this->plottingAct->setIcon(QIcon(":/icons/icons/electrical_threshold-26.png"));
-    this->plottingAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_G));
-    this->plottingAct->setStatusTip(tr("Show graphs"));
-    connect(this->plottingAct, SIGNAL(triggered()), this, SLOT(plotting()));
+    QAction * plottingAct = new QAction(tr("Show &Graphs"), this);
+    plottingAct->setIcon(QIcon(":/icons/icons/electrical_threshold-26.png"));
+    plottingAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_G));
+    plottingAct->setStatusTip(tr("Show graphs"));
+    connect(plottingAct, SIGNAL(triggered()), this, SLOT(plotting()));
 
-    this->compareAct = new QAction(tr("Compare"), this);
-    this->compareAct->setIcon(QIcon(":/icons/icons/compare-26.png"));
-    this->compareAct->setStatusTip(tr("Show compare graphs"));
-    connect(this->compareAct, SIGNAL(triggered()), this, SLOT(compare()));
+    QAction * compareAct = new QAction(tr("Compare"), this);
+    compareAct->setIcon(QIcon(":/icons/icons/compare-26.png"));
+    compareAct->setStatusTip(tr("Show compare graphs"));
+    connect(compareAct, SIGNAL(triggered()), this, SLOT(compare()));
 
-    this->removeAct = new QAction(tr("Remove"), this);
-    this->removeAct->setIcon(QIcon(":/icons/icons/delete-26.png"));
-    this->removeAct->setStatusTip(tr("Remove selected files"));
-    connect(this->removeAct, SIGNAL(triggered()), this, SLOT(remove()));
+    QAction * removeAct = new QAction(tr("Remove"), this);
+    removeAct->setIcon(QIcon(":/icons/icons/delete-26.png"));
+    removeAct->setStatusTip(tr("Remove selected files"));
+    connect(removeAct, SIGNAL(triggered()), this, SLOT(remove()));
 
-    this->renameAct = new QAction(tr("Rename"), this);
-    this->renameAct->setIcon(QIcon(":/icons/icons/edit-26.png"));
-    this->renameAct->setStatusTip(tr("Rename selected file"));
-    connect(this->renameAct, SIGNAL(triggered()), this, SLOT(rename()));
+    QAction * renameAct = new QAction(tr("Rename"), this);
+    renameAct->setIcon(QIcon(":/icons/icons/edit-26.png"));
+    renameAct->setStatusTip(tr("Rename selected file"));
+    connect(renameAct, SIGNAL(triggered()), this, SLOT(rename()));
 
     addToolBarBreak();
-    this->fileToolBar = addToolBar(tr("Files Operations"));
-    this->fileToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    this->fileToolBar->setIconSize(QSize(16,16));
-    this->fileToolBar->addAction(this->plottingAct);
-    this->fileToolBar->addAction(this->compareAct);
-    this->fileToolBar->addAction(this->removeAct);
-    this->fileToolBar->addAction(this->renameAct);
+    QToolBar * fileToolBar = addToolBar(tr("Files Operations"));
+    fileToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    fileToolBar->setIconSize(QSize(16,16));
+    fileToolBar->addAction(plottingAct);
+    fileToolBar->addAction(compareAct);
+    fileToolBar->addAction(removeAct);
+    fileToolBar->addAction(renameAct);
 
     // Programm settings tool bar
-    this->settingsAct = new QAction(tr("Settings"), this);
-    this->settingsAct->setIcon(QIcon(":/icons/icons/settings-26.png"));
-    this->settingsAct->setStatusTip(tr("Open settings dialog"));
-    connect(this->settingsAct, SIGNAL(triggered()), this, SLOT(settingsShow()));
+    QAction * settingsAct = new QAction(tr("Settings"), this);
+    settingsAct->setIcon(QIcon(":/icons/icons/settings-26.png"));
+    settingsAct->setStatusTip(tr("Open settings dialog"));
+    connect(settingsAct, SIGNAL(triggered()), this, SLOT(settingsShow()));
 
-    this->settingsToolBar = addToolBar(tr("Audio Devices"));
-    this->settingsToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    this->settingsToolBar->setIconSize(QSize(16,16));
-    this->settingsToolBar->addAction(this->settingsAct);
+    QToolBar * settingsToolBar = addToolBar(tr("Audio Devices"));
+    settingsToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    settingsToolBar->setIconSize(QSize(16,16));
+    settingsToolBar->addAction(settingsAct);
 
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateVolume()));
@@ -326,7 +339,7 @@ void MainWindow::evaluationTest()
     QString path2 = path + QInputDialog::getItem(this, tr("Compare with"), tr("Record"), items, 0, false, &ok);
     if (ok && !path2.isEmpty()){
         qDebug() << "Draw graphs for evaluation " << path1;
-        GraphsEvalWindow * window = new GraphsEvalWindow(path1, new DrawerEval());
+        GraphsEvalWindow * window = new GraphsEvalWindow(path1, new DrawerEvalPitch());
 
         connect(window, SIGNAL(autoRec()), this, SLOT(autoRecording()));
         connect(window, SIGNAL(rec()), this, SLOT(manualRecording()));
@@ -338,7 +351,17 @@ void MainWindow::evaluationTest()
     }
 }
 
-void MainWindow::evaluation()
+void MainWindow::evaluationF0()
+{
+    evaluation(new DrawerEvalPitch());
+}
+
+void MainWindow::evaluationI()
+{
+    evaluation(new DrawerEvalEnergy());
+}
+
+void MainWindow::evaluation(Drawer * drawer)
 {
     QString path = QApplication::applicationDirPath() + DATA_PATH;
     QList<QListWidgetItem*> items = ui->filesList->selectedItems();
@@ -346,7 +369,7 @@ void MainWindow::evaluation()
     {
         QString file = path + items.at(0)->text();
         qDebug() << "Draw graphs for evaluation " << file;
-        GraphsEvalWindow * window = new GraphsEvalWindow(file, new DrawerEval());
+        GraphsEvalWindow * window = new GraphsEvalWindow(file, drawer);
 
         connect(window, SIGNAL(autoRec()), this, SLOT(autoRecording()));
         connect(window, SIGNAL(rec()), this, SLOT(manualRecording()));

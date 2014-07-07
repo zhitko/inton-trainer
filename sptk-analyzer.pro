@@ -39,8 +39,9 @@ SOURCES += \
     drawer.cpp \
     soundplayer.cpp \
     graphsevalwindow.cpp \
-    drawereval.cpp \
-    DP/vectordp.cpp
+    DP/vectordp.cpp \
+    drawerevalpitch.cpp \
+    drawerevalenergy.cpp
 
 HEADERS  += \
     mainwindow.h \
@@ -52,10 +53,11 @@ HEADERS  += \
     drawer.h \
     soundplayer.h \
     graphsevalwindow.h \
-    drawereval.h \
     abstractdrawer.h \
     DP/dp.h \
-    DP/vectordp.h
+    DP/vectordp.h \
+    drawerevalpitch.h \
+    drawerevalenergy.h
 
 # OpenAL
 SOURCES += \

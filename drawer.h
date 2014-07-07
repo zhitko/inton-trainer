@@ -3,6 +3,8 @@
 
 #include <mgl2/qmathgl.h>
 
+#define ENERGY_MAX 10000
+
 extern "C" {
     #include "./SPTK/SPTK.h"
     #include "./SPTK/vector.h"
