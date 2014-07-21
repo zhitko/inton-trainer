@@ -7,17 +7,30 @@ extern "C" {
     #include "vector.h"
 }
 
-class VectorDP : public DP<vector, double>
+class VectorSignal : public Signal<double>
+{
+private:
+    vector array;
+public:
+    VectorSignal(vector array) : array(array) {;}
+    Signal<double> * makeSignal(int size);
+    void freeSignal();
+
+    int size();
+    double valueAt(int index);
+    void setValueAt(double value, int index);
+
+    vector getArray(){ return array; }
+};
+
+class VectorDP : public DP<double>
 {
 public:
-    VectorDP(vector pttrn, vector sig) : DP(pttrn, sig) {;}
+    VectorDP(VectorSignal * pttrn, VectorSignal * sig) : DP(pttrn, sig) {;}
+
+    VectorSignal * getScaledSignal() { return (VectorSignal*) DP<double>::getScaledSignal(); }
 
 protected:
-    double getValueAt(vector array, int index);
-    int getArraySize(vector array);
-    void setValueAt(vector array, double value, int index);
-    vector makeArray(int size);
-    void freeArray(vector array);
     int calculateError(double value1, double value2);
 };
 

@@ -59,7 +59,6 @@ private slots:
     void evaluationF0();
     void evaluationI();
     void evaluation(Drawer * drawer);
-    void evaluationTest();
     void remove();
     void rename();
     void autoRecording();
@@ -76,7 +75,6 @@ private slots:
 private slots:
     void plottingGraph(QListWidgetItem*);
     void trainingGraph(QListWidgetItem*);
-    void evaluationGraph(QListWidgetItem* item);
 };
 
 #endif // MAINWINDOW_H

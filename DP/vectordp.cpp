@@ -2,29 +2,29 @@
 
 #include "stdlib.h"
 
-double VectorDP::getValueAt(vector array, int index)
+double VectorSignal::valueAt(int index)
 {
     return array.v[index];
 }
 
-int VectorDP::getArraySize(vector array)
+int VectorSignal::size()
 {
     return array.x;
 }
 
-void VectorDP::setValueAt(vector array, double value, int index)
+void VectorSignal::setValueAt(double value, int index)
 {
     array.v[index] = value;
 }
 
-vector VectorDP::makeArray(int size)
+Signal<double> * VectorSignal::makeSignal(int size)
 {
-    return makev(size);
+    return new VectorSignal(makev(size));
 }
 
-void VectorDP::freeArray(vector array)
+void VectorSignal::freeSignal()
 {
-    freev(array);
+    freev(this->array);
 }
 
 int VectorDP::calculateError(double value1, double value2)

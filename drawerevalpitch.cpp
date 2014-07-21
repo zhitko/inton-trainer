@@ -42,31 +42,34 @@ int DrawerEvalPitch::Draw(mglGraph *gr)
     gr->Clf();
 
     qDebug() << "waveData";
-    gr->MultiPlot(1, 10, 0, 1, 1, "#");
+    gr->MultiPlot(1, 11, 0, 1, 1, "#");
     gr->SetRange('y', waveMin, waveMax);
     gr->Plot(waveData, "-G");
 
     qDebug() << "pitchData";
-    gr->MultiPlot(1, 10, 3, 1, 6, "#");
-    gr->SetRange('y', pitchMin, pitchMax);
+    gr->MultiPlot(1, 11, 4, 1, 6, "#");
+    gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
     gr->Plot(pitchData, "-G4");
     gr->Axis("Y", "");
     gr->Grid("y", "W", "");
 
     if(!this->secFileName.isEmpty()){
         qDebug() << "secWaveData";
-        gr->MultiPlot(1, 10, 1, 1, 1, "#");
+        gr->MultiPlot(1, 11, 1, 1, 1, "#");
         gr->SetRange('y', waveMin, waveMax);
         gr->Plot(secWaveData, "B");
 
+        gr->MultiPlot(1, 11, 3, 1, 1, "#");
+        gr->Puts(mglPoint(0,0),QString("Your score: \\big{#r{%1}}").arg(this->result).toUtf8().data(), ":C", 50);
+
         qDebug() << "secPitchData";
-        gr->MultiPlot(1, 10, 3, 1, 6, "#");
-        gr->SetRange('y', pitchMin, pitchMax);
+        gr->MultiPlot(1, 11, 4, 1, 6, "#");
+        gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
         gr->Plot(secPitchData, "-B4");
 
         qDebug() << "secPitchData";
-        gr->MultiPlot(1, 10, 3, 1, 6, "#");
-        gr->SetRange('y', pitchMin, pitchMax);
+        gr->MultiPlot(1, 11, 4, 1, 6, "#");
+        gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
         gr->Plot(secPitchDataOrig, ".B1");
     }
 
@@ -80,6 +83,7 @@ void DrawerEvalPitch::Proc(QString fname)
     {
         qDebug() << "Drawer::Proc";
         Drawer::Proc(fname);
+        pitchData.Norm(GRAPH_Y_VAL_MAX);
         first = false;
     }
     else
@@ -91,18 +95,31 @@ void DrawerEvalPitch::Proc(QString fname)
         dataSec.d_pitch = sptk_fill_empty(dataSec.d_pitch);
 
         vectorToData(dataSec.d_wave, &secWaveData);
+        double min = secWaveData.Min("x").a[0];
+        if(min < waveMin) waveMin = min;
+        double max = secWaveData.Max("x").a[0];
+        if(max > waveMax) waveMax = max;
         qDebug() << "waveData New Filled";
 
         vectorToData(dataSec.d_pitch, &secPitchDataOrig);
-        double min = secPitchDataOrig.Min("x").a[0];
-        double max = secPitchDataOrig.Max("x").a[0];
-        if(pitchMin > min) pitchMin = min;
-        if(pitchMax < max) pitchMax = max;
+        secPitchDataOrig.Norm(GRAPH_Y_VAL_MAX);
         qDebug() << "pitchData New Filled";
 
+        vector pitchOrig;
+        pitchOrig.v = pitchData.a;
+        pitchOrig.x = data->d_pitch.x;
+        (*pitchOrig.v) = 0;
+
+        vector pitch;
+        pitch.v = secPitchDataOrig.a;
+        pitch.x = dataSec.d_pitch.x;
+        (*pitch.v) = 0;
+
+        qDebug() << "Pitch sizes " << pitchOrig.x << " " << pitch.x;
+
         qDebug() << "Start DP";
-        VectorDP dp(data->d_pitch, dataSec.d_pitch);
-        vector newPitch = dp.getScaledSignal();
+        VectorDP dp(new VectorSignal(copyv(pitchOrig)), new VectorSignal(copyv(pitch)));
+        vector newPitch = dp.getScaledSignal()->getArray();
         this->result = dp.getSignalMask()->value.globalError;
         qDebug() << "Stop DP";
 

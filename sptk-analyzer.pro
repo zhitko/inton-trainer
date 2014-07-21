@@ -55,9 +55,9 @@ HEADERS  += \
     graphsevalwindow.h \
     abstractdrawer.h \
     DP/dp.h \
-    DP/vectordp.h \
     drawerevalpitch.h \
-    drawerevalenergy.h
+    drawerevalenergy.h \
+    DP/vectordp.h
 
 # OpenAL
 SOURCES += \

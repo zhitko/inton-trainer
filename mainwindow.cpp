@@ -151,7 +151,7 @@ void MainWindow::initUI()
     timer->start(200);
 
     connect( this->ui->filesList, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
-             this, SLOT(evaluationGraph(QListWidgetItem*)) );
+             this, SLOT(plottingGraph(QListWidgetItem*)) );
 }
 
 void MainWindow::autoRecording()
@@ -319,38 +319,6 @@ void MainWindow::training()
     }
 }
 
-void MainWindow::evaluationGraph(QListWidgetItem* item)
-{
-    this->evaluationTest();
-}
-
-void MainWindow::evaluationTest()
-{
-    QStringList items;
-    for(int i=0;i<this->ui->filesList->count();i++)
-        items.append(this->ui->filesList->item(i)->text());
-
-    QListWidgetItem* item = ui->filesList->currentItem();
-    QString path = QApplication::applicationDirPath() + DATA_PATH;
-    QString path1 = path + item->text();
-
-    items.removeAll(item->text());
-    bool ok;
-    QString path2 = path + QInputDialog::getItem(this, tr("Compare with"), tr("Record"), items, 0, false, &ok);
-    if (ok && !path2.isEmpty()){
-        qDebug() << "Draw graphs for evaluation " << path1;
-        GraphsEvalWindow * window = new GraphsEvalWindow(path1, new DrawerEvalPitch());
-
-        connect(window, SIGNAL(autoRec()), this, SLOT(autoRecording()));
-        connect(window, SIGNAL(rec()), this, SLOT(manualRecording()));
-
-        connect(window, SIGNAL(recFinish()), this, SLOT(updateFileList()));
-
-        window->show();
-        window->drawFile(path2);
-    }
-}
-
 void MainWindow::evaluationF0()
 {
     evaluation(new DrawerEvalPitch());
@@ -377,6 +345,11 @@ void MainWindow::evaluation(Drawer * drawer)
         connect(window, SIGNAL(recFinish()), this, SLOT(updateFileList()));
 
         window->show();
+        if(items.size() > 1)
+        {
+            QString file2 = path + items.at(1)->text();
+            window->drawFile(file2);
+        }
     }
 }
 

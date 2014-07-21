@@ -26,12 +26,24 @@ struct DPStateStack{
     DPStateStack * next;
 };
 
-template< typename A, typename V >
+template< typename ValueType >
+class Signal
+{
+public:
+    virtual Signal<ValueType> * makeSignal(int size) = 0;
+
+    virtual void freeSignal() = 0;
+    virtual int size() = 0;
+    virtual ValueType valueAt(int index) = 0;
+    virtual void setValueAt(ValueType value, int index) = 0;
+};
+
+template< typename ValueType >
 class DP
 {
 private:
-    A pattern;
-    A signal;
+    Signal<ValueType> * pattern;
+    Signal<ValueType> * signal;
     DPStateStack * mask;
     DPStateStack ** stateCache;
 
@@ -46,8 +58,8 @@ private:
 
         // Init current errors
         int localError = this->calculateError(
-                    this->getValueAt(this->signal, signalPos),
-                    this->getValueAt(this->pattern, patternPos)
+                    this->signal->valueAt(signalPos),
+                    this->pattern->valueAt(patternPos)
                 );
 
         DPState currentState = {localError, localError, opNone, signalPos, patternPos};
@@ -59,8 +71,8 @@ private:
         DPStateStack * branchDrop   = 0;
 
         // Try next operations
-        if(signalPos  > 0)                  branchDrop   = calcNextIter(signalPos-1, patternPos);
         if(patternPos > 0 && signalPos > 0) branchAdd    = calcNextIter(signalPos-1, patternPos-1);
+        if(signalPos  > 0)                  branchDrop   = calcNextIter(signalPos-1, patternPos);
         if(patternPos > 0)                  branchRepeat = calcNextIter(signalPos,   patternPos-1);
 
         // If this is last iteration, return current branch
@@ -71,13 +83,13 @@ private:
         }
 
         // Init last states for all branches
-        DPState stateRepeat = {INT_MAX, INT_MAX, opRepeat, signalPos,   patternPos-1};
         DPState stateAdd    = {INT_MAX, INT_MAX, opAdd,    signalPos-1, patternPos-1};
+        DPState stateRepeat = {INT_MAX, INT_MAX, opRepeat, signalPos,   patternPos-1};
         DPState stateDrop   = {INT_MAX, INT_MAX, opDrop,   signalPos-1, patternPos};
 
         // Set value to state if branch calculated
-        if(branchRepeat != 0) stateRepeat = branchRepeat->value;
         if(branchAdd    != 0) stateAdd    = branchAdd->value;
+        if(branchRepeat != 0) stateRepeat = branchRepeat->value;
         if(branchDrop   != 0) stateDrop   = branchDrop->value;
 
         // Search branch with minimal global error
@@ -109,19 +121,27 @@ private:
     }
 
 public:
-    DP(A pttrn, A sig) :
+    DP(Signal<ValueType> * pttrn, Signal<ValueType> * sig) :
         pattern(pttrn),
         signal(sig),
         mask(0),
         stateCache(0)
     { ; }
 
+    ~DP()
+    {
+        pattern->freeSignal();
+        signal->freeSignal();
+        delete pattern;
+        delete signal;
+    }
+
     DPStateStack * getSignalMask()
     {
         if(!this->mask)
         {
-            int signalSize = this->getArraySize(signal);
-            int patternSize = this->getArraySize(pattern);
+            int signalSize = this->signal->size();
+            int patternSize = this->pattern->size();
             qDebug() << "DP Init " << signalSize << " : " << patternSize << " iterations->" << signalSize*patternSize;
             this->mask = this->calcNextIter(signalSize - 1, patternSize - 1);
             qDebug() << "DP Finish " << this->stateCache[signalSize - 1][patternSize - 1].value.globalError;
@@ -129,15 +149,15 @@ public:
         return this->mask;
     }
 
-    A getScaledSignal()
+    Signal<ValueType> * getScaledSignal()
     {
         return this->applyMask(this->signal);
     }
 
     void reinitCache()
     {
-        int signalSize = getArraySize(signal);
-        int resultSize = getArraySize(pattern);
+        int signalSize = this->signal->size();
+        int resultSize = this->pattern->size();
 
         if(stateCache)
         {
@@ -159,17 +179,18 @@ public:
         }
     }
 
-    A applyMask(A array)
+    template< typename SignalValueType >
+    Signal<SignalValueType> * applyMask(Signal<SignalValueType> * array)
     {
         if(!this->mask){
             reinitCache();
             getSignalMask();
         }
-        if(getArraySize(signal) != getArraySize(array)) return array;
+        if(signal->size() != array->size()) return array;
 
-        int resultSize = getArraySize(pattern);
+        int resultSize = pattern->size();
 
-        A result = makeArray(resultSize);
+        Signal<SignalValueType> * result = array->makeSignal(resultSize);
 
         DPStateStack * stateStep = this->mask;
 
@@ -181,9 +202,7 @@ public:
         qDebug() << "operation\t global\t local\t signal\t pattern\t next";
         DPStateOperation operation = opNone;
         while(stateStep != 0)
-//        while(stateStep->next != 0)
         {
-//            stateStep = stateStep->next;
             operation = stateStep->value.operation;
             qDebug() << stateStep->value.operation << " \t "
                      << stateStep->value.globalError << " \t "
@@ -192,15 +211,15 @@ public:
                      << stateStep->value.patternPos << " \t "
                      << stateStep->next;
             switch (operation) {
-            case opAdd:
-            case opRepeat:
-                setValueAt(result, getValueAt(array, stateStep->value.signalPos), stateStep->value.patternPos);
-                break;
-            case opDrop:
-                break;
-            default:
-                qDebug() << "opNone";
-                break;
+                case opAdd:
+                case opRepeat:
+                    result->setValueAt(array->valueAt(stateStep->value.signalPos), stateStep->value.patternPos);
+                    break;
+                case opDrop:
+                    break;
+                default:
+                    qDebug() << "opNone";
+                    break;
             }
             stateStep = stateStep->next;
         }
@@ -209,12 +228,7 @@ public:
     }
 
 protected:
-    virtual V getValueAt(A array, int index) = 0;
-    virtual int getArraySize(A array) = 0;
-    virtual void setValueAt(A array, V value, int index) = 0;
-    virtual A makeArray(int size) = 0;
-    virtual void freeArray(A array) = 0;
-    virtual int calculateError(V value1, V value2) = 0;
+    virtual int calculateError(ValueType value1, ValueType value2) = 0;
 };
 
 #endif // DP_H
