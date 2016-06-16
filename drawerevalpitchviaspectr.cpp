@@ -1,4 +1,4 @@
-#include "drawerevalpitch.h"
+#include "drawerevalpitchviaspectr.h"
 
 #include <QFile>
 #include <QDebug>
@@ -22,7 +22,7 @@ extern "C" {
     #include "./SPTK/spec/spec.h"
 }
 
-DrawerEvalPitch::DrawerEvalPitch() :
+DrawerEvalPitchViaSpectr::DrawerEvalPitchViaSpectr() :
     Drawer(),
     secFileName(""),
     result(0),
@@ -30,12 +30,12 @@ DrawerEvalPitch::DrawerEvalPitch() :
 {
 }
 
-DrawerEvalPitch::~DrawerEvalPitch()
+DrawerEvalPitchViaSpectr::~DrawerEvalPitchViaSpectr()
 {
     qDebug() << "DrawerEval removed";
 }
 
-int DrawerEvalPitch::Draw(mglGraph *gr)
+int DrawerEvalPitchViaSpectr::Draw(mglGraph *gr)
 {
     qDebug() << "start drawing";
 
@@ -78,8 +78,8 @@ int DrawerEvalPitch::Draw(mglGraph *gr)
     return 0;
 }
 
-void DrawerEvalPitch::Proc(QString fname)
-{    
+void DrawerEvalPitchViaSpectr::Proc(QString fname)
+{
     if(first)
     {
         qDebug() << "Drawer::Proc";
@@ -119,21 +119,15 @@ void DrawerEvalPitch::Proc(QString fname)
         qDebug() << "Pitch sizes " << pitchOrig.x << " " << pitch.x;
 
         qDebug() << "Start DP";
-        VectorDP dp(new VectorSignal(copyv(pitchOrig)), new VectorSignal(copyv(pitch)));
-        vector newPitch = dp.getScaledSignal()->getArray();
+        SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
+        int speksize = sptk_settings->spec->leng / 2 + 1;
+        SpectrDP dp(new SpectrSignal(copyv(data->d_spec), speksize),
+                    new SpectrSignal(copyv(dataSec.d_spec), speksize));
+        VectorSignal data(makev(dataSec.d_spec.x/speksize));
+        for(int i=0; i<pitch.x; i++) data.setValueAt(pitch.v[i], i);
+        vector newPitch = ((VectorSignal*)dp.applyMask<double>(&data))->getArray();
         this->result = dp.getSignalMask()->value.globalError;
         qDebug() << "Stop DP";
-
-//        qDebug() << "Start DP";
-//        SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
-//        int speksize = sptk_settings->spec->leng / 2 + 1;
-//        SpectrDP dp(new SpectrSignal(copyv(data->d_spec), speksize),
-//                    new SpectrSignal(copyv(dataSec.d_spec), speksize));
-//        VectorSignal data(makev(dataSec.d_spec.x/speksize));
-//        for(int i=0; i<pitch.x; i++) data.setValueAt(pitch.v[i], i);
-//        vector newPitch = ((VectorSignal*)dp.applyMask<double>(&data))->getArray();
-//        this->result = dp.getSignalMask()->value.globalError;
-//        qDebug() << "Stop DP";
 
         vectorToData(newPitch, &secPitchData);
         qDebug() << "pitchData New Filled";

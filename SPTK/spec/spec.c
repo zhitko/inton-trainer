@@ -92,7 +92,7 @@
 
 #include <math.h>
 
-#if defined(WIN32)
+#if !defined(__linux__)
 #  include "SPTK.h"
 #  include "spec.h"
 #else

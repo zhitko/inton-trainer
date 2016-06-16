@@ -186,7 +186,10 @@ public:
             reinitCache();
             getSignalMask();
         }
-        if(signal->size() != array->size()) return array;
+        if(signal->size() != array->size()){
+            qDebug() << QString("Array has different size (%1 - %2)").arg(signal->size()).arg(array->size());
+            return array;
+        }
 
         int resultSize = pattern->size();
 

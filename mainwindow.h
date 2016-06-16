@@ -57,6 +57,8 @@ private:
 private slots:
     void training();
     void evaluationF0();
+    void evaluationF0_Spec();
+    void evaluationSpec();
     void evaluationI();
     void evaluation(Drawer * drawer);
     void remove();

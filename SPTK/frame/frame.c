@@ -83,13 +83,12 @@
 #  endif
 #endif
 
-
-#if defined(WIN32)
-#  include "SPTK.h"
-#  include "frame.h"
-#else
+#if defined(__linux__)
 #  include <SPTK.h>
 #  include <frame.h>
+#else
+#  include "SPTK.h"
+#  include "frame.h"
 #endif
 
 /*  Default Values  */

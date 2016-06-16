@@ -84,7 +84,7 @@
 #  endif
 #endif
 
-#if defined(WIN32)
+#if !defined(__linux__)
 #  include "SPTK.h"
 #  include "window.h"
 #else

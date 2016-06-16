@@ -74,7 +74,7 @@
 #define VNUM    1.4 // Current version
 #if 0
 #else
-#if defined(WIN32)
+#if !defined(__linux__)
   #define _USE_MATH_DEFINES
 #endif
 #endif

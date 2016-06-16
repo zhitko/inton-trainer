@@ -3,29 +3,31 @@
 # Project created by QtCreator 2014-02-01T20:30:52
 #
 #-------------------------------------------------
-QMAKE_CFLAGS += -std=gnu99
+#QMAKE_CFLAGS += -std=gnu99
+QMAKE_CFLAGS += -std=gnu++11 -std=c99
 
 QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG  += c++11
+#CONFIG  += c++11
 
 TARGET = sptk-analyzer
 TEMPLATE = app
 
 win32{
-    INCLUDEPATH += "c:/Dev/MathGL/release/include"
-    release:LIBS += -L"c:/Dev/MathGL/release/lib" -llibmgl -llibmgl-qt5
-    debug:LIBS += -L"c:/Dev/MathGL/debug/lib" -llibmgl -llibmgl-qt5
+    INCLUDEPATH += "c:/Dev/MathGL/include"
+    LIBS += -L"c:/Dev/MathGL/lib" -llibmgl -llibmgl-qt5
 
     INCLUDEPATH += "c:/Dev/openal-soft-1.15.1-bin/include"
     LIBS += -L"c:/Dev/openal-soft-1.15.1-bin/lib/Win32" -llibOpenAL32
 }
 unix{
-    INCLUDEPATH += "/home/user/extra headers"
-    release:LIBS += -L"/home/user/extra libs" -llibmgl2 -llibmgl2-qt5
-    debug:LIBS += -L"/home/user/extra libs" -llibmgl2 -llibmgl2-qt5
+    INCLUDEPATH += "/usr/include"
+
+#    INCLUDEPATH += "/home/user/extra headers"
+#    release:LIBS += -L"/home/user/extra libs" -llibmgl2 -llibmgl2-qt5
+#    debug:LIBS += -L"/home/user/extra libs" -llibmgl2 -llibmgl2-qt5
 }
 
 SOURCES += \
@@ -41,7 +43,10 @@ SOURCES += \
     graphsevalwindow.cpp \
     DP/vectordp.cpp \
     drawerevalpitch.cpp \
-    drawerevalenergy.cpp
+    drawerevalenergy.cpp \
+    DP/spectrdp.cpp \
+    drawerevalspectr.cpp \
+    drawerevalpitchviaspectr.cpp
 
 HEADERS  += \
     mainwindow.h \
@@ -57,7 +62,10 @@ HEADERS  += \
     DP/dp.h \
     drawerevalpitch.h \
     drawerevalenergy.h \
-    DP/vectordp.h
+    DP/vectordp.h \
+    DP/spectrdp.h \
+    drawerevalspectr.h \
+    drawerevalpitchviaspectr.h
 
 # OpenAL
 SOURCES += \
