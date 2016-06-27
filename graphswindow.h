@@ -65,6 +65,7 @@ public slots:
     void fit();
     void setK(int k);
     void setFitByK();
+    void fullFit();
     void saveImage();
     void openImage();
     void playRecord();

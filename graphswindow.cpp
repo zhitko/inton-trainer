@@ -95,8 +95,8 @@ void GraphsWindow::initUI()
     connect(this->ui->setRecordBtn, SIGNAL(clicked()), this, SLOT(startRecord()));
 
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
-    this->ui->pitchMinSpin->setValue(sptk_settings->pitch->min_freq);
-    this->ui->pitchMaxSpin->setValue(sptk_settings->pitch->max_freq);
+    this->ui->pitchMinSpin->setValue(sptk_settings->pitch->MIN_FREQ);
+    this->ui->pitchMaxSpin->setValue(sptk_settings->pitch->MAX_FREQ);
 
     QMGL = new QMathGL(this);
     QMGL->autoResize = false;
@@ -234,8 +234,7 @@ void GraphsWindow::decrease(int by)
 
 void GraphsWindow::fit()
 {
-    this->k_graph = GRAPH_K_INIT;
-    this->setFitByK();
+    this->fullFit();
     emit this->changeSig(this->k_graph);
 }
 
@@ -251,6 +250,13 @@ void GraphsWindow::setFitByK()
     if(!this->isVisible()) size.setHeight(GRAPH_HEIGHT);
     int width = (this->w_graph / GRAPH_K_MAX)* this->k_graph;
     this->QMGL->setSize(width, size.height());
+}
+
+void GraphsWindow::fullFit()
+{
+    QSize size = this->scrollArea->maximumViewportSize();
+    if(!this->isVisible()) size.setHeight(GRAPH_HEIGHT);
+    this->QMGL->setSize(size.width(), size.height());
 }
 
 void GraphsWindow::saveImage()

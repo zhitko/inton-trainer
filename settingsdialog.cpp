@@ -94,8 +94,17 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
 
     SettingsDialog * instance = getInstance();
 
-    sptk_settings->pitch->max_freq = instance->ui->maxFreqSpin->value();
-    sptk_settings->pitch->min_freq = instance->ui->minFreqSpin->value();
+//    sptk_settings->pitch->SAMPLE_FREQ = instance->ui->pitchSampleFreqSpin->value();
+    sptk_settings->pitch->MAX_FREQ = instance->ui->pitchMaxFreqSpin->value();
+    sptk_settings->pitch->MIN_FREQ = instance->ui->pitchMinFreqSpin->value();
+    sptk_settings->pitch->FRAME_SHIFT = instance->ui->pitchFrameShoftSpin->value();
+    sptk_settings->pitch->ATYPE = instance->ui->pitchATypeSpin->value();
+    sptk_settings->pitch->OTYPE = instance->ui->pitchOTypeSpin->value();
+    sptk_settings->pitch->THRESH_RAPT = instance->ui->pitchThreshRaptSpin->value();
+    sptk_settings->pitch->THRESH_SWIPE = instance->ui->pitchThreshSwipeSpin->value();
+
+    sptk_settings->energyFrame->leng = instance->ui->energyMidFrame->value();
+
     sptk_settings->frame->leng = instance->ui->frameSizeBox->currentText().toInt();
     sptk_settings->frame->shift = instance->ui->frameShiftSpin->value();
     sptk_settings->window->leng = instance->ui->frameSizeBox->currentText().toInt();
@@ -124,9 +133,26 @@ void SettingsDialog::loadSettings()
     settings.setPath(QSettings::IniFormat, QSettings::UserScope, QApplication::applicationDirPath());
 
     if(settings.contains("pitch/max_freq"))
-        this->ui->maxFreqSpin->setValue(settings.value("pitch/max_freq").toInt());
+        this->ui->pitchMaxFreqSpin->setValue(settings.value("pitch/max_freq").toInt());
     if(settings.contains("pitch/min_freq"))
-        this->ui->minFreqSpin->setValue(settings.value("pitch/min_freq").toInt());
+        this->ui->pitchMinFreqSpin->setValue(settings.value("pitch/min_freq").toInt());
+
+//    if(settings.contains("pitch/SAMPLE_FREQ"))
+//        this->ui->pitchSampleFreqSpin->setValue(settings.value("pitch/SAMPLE_FREQ").toDouble());
+    if(settings.contains("pitch/FRAME_SHIFT"))
+        this->ui->pitchFrameShoftSpin->setValue(settings.value("pitch/FRAME_SHIFT").toInt());
+    if(settings.contains("pitch/ATYPE"))
+        this->ui->pitchATypeSpin->setValue(settings.value("pitch/ATYPE").toInt());
+    if(settings.contains("pitch/OTYPE"))
+        this->ui->pitchOTypeSpin->setValue(settings.value("pitch/OTYPE").toInt());
+    if(settings.contains("pitch/THRESH_RAPT"))
+        this->ui->pitchThreshRaptSpin->setValue(settings.value("pitch/THRESH_RAPT").toDouble());
+    if(settings.contains("pitch/THRESH_SWIPE"))
+        this->ui->pitchThreshSwipeSpin->setValue(settings.value("pitch/THRESH_SWIPE").toDouble());
+
+    if(settings.contains("energyFrame/leng"))
+        this->ui->energyMidFrame->setValue(settings.value("energyFrame/leng").toInt());
+
     if(settings.contains("frame/leng"))
         this->ui->frameSizeBox->setCurrentText(QString::number(settings.value("frame/leng").toInt()));
     if(settings.contains("frame/shift"))
@@ -156,8 +182,18 @@ void SettingsDialog::saveSettings()
     QSettings settings(SETTINGS_FILE, QSettings::IniFormat);
     settings.setPath(QSettings::IniFormat, QSettings::UserScope, QApplication::applicationDirPath());
 
-    settings.setValue("pitch/max_freq", this->ui->maxFreqSpin->value());
-    settings.setValue("pitch/min_freq", this->ui->minFreqSpin->value());
+    settings.setValue("pitch/max_freq", this->ui->pitchMaxFreqSpin->value());
+    settings.setValue("pitch/min_freq", this->ui->pitchMinFreqSpin->value());
+
+//    settings.setValue("pitch/SAMPLE_FREQ", this->ui->pitchSampleFreqSpin->value());
+    settings.setValue("pitch/FRAME_SHIFT", this->ui->pitchFrameShoftSpin->value());
+    settings.setValue("pitch/ATYPE", this->ui->pitchATypeSpin->value());
+    settings.setValue("pitch/OTYPE", this->ui->pitchOTypeSpin->value());
+    settings.setValue("pitch/THRESH_RAPT", this->ui->pitchThreshRaptSpin->value());
+    settings.setValue("pitch/THRESH_SWIPE", this->ui->pitchThreshSwipeSpin->value());
+
+    settings.setValue("energyFrame/leng", this->ui->energyMidFrame->value());
+
     settings.setValue("frame/leng", this->ui->frameSizeBox->currentText().toInt());
     settings.setValue("frame/shift", this->ui->frameShiftSpin->value());
     settings.setValue("window/leng", this->ui->frameSizeBox->currentText().toInt());

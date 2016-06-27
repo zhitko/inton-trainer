@@ -134,8 +134,14 @@ typedef struct _deltawindow {
 
 /* library settings struct */
 typedef struct _PITCH_SETTINGS {
-    int min_freq;
-    int max_freq;
+    int MAX_FREQ;        // Maximum fundamental frequency to search for (Hz)
+    int MIN_FREQ;        // Minimum fundamental frequency to search for (Hz)
+    int FRAME_SHIFT;     // Frame shift
+    double SAMPLE_FREQ;  // Samplingfrequency (kHz)
+    int ATYPE;           // Algorithm used for extraction of pitch. [0: RAPT, 1: SWIPE]
+    int OTYPE;           // Output format. [0:pitch, 1:F0, 2:log(F0)]
+    double THRESH_RAPT;  // Voiced/unvoiced threhold (used only for RAPT algorithm)
+    double THRESH_SWIPE; // Voiced/unvoiced threhold (used only for SWIPE algorithm)
 } PITCH_SETTINGS;
 
 typedef struct _FRAME_SETTINGS {
@@ -161,6 +167,7 @@ typedef struct _SPEC_SETTINGS {
 typedef struct _SPTK_SETTINGS {
     PITCH_SETTINGS * pitch;
     FRAME_SETTINGS * frame;
+    FRAME_SETTINGS * energyFrame;
     WINDOW_SETTINGS * window;
     LPC_SETTINGS * lpc;
     SPEC_SETTINGS * spec;

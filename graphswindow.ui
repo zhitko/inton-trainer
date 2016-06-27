@@ -65,14 +65,42 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
+       </property>
        <property name="currentIndex">
         <number>0</number>
        </property>
        <widget class="QWidget" name="tab_training">
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
         <attribute name="title">
          <string>Training</string>
         </attribute>
-        <layout class="QHBoxLayout" name="horizontalLayout_6">
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <widget class="QPushButton" name="fitBtn">
+           <property name="text">
+            <string>to window size</string>
+           </property>
+           <property name="icon">
+            <iconset resource="icons.qrc">
+             <normaloff>:/icons/icons/expand-26.png</normaloff>:/icons/icons/expand-26.png</iconset>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="playBtn">
+           <property name="text">
+            <string>Play Record</string>
+           </property>
+           <property name="icon">
+            <iconset resource="icons.qrc">
+             <normaloff>:/icons/icons/speaker-26.png</normaloff>:/icons/icons/speaker-26.png</iconset>
+           </property>
+          </widget>
+         </item>
          <item>
           <widget class="QToolButton" name="setRecordBtn">
            <property name="baseSize">
@@ -80,6 +108,9 @@
              <width>64</width>
              <height>64</height>
             </size>
+           </property>
+           <property name="layoutDirection">
+            <enum>Qt::LeftToRight</enum>
            </property>
            <property name="text">
             <string>...</string>
@@ -94,7 +125,23 @@
              <height>64</height>
             </size>
            </property>
+           <property name="autoRaise">
+            <bool>false</bool>
+           </property>
           </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
          </item>
         </layout>
        </widget>
@@ -138,17 +185,6 @@
              </widget>
             </item>
             <item row="2" column="0" colspan="2">
-             <widget class="QPushButton" name="fitBtn">
-              <property name="text">
-               <string>to window size</string>
-              </property>
-              <property name="icon">
-               <iconset resource="icons.qrc">
-                <normaloff>:/icons/icons/expand-26.png</normaloff>:/icons/icons/expand-26.png</iconset>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0" colspan="2">
              <widget class="QPushButton" name="autoRecordBtn">
               <property name="text">
                <string>Auto Record</string>
@@ -156,17 +192,6 @@
               <property name="icon">
                <iconset resource="icons.qrc">
                 <normaloff>:/icons/icons/voice_recognition_scan-26.png</normaloff>:/icons/icons/voice_recognition_scan-26.png</iconset>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="0" colspan="2">
-             <widget class="QPushButton" name="playBtn">
-              <property name="text">
-               <string>Play Record</string>
-              </property>
-              <property name="icon">
-               <iconset resource="icons.qrc">
-                <normaloff>:/icons/icons/speaker-26.png</normaloff>:/icons/icons/speaker-26.png</iconset>
               </property>
              </widget>
             </item>

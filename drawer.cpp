@@ -1,6 +1,7 @@
 #include <QDebug>
 #include <QFile>
 #include "drawer.h"
+#include <stdlib.h>
 
 #include "settingsdialog.h"
 
@@ -36,6 +37,35 @@ extern "C" {
         return result;
     }
 
+    int compare (const void * a, const void * b)
+    {
+      return ( *(double*)a - *(double*)b );
+    }
+
+    vector sptk_mid_intensive(vector data, FRAME_SETTINGS * settings)
+    {
+        int frameLength = settings->leng,
+            resultLength = data.x;
+        vector result = makev(resultLength);
+
+        double* middle = new double[frameLength];
+        for(int i=0;i<resultLength;i++)
+        {
+            for(int j=0; j < frameLength; j++)
+            {
+                int position = i+j-frameLength/2;
+                if( position < 0 || position > resultLength )
+                    middle[j] = 0.0;
+                else
+                    middle[j] = fabs(data.v[position]);
+            }
+            qsort (middle, frameLength, sizeof(double), compare);
+            result.v[i] = middle[frameLength/2];
+        }
+
+        return result;
+    }
+
     vector sptk_fill_empty(vector data)
     {
         int i;
@@ -66,6 +96,8 @@ GraphData ProcWave2Data(QString fname)
     qDebug() << "sptk_frame";
     data.d_intensive = sptk_intensive(data.d_frame, sptk_settings->frame);
     qDebug() << "sptk_intensive";
+    data.d_mid_intensive = sptk_mid_intensive(data.d_intensive, sptk_settings->energyFrame);
+    qDebug() << "sptk_mid_intensive";
     data.d_window = sptk_window(data.d_frame, sptk_settings->window);
     qDebug() << "sptk_window";
     data.d_lpc = sptk_lpc(data.d_frame, sptk_settings->lpc);
@@ -85,6 +117,7 @@ void freeGraphData(GraphData data)
 {
     freev(data.d_frame);
     freev(data.d_intensive);
+    freev(data.d_mid_intensive);
     freev(data.d_lpc);
     freev(data.d_pitch);
     freev(data.d_spec);
@@ -137,11 +170,15 @@ void Drawer::Proc(QString fname)
     intensiveData.Norm(GRAPH_Y_VAL_MAX);
     qDebug() << "intensiveData Filled";
 
+    vectorToData(data->d_mid_intensive, &midIntensiveData);
+    midIntensiveData.Norm(GRAPH_Y_VAL_MAX);
+    qDebug() << "midIntensiveData Filled";
+
     vectorToData(data->d_pitch, &pitchData);
     _pitchMin = pitchData.Min("x").a[0];
     _pitchMax = pitchData.Max("x").a[0];
-    pitchMin = sptk_settings->pitch->min_freq;
-    pitchMax = sptk_settings->pitch->max_freq;
+    pitchMin = sptk_settings->pitch->MIN_FREQ;
+    pitchMax = sptk_settings->pitch->MAX_FREQ;
     qDebug() << "pitchData Filled " << pitchMin << " " << pitchMax;
 
     int speksize = sptk_settings->spec->leng / 2 + 1;

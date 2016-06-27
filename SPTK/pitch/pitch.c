@@ -97,23 +97,6 @@
 #  include "SPTK.h"
 #  include "pitch.h"
 
-/*  Default Values  */
-#define FRAME_SHIFT 100 // 80
-#define SAMPLE_FREQ 8.0 // 16.0
-#define ATYPE 0
-#define OTYPE 1
-#define STR_LEN 256//255
-#define THRESH_RAPT 0.0
-#define THRESH_SWIPE 0.3
-#define NOISEMASK 50.0
-#define SEED 1
-#define RND_MAX 32767
-#define FSP 10.0
-#define ALPHA 0.00275
-#define BETA_1 9600.0
-#define BETA_2 168.0
-#define BETA_3 96000.0
-
 typedef struct _float_list {
    float f;
    struct _float_list *next;
@@ -128,15 +111,15 @@ vector sptk_pitch_spec(vector data, PITCH_SETTINGS * settings, int count)
 {
    if(!settings) settings = initPitchSettings();
    int length, i,
-       frame_shift = FRAME_SHIFT,
-       atype = ATYPE,
-       otype = OTYPE;
+       frame_shift = settings->FRAME_SHIFT,
+       atype = settings->ATYPE,
+       otype = settings->OTYPE;
    double *x,
-       thresh_rapt = THRESH_RAPT,
-       thresh_swipe = THRESH_SWIPE,
-       sample_freq = SAMPLE_FREQ * 1000.0,
-       L = settings->min_freq,
-       H = settings->max_freq;
+       thresh_rapt = settings->THRESH_RAPT,
+       thresh_swipe = settings->THRESH_SWIPE,
+       sample_freq = settings->SAMPLE_FREQ * 1000.0,
+       L = settings->MIN_FREQ,
+       H = settings->MAX_FREQ;
    float_list *top, *cur, *prev;
 
    vector rapt(float_list * flist, int length, double sample_freq,

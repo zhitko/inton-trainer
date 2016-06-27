@@ -9,6 +9,7 @@ extern "C" {
     #include "./SPTK/SPTK.h"
     #include "./SPTK/vector.h"
     vector sptk_intensive(vector data, FRAME_SETTINGS * settings);
+    vector sptk_mid_intensive(vector data, FRAME_SETTINGS * settings);
     vector sptk_fill_empty(vector data);
 }
 
@@ -16,6 +17,7 @@ struct GraphData{
     vector d_wave;
     vector d_pitch;
     vector d_intensive;
+    vector d_mid_intensive;
     vector d_frame;
     vector d_window;
     vector d_lpc;
@@ -50,7 +52,7 @@ public:
 protected:
     GraphData * data;
     QString fileName;
-    mglData waveData, pitchData, specData, intensiveData;
+    mglData waveData, pitchData, specData, intensiveData, midIntensiveData;
     double _waveMin, _waveMax, _pitchMin, _pitchMax;
     int waveDataLen;
 };
