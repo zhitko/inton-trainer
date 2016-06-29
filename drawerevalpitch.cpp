@@ -42,6 +42,12 @@ int DrawerEvalPitch::Draw(mglGraph *gr)
     gr->DefaultPlotParam();
     gr->Clf();
 
+    gr->AddLegend(QString("F0 образца").toLocal8Bit().data(),"-G1");
+    gr->AddLegend(QString("Ln(F0)").toLocal8Bit().data(),"jG1");
+    gr->AddLegend(QString("F0 записи").toLocal8Bit().data(),"-B1");
+    gr->AddLegend(QString("Оригинальня F0 записи").toLocal8Bit().data(),"=B1");
+    gr->Legend(2,"A#");
+
     qDebug() << "waveData";
     gr->MultiPlot(1, 11, 0, 1, 1, "#");
     gr->SetRange('y', waveMin, waveMax);
@@ -50,7 +56,8 @@ int DrawerEvalPitch::Draw(mglGraph *gr)
     qDebug() << "pitchData";
     gr->MultiPlot(1, 11, 4, 1, 6, "#");
     gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
-    gr->Plot(pitchData, "-G4");
+    gr->Plot(pitchData, "-G1");
+    gr->Plot(logPitchData, "jG1");
     gr->Axis("Y", "");
     gr->Grid("y", "W", "");
 
@@ -66,12 +73,12 @@ int DrawerEvalPitch::Draw(mglGraph *gr)
         qDebug() << "secPitchData";
         gr->MultiPlot(1, 11, 4, 1, 6, "#");
         gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
-        gr->Plot(secPitchData, "-B4");
+        gr->Plot(secPitchData, "-B1");
 
         qDebug() << "secPitchData";
         gr->MultiPlot(1, 11, 4, 1, 6, "#");
         gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
-        gr->Plot(secPitchDataOrig, ".B1");
+        gr->Plot(secPitchDataOrig, "=B1");
     }
 
     qDebug() << "finish drawing";

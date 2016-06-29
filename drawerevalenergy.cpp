@@ -42,7 +42,8 @@ int DrawerEvalEnergy::Draw(mglGraph *gr)
     gr->Clf();
 
     gr->AddLegend(QString("Энергия образца").toLocal8Bit().data(),"-G1");
-    gr->AddLegend(QString("Ср. энергия").toLocal8Bit().data(),"jG1");
+    gr->AddLegend(QString("Ln(энергия)").toLocal8Bit().data(),"jG1");
+    gr->AddLegend(QString("Ср. энергия").toLocal8Bit().data(),"=G1");
     gr->AddLegend(QString("Энергия записи").toLocal8Bit().data(),"-B1");
     gr->AddLegend(QString("Ср. энергия записи").toLocal8Bit().data(),"jB1");
     gr->AddLegend(QString("Оригинальня энергия записи").toLocal8Bit().data(),"=B1");
@@ -57,7 +58,8 @@ int DrawerEvalEnergy::Draw(mglGraph *gr)
     gr->MultiPlot(1, 11, 4, 1, 6, "#");
     gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
     gr->Plot(intensiveData, "-G1");
-    gr->Plot(midIntensiveData, "jG1");
+    gr->Plot(logIntensiveData, "jG1");
+    gr->Plot(midIntensiveData, "=G1");
 
     gr->Axis("Y", "");
     gr->Grid("y", "W", "");

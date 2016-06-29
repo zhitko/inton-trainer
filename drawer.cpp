@@ -66,6 +66,14 @@ extern "C" {
         return result;
     }
 
+    vector sptk_log(vector data)
+    {
+        vector result = makev(data.x);
+        for(int i=0;i<data.x;i++)
+            result.v[i] = log10(data.v[i])*2000;
+        return result;
+    }
+
     vector sptk_fill_empty(vector data)
     {
         int i;
@@ -96,6 +104,8 @@ GraphData ProcWave2Data(QString fname)
     qDebug() << "sptk_frame";
     data.d_intensive = sptk_intensive(data.d_frame, sptk_settings->frame);
     qDebug() << "sptk_intensive";
+    data.d_intensive_log = sptk_log(data.d_intensive);
+    qDebug() << "d_intensive_log";
     data.d_mid_intensive = sptk_mid_intensive(data.d_intensive, sptk_settings->energyFrame);
     qDebug() << "sptk_mid_intensive";
     data.d_window = sptk_window(data.d_frame, sptk_settings->window);
@@ -106,6 +116,8 @@ GraphData ProcWave2Data(QString fname)
     qDebug() << "sptk_spec";
     data.d_pitch = sptk_pitch_spec(data.d_wave, sptk_settings->pitch, data.d_intensive.x);
     qDebug() << "sptk_pitch";
+    data.d_pitch_log = sptk_log(data.d_pitch);
+    qDebug() << "d_pitch_log";
 
     file.close();
     waveCloseFile(waveFile);
@@ -117,9 +129,11 @@ void freeGraphData(GraphData data)
 {
     freev(data.d_frame);
     freev(data.d_intensive);
+    freev(data.d_intensive_log);
     freev(data.d_mid_intensive);
     freev(data.d_lpc);
     freev(data.d_pitch);
+    freev(data.d_pitch_log);
     freev(data.d_spec);
     freev(data.d_wave);
     freev(data.d_window);
@@ -170,6 +184,13 @@ void Drawer::Proc(QString fname)
     intensiveData.Norm(GRAPH_Y_VAL_MAX);
     qDebug() << "intensiveData Filled";
 
+    vectorToData(data->d_intensive_log, &logIntensiveData);
+//    logIntensiveData.Norm(GRAPH_Y_VAL_MAX);
+//    vectorToData(data->d_intensive, &logIntensiveData);
+//    logIntensiveData.Modify("lg(y)", 1);
+//    logIntensiveData.Norm(GRAPH_Y_VAL_MAX);
+    qDebug() << "logIntensiveData Filled";
+
     vectorToData(data->d_mid_intensive, &midIntensiveData);
     midIntensiveData.Norm(GRAPH_Y_VAL_MAX);
     qDebug() << "midIntensiveData Filled";
@@ -180,6 +201,8 @@ void Drawer::Proc(QString fname)
     pitchMin = sptk_settings->pitch->MIN_FREQ;
     pitchMax = sptk_settings->pitch->MAX_FREQ;
     qDebug() << "pitchData Filled " << pitchMin << " " << pitchMax;
+
+    vectorToData(data->d_pitch_log, &logPitchData);
 
     int speksize = sptk_settings->spec->leng / 2 + 1;
     int specX = data->d_spec.x/speksize;

@@ -16,7 +16,9 @@ extern "C" {
 struct GraphData{
     vector d_wave;
     vector d_pitch;
+    vector d_pitch_log;
     vector d_intensive;
+    vector d_intensive_log;
     vector d_mid_intensive;
     vector d_frame;
     vector d_window;
@@ -52,7 +54,7 @@ public:
 protected:
     GraphData * data;
     QString fileName;
-    mglData waveData, pitchData, specData, intensiveData, midIntensiveData;
+    mglData waveData, pitchData, logPitchData, specData, intensiveData, logIntensiveData, midIntensiveData;
     double _waveMin, _waveMax, _pitchMin, _pitchMax;
     int waveDataLen;
 };
