@@ -31,7 +31,7 @@ public:
     long int getVolumeLevel();
     long int getMaxVolumeLevel();
     bool isRecording();
-    int getData(void **);
+    virtual int getData(void **);
 signals:
     void resultReady(SoundRecorder *);
 public slots:

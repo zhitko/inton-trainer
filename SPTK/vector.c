@@ -139,6 +139,15 @@ vector subv(vector yr_vector, int nw_size) {
     return(nw_vector);
 }
 
+// cut vector and make a deep copy of a cutted
+vector cutv(vector yr_vector, int start_index, int end_index)
+{
+    int nw_size = end_index-start_index;
+    vector nw_vector = makev(nw_size);
+    memcpy(nw_vector.v, &yr_vector.v[start_index], sizeof(double) * nw_size);
+    return(nw_vector);
+}
+
 // free the memory associated with the vector
 void freev(vector yr_vector) {
     free(yr_vector.v);
@@ -148,6 +157,47 @@ void freev(vector yr_vector) {
 void printv(vector yr_vector) { 
     int i;
     for (i = 0; i < yr_vector.x; i++) printf("%f\n", yr_vector.v[i]);
+}
+
+// normalize vector by targetMin and targetMax values
+vector normalizev(vector data, double targetMin, double targetMax)
+{
+    vector result = makev(data.x);
+    double sourceMin = data.v[minv(data)];
+    double sourceMax = data.v[maxv(data)];
+
+    double sourceScale = sourceMax - sourceMin;
+    double targetScale = targetMax - targetMin;
+
+    double zsrc, scaled;
+
+    for(int i=0;i<data.x;i++)
+    {
+        zsrc = data.v[i] - sourceMin;
+        scaled = zsrc * targetScale / sourceScale;
+        result.v[i] = scaled + targetMin;
+    }
+    return result;
+}
+
+// Find index of the first item is greater than value
+int first_greaterv(vector data, double value)
+{
+    int index;
+    for(index = 0; index < data.x; index++)
+        if(data.v[index] > value)
+            break;
+    return index;
+}
+
+// Find index of the last item is greater than value
+int last_greaterv(vector data, double value)
+{
+    int index;
+    for(index = data.x; index >= 0; index--)
+        if(data.v[index] > value)
+            break;
+    return index;
 }
 
 // return the index of the maximum value of the vector

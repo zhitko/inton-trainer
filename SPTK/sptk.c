@@ -25,11 +25,13 @@ FRAME_SETTINGS *initFrameSettings()
     return frame;
 }
 
-FRAME_SETTINGS *initEnergyFrameSettings()
+ENERGY_SETTINGS *initEnergyFrameSettings()
 {
-    FRAME_SETTINGS * frame = malloc(sizeof(FRAME_SETTINGS));
+    ENERGY_SETTINGS * frame = malloc(sizeof(ENERGY_SETTINGS));
     frame->leng = 5;
     frame->shift = 1;
+    frame->threshold_start = 0.4;
+    frame->threshold_end = 0.05;
     return frame;
 }
 

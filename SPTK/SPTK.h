@@ -149,6 +149,13 @@ typedef struct _FRAME_SETTINGS {
     int shift;
 } FRAME_SETTINGS;
 
+typedef struct _ENERGY_SETTINGS {
+    int leng;
+    int shift;
+    double threshold_start;
+    double threshold_end;
+} ENERGY_SETTINGS;
+
 typedef struct _WINDOW_SETTINGS {
     int leng;
     Window window_type;
@@ -167,7 +174,7 @@ typedef struct _SPEC_SETTINGS {
 typedef struct _SPTK_SETTINGS {
     PITCH_SETTINGS * pitch;
     FRAME_SETTINGS * frame;
-    FRAME_SETTINGS * energyFrame;
+    ENERGY_SETTINGS * energyFrame;
     WINDOW_SETTINGS * window;
     LPC_SETTINGS * lpc;
     SPEC_SETTINGS * spec;

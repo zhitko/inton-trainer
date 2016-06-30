@@ -7,7 +7,9 @@
 extern "C" {
     #include "./SPTK/SPTK.h"
     #include "./SPTK/pitch/pitch.h"
+    #include "./SPTK/frame/frame.h"
     #include "./SPTK/x2x/x2x.h"
+    #include "./intensive/intensive.h"
 }
 
 #include <QDebug>
@@ -28,6 +30,60 @@ AutoSoundRecorder::~AutoSoundRecorder()
         freeBuffer(this->lastActiveBuffer, true);
     else
         freeBuffer(this->currentBuffer);
+}
+
+
+int AutoSoundRecorder::trimDataByMidEnergy(void* buffer, int bufferSize, void** outputBuffer)
+{
+    SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
+
+    vector wave = sptk_v2v(buffer, bufferSize, this->sampleByteSize*CHAR_BIT);
+    vector frame = sptk_frame(wave, sptk_settings->frame);
+    vector intensive = sptk_intensive(frame, sptk_settings->frame);
+    vector midIntensive = sptk_mid_intensive(intensive, sptk_settings->energyFrame);
+    vector normMidIntensive = normalizev(midIntensive, 0.0, 1.0);
+
+    int sourceStartIndex = first_greaterv(normMidIntensive, sptk_settings->energyFrame->threshold_start);
+    int sourceEndIndex = last_greaterv(normMidIntensive, sptk_settings->energyFrame->threshold_end);
+
+    int waveLen = bufferSize / this->sampleByteSize;
+    double indexScale = (1.0 * waveLen) / normMidIntensive.x;
+
+    int destinationStartIndex = sourceStartIndex * indexScale;
+    int destinationEndIndex = sourceEndIndex * indexScale;
+
+    int newSize = destinationEndIndex - destinationStartIndex;
+    int newSizeByte = newSize * this->sampleByteSize;
+
+    qDebug() << "sourceStartIndex " << sourceStartIndex;
+    qDebug() << "destinationStartIndex " << destinationStartIndex;
+    qDebug() << "sourceEndIndex" << sourceEndIndex;
+    qDebug() << "destinationEndIndex" << destinationEndIndex;
+    qDebug() << "normMidIntensive" << normMidIntensive.x;
+    qDebug() << "bufferSize " << bufferSize;
+    qDebug() << "waveLen " << waveLen;
+    qDebug() << "indexScale " << indexScale;
+    qDebug() << "newSize " << newSize;
+    qDebug() << "newSizeByte " << newSizeByte;
+
+    *outputBuffer = malloc(newSizeByte);
+    void * start_pointer = ((char*)buffer) + (destinationStartIndex * this->sampleByteSize);
+    memcpy(*outputBuffer, start_pointer, newSizeByte);
+
+    freev(wave);
+    freev(frame);
+    freev(intensive);
+    freev(midIntensive);    
+    freev(normMidIntensive);
+    return newSizeByte;
+}
+
+int AutoSoundRecorder::getData(void ** resBuffer)
+{
+    char *data;
+    int bufferSize = getBufferData(this->initBuffer, (void**) &data, true);
+    int newBufferSize = trimDataByMidEnergy(data, bufferSize, resBuffer);
+    return newBufferSize;
 }
 
 void AutoSoundRecorder::allocateNewBuffer()

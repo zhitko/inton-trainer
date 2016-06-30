@@ -14,6 +14,8 @@ public:
     explicit AutoSoundRecorder(oal_device *device, int sampleByteSize, QObject *parent = 0);
     ~AutoSoundRecorder();
 
+    int getData(void **);
+    int trimDataByMidEnergy(void* buffer, int bufferSize, void** outputBuffer);
 protected:
     void allocateNewBuffer();
     int buffersCounter, emptyBuffersCounter;

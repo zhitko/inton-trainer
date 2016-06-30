@@ -104,6 +104,8 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->pitch->THRESH_SWIPE = instance->ui->pitchThreshSwipeSpin->value();
 
     sptk_settings->energyFrame->leng = instance->ui->energyMidFrame->value();
+    sptk_settings->energyFrame->threshold_start = instance->ui->energyMidThresholdStart->value();
+    sptk_settings->energyFrame->threshold_end = instance->ui->energyMidThresholdEnd->value();
 
     sptk_settings->frame->leng = instance->ui->frameSizeBox->currentText().toInt();
     sptk_settings->frame->shift = instance->ui->frameShiftSpin->value();
@@ -152,6 +154,10 @@ void SettingsDialog::loadSettings()
 
     if(settings.contains("energyFrame/leng"))
         this->ui->energyMidFrame->setValue(settings.value("energyFrame/leng").toInt());
+    if(settings.contains("energyFrame/threshold_start"))
+        this->ui->energyMidThresholdStart->setValue(settings.value("energyFrame/threshold_start").toDouble());
+    if(settings.contains("energyFrame/threshold_end"))
+        this->ui->energyMidThresholdEnd->setValue(settings.value("energyFrame/threshold_end").toDouble());
 
     if(settings.contains("frame/leng"))
         this->ui->frameSizeBox->setCurrentText(QString::number(settings.value("frame/leng").toInt()));
@@ -193,6 +199,8 @@ void SettingsDialog::saveSettings()
     settings.setValue("pitch/THRESH_SWIPE", this->ui->pitchThreshSwipeSpin->value());
 
     settings.setValue("energyFrame/leng", this->ui->energyMidFrame->value());
+    settings.setValue("energyFrame/threshold_start", this->ui->energyMidThresholdStart->value());
+    settings.setValue("energyFrame/threshold_end", this->ui->energyMidThresholdEnd->value());
 
     settings.setValue("frame/leng", this->ui->frameSizeBox->currentText().toInt());
     settings.setValue("frame/shift", this->ui->frameShiftSpin->value());

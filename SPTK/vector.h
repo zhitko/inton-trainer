@@ -77,6 +77,7 @@ vector                            onesv(int);
 vector                            nansv(int);
 vector                            copyv(vector);
 vector                            subv(vector, int);
+vector                            cutv(vector, int, int);
 
 int                               maxv(vector);
 int                               minv(vector);
@@ -85,6 +86,10 @@ int                               bilookv(vector, double, int);
 
 void                              freev(vector);
 void                              printv(vector);
+
+vector                            normalizev(vector, double, double);
+int                               first_greaterv(vector, double);
+int                               last_greaterv(vector, double);
 
 // intvector stuff
 typedef struct                    { int x; int* v; } intvector;

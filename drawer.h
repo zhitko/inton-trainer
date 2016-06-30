@@ -8,9 +8,6 @@
 extern "C" {
     #include "./SPTK/SPTK.h"
     #include "./SPTK/vector.h"
-    vector sptk_intensive(vector data, FRAME_SETTINGS * settings);
-    vector sptk_mid_intensive(vector data, FRAME_SETTINGS * settings);
-    vector sptk_fill_empty(vector data);
 }
 
 struct GraphData{

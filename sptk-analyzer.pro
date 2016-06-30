@@ -301,6 +301,7 @@ SOURCES +=  \
 #    SPTK/zcross/_zcross.c \
 #    SPTK/zerodf/zerodf.c \
 #    SPTK/zerodf/_zerodf.c \
+    SPTK/intensive/intensive.c \
 
 HEADERS  += \
     SPTK/SPTK.h \
@@ -321,7 +322,8 @@ HEADERS  += \
     SPTK/x2x/x2x.h \
 #    SPTK/xgr/config.h \
 #    SPTK/xgr/gcdata.h \
-#    SPTK/xgr/xgr.h
+#    SPTK/xgr/xgr.h \
+    SPTK/intensive/intensive.h \
 
 FORMS += \
     mainwindow.ui \
