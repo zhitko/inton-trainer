@@ -55,6 +55,28 @@ GraphData ProcWave2Data(QString fname)
     data.d_log = sptk_pitch_spec(data.d_wave, &log_settings, data.d_intensive.x);
     qDebug() << "d_log";
 
+    double t = 0.9;
+    double min_pitch_value = DBL_MAX;
+    double max_pitch_value = -DBL_MAX;
+    vector d_log_norm = normalizev(data.d_log, 0.0, 1.0);
+    for(int i=0; i<data.d_pitch.x && i<d_log_norm.x; i++ )
+    {
+        if(d_log_norm.v[i] + t > 1)
+        {
+            if(data.d_pitch.v[i] > max_pitch_value) max_pitch_value = data.d_pitch.v[i];
+            if(data.d_pitch.v[i] < min_pitch_value) min_pitch_value = data.d_pitch.v[i];
+        }
+    }
+    for(int i=0; i<data.d_pitch.x; i++ )
+    {
+        if(data.d_pitch.v[i] > max_pitch_value) data.d_pitch.v[i] = max_pitch_value;
+        if(data.d_pitch.v[i] < min_pitch_value) data.d_pitch.v[i] = min_pitch_value;
+    }
+    qDebug() << "min_pitch_value " << min_pitch_value;
+    qDebug() << "max_pitch_value " << max_pitch_value;
+
+    freev(d_log_norm);
+
     file.close();
     waveCloseFile(waveFile);
 
