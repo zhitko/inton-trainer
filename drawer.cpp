@@ -56,6 +56,7 @@ GraphData ProcWave2Data(QString fname)
     qDebug() << "d_log";
 
     double t = 0.9;
+
     double min_pitch_value = DBL_MAX;
     double max_pitch_value = -DBL_MAX;
     vector d_log_norm = normalizev(data.d_log, 0.0, 1.0);
@@ -74,6 +75,27 @@ GraphData ProcWave2Data(QString fname)
     }
     qDebug() << "min_pitch_value " << min_pitch_value;
     qDebug() << "max_pitch_value " << max_pitch_value;
+
+    qDebug() << "d_intensive " << data.d_intensive.x;
+    qDebug() << "d_log_norm " << d_log_norm.x;
+
+    double min_enegry_value = DBL_MAX;
+    double max_enegry_value = -DBL_MAX;
+    for(int i=0; i<data.d_intensive.x && i<d_log_norm.x; i++ )
+    {
+        if(d_log_norm.v[i] + t > 1)
+        {
+            if(data.d_intensive.v[i] > max_enegry_value) max_enegry_value = data.d_intensive.v[i];
+            if(data.d_intensive.v[i] < min_enegry_value) min_enegry_value = data.d_intensive.v[i];
+        }
+    }
+    for(int i=0; i<data.d_intensive.x; i++ )
+    {
+        if(data.d_intensive.v[i] > max_enegry_value) data.d_intensive.v[i] = max_enegry_value;
+        if(data.d_intensive.v[i] < min_enegry_value) data.d_intensive.v[i] = min_enegry_value;
+    }
+    qDebug() << "min_enegry_value " << min_enegry_value;
+    qDebug() << "max_enegry_value " << max_enegry_value;
 
     freev(d_log_norm);
 
