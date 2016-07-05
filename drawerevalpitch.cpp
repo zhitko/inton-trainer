@@ -101,7 +101,7 @@ void DrawerEvalPitch::Proc(QString fname)
         this->secFileName = fname;
 
         GraphData dataSec = ProcWave2Data(this->secFileName);
-        dataSec.d_pitch = sptk_fill_empty(dataSec.d_pitch);
+        dataSec.d_pitch = vector_fill_empty(dataSec.d_pitch);
 
         vectorToData(dataSec.d_wave, &secWaveData);
         double min = secWaveData.Min("x").a[0];

@@ -39,8 +39,8 @@ int AutoSoundRecorder::trimDataByMidEnergy(void* buffer, int bufferSize, void** 
 
     vector wave = sptk_v2v(buffer, bufferSize, this->sampleByteSize*CHAR_BIT);
     vector frame = sptk_frame(wave, sptk_settings->frame);
-    vector intensive = sptk_intensive(frame, sptk_settings->frame);
-    vector midIntensive = sptk_mid_intensive(intensive, sptk_settings->energyFrame);
+    vector intensive = vector_intensive(frame, sptk_settings->frame);
+    vector midIntensive = vector_mid_intensive(intensive, sptk_settings->energyFrame);
     vector normMidIntensive = normalizev(midIntensive, 0.0, 1.0);
 
     int sourceStartIndex = first_greaterv(normMidIntensive, sptk_settings->energyFrame->threshold_start);

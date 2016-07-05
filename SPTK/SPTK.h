@@ -171,6 +171,10 @@ typedef struct _SPEC_SETTINGS {
     int order;
 } SPEC_SETTINGS;
 
+typedef struct _PLOT_SETTINGS {
+    int midFrame;
+} PLOT_SETTINGS;
+
 typedef struct _SPTK_SETTINGS {
     PITCH_SETTINGS * pitch;
     FRAME_SETTINGS * frame;
@@ -178,6 +182,7 @@ typedef struct _SPTK_SETTINGS {
     WINDOW_SETTINGS * window;
     LPC_SETTINGS * lpc;
     SPEC_SETTINGS * spec;
+    PLOT_SETTINGS * plot;
 } SPTK_SETTINGS;
 
 SPTK_SETTINGS *initSptkSettings();

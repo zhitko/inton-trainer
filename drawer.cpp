@@ -37,9 +37,9 @@ GraphData ProcWave2Data(QString fname)
     qDebug() << "sptk_v2v";
     data.d_frame = sptk_frame(data.d_wave, sptk_settings->frame);
     qDebug() << "sptk_frame";
-    data.d_intensive = sptk_intensive(data.d_frame, sptk_settings->frame);
+    data.d_intensive = vector_intensive(data.d_frame, sptk_settings->frame);
     qDebug() << "sptk_intensive";
-    data.d_mid_intensive = sptk_mid_intensive(data.d_intensive, sptk_settings->energyFrame);
+    data.d_mid_intensive = vector_mid_intensive(data.d_intensive, sptk_settings->energyFrame);
     qDebug() << "sptk_mid_intensive";
     data.d_window = sptk_window(data.d_frame, sptk_settings->window);
     qDebug() << "sptk_window";
@@ -55,49 +55,13 @@ GraphData ProcWave2Data(QString fname)
     data.d_log = sptk_pitch_spec(data.d_wave, &log_settings, data.d_intensive.x);
     qDebug() << "d_log";
 
-    double t = 0.9;
+    vector mask = normalizev(data.d_log, 0.0, 1.0);
+    vector_cut_by_mask(data.d_pitch, mask);
+    vector_cut_by_mask(data.d_intensive, mask);
+    freev(mask);
 
-    double min_pitch_value = DBL_MAX;
-    double max_pitch_value = -DBL_MAX;
-    vector d_log_norm = normalizev(data.d_log, 0.0, 1.0);
-    for(int i=0; i<data.d_pitch.x && i<d_log_norm.x; i++ )
-    {
-        if(d_log_norm.v[i] + t > 1)
-        {
-            if(data.d_pitch.v[i] > max_pitch_value) max_pitch_value = data.d_pitch.v[i];
-            if(data.d_pitch.v[i] < min_pitch_value) min_pitch_value = data.d_pitch.v[i];
-        }
-    }
-    for(int i=0; i<data.d_pitch.x; i++ )
-    {
-        if(data.d_pitch.v[i] > max_pitch_value) data.d_pitch.v[i] = max_pitch_value;
-        if(data.d_pitch.v[i] < min_pitch_value) data.d_pitch.v[i] = min_pitch_value;
-    }
-    qDebug() << "min_pitch_value " << min_pitch_value;
-    qDebug() << "max_pitch_value " << max_pitch_value;
-
-    qDebug() << "d_intensive " << data.d_intensive.x;
-    qDebug() << "d_log_norm " << d_log_norm.x;
-
-    double min_enegry_value = DBL_MAX;
-    double max_enegry_value = -DBL_MAX;
-    for(int i=0; i<data.d_intensive.x && i<d_log_norm.x; i++ )
-    {
-        if(d_log_norm.v[i] + t > 1)
-        {
-            if(data.d_intensive.v[i] > max_enegry_value) max_enegry_value = data.d_intensive.v[i];
-            if(data.d_intensive.v[i] < min_enegry_value) min_enegry_value = data.d_intensive.v[i];
-        }
-    }
-    for(int i=0; i<data.d_intensive.x; i++ )
-    {
-        if(data.d_intensive.v[i] > max_enegry_value) data.d_intensive.v[i] = max_enegry_value;
-        if(data.d_intensive.v[i] < min_enegry_value) data.d_intensive.v[i] = min_enegry_value;
-    }
-    qDebug() << "min_enegry_value " << min_enegry_value;
-    qDebug() << "max_enegry_value " << max_enegry_value;
-
-    freev(d_log_norm);
+    data.d_pitch = vector_mid(data.d_pitch, sptk_settings->plot->midFrame);
+    data.d_intensive = vector_mid(data.d_intensive, sptk_settings->plot->midFrame);
 
     file.close();
     waveCloseFile(waveFile);
@@ -151,7 +115,7 @@ void Drawer::Proc(QString fname)
 
     data = (GraphData*) malloc(sizeof(GraphData));
     *(data) = ProcWave2Data(this->fileName);
-    data->d_pitch = sptk_fill_empty(data->d_pitch);
+    data->d_pitch = vector_fill_empty(data->d_pitch);
 
     vectorToData(data->d_wave, &waveData);
     waveDataLen = waveData.GetNx();

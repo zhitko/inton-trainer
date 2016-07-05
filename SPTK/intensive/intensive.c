@@ -12,11 +12,12 @@
 #  endif
 #endif
 
-#  include "SPTK.h"
-#  include "intensive.h"
+#include "SPTK.h"
+#include "intensive.h"
+#include "float.h"
 
 
-vector sptk_intensive(vector data, FRAME_SETTINGS * settings)
+vector vector_intensive(vector data, FRAME_SETTINGS * settings)
 {
     int frameLength = settings->leng,
         resultLength = data.x / frameLength;
@@ -40,7 +41,7 @@ int compare (const void * a, const void * b)
   return ( *(double*)a - *(double*)b );
 }
 
-vector sptk_mid_intensive(vector data, ENERGY_SETTINGS * settings)
+vector vector_mid_intensive(vector data, ENERGY_SETTINGS * settings)
 {
     int frameLength = settings->leng,
         resultLength = data.x;
@@ -64,7 +65,30 @@ vector sptk_mid_intensive(vector data, ENERGY_SETTINGS * settings)
     return result;
 }
 
-vector sptk_fill_empty(vector data)
+vector vector_mid(vector data, int frame)
+{
+    int resultLength = data.x;
+    vector result = makev(resultLength);
+
+    double* middle = malloc(frame * sizeof(double));
+    for(int i=0;i<resultLength;i++)
+    {
+        for(int j=0; j < frame; j++)
+        {
+            int position = i+j-frame/2;
+            if( position < 0 || position > resultLength )
+                middle[j] = 0.0;
+            else
+                middle[j] = fabs(data.v[position]);
+        }
+        qsort (middle, frame, sizeof(double), compare);
+        result.v[i] = middle[frame/2];
+    }
+
+    return result;
+}
+
+vector vector_fill_empty(vector data)
 {
     int i;
     double v = data.v[0];
@@ -74,11 +98,33 @@ vector sptk_fill_empty(vector data)
     return data;
 }
 
-vector sptk_log(vector data)
+vector vector_log(vector data)
 {
     vector result = makev(data.x);
     for(int i=0;i<data.x;i++)
         result.v[i] = log10(data.v[i])*2000;
     return result;
+}
+
+
+void vector_cut_by_mask(vector data, vector mask)
+{
+    double t = 0.9;
+
+    double min_value = DBL_MAX;
+    double max_value = -DBL_MAX;
+    for(int i=0; i<data.x && i<mask.x; i++ )
+    {
+        if(mask.v[i] + t > 1)
+        {
+            if(data.v[i] > max_value) max_value = data.v[i];
+            if(data.v[i] < min_value) min_value = data.v[i];
+        }
+    }
+    for(int i=0; i<data.x; i++ )
+    {
+        if(data.v[i] > max_value) data.v[i] = max_value;
+        if(data.v[i] < min_value) data.v[i] = min_value;
+    }
 }
 

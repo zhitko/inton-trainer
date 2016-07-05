@@ -4,9 +4,11 @@
 #ifndef SPTK_INTENSIVE
 #define SPTK_INTENSIVE
 
-vector sptk_intensive(vector data, FRAME_SETTINGS * settings);
-vector sptk_mid_intensive(vector data, ENERGY_SETTINGS * settings);
-vector sptk_fill_empty(vector data);
-vector sptk_log(vector data);
+vector vector_intensive(vector, FRAME_SETTINGS*);
+vector vector_mid_intensive(vector, ENERGY_SETTINGS*);
+vector vector_mid(vector, int);
+vector vector_fill_empty(vector);
+vector vector_log(vector);
+void vector_cut_by_mask(vector, vector);
 
 #endif
