@@ -47,15 +47,15 @@ int DrawerEvalPitch::Draw(mglGraph *gr)
     gr->AddLegend(QString("Ln(F0)").toLocal8Bit().data(),"jR1");
     gr->AddLegend(QString("F0 записи").toLocal8Bit().data(),"-B1");
     gr->AddLegend(QString("Оригинальня F0 записи").toLocal8Bit().data(),"=B1");
-    gr->Legend(2,"A#");
+    gr->Legend(0,"-A");
 
     qDebug() << "waveData";
-    gr->MultiPlot(1, 11, 0, 1, 1, "#");
+    gr->MultiPlot(1, 12, 0, 1, 1, "#");
     gr->SetRange('y', waveMin, waveMax);
     gr->Plot(waveData, "-G");
 
     qDebug() << "pitchData";
-    gr->MultiPlot(1, 11, 4, 1, 6, "#");
+    gr->MultiPlot(1, 12, 4, 1, 6, "#");
     gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
     gr->Plot(pitchData, "-G1");
     gr->Plot(logData, "jR1");
@@ -64,20 +64,20 @@ int DrawerEvalPitch::Draw(mglGraph *gr)
 
     if(!this->secFileName.isEmpty()){
         qDebug() << "secWaveData";
-        gr->MultiPlot(1, 11, 1, 1, 1, "#");
+        gr->MultiPlot(1, 12, 1, 1, 1, "#");
         gr->SetRange('y', waveMin, waveMax);
         gr->Plot(secWaveData, "B");
 
-        gr->MultiPlot(1, 11, 3, 1, 1, "#");
+        gr->MultiPlot(1, 12, 3, 1, 1, "#");
         gr->Puts(mglPoint(0,0),QString("Your score: \\big{#r{%1}}").arg(this->result).toUtf8().data(), ":C", 50);
 
         qDebug() << "secPitchData";
-        gr->MultiPlot(1, 11, 4, 1, 6, "#");
+        gr->MultiPlot(1, 12, 4, 1, 6, "#");
         gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
         gr->Plot(secPitchData, "-B1");
 
         qDebug() << "secPitchData";
-        gr->MultiPlot(1, 11, 4, 1, 6, "#");
+        gr->MultiPlot(1, 12, 4, 1, 6, "#");
         gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
         gr->Plot(secPitchDataOrig, "=B1");
     }

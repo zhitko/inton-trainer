@@ -47,15 +47,15 @@ int DrawerEvalEnergy::Draw(mglGraph *gr)
     gr->AddLegend(QString("Энергия записи").toLocal8Bit().data(),"-B1");
     gr->AddLegend(QString("Ср. энергия записи").toLocal8Bit().data(),"jB1");
     gr->AddLegend(QString("Оригинальня энергия записи").toLocal8Bit().data(),"=B1");
-    gr->Legend(2,"A#");
+    gr->Legend(0,"-A");
 
     qDebug() << "waveData";
-    gr->MultiPlot(1, 11, 0, 1, 1, "#");
+    gr->MultiPlot(1, 12, 0, 1, 1, "#");
     gr->SetRange('y', waveMin, waveMax);
     gr->Plot(waveData, "-G");
 
     qDebug() << "enegryData";
-    gr->MultiPlot(1, 11, 4, 1, 6, "#");
+    gr->MultiPlot(1, 12, 4, 1, 6, "#");
     gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
     gr->Plot(intensiveData, "-G1");
     gr->Plot(midIntensiveData, "=G1");
@@ -64,25 +64,25 @@ int DrawerEvalEnergy::Draw(mglGraph *gr)
     gr->Axis("Y", "");
     gr->Grid("y", "W", "");
 
-    gr->MultiPlot(1, 11, 4, 1, 6, "#");
+    gr->MultiPlot(1, 12, 4, 1, 6, "#");
 
     if(!this->secFileName.isEmpty()){
         qDebug() << "secWaveData";
-        gr->MultiPlot(1, 11, 1, 1, 1, "#");
+        gr->MultiPlot(1, 12, 1, 1, 1, "#");
         gr->SetRange('y', waveMin, waveMax);
         gr->Plot(secWaveData, "B");
 
-        gr->MultiPlot(1, 11, 3, 1, 1, "#");
+        gr->MultiPlot(1, 12, 3, 1, 1, "#");
         gr->Puts(mglPoint(0,0),QString("Your score: \\big{#r{%1}}").arg(this->result).toUtf8().data(), ":C", 50);
 
         qDebug() << "secEnegryData";
-        gr->MultiPlot(1, 11, 4, 1, 6, "#");
+        gr->MultiPlot(1, 12, 4, 1, 6, "#");
         gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
         gr->Plot(secIntensiveData, "-B1");
 //        gr->Plot(secMidIntensiveData, "jB1");
 
         qDebug() << "secEnegryDataOrig";
-        gr->MultiPlot(1, 11, 4, 1, 6, "#");
+        gr->MultiPlot(1, 12, 4, 1, 6, "#");
         gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
         gr->Plot(secIntensiveDataOrig, "=B1");
     }
