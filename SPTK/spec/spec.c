@@ -92,13 +92,8 @@
 
 #include <math.h>
 
-#if !defined(__linux__)
 #  include "SPTK.h"
 #  include "spec.h"
-#else
-#  include <SPTK.h>
-#  include <spec.h>
-#endif
 
 /*  Default Values  */
 #define LENG    512 //256

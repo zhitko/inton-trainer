@@ -9,7 +9,8 @@ extern "C" {
     #include "./SPTK/pitch/pitch.h"
     #include "./SPTK/frame/frame.h"
     #include "./SPTK/x2x/x2x.h"
-    #include "./intensive/intensive.h"
+    #include "./SPTK/others/func.h"
+    #include "./SPTK/others/interpolation.h"
 }
 
 #include <QDebug>
@@ -40,7 +41,7 @@ int AutoSoundRecorder::trimDataByMidEnergy(void* buffer, int bufferSize, void** 
     vector wave = sptk_v2v(buffer, bufferSize, this->sampleByteSize*CHAR_BIT);
     vector frame = sptk_frame(wave, sptk_settings->frame);
     vector intensive = vector_intensive(frame, sptk_settings->frame);
-    vector midIntensive = vector_mid_intensive(intensive, sptk_settings->energyFrame);
+    vector midIntensive = vector_avg_intensive(intensive, sptk_settings->energyFrame);
     vector normMidIntensive = normalizev(midIntensive, 0.0, 1.0);
 
     int sourceStartIndex = first_greaterv(normMidIntensive, sptk_settings->energyFrame->threshold_start);

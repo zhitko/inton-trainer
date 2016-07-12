@@ -17,14 +17,13 @@ extern "C" {
     #include "./SPTK/window/window.h"
     #include "./SPTK/lpc/lpc.h"
     #include "./SPTK/spec/spec.h"
-    #include "./intensive/intensive.h"
+    #include "./others/func.h"
+    #include "./others/interpolation.h"
 }
 
 GraphData ProcWave2Data(QString fname)
 {
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
-
-    GraphData data;
 
     QFile file(fname);
     file.open(QIODevice::ReadOnly);
@@ -33,38 +32,69 @@ GraphData ProcWave2Data(QString fname)
     int size = littleEndianBytesToUInt32(waveFile->dataChunk->chunkDataSize);
     short int bits = littleEndianBytesToUInt16(waveFile->formatChunk->significantBitsPerSample);
     qDebug() << "waveOpenFile";
-    data.d_wave = sptk_v2v(waveFile->dataChunk->waveformData, size, bits);
+    vector wave = sptk_v2v(waveFile->dataChunk->waveformData, size, bits);
     qDebug() << "sptk_v2v";
-    data.d_frame = sptk_frame(data.d_wave, sptk_settings->frame);
+    vector frame = sptk_frame(wave, sptk_settings->frame);
     qDebug() << "sptk_frame";
-    data.d_intensive = vector_intensive(data.d_frame, sptk_settings->frame);
-    qDebug() << "sptk_intensive";
-    data.d_mid_intensive = vector_mid_intensive(data.d_intensive, sptk_settings->energyFrame);
-    qDebug() << "sptk_mid_intensive";
-    data.d_window = sptk_window(data.d_frame, sptk_settings->window);
+    vector intensive = vector_intensive(frame, sptk_settings->frame);
+    qDebug() << "vector_intensive";
+    vector intensive_avg = vector_avg_intensive(intensive, sptk_settings->energyFrame);
+    qDebug() << "vector_avg_intensive";
+    vector window = sptk_window(frame, sptk_settings->window);
     qDebug() << "sptk_window";
-    data.d_lpc = sptk_lpc(data.d_frame, sptk_settings->lpc);
+    vector lpc = sptk_lpc(frame, sptk_settings->lpc);
     qDebug() << "sptk_lpc";
-    data.d_spec = sptk_spec(data.d_lpc, sptk_settings->spec);
+    vector spec = sptk_spec(lpc, sptk_settings->spec);
     qDebug() << "sptk_spec";
-    data.d_pitch = sptk_pitch_spec(data.d_wave, sptk_settings->pitch, data.d_intensive.x);
-    qDebug() << "sptk_pitch";
+    vector pitch = sptk_pitch_spec(wave, sptk_settings->pitch, intensive.x);
+    qDebug() << "sptk_pitch_spec";
     PITCH_SETTINGS log_settings;
     memcpy(&log_settings, sptk_settings->pitch, sizeof(PITCH_SETTINGS));
     log_settings.OTYPE = 2;
-    data.d_log = sptk_pitch_spec(data.d_wave, &log_settings, data.d_intensive.x);
-    qDebug() << "d_log";
+    vector logf0 = sptk_pitch_spec(wave, &log_settings, intensive.x);
+    qDebug() << "sptk_pitch_spec log(f0)";
 
-    vector mask = normalizev(data.d_log, 0.0, 1.0);
-    vector_cut_by_mask(data.d_pitch, mask);
-    vector_cut_by_mask(data.d_intensive, mask);
+    vector mask = normalizev(logf0, 0.0, 1.0);
+    qDebug() << "normalizev";
+    vector pitch_cutted = vector_cut_by_mask(pitch, mask);
+    qDebug() << "vector_cut_by_mask pitch";
+    freev(pitch);
+    vector intensive_cutted = vector_cut_by_mask(intensive, mask);
+    qDebug() << "vector_cut_by_mask intensive";
+    freev(intensive);
+    vector inverted_mask = vector_invert_mask(mask);
     freev(mask);
 
-    data.d_pitch = vector_mid(data.d_pitch, sptk_settings->plot->midFrame);
-    data.d_intensive = vector_mid(data.d_intensive, sptk_settings->plot->midFrame);
+    vector pitch_mid = vector_mid(pitch_cutted, sptk_settings->plot->midFrame);
+    qDebug() << "vector_mid pitch";
+    freev(pitch_cutted);
+    vector intensive_mid = vector_mid(intensive_cutted, sptk_settings->plot->midFrame);
+    qDebug() << "vector_mid intensive";
+    freev(intensive_cutted);
+
+    vector pitch_interpolate = vector_interpolate_by_mask(
+                pitch_mid,
+                inverted_mask,
+                sptk_settings->plot->interpolation_edges,
+                sptk_settings->plot->interpolation_type
+                );
+    freev(pitch_mid);
+    freev(inverted_mask);
 
     file.close();
     waveCloseFile(waveFile);
+
+    GraphData data;
+
+    data.d_wave = wave;
+    data.d_pitch = pitch_interpolate;
+    data.d_log = logf0;
+    data.d_intensive = intensive_mid;
+    data.d_avg_intensive = intensive_avg;
+    data.d_frame = frame;
+    data.d_window = window;
+    data.d_lpc = lpc;
+    data.d_spec = spec;
 
     return data;
 }
@@ -74,7 +104,7 @@ void freeGraphData(GraphData data)
     freev(data.d_frame);
     freev(data.d_intensive);
     freev(data.d_log);
-    freev(data.d_mid_intensive);
+    freev(data.d_avg_intensive);
     freev(data.d_lpc);
     freev(data.d_pitch);
     freev(data.d_spec);
@@ -131,7 +161,7 @@ void Drawer::Proc(QString fname)
     logData.Norm(GRAPH_Y_VAL_MAX);
     qDebug() << "logData Filled";
 
-    vectorToData(data->d_mid_intensive, &midIntensiveData);
+    vectorToData(data->d_avg_intensive, &midIntensiveData);
     midIntensiveData.Norm(GRAPH_Y_VAL_MAX);
     qDebug() << "midIntensiveData Filled";
 

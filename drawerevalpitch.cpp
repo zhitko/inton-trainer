@@ -20,7 +20,8 @@ extern "C" {
     #include "./SPTK/window/window.h"
     #include "./SPTK/lpc/lpc.h"
     #include "./SPTK/spec/spec.h"
-    #include "./intensive/intensive.h"
+    #include "./SPTK/others/func.h"
+    #include "./SPTK/others/interpolation.h"
 }
 
 DrawerEvalPitch::DrawerEvalPitch() :

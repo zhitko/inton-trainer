@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string>
+#include <cstring>
 
 #include "buffer.h"
 

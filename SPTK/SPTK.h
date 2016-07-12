@@ -173,6 +173,8 @@ typedef struct _SPEC_SETTINGS {
 
 typedef struct _PLOT_SETTINGS {
     int midFrame;
+    int interpolation_type;
+    int interpolation_edges;
 } PLOT_SETTINGS;
 
 typedef struct _SPTK_SETTINGS {

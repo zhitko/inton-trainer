@@ -15,7 +15,7 @@ struct GraphData{
     vector d_pitch;
     vector d_log;
     vector d_intensive;
-    vector d_mid_intensive;
+    vector d_avg_intensive;
     vector d_frame;
     vector d_window;
     vector d_lpc;

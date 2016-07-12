@@ -84,13 +84,8 @@
 #  endif
 #endif
 
-#if !defined(__linux__)
 #  include "SPTK.h"
 #  include "window.h"
-#else
-#  include <SPTK.h>
-#  include <window.h>
-#endif
 
 /*  Default Values */
 #define NORMFLG  1

@@ -63,6 +63,8 @@ PLOT_SETTINGS *initPlotSettings()
 {
     PLOT_SETTINGS * plot = malloc(sizeof(PLOT_SETTINGS));
     plot->midFrame = 10;
+    plot->interpolation_edges = 0;
+    plot->interpolation_type = 1;
     return plot;
 }
 

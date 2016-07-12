@@ -3,14 +3,11 @@
 # Project created by QtCreator 2014-02-01T20:30:52
 #
 #-------------------------------------------------
-#QMAKE_CFLAGS += -std=gnu99
 QMAKE_CFLAGS += -std=gnu++11 -std=c99
 
 QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
-#CONFIG  += c++11
 
 TARGET = sptk-analyzer
 TEMPLATE = app
@@ -21,13 +18,17 @@ win32{
 
     INCLUDEPATH += "c:/Dev/openal-soft-1.15.1-bin/include"
     LIBS += -L"c:/Dev/openal-soft-1.15.1-bin/lib/Win32" -llibOpenAL32
+
+    INCLUDEPATH += "c:/Dev/Libs/gsl-2.1-bin/include"
+    LIBS += -L"c:/Dev/Libs/gsl-2.1-bin/lib" -llibgsl -llibgslcblas
 }
-unix{
+
+unix:!mac {
+    QMAKE_CFLAGS += -U__STRICT_ANSI__
+
     INCLUDEPATH += "/usr/include"
 
-#    INCLUDEPATH += "/home/user/extra headers"
-#    release:LIBS += -L"/home/user/extra libs" -llibmgl2 -llibmgl2-qt5
-#    debug:LIBS += -L"/home/user/extra libs" -llibmgl2 -llibmgl2-qt5
+    LIBS += `pkg-config --libs gsl openal`
 }
 
 SOURCES += \
@@ -301,7 +302,8 @@ SOURCES +=  \
 #    SPTK/zcross/_zcross.c \
 #    SPTK/zerodf/zerodf.c \
 #    SPTK/zerodf/_zerodf.c \
-    SPTK/intensive/intensive.c \
+    SPTK/others/func.c \
+    SPTK/others/interpolation.c \
 
 HEADERS  += \
     SPTK/SPTK.h \
@@ -323,7 +325,8 @@ HEADERS  += \
 #    SPTK/xgr/config.h \
 #    SPTK/xgr/gcdata.h \
 #    SPTK/xgr/xgr.h \
-    SPTK/intensive/intensive.h \
+    SPTK/others/func.h \
+    SPTK/others/interpolation.h \
 
 FORMS += \
     mainwindow.ui \

@@ -3,19 +3,8 @@
 #include <stdlib.h>
 #include <math.h>
 
-#ifdef HAVE_STRING_H
-#  include <string.h>
-#else
-#  include <strings.h>
-#  ifndef HAVE_STRRCHR
-#     define strrchr rindex
-#  endif
-#endif
-
-#include "SPTK.h"
-#include "intensive.h"
+#include "func.h"
 #include "float.h"
-
 
 vector vector_intensive(vector data, FRAME_SETTINGS * settings)
 {
@@ -41,7 +30,7 @@ int compare (const void * a, const void * b)
   return ( *(double*)a - *(double*)b );
 }
 
-vector vector_mid_intensive(vector data, ENERGY_SETTINGS * settings)
+vector vector_avg_intensive(vector data, ENERGY_SETTINGS * settings)
 {
     int frameLength = settings->leng,
         resultLength = data.x;
@@ -107,24 +96,58 @@ vector vector_log(vector data)
 }
 
 
-void vector_cut_by_mask(vector data, vector mask)
+vector vector_cut_by_mask(vector data, vector mask)
 {
-    double t = 0.9;
+    vector result = makev(data.x);
 
     double min_value = DBL_MAX;
     double max_value = -DBL_MAX;
     for(int i=0; i<data.x && i<mask.x; i++ )
     {
-        if(mask.v[i] + t > 1)
+        if(mask.v[i] > MASK_LIMIT)
         {
-            if(data.v[i] > max_value) max_value = data.v[i];
-            if(data.v[i] < min_value) min_value = data.v[i];
+            if(data.v[i] > max_value)
+            {
+                max_value = data.v[i];
+            }
+            if(data.v[i] < min_value)
+            {
+                min_value = data.v[i];
+            }
         }
     }
     for(int i=0; i<data.x; i++ )
     {
-        if(data.v[i] > max_value) data.v[i] = max_value;
-        if(data.v[i] < min_value) data.v[i] = min_value;
+        if(data.v[i] > max_value)
+        {
+            result.v[i] = max_value;
+        }
+        else if(data.v[i] < min_value)
+        {
+            result.v[i] = min_value;
+        }
+        else
+        {
+            result.v[i] = data.v[i];
+        }
     }
+    return result;
+}
+
+vector vector_invert_mask(vector mask)
+{
+    vector inverted = makev(mask.x);
+    for(int i=0; i<mask.x; i++ )
+    {
+        if(mask.v[i] > MASK_LIMIT)
+        {
+            inverted.v[i] = 0.0;
+        }
+        else
+        {
+            inverted.v[i] = 1.0;
+        }
+    }
+    return inverted;
 }
 
