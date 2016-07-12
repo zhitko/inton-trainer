@@ -79,6 +79,15 @@ GraphData ProcWave2Data(QString fname)
                 sptk_settings->plot->interpolation_type
                 );
     freev(pitch_mid);
+
+    vector intensive_interpolate = vector_interpolate_by_mask(
+                intensive_mid,
+                inverted_mask,
+                sptk_settings->plot->interpolation_edges,
+                sptk_settings->plot->interpolation_type
+                );
+    freev(intensive_mid);
+
     freev(inverted_mask);
 
     file.close();
@@ -89,7 +98,7 @@ GraphData ProcWave2Data(QString fname)
     data.d_wave = wave;
     data.d_pitch = pitch_interpolate;
     data.d_log = logf0;
-    data.d_intensive = intensive_mid;
+    data.d_intensive = intensive_interpolate;
     data.d_avg_intensive = intensive_avg;
     data.d_frame = frame;
     data.d_window = window;
