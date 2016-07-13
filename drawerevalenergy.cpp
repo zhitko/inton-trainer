@@ -41,12 +41,12 @@ int DrawerEvalEnergy::Draw(mglGraph *gr)
     gr->DefaultPlotParam();
     gr->Clf();
 
-    gr->AddLegend(QString("Энергия образца").toLocal8Bit().data(),"-G1");
-    gr->AddLegend(QString("Ln(F0)").toLocal8Bit().data(),"jR1");
-    gr->AddLegend(QString("Ср. энергия").toLocal8Bit().data(),"=G1");
-    gr->AddLegend(QString("Энергия записи").toLocal8Bit().data(),"-B1");
-    gr->AddLegend(QString("Ср. энергия записи").toLocal8Bit().data(),"jB1");
-    gr->AddLegend(QString("Оригинальня энергия записи").toLocal8Bit().data(),"=B1");
+    gr->AddLegend(QString("Энергия образца").toLocal8Bit().data(),"-g1");
+    gr->AddLegend(QString("Ln(F0)").toLocal8Bit().data(),"-r1");
+    gr->AddLegend(QString("Ср. энергия").toLocal8Bit().data(),"-m1");
+    gr->AddLegend(QString("Энергия записи").toLocal8Bit().data(),"-B2");
+//    gr->AddLegend(QString("Ср. энергия записи").toLocal8Bit().data(),"jB1");
+    gr->AddLegend(QString("Оригинальня энергия записи").toLocal8Bit().data(),"-n1");
     gr->Legend(0,"-A");
 
     qDebug() << "waveData";
@@ -57,9 +57,9 @@ int DrawerEvalEnergy::Draw(mglGraph *gr)
     qDebug() << "enegryData";
     gr->MultiPlot(1, 12, 4, 1, 6, "#");
     gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
-    gr->Plot(intensiveData, "-G1");
-    gr->Plot(midIntensiveData, "=G1");
-    gr->Plot(logData, "jR1");
+    gr->Plot(intensiveData, "-g1");
+    gr->Plot(midIntensiveData, "-m1");
+    gr->Plot(logData, "-r1");
 
     gr->Axis("Y", "");
     gr->Grid("y", "W", "");
@@ -78,13 +78,13 @@ int DrawerEvalEnergy::Draw(mglGraph *gr)
         qDebug() << "secEnegryData";
         gr->MultiPlot(1, 12, 4, 1, 6, "#");
         gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
-        gr->Plot(secIntensiveData, "-B1");
+        gr->Plot(secIntensiveData, "-B2");
 //        gr->Plot(secMidIntensiveData, "jB1");
 
         qDebug() << "secEnegryDataOrig";
         gr->MultiPlot(1, 12, 4, 1, 6, "#");
         gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
-        gr->Plot(secIntensiveDataOrig, "=B1");
+        gr->Plot(secIntensiveDataOrig, "-n1");
     }
 
     qDebug() << "finish drawing";
