@@ -165,7 +165,7 @@ void Drawer::Proc(QString fname)
     qDebug() << "waveData Filled " << _waveMin << " " << _waveMax;
 
     vectorToData(data->d_intensive_original, &intensiveDataOriginal);
-    intensiveData.Norm(GRAPH_Y_VAL_MAX);
+    intensiveDataOriginal.Norm(GRAPH_Y_VAL_MAX);
     qDebug() << "intensiveData Filled";
 
     vectorToData(data->d_intensive, &intensiveData);
