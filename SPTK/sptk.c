@@ -78,6 +78,7 @@ SPTK_SETTINGS *initSptkSettings()
     settings->window = initWindowSettings();
     settings->lpc = initLpcSettings();
     settings->spec = initSpecSettings();
-    settings->plot = initPlotSettings();
+    settings->plotEnergy = initPlotSettings();
+    settings->plotF0 = initPlotSettings();
     return settings;
 }

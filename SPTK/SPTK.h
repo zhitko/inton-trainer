@@ -184,7 +184,8 @@ typedef struct _SPTK_SETTINGS {
     WINDOW_SETTINGS * window;
     LPC_SETTINGS * lpc;
     SPEC_SETTINGS * spec;
-    PLOT_SETTINGS * plot;
+    PLOT_SETTINGS * plotEnergy;
+    PLOT_SETTINGS * plotF0;
 } SPTK_SETTINGS;
 
 SPTK_SETTINGS *initSptkSettings();

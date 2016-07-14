@@ -107,9 +107,13 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->energyFrame->threshold_start = instance->ui->energyMidThresholdStart->value();
     sptk_settings->energyFrame->threshold_end = instance->ui->energyMidThresholdEnd->value();
 
-    sptk_settings->plot->midFrame = instance->ui->plotMidFrameSpin->value();
-    sptk_settings->plot->interpolation_edges = instance->ui->plotInterpolationEdgesSpin->value();
-    sptk_settings->plot->interpolation_type = instance->ui->plotInterpolationTypeBox->currentIndex();
+    sptk_settings->plotF0->midFrame = instance->ui->plotMidFrameF0Spin->value();
+    sptk_settings->plotF0->interpolation_edges = instance->ui->plotInterpolationEdgesF0Spin->value();
+    sptk_settings->plotF0->interpolation_type = instance->ui->plotInterpolationTypeF0Box->currentIndex();
+
+    sptk_settings->plotEnergy->midFrame = instance->ui->plotMidFrameEnergySpin->value();
+    sptk_settings->plotEnergy->interpolation_edges = instance->ui->plotInterpolationEdgesEnergySpin->value();
+    sptk_settings->plotEnergy->interpolation_type = instance->ui->plotInterpolationTypeEnergyBox->currentIndex();
 
     sptk_settings->frame->leng = instance->ui->frameSizeBox->currentText().toInt();
     sptk_settings->frame->shift = instance->ui->frameShiftSpin->value();
@@ -156,12 +160,19 @@ void SettingsDialog::loadSettings()
     if(settings.contains("pitch/THRESH_SWIPE"))
         this->ui->pitchThreshSwipeSpin->setValue(settings.value("pitch/THRESH_SWIPE").toDouble());
 
-    if(settings.contains("plot/mid_frame"))
-        this->ui->plotMidFrameSpin->setValue(settings.value("plot/mid_frame").toInt());
-    if(settings.contains("plot/interpolation_type"))
-        this->ui->plotInterpolationTypeBox->setCurrentIndex(settings.value("plot/interpolation_type").toInt());
-    if(settings.contains("plot/interpolation_edges"))
-        this->ui->plotInterpolationEdgesSpin->setValue(settings.value("plot/interpolation_edges").toInt());
+    if(settings.contains("plot_f0/mid_frame"))
+        this->ui->plotMidFrameF0Spin->setValue(settings.value("plot_f0/mid_frame").toInt());
+    if(settings.contains("plot_f0/interpolation_type"))
+        this->ui->plotInterpolationTypeF0Box->setCurrentIndex(settings.value("plot_f0/interpolation_type").toInt());
+    if(settings.contains("plot_f0/interpolation_edges"))
+        this->ui->plotInterpolationEdgesF0Spin->setValue(settings.value("plot_f0/interpolation_edges").toInt());
+
+    if(settings.contains("plot_energy/mid_frame"))
+        this->ui->plotMidFrameEnergySpin->setValue(settings.value("plot_energy/mid_frame").toInt());
+    if(settings.contains("plot_energy/interpolation_type"))
+        this->ui->plotInterpolationTypeEnergyBox->setCurrentIndex(settings.value("plot_energy/interpolation_type").toInt());
+    if(settings.contains("plot_energy/interpolation_edges"))
+        this->ui->plotInterpolationEdgesEnergySpin->setValue(settings.value("plot_energy/interpolation_edges").toInt());
 
     if(settings.contains("energyFrame/leng"))
         this->ui->energyMidFrame->setValue(settings.value("energyFrame/leng").toInt());
@@ -209,9 +220,13 @@ void SettingsDialog::saveSettings()
     settings.setValue("pitch/THRESH_RAPT", this->ui->pitchThreshRaptSpin->value());
     settings.setValue("pitch/THRESH_SWIPE", this->ui->pitchThreshSwipeSpin->value());
 
-    settings.setValue("plot/mid_frame", this->ui->plotMidFrameSpin->value());
-    settings.setValue("plot/interpolation_edges", this->ui->plotInterpolationEdgesSpin->value());
-    settings.setValue("plot/interpolation_type", this->ui->plotInterpolationTypeBox->currentIndex());
+    settings.setValue("plot_f0/mid_frame", this->ui->plotMidFrameF0Spin->value());
+    settings.setValue("plot_f0/interpolation_edges", this->ui->plotInterpolationEdgesF0Spin->value());
+    settings.setValue("plot_f0/interpolation_type", this->ui->plotInterpolationTypeF0Box->currentIndex());
+
+    settings.setValue("plot_energy/mid_frame", this->ui->plotMidFrameEnergySpin->value());
+    settings.setValue("plot_energy/interpolation_edges", this->ui->plotInterpolationEdgesEnergySpin->value());
+    settings.setValue("plot_energy/interpolation_type", this->ui->plotInterpolationTypeEnergyBox->currentIndex());
 
     settings.setValue("energyFrame/leng", this->ui->energyMidFrame->value());
     settings.setValue("energyFrame/threshold_start", this->ui->energyMidThresholdStart->value());

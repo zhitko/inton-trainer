@@ -65,24 +65,24 @@ GraphData ProcWave2Data(QString fname)
     vector inverted_mask = vector_invert_mask(mask);
     freev(mask);
 
-    vector pitch_mid = vector_mid(pitch_cutted, sptk_settings->plot->midFrame);
+    vector pitch_mid = vector_mid(pitch_cutted, sptk_settings->plotF0->midFrame);
     qDebug() << "vector_mid pitch";
-    vector intensive_mid = vector_mid(intensive_cutted, sptk_settings->plot->midFrame);
+    vector intensive_mid = vector_mid(intensive_cutted, sptk_settings->plotEnergy->midFrame);
     qDebug() << "vector_mid intensive";
 
     vector pitch_interpolate = vector_interpolate_by_mask(
                 pitch_mid,
                 inverted_mask,
-                sptk_settings->plot->interpolation_edges,
-                sptk_settings->plot->interpolation_type
+                sptk_settings->plotF0->interpolation_edges,
+                sptk_settings->plotF0->interpolation_type
                 );
     freev(pitch_mid);
 
     vector intensive_interpolate = vector_interpolate_by_mask(
                 intensive_mid,
                 inverted_mask,
-                sptk_settings->plot->interpolation_edges,
-                sptk_settings->plot->interpolation_type
+                sptk_settings->plotEnergy->interpolation_edges,
+                sptk_settings->plotEnergy->interpolation_type
                 );
     freev(intensive_mid);
 
