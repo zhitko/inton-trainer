@@ -44,7 +44,8 @@ int DrawerEvalPitch::Draw(mglGraph *gr)
     gr->DefaultPlotParam();
     gr->Clf();
 
-    gr->AddLegend(QString("F0 образца").toLocal8Bit().data(),"-g1");
+    gr->AddLegend(QString("F0 образца (без обработки)").toLocal8Bit().data(),"-G1");
+    gr->AddLegend(QString("F0 образца").toLocal8Bit().data(),"-g2");
     gr->AddLegend(QString("Ln(F0)").toLocal8Bit().data(),"-r1");
     gr->AddLegend(QString("F0 записи").toLocal8Bit().data(),"-B2");
     gr->AddLegend(QString("Оригинальня F0 записи").toLocal8Bit().data(),"-n1");
@@ -58,7 +59,8 @@ int DrawerEvalPitch::Draw(mglGraph *gr)
     qDebug() << "pitchData";
     gr->MultiPlot(1, 12, 4, 1, 6, "#");
     gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
-    gr->Plot(pitchData, "-g1");
+    gr->Plot(pitchData, "-g2");
+    gr->Plot(pitchDataOriginal, "-G1");
     gr->Plot(logData, "-r1");
     gr->Axis("Y", "");
     gr->Grid("y", "W", "");
@@ -93,7 +95,6 @@ void DrawerEvalPitch::Proc(QString fname)
     {
         qDebug() << "Drawer::Proc";
         Drawer::Proc(fname);
-        pitchData.Norm(GRAPH_Y_VAL_MAX);
         first = false;
     }
     else

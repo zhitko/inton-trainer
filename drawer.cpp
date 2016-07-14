@@ -67,10 +67,8 @@ GraphData ProcWave2Data(QString fname)
 
     vector pitch_mid = vector_mid(pitch_cutted, sptk_settings->plot->midFrame);
     qDebug() << "vector_mid pitch";
-    freev(pitch_cutted);
     vector intensive_mid = vector_mid(intensive_cutted, sptk_settings->plot->midFrame);
     qDebug() << "vector_mid intensive";
-    freev(intensive_cutted);
 
     vector pitch_interpolate = vector_interpolate_by_mask(
                 pitch_mid,
@@ -96,8 +94,10 @@ GraphData ProcWave2Data(QString fname)
     GraphData data;
 
     data.d_wave = wave;
+    data.d_pitch_originl = pitch_cutted;
     data.d_pitch = pitch_interpolate;
     data.d_log = logf0;
+    data.d_intensive_original = intensive_cutted;
     data.d_intensive = intensive_interpolate;
     data.d_avg_intensive = intensive_avg;
     data.d_frame = frame;
@@ -111,10 +111,12 @@ GraphData ProcWave2Data(QString fname)
 void freeGraphData(GraphData data)
 {
     freev(data.d_frame);
+    freev(data.d_intensive_original);
     freev(data.d_intensive);
     freev(data.d_log);
     freev(data.d_avg_intensive);
     freev(data.d_lpc);
+    freev(data.d_pitch_originl);
     freev(data.d_pitch);
     freev(data.d_spec);
     freev(data.d_wave);
@@ -162,6 +164,10 @@ void Drawer::Proc(QString fname)
     _waveMax = waveMax = waveData.Max("x").a[0];
     qDebug() << "waveData Filled " << _waveMin << " " << _waveMax;
 
+    vectorToData(data->d_intensive_original, &intensiveDataOriginal);
+    intensiveData.Norm(GRAPH_Y_VAL_MAX);
+    qDebug() << "intensiveData Filled";
+
     vectorToData(data->d_intensive, &intensiveData);
     intensiveData.Norm(GRAPH_Y_VAL_MAX);
     qDebug() << "intensiveData Filled";
@@ -174,7 +180,10 @@ void Drawer::Proc(QString fname)
     midIntensiveData.Norm(GRAPH_Y_VAL_MAX);
     qDebug() << "midIntensiveData Filled";
 
+    vectorToData(data->d_pitch_originl, &pitchDataOriginal);
+    pitchDataOriginal.Norm(GRAPH_Y_VAL_MAX);
     vectorToData(data->d_pitch, &pitchData);
+    pitchData.Norm(GRAPH_Y_VAL_MAX);
     _pitchMin = pitchData.Min("x").a[0];
     _pitchMax = pitchData.Max("x").a[0];
     pitchMin = sptk_settings->pitch->MIN_FREQ;
