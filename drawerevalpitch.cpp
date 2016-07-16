@@ -46,14 +46,13 @@ int DrawerEvalPitch::Draw(mglGraph *gr)
 
     gr->AddLegend(QString("F0 образца (без обработки)").toLocal8Bit().data(),"-G1");
     gr->AddLegend(QString("F0 образца").toLocal8Bit().data(),"-g2");
-    gr->AddLegend(QString("Ln(F0)").toLocal8Bit().data(),"-r1");
     gr->AddLegend(QString("F0 записи").toLocal8Bit().data(),"-B2");
     gr->AddLegend(QString("Оригинальня F0 записи").toLocal8Bit().data(),"-n1");
     gr->Legend(0,"-A");
 
     qDebug() << "waveData";
     gr->MultiPlot(1, 12, 0, 1, 1, "#");
-    gr->SetRange('y', waveMin, waveMax);
+    gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
     gr->Plot(waveData, "-G");
 
     qDebug() << "pitchData";
@@ -61,14 +60,13 @@ int DrawerEvalPitch::Draw(mglGraph *gr)
     gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
     gr->Plot(pitchData, "-g2");
     gr->Plot(pitchDataOriginal, "-G1");
-    gr->Plot(logData, "-r1");
     gr->Axis("Y", "");
     gr->Grid("y", "W", "");
 
     if(!this->secFileName.isEmpty()){
         qDebug() << "secWaveData";
         gr->MultiPlot(1, 12, 1, 1, 1, "#");
-        gr->SetRange('y', waveMin, waveMax);
+        gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
         gr->Plot(secWaveData, "B");
 
         gr->MultiPlot(1, 12, 3, 1, 1, "#");
@@ -106,10 +104,7 @@ void DrawerEvalPitch::Proc(QString fname)
         dataSec.d_pitch = vector_fill_empty(dataSec.d_pitch);
 
         vectorToData(dataSec.d_wave, &secWaveData);
-        double min = secWaveData.Min("x").a[0];
-        if(min < waveMin) waveMin = min;
-        double max = secWaveData.Max("x").a[0];
-        if(max > waveMax) waveMax = max;
+        secWaveData.Norm(GRAPH_Y_VAL_MAX);
         qDebug() << "waveData New Filled";
 
         vectorToData(dataSec.d_pitch, &secPitchDataOrig);

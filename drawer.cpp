@@ -2,6 +2,8 @@
 #include <QFile>
 #include "drawer.h"
 #include <stdlib.h>
+#include <cmath>
+#include <limits>
 
 #include "settingsdialog.h"
 
@@ -58,33 +60,33 @@ GraphData ProcWave2Data(QString fname)
     qDebug() << "normalizev";
     vector pitch_cutted = vector_cut_by_mask(pitch, mask);
     qDebug() << "vector_cut_by_mask pitch";
-    freev(pitch);
     vector intensive_cutted = vector_cut_by_mask(intensive, mask);
     qDebug() << "vector_cut_by_mask intensive";
-    freev(intensive);
     vector inverted_mask = vector_invert_mask(mask);
     freev(mask);
 
-    vector pitch_mid = vector_mid(pitch_cutted, sptk_settings->plotF0->midFrame);
-    qDebug() << "vector_mid pitch";
-    vector intensive_mid = vector_mid(intensive_cutted, sptk_settings->plotEnergy->midFrame);
-    qDebug() << "vector_mid intensive";
-
     vector pitch_interpolate = vector_interpolate_by_mask(
-                pitch_mid,
+                pitch_cutted,
                 inverted_mask,
                 sptk_settings->plotF0->interpolation_edges,
                 sptk_settings->plotF0->interpolation_type
                 );
-    freev(pitch_mid);
+    freev(pitch_cutted);
 
     vector intensive_interpolate = vector_interpolate_by_mask(
-                intensive_mid,
+                intensive_cutted,
                 inverted_mask,
                 sptk_settings->plotEnergy->interpolation_edges,
                 sptk_settings->plotEnergy->interpolation_type
                 );
-    freev(intensive_mid);
+    freev(intensive_cutted);
+
+    vector pitch_mid = vector_mid(pitch_interpolate, sptk_settings->plotF0->midFrame);
+    freev(pitch_interpolate);
+    qDebug() << "vector_mid pitch";
+    vector intensive_mid = vector_mid(intensive_interpolate, sptk_settings->plotEnergy->midFrame);
+    freev(intensive_interpolate);
+    qDebug() << "vector_mid intensive";
 
     freev(inverted_mask);
 
@@ -94,11 +96,11 @@ GraphData ProcWave2Data(QString fname)
     GraphData data;
 
     data.d_wave = wave;
-    data.d_pitch_originl = pitch_cutted;
-    data.d_pitch = pitch_interpolate;
+    data.d_pitch_originl = pitch;
+    data.d_pitch = pitch_mid;
     data.d_log = logf0;
-    data.d_intensive_original = intensive_cutted;
-    data.d_intensive = intensive_interpolate;
+    data.d_intensive_original = intensive;
+    data.d_intensive = intensive_mid;
     data.d_avg_intensive = intensive_avg;
     data.d_frame = frame;
     data.d_window = window;
@@ -130,20 +132,24 @@ void vectorToData(vector vec, mglData * data)
         data->a[i] = vec.v[i];
 }
 
+void vectorToDataWithNan(vector vec, mglData * data)
+{
+    data->Create(vec.x);
+    for(long i=0;i<vec.x;i++)
+        if (vec.v[i] != 0)
+            data->a[i] = vec.v[i];
+        else data->a[i] = std::numeric_limits<double>::quiet_NaN();
+}
+
 Drawer::Drawer() : mglDraw(),
-    specMin(0.0), specMax(1.0),
-    waveMin(DBL_MAX), pitchMin(DBL_MAX),
-    waveMax(DBL_MIN), pitchMax(DBL_MIN),
-    _waveMin(DBL_MAX), _pitchMin(DBL_MAX),
-    _waveMax(DBL_MIN), _pitchMax(DBL_MIN),
     data(NULL), stereo(false)
 {
 }
 
 Drawer::~Drawer()
 {
-//    freeGraphData(*data);
-//    free(data);
+    freeGraphData(*data);
+    free(data);
     qDebug() << "Drawer removed";
 }
 
@@ -160,11 +166,10 @@ void Drawer::Proc(QString fname)
 
     vectorToData(data->d_wave, &waveData);
     waveDataLen = waveData.GetNx();
-    _waveMin = waveMin = waveData.Min("x").a[0];
-    _waveMax = waveMax = waveData.Max("x").a[0];
-    qDebug() << "waveData Filled " << _waveMin << " " << _waveMax;
+    waveData.Norm(GRAPH_Y_VAL_MAX);
+    qDebug() << "waveData Filled";
 
-    vectorToData(data->d_intensive_original, &intensiveDataOriginal);
+    vectorToDataWithNan(data->d_intensive_original, &intensiveDataOriginal);
     intensiveDataOriginal.Norm(GRAPH_Y_VAL_MAX);
     qDebug() << "intensiveData Filled";
 
@@ -180,15 +185,11 @@ void Drawer::Proc(QString fname)
     midIntensiveData.Norm(GRAPH_Y_VAL_MAX);
     qDebug() << "midIntensiveData Filled";
 
-    vectorToData(data->d_pitch_originl, &pitchDataOriginal);
+    vectorToDataWithNan(data->d_pitch_originl, &pitchDataOriginal);
     pitchDataOriginal.Norm(GRAPH_Y_VAL_MAX);
     vectorToData(data->d_pitch, &pitchData);
     pitchData.Norm(GRAPH_Y_VAL_MAX);
-    _pitchMin = pitchData.Min("x").a[0];
-    _pitchMax = pitchData.Max("x").a[0];
-    pitchMin = sptk_settings->pitch->MIN_FREQ;
-    pitchMax = sptk_settings->pitch->MAX_FREQ;
-    qDebug() << "pitchData Filled " << pitchMin << " " << pitchMax;
+    qDebug() << "pitchData Filled";
 
     int speksize = sptk_settings->spec->leng / 2 + 1;
     int specX = data->d_spec.x/speksize;
@@ -204,26 +205,12 @@ void Drawer::Proc(QString fname)
     specData.Squeeze(mathgl_settings->quality, 1);
     qDebug() << "specData Filled " << specX << " " << specY;
 
-    this->specAuto();
-    this->pitchAuto();
     qDebug() << "Data Processed";
 }
 
 int Drawer::getDataLenght()
 {
     return waveDataLen;
-}
-
-void Drawer::specAuto()
-{
-    specMin = 0.8;
-    specMax = 1.0;
-}
-
-void Drawer::pitchAuto()
-{
-    pitchMin = _pitchMin;
-    pitchMax = _pitchMax;
 }
 
 int Drawer::Draw(mglGraph *gr)
@@ -235,21 +222,21 @@ int Drawer::Draw(mglGraph *gr)
 
     qDebug() << "waveData";
     gr->MultiPlot(1, 16, 0, 1, 2, "#");
-    gr->SetRange('y', waveMin, waveMax);
+    gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
     gr->Plot(waveData);
 
     qDebug() << "pitchData";
     gr->MultiPlot(1, 16, 3, 1, 6, "#");
-    gr->SetRange('y', pitchMin, pitchMax);
+    gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
     gr->Plot(pitchData, "-G6");
     gr->Axis("Y", "");
     gr->Grid("y", "W", "");
 
     qDebug() << "specData";
-    specData.Norm(0, specMax);
+    specData.Norm(0, GRAPH_Y_VAL_MAX);
     gr->MultiPlot(1, 16, 10, 1, 6, "#");
     if(stereo) gr->Rotate(50,60);
-    QString colors = QString("w{w,%1}k").arg(QString::number(specMin));
+    QString colors = QString("w{w,%1}k").arg(QString::number(0));
     qDebug() << colors;
     gr->SetDefScheme(colors.toStdString().c_str());
     gr->Surf(specData);

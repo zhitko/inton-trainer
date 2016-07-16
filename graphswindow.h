@@ -47,10 +47,6 @@ signals:
     void recFinish();
 
 public slots:
-    void rangeChanged();
-    void pitchAuto();
-    void specAuto();
-
     void _autoRec();
     void _rec();
 

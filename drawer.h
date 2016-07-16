@@ -25,6 +25,7 @@ struct GraphData{
 };
 
 void vectorToData(vector vec, mglData * data);
+void vectorToDataWithNan(vector vec, mglData * data);
 GraphData ProcWave2Data(QString fname);
 void freeGraphData(GraphData data);
 
@@ -34,13 +35,7 @@ public:
     Drawer();
     ~Drawer();
 
-    double waveMin, waveMax,
-           pitchMin, pitchMax,
-           specMin, specMax;
     bool stereo;
-
-    void specAuto();
-    void pitchAuto();
 
     int getDataLenght();
 
@@ -53,7 +48,6 @@ protected:
     GraphData * data;
     QString fileName;
     mglData waveData, pitchData, pitchDataOriginal, specData, intensiveData, intensiveDataOriginal, logData, midIntensiveData;
-    double _waveMin, _waveMax, _pitchMin, _pitchMax;
     int waveDataLen;
 };
 

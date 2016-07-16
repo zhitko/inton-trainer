@@ -114,7 +114,7 @@ void GraphsWindow::drawFile(QString path)
     this->path = path;
     this->drawer = this->createNewDrawer(path);
     this->w_graph = this->drawer->getDataLenght();
-    this->setFitByK();
+//    this->setFitByK();
     this->QMGL->update();
 }
 
@@ -164,32 +164,6 @@ void GraphsWindow::_autoRec()
 void GraphsWindow::_rec()
 {
     emit rec();
-}
-
-void GraphsWindow::rangeChanged()
-{
-    this->drawer->pitchMin =  ((double) this->ui->pitchMinSpin->value());
-    this->drawer->pitchMax =  ((double) this->ui->pitchMaxSpin->value());
-    this->drawer->specMin =  ((double) this->ui->specMinSpin->value()) / this->ui->specMinSpin->maximum();
-    this->drawer->specMax =  ((double) this->ui->specMaxSpin->value()) / this->ui->specMaxSpin->maximum();
-    this->QMGL->update();
-}
-
-
-void GraphsWindow::pitchAuto()
-{
-    this->drawer->pitchAuto();
-    this->ui->pitchMinSpin->setValue(this->drawer->pitchMin);
-    this->ui->pitchMaxSpin->setValue(this->drawer->pitchMax);
-    this->QMGL->update();
-}
-
-void GraphsWindow::specAuto()
-{
-    this->drawer->specAuto();
-    this->ui->specMinSpin->setValue(this->drawer->specMin * this->ui->specMinSpin->maximum());
-    this->ui->specMaxSpin->setValue(this->drawer->specMax * this->ui->specMaxSpin->maximum());
-    this->QMGL->update();
 }
 
 void GraphsWindow::hideZoomControls()

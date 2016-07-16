@@ -235,7 +235,11 @@ void MainWindow::recordFinished(SoundRecorder * recorder)
     this->updateFileList();
 
     if(SettingsDialog::getInstance()->getMathGLSettings()->autoOpen)
-        this->showGraph(path)->show();
+    {
+        GraphsWindow * graph = this->showGraph(path);
+        graph->show();
+        graph->fullFit();
+    }
 }
 
 QStringList scanDirIter(QDir dir)
@@ -292,6 +296,8 @@ void MainWindow::compare()
         layout->addWidget(first);
         layout->addWidget(second);
         window->show();
+        first->fullFit();
+        second->fullFit();
     }
 }
 
@@ -324,6 +330,8 @@ void MainWindow::training()
         layout->addWidget(first);
         layout->addWidget(second);
         window->show();
+        first->fullFit();
+        second->fullFit();
     }
 }
 
@@ -363,6 +371,7 @@ void MainWindow::evaluation(Drawer * drawer)
         connect(window, SIGNAL(recFinish()), this, SLOT(updateFileList()));
 
         window->show();
+        window->fullFit();
         if(items.size() > 1)
         {
             QString file2 = path + items.at(1)->text();
@@ -379,7 +388,9 @@ void MainWindow::plotting()
     {
         QString file = path + items.at(0)->text();
         qDebug() << "Draw graphs for " << path;
-        this->showGraph(file)->show();
+        GraphsWindow * graph = this->showGraph(file);
+        graph->show();
+        graph->fullFit();
     }
 }
 
@@ -402,7 +413,6 @@ void MainWindow::updateVolume()
     {
         long int avg = this->recorder->getVolumeLevel();
         long int max = this->recorder->getMaxVolumeLevel();
-//        qDebug() << "Volume is " << avg << " of max " << max;
         this->ui->volumeBar->setMaximum(max);
         this->ui->volumeBar->setValue(avg);
     }

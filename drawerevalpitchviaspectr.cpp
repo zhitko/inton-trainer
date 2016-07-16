@@ -46,7 +46,7 @@ int DrawerEvalPitchViaSpectr::Draw(mglGraph *gr)
 
     qDebug() << "waveData";
     gr->MultiPlot(1, 11, 0, 1, 1, "#");
-    gr->SetRange('y', waveMin, waveMax);
+    gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
     gr->Plot(waveData, "-G");
 
     qDebug() << "pitchData";
@@ -59,7 +59,7 @@ int DrawerEvalPitchViaSpectr::Draw(mglGraph *gr)
     if(!this->secFileName.isEmpty()){
         qDebug() << "secWaveData";
         gr->MultiPlot(1, 11, 1, 1, 1, "#");
-        gr->SetRange('y', waveMin, waveMax);
+        gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
         gr->Plot(secWaveData, "B");
 
         gr->MultiPlot(1, 11, 3, 1, 1, "#");
@@ -98,10 +98,7 @@ void DrawerEvalPitchViaSpectr::Proc(QString fname)
         dataSec.d_pitch = vector_fill_empty(dataSec.d_pitch);
 
         vectorToData(dataSec.d_wave, &secWaveData);
-        double min = secWaveData.Min("x").a[0];
-        if(min < waveMin) waveMin = min;
-        double max = secWaveData.Max("x").a[0];
-        if(max > waveMax) waveMax = max;
+        secWaveData.Norm(GRAPH_Y_VAL_MAX);
         qDebug() << "waveData New Filled";
 
         vectorToData(dataSec.d_pitch, &secPitchDataOrig);
