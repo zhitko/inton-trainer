@@ -197,22 +197,22 @@ public:
 
         DPStateStack * stateStep = this->mask;
 
-        qDebug() << "opDrop = -1";
-        qDebug() << "opAdd = 0";
-        qDebug() << "opRepeat = 1";
-        qDebug() << "opNone = 2";
-        qDebug() << "opFirst = 3";
-        qDebug() << "operation\t global\t local\t signal\t pattern\t next";
+//        qDebug() << "opDrop = -1";
+//        qDebug() << "opAdd = 0";
+//        qDebug() << "opRepeat = 1";
+//        qDebug() << "opNone = 2";
+//        qDebug() << "opFirst = 3";
+//        qDebug() << "operation\t global\t local\t signal\t pattern\t next";
         DPStateOperation operation = opNone;
         while(stateStep != 0)
         {
             operation = stateStep->value.operation;
-            qDebug() << stateStep->value.operation << " \t "
-                     << stateStep->value.globalError << " \t "
-                     << stateStep->value.localError << " \t "
-                     << stateStep->value.signalPos << " \t "
-                     << stateStep->value.patternPos << " \t "
-                     << stateStep->next;
+//            qDebug() << stateStep->value.operation << " \t "
+//                     << stateStep->value.globalError << " \t "
+//                     << stateStep->value.localError << " \t "
+//                     << stateStep->value.signalPos << " \t "
+//                     << stateStep->value.patternPos << " \t "
+//                     << stateStep->next;
             switch (operation) {
                 case opAdd:
                 case opRepeat:
@@ -221,7 +221,7 @@ public:
                 case opDrop:
                     break;
                 default:
-                    qDebug() << "opNone";
+//                    qDebug() << "opNone";
                     break;
             }
             stateStep = stateStep->next;

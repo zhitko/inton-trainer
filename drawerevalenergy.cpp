@@ -72,7 +72,7 @@ int DrawerEvalEnergy::Draw(mglGraph *gr)
         gr->Plot(secWaveData, "B");
 
         gr->MultiPlot(1, 12, 3, 1, 1, "#");
-        gr->Puts(mglPoint(0,0),QString("Результат: \\big{#r{%1}}").arg(this->result).toLocal8Bit().data(), ":C", 30);
+        gr->Puts(mglPoint(0,0),QString("Совпадение: \\big{#r{%1}}%").arg(this->result).toLocal8Bit().data(), ":C", 30);
 
         qDebug() << "secEnegryData";
         gr->MultiPlot(1, 12, 4, 1, 6, "#");
@@ -125,7 +125,8 @@ void DrawerEvalEnergy::Proc(QString fname)
         qDebug() << "Start DP";
         VectorDP dp(new VectorSignal(copyv(intensiveOrig)), new VectorSignal(copyv(intensive)));
         vector newIntensive = dp.getScaledSignal()->getArray();
-        this->result = dp.getSignalMask()->value.globalError;
+//        this->result = dp.getSignalMask()->value.globalError;
+        this->result = calcResultMark(newIntensive,intensiveOrig, dp.getSignalMask()->value.globalError);
         qDebug() << "Stop DP";
 
         vectorToData(newIntensive, &secIntensiveData);

@@ -153,6 +153,26 @@ Drawer::~Drawer()
     qDebug() << "Drawer removed";
 }
 
+double Drawer::calcResultMark(vector v1, vector v2, int errors)
+{
+    vector v1norm = normalizev(v1, 0.0, 1.0);
+    vector v2norm = normalizev(v2, 0.0, 1.0);
+    qDebug() << "v1norm" << v1norm.x;
+    qDebug() << "v2norm" << v2norm.x;
+    double diff = 0;
+    for(int i=0; i<v1norm.x && i<v1norm.x; i++)
+    {
+        diff += std::abs(v1norm.v[i] - v2norm.v[i]);
+//        qDebug() << "diff" << diff;
+//        qDebug() << "v1norm" << v1norm.v[i];
+//        qDebug() << "v2norm" << v2norm.v[i];
+    }
+    diff /= v1norm.x;
+    freev(v1norm);
+    freev(v2norm);
+    return 100 - diff * 100;
+}
+
 void Drawer::Proc(QString fname)
 {
     MathGLSettings * mathgl_settings = SettingsDialog::getMathGLSettings();

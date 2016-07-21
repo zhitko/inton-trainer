@@ -72,7 +72,7 @@ int DrawerEvalPitch::Draw(mglGraph *gr)
         gr->Plot(secWaveData, "B");
 
         gr->MultiPlot(1, 12, 3, 1, 1, "#");
-        gr->Puts(mglPoint(0,0),QString("Результат: \\big{#r{%1}}").arg(this->result).toLocal8Bit().data(), ":C", 30);
+        gr->Puts(mglPoint(0,0),QString("Совпадение: \\big{#r{%1}}%").arg(this->result).toLocal8Bit().data(), ":C", 30);
 
         qDebug() << "secPitchData";
         gr->MultiPlot(1, 12, 4, 1, 6, "#");
@@ -118,17 +118,25 @@ void DrawerEvalPitch::Proc(QString fname)
         pitchOrig.x = data->d_pitch.x;
         (*pitchOrig.v) = 0;
 
+        vector pitchOrigNorm = normalizev(pitchOrig, 0.0, 10.0);
+
         vector pitch;
         pitch.v = secPitchDataOrig.a;
         pitch.x = dataSec.d_pitch.x;
         (*pitch.v) = 0;
 
+        vector pitchNorm = normalizev(pitch, 0.0, 10.0);
+
         qDebug() << "Pitch sizes " << pitchOrig.x << " " << pitch.x;
 
         qDebug() << "Start DP";
-        VectorDP dp(new VectorSignal(copyv(pitchOrig)), new VectorSignal(copyv(pitch)));
+//        VectorDP dp(new VectorSignal(copyv(pitchOrig)), new VectorSignal(copyv(pitch)));
+        VectorDP dp(new VectorSignal(copyv(pitchOrigNorm)), new VectorSignal(copyv(pitchNorm)));
         vector newPitch = dp.getScaledSignal()->getArray();
-        this->result = dp.getSignalMask()->value.globalError;
+//        this->result = dp.getSignalMask()->value.globalError;
+//        this->result = calcResultMark(newPitch,pitchOrig, dp.getSignalMask()->value.globalError);
+        this->result = calcResultMark(newPitch,pitchOrigNorm, dp.getSignalMask()->value.globalError);
+
         qDebug() << "Stop DP";
 
 //        qDebug() << "Start DP";
@@ -143,6 +151,7 @@ void DrawerEvalPitch::Proc(QString fname)
 //        qDebug() << "Stop DP";
 
         vectorToData(newPitch, &secPitchData);
+        secPitchData.Norm(GRAPH_Y_VAL_MAX);
         qDebug() << "pitchData New Filled";
 
         freev(newPitch);
