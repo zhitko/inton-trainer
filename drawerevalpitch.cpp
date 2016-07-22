@@ -49,7 +49,7 @@ int DrawerEvalPitch::Draw(mglGraph *gr)
     if(!isCompare) gr->AddLegend(QString("F0 образца (без обработки)").toLocal8Bit().data(),"-G1");
     gr->AddLegend(QString("F0 образца").toLocal8Bit().data(),"-g2");
     if(isCompare) gr->AddLegend(QString("F0 записи").toLocal8Bit().data(),"-B2");
-    if(isCompare) gr->AddLegend(QString("Оригинальня F0 записи").toLocal8Bit().data(),"-n1");
+//    if(isCompare) gr->AddLegend(QString("Оригинальня F0 записи").toLocal8Bit().data(),"-n1");
     gr->Legend(0,"-A");
 
     qDebug() << "waveData";
@@ -79,10 +79,10 @@ int DrawerEvalPitch::Draw(mglGraph *gr)
         gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
         gr->Plot(secPitchData, "-B2");
 
-        qDebug() << "secPitchData";
-        gr->MultiPlot(1, 12, 4, 1, 6, "#");
-        gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
-        gr->Plot(secPitchDataOrig, "-n1");
+//        qDebug() << "secPitchData";
+//        gr->MultiPlot(1, 12, 4, 1, 6, "#");
+//        gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
+//        gr->Plot(secPitchDataOrig, "-n1");
     }
 
     qDebug() << "finish drawing";

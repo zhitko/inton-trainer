@@ -29,8 +29,9 @@
 
 #include "drawer.h"
 #include "drawerevalpitch.h"
-#include "drawerevalpitchviaspectr.h"
+#include "drawerevalpitchbyspectr.h"
 #include "drawerevalenergy.h"
+#include "drawerevalenergybyspectr.h"
 #include "drawerevalspectr.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -75,10 +76,13 @@ void MainWindow::initUI()
     connect(ratingSpecAct, SIGNAL(triggered()), this, SLOT(evaluationSpec()));
     QAction * ratingF0SpectrAct = new QAction(tr("Show F0 By Spectr"), this);
     connect(ratingF0SpectrAct, SIGNAL(triggered()), this, SLOT(evaluationF0_Spec()));
+    QAction * ratingISpectrAct = new QAction(tr("Show Energy By Spectr"), this);
+    connect(ratingISpectrAct, SIGNAL(triggered()), this, SLOT(evaluationI_Spec()));
     menu->addAction(ratingF0Act);
     menu->addAction(ratingIAct);
-    menu->addAction(ratingSpecAct);
     menu->addAction(ratingF0SpectrAct);
+    menu->addAction(ratingISpectrAct);
+    menu->addAction(ratingSpecAct);
     ratingButton->setMenu(menu);
     ratingButton->setPopupMode(QToolButton::InstantPopup);
 
@@ -342,7 +346,12 @@ void MainWindow::evaluationF0()
 
 void MainWindow::evaluationF0_Spec()
 {
-    evaluation(new DrawerEvalPitchViaSpectr());
+    evaluation(new DrawerEvalPitchBySpectr());
+}
+
+void MainWindow::evaluationI_Spec()
+{
+    evaluation(new DrawerEvalEnergyBySpectr());
 }
 
 void MainWindow::evaluationSpec()

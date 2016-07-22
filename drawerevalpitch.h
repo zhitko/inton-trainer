@@ -7,13 +7,13 @@ class DrawerEvalPitch : public Drawer
 {
 public:
     DrawerEvalPitch();
-    ~DrawerEvalPitch();
+    virtual ~DrawerEvalPitch();
 
     int Draw(mglGraph *gr);
     void Proc(QString fname);
-    int result;
+    double result;
 
-private:
+protected:
     bool first;
     QString secFileName;
     mglData secWaveData, secPitchData, secPitchDataOrig;

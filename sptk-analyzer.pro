@@ -45,6 +45,8 @@ SOURCES += \
     DP/vectordp.cpp \
     drawerevalpitch.cpp \
     drawerevalenergy.cpp \
+    drawerevalpitchbyspectr.cpp \
+    drawerevalenergybyspectr.cpp \
     DP/spectrdp.cpp \
     drawerevalspectr.cpp \
     drawerevalpitchviaspectr.cpp
@@ -63,6 +65,8 @@ HEADERS  += \
     DP/dp.h \
     drawerevalpitch.h \
     drawerevalenergy.h \
+    drawerevalpitchbyspectr.h \
+    drawerevalenergybyspectr.h \
     DP/vectordp.h \
     DP/spectrdp.h \
     drawerevalspectr.h \

@@ -46,7 +46,7 @@ int DrawerEvalEnergy::Draw(mglGraph *gr)
     if(!isCompare) gr->AddLegend(QString("Энергия образца (без обработки)").toLocal8Bit().data(),"-G1");
     gr->AddLegend(QString("Энергия образца").toLocal8Bit().data(),"-g2");
     if(isCompare) gr->AddLegend(QString("Энергия записи").toLocal8Bit().data(),"-B2");
-    if(isCompare) gr->AddLegend(QString("Оригинальня энергия записи").toLocal8Bit().data(),"-n1");
+//    if(isCompare) gr->AddLegend(QString("Оригинальня энергия записи").toLocal8Bit().data(),"-n1");
     gr->Legend(0,"-A");
 
     qDebug() << "waveData";
@@ -79,10 +79,10 @@ int DrawerEvalEnergy::Draw(mglGraph *gr)
         gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
         gr->Plot(secIntensiveData, "-B2");
 
-        qDebug() << "secEnegryDataOrig";
-        gr->MultiPlot(1, 12, 4, 1, 6, "#");
-        gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
-        gr->Plot(secIntensiveDataOrig, "-n1");
+//        qDebug() << "secEnegryDataOrig";
+//        gr->MultiPlot(1, 12, 4, 1, 6, "#");
+//        gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
+//        gr->Plot(secIntensiveDataOrig, "-n1");
     }
 
     qDebug() << "finish drawing";

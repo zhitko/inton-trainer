@@ -7,13 +7,13 @@ class DrawerEvalEnergy : public Drawer
 {
 public:
     DrawerEvalEnergy();
-    ~DrawerEvalEnergy();
+    virtual ~DrawerEvalEnergy();
 
-    int Draw(mglGraph *gr);
+    virtual int Draw(mglGraph *gr);
     void Proc(QString fname);
-    int result;
+    double result;
 
-private:
+protected:
     bool first;
     QString secFileName;
     mglData secWaveData, secIntensiveData, secIntensiveDataOrig;

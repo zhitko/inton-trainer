@@ -60,6 +60,7 @@ private slots:
     void evaluationF0_Spec();
     void evaluationSpec();
     void evaluationI();
+    void evaluationI_Spec();
     void evaluation(Drawer * drawer);
     void remove();
     void rename();

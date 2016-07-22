@@ -33,7 +33,7 @@ class Drawer: public mglDraw
 {
 public:
     Drawer();
-    ~Drawer();
+    virtual ~Drawer();
 
     bool stereo;
 
