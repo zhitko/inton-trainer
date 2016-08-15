@@ -18,12 +18,16 @@
 
     <script src="./js/jquery-3.1.0.min.js"></script>
     <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/popover-override.js"></script>
 
     <script type="text/javascript">
       $(document).ready(function(){
-          $('[data-toggle="tooltip"]').tooltip({
-            'trigger':'hover'
-          }); 
+        $('[data-toggle="popover"]').popover({ 
+          trigger: 'click hover', 
+          placement: 'auto', 
+          delay: {show: 50, hide: 400},
+          html: true
+        });
       });
     </script>
 
@@ -50,26 +54,53 @@
       <img src="images/rus/ik1.png" class="img-thumbnail" alt="ИК1" width="100%">
       
       <ul>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="До+ма хо+лодно." href="/ИК1/Ж_2А/Дома холодно.wav">Дома холодно</a></li>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="Стака+н воды+." href="/ИК1/Ж_2А/Стакан воды.wav">Стакан воды</a></li>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="У+тром за+морозки." href="/ИК1/Ж_2А/Утром заморозки.wav">Утром заморозки</a></li>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="Дорого+й до+ктор." href="/ИК1/Ж_2А/Дорогой доктор.wav">Дорогой доктор</a></li>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="Продава+ть коро+ву." href="/ИК1/Ж_2А/Продавать корову.wav">Продавать корову</a></li>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="Иду+ заъдо+ктором." href="/ИК1/Ж_2А/Иду за доктором.wav">Иду за доктором</a></li>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="Моро+з наъдворе+." href="/ИК1/Ж_2А/Мороз на дворе.wav">Мороз на дворе</a></li>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="Соба+ка о=коло до+ма." href="/ИК1/Ж_2А/Собака около дома.wav">Собака около дома</a></li>
+        <li><span data-toggle="popover" title="До+ма хо+лодно." data-content="<a href='/ИК1/Ж_2А/Дома холодно.wav#pitch'>Основной тон</a><br><a href='/ИК1/Ж_2А/Дома холодно.wav#energy'>Энергия</a>">
+          Дома холодно
+        </span></li>
+        <li><span data-toggle="popover" title="Стака+н воды+." data-content="<a href='/ИК1/Ж_2А/Стакан воды.wav#pitch'>Основной тон</a><br><a href='/ИК1/Ж_2А/Стакан воды.wav#energy'>Энергия</a>">
+          Стакан воды
+        </span></li>
+        <li><span data-toggle="popover" title="У+тром за+морозки." data-content="<a href='/ИК1/Ж_2А/Утром заморозки.wav#pitch'>Основной тон</a><br><a href='/ИК1/Ж_2А/Утром заморозки.wav#energy'>Энергия</a>">
+          Утром заморозки
+        </span></li>
+        <li><span data-toggle="popover" title="Дорого+й до+ктор." data-content="<a href='/ИК1/Ж_2А/Дорогой доктор.wav#pitch'>Основной тон</a><br><a href='/ИК1/Ж_2А/Дорогой доктор.wav#energy'>Энергия</a>">
+          Дорогой доктор
+        </span></li>
+        <li><span data-toggle="popover" title="Продава+ть коро+ву." data-content="<a href='/ИК1/Ж_2А/Продавать корову.wav#pitch'>Основной тон</a><br><a href='/ИК1/Ж_2А/Продавать корову.wav#energy'>Энергия</a>">
+          Продавать корову
+        </span></li>
+        <li><span data-toggle="popover" title="Иду+ заъдо+ктором." data-content="<a href='/ИК1/Ж_2А/Иду за доктором.wav#pitch'>Основной тон</a><br><a href='/ИК1/Ж_2А/Иду за доктором.wav#energy'>Энергия</a>">
+          Иду за доктором
+        </span></li>
+        <li><span data-toggle="popover" title="Моро+з наъдворе+." data-content="<a href='/ИК1/Ж_2А/Мороз на дворе.wav#pitch'>Основной тон</a><br><a href='/ИК1/Ж_2А/Мороз на дворе.wav#energy'>Энергия</a>">
+          Мороз на дворе
+        </span></li>
+        <li><span data-toggle="popover" title="Соба+ка о=коло до+ма." data-content="<a href='/ИК1/Ж_2А/Собака около дома.wav#pitch'>Основной тон</a><br><a href='/ИК1/Ж_2А/Собака около дома.wav#energy'>Энергия</a>">
+          Собака около дома
+        </span></li>
       </ul>
 
       <p>Двухакцентная (распрастраненная структура)</p>
 
       <img src="images/rus/ik1-2.png" class="img-thumbnail" alt="ИК1" width="100%">
 
+
       <ul>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="О+н гуля+ет." href="/ИК1/Ж_2А_распр/Он гуляет.wav">Он гуляет</a></li>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="О+н гуля+ет въпа=рке." href="/ИК1/Ж_2А_распр/Он гуляет в парке.wav">Он гуляет в парке</a></li>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="О+н гуля+ет въпа=рке съсоба=кой." href="/ИК1/Ж_2А_распр/Он гуляет в парке с собакой.wav">Он гуляет в парке с собакой</a></li>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="О+н занима+ется." href="/ИК1/Ж_2А_распр/Он занимается.wav">Он занимается</a></li>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="О+н занима+ется въбиблиоте=ке." href="/ИК1/Ж_2А_распр/Он занимается в библиотеке.wav">Он занимается в библиотеке</a></li>
+        <li><span data-toggle="popover" title="О+н гуля+ет." data-content="<a href='/ИК1/Ж_2А_распр/Он гуляет.wav#pitch'>Основной тон</a><br><a href='/ИК1/Ж_2А_распр/Он гуляет.wav#energy'>Энергия</a>">
+          Он гуляет
+        </span></li>
+        <li><span data-toggle="popover" title="О+н гуля+ет въпа=рке." data-content="<a href='/ИК1/Ж_2А_распр/Он гуляет в парке.wav#pitch'>Основной тон</a><br><a href='/ИК1/Ж_2А_распр/Он гуляет в парке.wav#energy'>Энергия</a>">
+          Он гуляет в парке
+        </span></li>
+        <li><span data-toggle="popover" title="О+н гуля+ет въпа=рке съсоба=кой." data-content="<a href='/ИК1/Ж_2А_распр/Он гуляет в парке с собакой.wav#pitch'>Основной тон</a><br><a href='/ИК1/Ж_2А_распр/Он гуляет в парке с собакой.wav#energy'>Энергия</a>">
+          Он гуляет в парке с собакой
+        </span></li>
+        <li><span data-toggle="popover" title="О+н занима+ется." data-content="<a href='/ИК1/Ж_2А_распр/Он занимается.wav#pitch'>Основной тон</a><br><a href='/ИК1/Ж_2А_распр/Он занимается.wav#energy'>Энергия</a>">
+          Он занимается
+        </span></li>
+        <li><span data-toggle="popover" title="О+н занима+ется въбиблиоте=ке." data-content="<a href='/ИК1/Ж_2А_распр/Он занимается в библиотеке.wav#pitch'>Основной тон</a><br><a href='/ИК1/Ж_2А_распр/Он занимается в библиотеке.wav#energy'>Энергия</a>">
+          Он занимается в библиотеке
+        </span></li>
       </ul>
 
     </div> <!-- /container -->

@@ -82,8 +82,16 @@ body {
     max-width: 100% !important;
 }
 
+.popover {
+    max-width: 100% !important;
+}
+
 .top-text {
     font-size: 15px;
     vertical-align: top;
     line-height: 1.4; 
+}
+
+.hover:hover {
+  text-decoration: underline;
 }

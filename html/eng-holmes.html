@@ -18,12 +18,16 @@
 
     <script src="./js/jquery-3.1.0.min.js"></script>
     <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/popover-override.js"></script>
 
     <script type="text/javascript">
       $(document).ready(function(){
-          $('[data-toggle="tooltip"]').tooltip({
-            'trigger':'hover'
-          }); 
+        $('[data-toggle="popover"]').popover({ 
+          trigger: 'click hover', 
+          placement: 'auto', 
+          delay: {show: 50, hide: 400},
+          html: true
+        });
       });
     </script>
 
@@ -43,131 +47,132 @@
         <h3 class="text-muted">IntoTrainer</h3>
       </div>
 
-      <h2><a href="/eng/holmes/1 The Adventure.wav" data-toggle="tooltip" data-placement="bottom" data-html="true" title="
-      The Adve+nture / of the Spe+ckled Ba+nd / by Sir A+rthur Co+nan Doyle / (rea+d / by Ra+ndall Coling Roffe) // <br>
-      ðı ədˈventʃə / əv ðə ˈspek(ə)ld bænd / baı sɜː ˈɑːθə ˈkəʋnən dɔıl / (red / baı ˈrændl kəʋlɪŋ rɒf) // <br>
+      <h2><span class="hover" data-content="<a href='/eng/holmes/1 The Adventure.wav#pitch'>Pitch</a><br><a href='/eng/holmes/1 The Adventure.wav#energy'>Energy</a>"
+        data-toggle="popover" 
+        title="<b>The Adve+nture / of the Spe+ckled Ba+nd / by Sir A+rthur Co+nan Doyle / (rea+d / by Ra+ndall Coling Roffe) // </b><br>
+      <i>ðı ədˈventʃə / əv ðə ˈspek(ə)ld bænd / baı sɜː ˈɑːθə ˈkəʋnən dɔıl / (red / baı ˈrændl kəʋlɪŋ rɒf) // </i><br>
       Приключение / пёстрой ленты / сэра Артура Конан Дойла / (читает / Рэндалл К. Роффе) //
-      ">The Adventure of the Speckled Band by Sir Arthur Conan Doyle (read by Randall Coling Roffe) </a></h2>
+      ">The Adventure of the Speckled Band by Sir Arthur Conan Doyle (read by Randall Coling Roffe) </span></h2>
 
-      <a href="/eng/holmes/2 On glancing...wav" data-toggle="tooltip" data-placement="bottom" data-html="true" title="
-      On gla+ncing over my notes / of the seventy o+dd cases //<br>
-      ɒn ˈglɑːnsıŋ ˈəʋvə maı nəʋts / əv ðə ˈsev(ə)ntı ɒd keısɪz //<br>
+      <span class="hover" data-content="<a href='/eng/holmes/2 On glancing...wav#pitch'>Pitch</a><br><a href='/eng/holmes/2 On glancing...wav#energy'>Energy</a>"
+        data-toggle="popover" 
+        title="<b>On gla+ncing over my notes / of the seventy o+dd cases //</b><br>
+      <i>ɒn ˈglɑːnsıŋ ˈəʋvə maı nəʋts / əv ðə ˈsev(ə)ntı ɒd keısɪz //</i><br>
       Просматривая свои заметки / по семидесяти с лишним делам, 
-      ">
-      On glancing over my notes of the seventy odd cases
-      </a>
+      ">On glancing over my notes of the seventy odd cases
+      </span>
 
-      <a href="/eng/holmes/3 in which I...wav" data-toggle="tooltip" data-placement="bottom" data-html="true" title="
-      in whi+ch I have / du+ring the last eight years / studied the me+thods / of my frie+nd / Sherlock Ho+lmes, // <br>
-      ın wıtʃ aı həv / ˈdjʋərıŋ ðə lɑːst eıt jıəz / ˈstʌdıd ðə ˈmeθədz / əv maı frend / ʃəlɒk həʋ(l)mz, //<br>
+      <span class="hover" data-content="<a href='/eng/holmes/3 in which I...wav#pitch'>Pitch</a><br><a href='/eng/holmes/3 in which I...wav#energy'>Energy</a>"
+        data-toggle="popover" 
+        title="<b>in whi+ch I have / du+ring the last eight years / studied the me+thods / of my frie+nd / Sherlock Ho+lmes, // </b><br>
+      <i>ın wıtʃ aı həv / ˈdjʋərıŋ ðə lɑːst eıt jıəz / ˈstʌdıd ðə ˈmeθədz / əv maı frend / ʃəlɒk həʋ(l)mz, //</i><br>
       по которым я / в течение последних восьми лет / изучал методы / моего друга / Шерлока Холмса,
-      ">
-      in which I have during the last eight years studied the methods of my friend Sherlock Holmes,
-      </a>
+      ">in which I have during the last eight years studied the methods of my friend Sherlock Holmes,
+      </span>
 
-      <a href="/eng/holmes/4 I find...wav" data-toggle="tooltip" data-placement="bottom" data-html="true" title="
-      I find ma+ny tragic, / so+me comic, / a la+rge number merely strange, / but no+ne commonplace; /// <br>
-      aı faınd ˈmenı ˈtrædʒık, / səm ˈkɒmık, / ə lɑːdʒ ˈnʌmbə ˈmıəlı streındʒ, / bʌt nʌn ˈkɒmənpleıs; ///<br>
+      <span class="hover" data-content="<a href='/eng/holmes/4 I find...wav#pitch'>Pitch</a><br><a href='/eng/holmes/4 I find...wav#energy'>Energy</a>"
+        data-toggle="popover" 
+        title="<b>I find ma+ny tragic, / so+me comic, / a la+rge number merely strange, / but no+ne commonplace; /// </b><br>
+      <i>aı faınd ˈmenı ˈtrædʒık, / səm ˈkɒmık, / ə lɑːdʒ ˈnʌmbə ˈmıəlı streındʒ, / bʌt nʌn ˈkɒmənpleıs; ///</i><br>
       я нахожу много трагических, / несколько комических, / большое количество просто странных случаев, / но ни одного банального; ///
-      ">
-      I find many tragic, some comic, a large number merely strange, but none commonplace;
-      </a>
+      ">I find many tragic, some comic, a large number merely strange, but none commonplace;
+      </span>
 
-      <a href="/eng/holmes/5 for working.wav" data-toggle="tooltip" data-placement="bottom" data-html="true" title="
-      fo+r, / working as he di+d / ra+ther / for the lo+ve of his a+rt / tha+n / for the acqui+rement of wea+lth, // <br>
-      fɔː, / ˈwɜːkıŋ əz hiː dıd / ˈrɑːðə / fɔː ðə lʌv əv hız ɑːt / ðæn / fɔː ðı əˈkwaıəmənt əv welθ, //<br>
+      <span class="hover" data-content="<a href='/eng/holmes/5 for working.wav#pitch'>Pitch</a><br><a href='/eng/holmes/5 for working.wav#energy'>Energy</a>"
+        data-toggle="popover" 
+        title="<b>fo+r, / working as he di+d / ra+ther / for the lo+ve of his a+rt / tha+n / for the acqui+rement of wea+lth, // </b><br>
+      <i>fɔː, / ˈwɜːkıŋ əz hiː dıd / ˈrɑːðə / fɔː ðə lʌv əv hız ɑːt / ðæn / fɔː ðı əˈkwaıəmənt əv welθ, //</i><br>
       поскольку, работая скорее из любви к искусству, чем для укрепления благосостояния, //
-      ">
-      for, working as he did rather for the love of his art than for the acquirement of wealth,
-      </a>
+      ">for, working as he did rather for the love of his art than for the acquirement of wealth,
+      </span>
 
-      <a href="/eng/holmes/6 he refused.wav" data-toggle="tooltip" data-placement="bottom" data-html="true" title="
-      he refu+sed / to asso+ciate himself / with a+ny investigation / which did not te+nd towards the unusual, / and even the fanta+stic. ///<br>
-      hiː rıˈfjuːzd / tuː əˈsəʋʃııt (h)ımˈself / wıð ˈenı ınˌvestıˈgeıʃ(ə)n / wıtʃ dıd nɒt tend təˈwɔːdz ðı ʌnˈjuːʒʋəl, / ənd ˈiːv(ə)n ðə fænˈtæstık. ///<br>
+      <span class="hover" data-content="<a href='/eng/holmes/6 he refused.wav#pitch'>Pitch</a><br><a href='/eng/holmes/6 he refused.wav#energy'>Energy</a>"
+        data-toggle="popover" 
+        title="<b>he refu+sed / to asso+ciate himself / with a+ny investigation / which did not te+nd towards the unusual, / and even the fanta+stic. ///</b><br>
+      <i>hiː rıˈfjuːzd / tuː əˈsəʋʃııt (h)ımˈself / wıð ˈenı ınˌvestıˈgeıʃ(ə)n / wıtʃ dıd nɒt tend təˈwɔːdz ðı ʌnˈjuːʒʋəl, / ənd ˈiːv(ə)n ðə fænˈtæstık. ///</i><br>
       он отказывался приниматься за расследование, которое не вело бы к чему-нибудь необычному или даже фантастическому.
-      ">
-      he refused to associate himself with any investigation which did not tend towards the unusual, and even the fantastic.
-      </a>
+      ">he refused to associate himself with any investigation which did not tend towards the unusual, and even the fantastic.
+      </span>
 
-      <a href="/eng/holmes/7 Of all these vareid.wav" data-toggle="tooltip" data-placement="bottom" data-html="true" title="
-      Of all these va+ried cases, / howe+ver, / I cannot recall a+ny / which prese+nted / more si+ngular features //<br>
-      əv ɔːl ðiːz ˈve(ə)rıd keısɪz, / haʋˈevə, / aı ˈkænɒt rıˈkɔːl ˈenı / wıtʃ prıˈzentɪd mɔː ˈsıŋgjʋlə ˈfiːtʃəz //<br>
+      <span class="hover" data-content="<a href='/eng/holmes/7 Of all these vareid.wav#pitch'>Pitch</a><br><a href='/eng/holmes/7 Of all these vareid.wav#energy'>Energy</a>"
+        data-toggle="popover" 
+        title="<b>Of all these va+ried cases, / howe+ver, / I cannot recall a+ny / which prese+nted / more si+ngular features //</b><br>
+      <i>əv ɔːl ðiːz ˈve(ə)rıd keısɪz, / haʋˈevə, / aı ˈkænɒt rıˈkɔːl ˈenı / wıtʃ prıˈzentɪd mɔː ˈsıŋgjʋlə ˈfiːtʃəz //</i><br>
       Однако из всех этих разнообразных дел я не могу припомнить хоть один случай, имевший больше необыкновенных особенностей, 
-      ">
-      Of all these varied cases, however, I cannot recall any which presented more singular features
-      </a>
+      ">Of all these varied cases, however, I cannot recall any which presented more singular features
+      </span>
 
-      <a href="/eng/holmes/8 than that which was assosiated.wav" data-toggle="tooltip" data-placement="bottom" data-html="true" title="
-      than that which was asso+ciated / with the well-kno+wn / Su+rrey family / of the Roy+lotts / of Sto+ke / Mora+n. /// <br>
-      ðæn ðət wıtʃ wəz əˈsəʋʃıeıtıd wıð ðə ˌwelˈnəʋn ˈsʌrı ˈfæm(ə)lı əv ðə rɔılɔts əv stəʋk mɔrʌn. ///<br>
+      <span class="hover" data-content="<a href='/eng/holmes/8 than that which was assosiated.wav#pitch'>Pitch</a><br><a href='/eng/holmes/8 than that which was assosiated.wav#energy'>Energy</a>"
+        data-toggle="popover" 
+        title="<b>than that which was asso+ciated / with the well-kno+wn / Su+rrey family / of the Roy+lotts / of Sto+ke / Mora+n. /// </b><br>
+      <i>ðæn ðət wıtʃ wəz əˈsəʋʃıeıtıd wıð ðə ˌwelˈnəʋn ˈsʌrı ˈfæm(ə)lı əv ðə rɔılɔts əv stəʋk mɔrʌn. ///</i><br>
       чем тот, который был связан с хорошо известным в Сюррее семейством Ройлоттов из Сток-Морана. 
-      ">
-      than that which was associated with the well-known Surrey family of the Roylotts of Stoke Moran.
-      </a>
+      ">than that which was associated with the well-known Surrey family of the Roylotts of Stoke Moran.
+      </span>
 
-      <a href="/eng/holmes/9 The event in question.wav" data-toggle="tooltip" data-placement="bottom" data-html="true" title="
-      The eve+nts / in que+stion / occu+rred / in the early da+ys of my associa+tion / with Ho+lmes, //<br>
-      ðı ıˈvents ın ˈkwestʃ(ə)n əˈkɜːd ın ðı ˈɜːlı deız əv maı əˌsəʋsıˈeıʃ(ə)n wıð həʋ(l)mz, //<br>
+      <span class="hover" data-content="<a href='/eng/holmes/9 The event in question.wav#pitch'>Pitch</a><br><a href='/eng/holmes/9 The event in question.wav#energy'>Energy</a>"
+        data-toggle="popover" 
+        title="<b>The eve+nts / in que+stion / occu+rred / in the early da+ys of my associa+tion / with Ho+lmes, //</b><br>
+      <i>ðı ıˈvents ın ˈkwestʃ(ə)n əˈkɜːd ın ðı ˈɜːlı deız əv maı əˌsəʋsıˈeıʃ(ə)n wıð həʋ(l)mz, //</i><br>
       Эти события произошли в самом начале моего сотрудничества с Холмсом, //
-      ">
-      The eve+nts in question occurred in the early days of my association with Holmes,
-      </a>
+      ">The eve+nts in question occurred in the early days of my association with Holmes,
+      </span>
 
-      <a href="/eng/holmes/10 when we were sharing.wav" data-toggle="tooltip" data-placement="bottom" data-html="true" title="
-      when we were sha+ring rooms / as ba+chelors / in Ba+ker Street. ///<br>
-      wen wiː wə ˈʃe(ə)rıŋ ru(ː)mz əz ˈbætʃ(ə)ləz ın ˈbeıkə striːt. ///<br>
+      <span class="hover" data-content="<a href='/eng/holmes/10 when we were sharing.wav#pitch'>Pitch</a><br><a href='/eng/holmes/10 when we were sharing.wav#energy'>Energy</a>"
+        data-toggle="popover" 
+        title="<b>when we were sha+ring rooms / as ba+chelors / in Ba+ker Street. ///</b><br>
+      <i>wen wiː wə ˈʃe(ə)rıŋ ru(ː)mz əz ˈbætʃ(ə)ləz ın ˈbeıkə striːt. ///</i><br>
       когда мы, два холостяка, делили жилье на Бейкер-стрит. ///
-      ">
-      when we were sharing rooms as bachelors in Baker Street.
-      </a>
+      ">when we were sharing rooms as bachelors in Baker Street.
+      </span>
 
-      <a href="/eng/holmes/11 It is possible.wav" data-toggle="tooltip" data-placement="bottom" data-html="true" title="
-      It is po+ssible / that I mi+ght have pla+ced them / upon reco+rd before, //<br>
-      ıt ız ˈpɒsəb(ə)l ðət aı maıt həv pleıst ðəm əˈpɒn ˈrekɔːd bıˈfɔː, //<br>
+      <span class="hover" data-content="<a href='/eng/holmes/11 It is possible.wav#pitch'>Pitch</a><br><a href='/eng/holmes/11 It is possible.wav#energy'>Energy</a>"
+        data-toggle="popover" 
+        title="<b>It is po+ssible / that I mi+ght have pla+ced them / upon reco+rd before, //</b><br>
+      <i>ıt ız ˈpɒsəb(ə)l ðət aı maıt həv pleıst ðəm əˈpɒn ˈrekɔːd bıˈfɔː, //</i><br>
       Вероятно, я мог бы и раньше опубликовать свои записи, //
-      ">
-      It is possible that I might have placed them upon record before,
-      </a>
+      ">It is possible that I might have placed them upon record before,
+      </span>
 
-      <a href="/eng/holmes/12 but a promise of secrecy.wav" data-toggle="tooltip" data-placement="bottom" data-html="true" title="
-      but a pro+mise of secrecy / was ma+de at the time, //<br>
-      bʌt ə ˈprɒmıs əv ˈsiːkrısı wəz meıd ət ðə taım, //<br>
+      <span class="hover" data-content="<a href='/eng/holmes/12 but a promise of secrecy.wav#pitch'>Pitch</a><br><a href='/eng/holmes/12 but a promise of secrecy.wav#energy'>Energy</a>"
+        data-toggle="popover" 
+        title="<b>but a pro+mise of secrecy / was ma+de at the time, //</b><br>
+      <i>bʌt ə ˈprɒmıs əv ˈsiːkrısı wəz meıd ət ðə taım, //</i><br>
       если бы не данное в то время обещание хранить тайну, //
-      ">
-      but a promise of secrecy was made at the time,
-      </a>
+      ">but a promise of secrecy was made at the time,
+      </span>
 
-      <a href="/eng/holmes/13 from which I have only been freed.wav" data-toggle="tooltip" data-placement="bottom" data-html="true" title="
-      from which / I have o+nly been free+d / du+ring the last month / by the unti+mely death /of the la+dy / to whom the ple+dge / was gi+ven.///<br>
-      frəm wıtʃ aı həv ˈəʋnlı bi(ː)n friːd ˈdjʋərıŋ ðə lɑːst mʌnθ baı ðı ˌʌnˈtaımlı deθ əv ðə ˈleıdı tuː huːm ðə pledʒ wəz ˈgıv(ə)n. ///<br>
+      <span class="hover" data-content="<a href='/eng/holmes/13 from which I have only been freed.wav#pitch'>Pitch</a><br><a href='/eng/holmes/13 from which I have only been freed.wav#energy'>Energy</a>"
+        data-toggle="popover" 
+        title="<b>from which / I have o+nly been free+d / du+ring the last month / by the unti+mely death /of the la+dy / to whom the ple+dge / was gi+ven.///</b><br>
+      <i>frəm wıtʃ aı həv ˈəʋnlı bi(ː)n friːd ˈdjʋərıŋ ðə lɑːst mʌnθ baı ðı ˌʌnˈtaımlı deθ əv ðə ˈleıdı tuː huːm ðə pledʒ wəz ˈgıv(ə)n. ///</i><br>
       от которого в прошлом месяце меня освободила безвременная кончина женщины, которой этот обет был дан. ///
-      ">
-      from which I have only been freed during the last month by the untimely death of the lady to whom the pledge was given.
-      </a>
+      ">from which I have only been freed during the last month by the untimely death of the lady to whom the pledge was given.
+      </span>
 
-      <a href="/eng/holmes/14 It is perhaps as well.wav" data-toggle="tooltip" data-placement="bottom" data-html="true" title="
-      I+t is / perha+ps as well /that the fa+cts / should now come to li+ght, //<br>
-      ıt ız pəˈhæps əz wel ðət ðə fækts ʃəd naʋ kʌm tuː laıt, //<br>
+      <span class="hover" data-content="<a href='/eng/holmes/14 It is perhaps as well.wav#pitch'>Pitch</a><br><a href='/eng/holmes/14 It is perhaps as well.wav#energy'>Energy</a>"
+        data-toggle="popover" 
+        title="<b>I+t is / perha+ps as well /that the fa+cts / should now come to li+ght, //</b><br>
+      <i>ıt ız pəˈhæps əz wel ðət ðə fækts ʃəd naʋ kʌm tuː laıt, //</i><br>
       Пожалуй, именно теперь нужно пролить свет на эти факты, //
-      ">
-      It is perhaps as well that the facts should now come to light,
-      </a>
+      ">It is perhaps as well that the facts should now come to light,
+      </span>
 
-      <a href="/eng/holmes/15 for I have reasons to know.wav" data-toggle="tooltip" data-placement="bottom" data-html="true" title="
-      for I have rea+sons to kno+w / that there are widesprea+d rumours/ a+s / to the dea+th / of Dr. Gri+mesby Roylott //<br>
-      fɔː aı həv ˈriːz(ə)nz tuː nəʋ ðət ðeə ɑː waıdspred ˈruːməz əz tuː ðə deθ əv ˈdɒktə grımsbı rɔılɔt //<br>
+      <span class="hover" data-content="<a href='/eng/holmes/15 for I have reasons to know.wav#pitch'>Pitch</a><br><a href='/eng/holmes/15 for I have reasons to know.wav#energy'>Energy</a>"
+        data-toggle="popover" 
+        title="<b>for I have rea+sons to kno+w / that there are widesprea+d rumours/ a+s / to the dea+th / of Dr. Gri+mesby Roylott //</b><br>
+      <i>fɔː aı həv ˈriːz(ə)nz tuː nəʋ ðət ðeə ɑː waıdspred ˈruːməz əz tuː ðə deθ əv ˈdɒktə grımsbı rɔılɔt //</i><br>
       поскольку я имею основания считать, что распространяемые слухи по поводу смерти доктора Гримсби Ройлотта //
-      ">
-      for I have reasons to know that there are widespread rumours as to the death of Dr. Grimesby Roylott
-      </a>
+      ">for I have reasons to know that there are widespread rumours as to the death of Dr. Grimesby Roylott
+      </span>
 
-      <a href="/eng/holmes/16 which tend to make.wav" data-toggle="tooltip" data-placement="bottom" data-html="true" title="
-      which te+nd / to make the ma+tter / e+ven more te+rrible / tha+n the truth. ///<br>
-      wıtʃ tend tuː meık ðə ˈmætə ˈiːv(ə)n mɔː ˈterəb(ə)l ðæn ðə truːθ. ///<br>
+      <span class="hover" data-content="<a href='/eng/holmes/16 which tend to make.wav#pitch'>Pitch</a><br><a href='/eng/holmes/16 which tend to make.wav#energy'>Energy</a>"
+        data-toggle="popover" 
+        title="<b>which te+nd / to make the ma+tter / e+ven more te+rrible / tha+n the truth. ///</b><br>
+      <i>wıtʃ tend tuː meık ðə ˈmætə ˈiːv(ə)n mɔː ˈterəb(ə)l ðæn ðə truːθ. ///</i><br>
       представляли дело еще более ужасным, чем оно было в действительности. ///
-      ">
-      which tend to make the matter even more terrible than the truth.
-      </a>
+      ">which tend to make the matter even more terrible than the truth.
+      </span>
 
     </div> <!-- /container -->
   </body>

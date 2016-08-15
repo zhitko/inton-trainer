@@ -18,12 +18,16 @@
 
     <script src="./js/jquery-3.1.0.min.js"></script>
     <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/popover-override.js"></script>
 
     <script type="text/javascript">
       $(document).ready(function(){
-          $('[data-toggle="tooltip"]').tooltip({
-            'trigger':'hover'
-          }); 
+        $('[data-toggle="popover"]').popover({ 
+          trigger: 'click hover', 
+          placement: 'auto', 
+          delay: {show: 50, hide: 400},
+          html: true
+        });
       });
     </script>
 

@@ -18,12 +18,16 @@
 
     <script src="./js/jquery-3.1.0.min.js"></script>
     <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/popover-override.js"></script>
 
     <script type="text/javascript">
       $(document).ready(function(){
-          $('[data-toggle="tooltip"]').tooltip({
-            'trigger':'hover'
-          }); 
+        $('[data-toggle="popover"]').popover({ 
+          trigger: 'click hover', 
+          placement: 'auto', 
+          delay: {show: 50, hide: 400},
+          html: true
+        });
       });
     </script>
 
@@ -50,12 +54,24 @@
       <img src="images/rus/ik2.png" class="img-thumbnail" alt="ИК" width="100%">
       
       <ul>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="Где+ вы= бы=ли?" href="/ИК2/Ж_1А_безпредъядра/Где вы были.wav">Где вы были</a></li>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="Где+ она=?" href="/ИК2/Ж_1А_безпредъядра/Где она.wav">Где она</a></li>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="Кто+ это=?" href="/ИК2/Ж_1А_безпредъядра/Кто это.wav">Кто это</a></li>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="Что+ ва=м на=до?" href="/ИК2/Ж_1А_безпредъядра/Что вам надо.wav">Что вам надо</a></li>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="Что+ ты= де=лаешь за=втра?" href="/ИК2/Ж_1А_безпредъядра/Что ты делаешь завтра.wav">Что ты делаешь завтра</a></li>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="Что+ ты= де=лал?" href="/ИК2/Ж_1А_безпредъядра/Что ты делал.wav">Что ты делал</a></li>
+        <li><span data-toggle="popover" title="Где+ вы= бы=ли?" data-content="<a href='/ИК2/Ж_1А_безпредъядра/Где вы были.wav#pitch'>Основной тон</a><br><a href='/ИК2/Ж_1А_безпредъядра/Где вы были.wav#energy'>Энергия</a>">
+          Где вы были
+        </span></li>
+        <li><span data-toggle="popover" title="Где+ она=?" data-content="<a href='/ИК2/Ж_1А_безпредъядра/Где она.wav#pitch'>Основной тон</a><br><a href='/ИК2/Ж_1А_безпредъядра/Где она.wav#energy'>Энергия</a>">
+          Где она
+        </span></li>
+        <li><span data-toggle="popover" title="Кто+ это=?" data-content="<a href='/ИК2/Ж_1А_безпредъядра/Кто это.wav#pitch'>Основной тон</a><br><a href='/ИК2/Ж_1А_безпредъядра/Кто это.wav#energy'>Энергия</a>">
+          Кто это
+        </span></li>
+        <li><span data-toggle="popover" title="Что+ ва=м на=до?" data-content="<a href='/ИК2/Ж_1А_безпредъядра/Что вам надо.wav#pitch'>Основной тон</a><br><a href='/ИК2/Ж_1А_безпредъядра/Что вам надо.wav#energy'>Энергия</a>">
+          Что вам надо
+        </span></li>
+        <li><span data-toggle="popover" title="Что+ ты= де=лаешь за=втра?" data-content="<a href='/ИК2/Ж_1А_безпредъядра/Что ты делаешь завтра.wav#pitch'>Основной тон</a><br><a href='/ИК2/Ж_1А_безпредъядра/Что ты делаешь завтра.wav#energy'>Энергия</a>">
+          Что ты делаешь завтра
+        </span></li>
+        <li><span data-toggle="popover" title="Что+ ты= де=лал?" data-content="<a href='/ИК2/Ж_1А_безпредъядра/Что ты делал.wav#pitch'>Основной тон</a><br><a href='/ИК2/Ж_1А_безпредъядра/Что ты делал.wav#energy'>Энергия</a>">
+          Что ты делал
+        </span></li>
       </ul>
 
       <p>Одноакцентная полная ИК</p>
@@ -63,10 +79,18 @@
       <img src="images/rus/ik2-2.png" class="img-thumbnail" alt="ИК" width="100%">
       
       <ul>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="Куда+ о=н?" href="/ИК2/Ж_1А_полнаяИК/Куда он.wav">Куда он</a></li>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="Куда+ ты= идё=шь?" href="/ИК2/Ж_1А_полнаяИК/Куда ты идёшь.wav">Куда ты идёшь</a></li>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="Отку+да она= прие=хала?" href="/ИК2/Ж_1А_полнаяИК/Откуда она приехала.wav">Откуда она приехала</a></li>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="Почему+ ты= опозда=л?" href="/ИК2/Ж_1А_полнаяИК/Почему ты опоздал.wav">Почему ты опоздал</a></li>
+        <li><span data-toggle="popover" title="Куда+ о=н?" data-content="<a href='/ИК2/Ж_1А_полнаяИК/Куда он.wav#pitch'>Основной тон</a><br><a href='/ИК2/Ж_1А_полнаяИК/Куда он.wav#energy'>Энергия</a>">
+          Куда он
+        </span></li>
+        <li><span data-toggle="popover" title="Куда+ ты= идё=шь?" data-content="<a href='/ИК2/Ж_1А_полнаяИК/Куда ты идёшь.wav#pitch'>Основной тон</a><br><a href='/ИК2/Ж_1А_полнаяИК/Куда ты идёшь.wav#energy'>Энергия</a>">
+          Куда ты идёшь
+        </span></li>
+        <li><span data-toggle="popover" title="Отку+да она= прие=хала?" data-content="<a href='/ИК2/Ж_1А_полнаяИК/Откуда она приехала.wav#pitch'>Основной тон</a><br><a href='/ИК2/Ж_1А_полнаяИК/Откуда она приехала.wav#energy'>Энергия</a>">
+          Откуда она приехала
+        </span></li>
+        <li><span data-toggle="popover" title="Почему+ ты= опозда=л?" data-content="<a href='/ИК2/Ж_1А_полнаяИК/Почему ты опоздал.wav#pitch'>Основной тон</a><br><a href='/ИК2/Ж_1А_полнаяИК/Почему ты опоздал.wav#energy'>Энергия</a>">
+          Почему ты опоздал
+        </span></li>
       </ul>
 
       <p>Однаакцентная полная распрастранённая</p>
@@ -74,12 +98,24 @@
       <img src="images/rus/ik2-3.png" class="img-thumbnail" alt="ИК" width="100%">
       
       <ul>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="Како+й?" href="/ИК2/Ж_1А_полнаяИК_распр/Какой.wav">Какой</a></li>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="Како+й фи=льм?" href="/ИК2/Ж_1А_полнаяИК_распр/Какой фильм.wav">Какой фильм</a></li>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="Како+й вчера= бы=л фи=льм?" href="/ИК2/Ж_1А_полнаяИК_распр/Какой вчера был фильм.wav">Какой вчера был фильм</a></li>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="Како+й вчера= бы=л фи=льм поътелеви=зору?" href="/ИК2/Ж_1А_полнаяИК_распр/Какой вчера был фильм по телевизору.wav">Какой вчера был фильм по телевизору</a></li>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="Како+й вчера= бы=л фи=льм поътелеви=зору поъвторо=й програ=мме?" href="/ИК2/Ж_1А_полнаяИК_распр/Какой вчера был фильм по телевизору по второй программе.wav">Какой вчера был фильм по телевизору по второй программе</a></li>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="Како+й вчера= бы=л фи=льм поътелеви=зору поъвторо=й програ=мме въде=сять часо=в?" href="/ИК2/Ж_1А_полнаяИК_распр/Какой вчера был фильм по телевизору по второй программе в десять часов.wav">Какой вчера был фильм по телевизору по второй программе в десять часов</a></li>
+        <li><span data-toggle="popover" title="Како+й?" data-content="<a href='/ИК2/Ж_1А_полнаяИК_распр/Какой.wav#pitch'>Основной тон</a><br><a href='/ИК2/Ж_1А_полнаяИК_распр/Какой.wav#energy'>Энергия</a>">
+          Какой
+        </span></li>
+        <li><span data-toggle="popover" title="Како+й фи=льм?" data-content="<a href='/ИК2/Ж_1А_полнаяИК_распр/Какой фильм.wav#pitch'>Основной тон</a><br><a href='/ИК2/Ж_1А_полнаяИК_распр/Какой фильм.wav#energy'>Энергия</a>">
+          Какой фильм
+        </span></li>
+        <li><span data-toggle="popover" title="Како+й вчера= бы=л фи=льм?" data-content="<a href='/ИК2/Ж_1А_полнаяИК_распр/Какой вчера был фильм.wav#pitch'>Основной тон</a><br><a href='/ИК2/Ж_1А_полнаяИК_распр/Какой вчера был фильм.wav#energy'>Энергия</a>">
+          Какой вчера был фильм
+        </span></li>
+        <li><span data-toggle="popover" title="Како+й вчера= бы=л фи=льм поътелеви=зору?" data-content="<a href='/ИК2/Ж_1А_полнаяИК_распр/Какой вчера был фильм по телевизору.wav#pitch'>Основной тон</a><br><a href='/ИК2/Ж_1А_полнаяИК_распр/Какой вчера был фильм по телевизору.wav#energy'>Энергия</a>">
+          Какой вчера был фильм по телевизору
+        </span></li>
+        <li><span data-toggle="popover" title="Како+й вчера= бы=л фи=льм поътелеви=зору поъвторо=й програ=мме?" data-content="<a href='/ИК2/Ж_1А_полнаяИК_распр/Какой вчера был филь#pitch'>Основной тон</a><br><a href='/ИК2/Ж_1А_полнаяИК_распр/Какой вчера был фильм п#energy'>Энергия</a>м по телевизору по второй программе.wav">
+          Какой вчера был фильм по телевизору по второй программе
+        </span></li>
+        <li><span data-toggle="popover" title="Како+й вчера= бы=л фи=льм поътелеви=зору поъвторо=й програ=мме въде=сять часо=в?" data-content="<a href='/ИК2/Ж_1А_полнаяИК_распр/Како#pitch'>Основной тон</a><br><a href='/ИК2/Ж_1А_полнаяИК_распр/Какой вчер#energy'>Энергия</a>й вчера был фильм по телевизору по второй программе в десять часов.wav">
+          Какой вчера был фильм по телевизору по второй программе в десять часов
+        </span></li>
       </ul>
 
       <p>Одноакцентная полная со сменой акцента</p>
@@ -87,9 +123,15 @@
       <img src="images/rus/ik2-4.png" class="img-thumbnail" alt="ИК" width="100%">
       
       <ul>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="Что= ты= де+лаешь за=втра?" href="/ИК2/Ж_1А_полнаяИК_сменаА/Что ты делаешь завтра 1.wav">Что ты делаешь завтра</a></li>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="Что= ты+ де=лаешь за=втра?" href="/ИК2/Ж_1А_полнаяИК_сменаА/Что ты делаешь завтра 2.wav">Что ты делаешь завтра</a></li>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="Что= ты= де=лаешь за+втра?" href="/ИК2/Ж_1А_полнаяИК_сменаА/Что ты делаешь завтра 3.wav">Что ты делаешь завтра</a></li>
+        <li><span data-toggle="popover" title="Что= ты= де+лаешь за=втра?" data-content="<a href='/ИК2/Ж_1А_полнаяИК_сменаА/Что ты делаешь завтра 1.wav#pitch'>Основной тон</a><br><a href='/ИК2/Ж_1А_полнаяИК_сменаА/Что ты делаешь завтра 1.wav#energy'>Энергия</a>">
+          Что ты делаешь завтра
+        </span></li>
+        <li><span data-toggle="popover" title="Что= ты+ де=лаешь за=втра?" data-content="<a href='/ИК2/Ж_1А_полнаяИК_сменаА/Что ты делаешь завтра 2.wav#pitch'>Основной тон</a><br><a href='/ИК2/Ж_1А_полнаяИК_сменаА/Что ты делаешь завтра 2.wav#energy'>Энергия</a>">
+          Что ты делаешь завтра
+        </span></li>
+        <li><span data-toggle="popover" title="Что= ты= де=лаешь за+втра?" data-content="<a href='/ИК2/Ж_1А_полнаяИК_сменаА/Что ты делаешь завтра 3.wav#pitch'>Основной тон</a><br><a href='/ИК2/Ж_1А_полнаяИК_сменаА/Что ты делаешь завтра 3.wav#energy'>Энергия</a>">
+          Что ты делаешь завтра
+        </span></li>
       </ul>
 
     </div> <!-- /container -->
