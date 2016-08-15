@@ -27,6 +27,7 @@ class SoundRecorder;
 class AutoSoundRecorder;
 class GraphsWindow;
 class SettingsDialog;
+class GraphsEvalWindow;
 
 class MainWindow : public QMainWindow
 {
@@ -61,7 +62,7 @@ private slots:
     void evaluationSpec();
     void evaluationI();
     void evaluationI_Spec();
-    void evaluation(Drawer * drawer);
+    void evaluation(Drawer*);
     void remove();
     void rename();
     void autoRecording();
@@ -72,12 +73,12 @@ private slots:
     void updateVolume();
     void playRecord();
     void updateFileList();
-
-    void settingsShow();
-
-private slots:
     void plottingGraph(QListWidgetItem*);
     void trainingGraph(QListWidgetItem*);
+
+public slots:
+    void settingsShow();
+    GraphsEvalWindow * evaluation(QString, Drawer*);
 };
 
 #endif // MAINWINDOW_H

@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+#include "webwindow.h"
 #include <QApplication>
 
 #include <QTextCodec>
@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("Voice Analyzer");
 
     QApplication a(argc, argv);
-    MainWindow w;
+    WebWindow w;
     w.show();
 
     return a.exec();

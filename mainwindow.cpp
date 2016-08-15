@@ -367,26 +367,38 @@ void MainWindow::evaluationI()
 void MainWindow::evaluation(Drawer * drawer)
 {
     QString path = QApplication::applicationDirPath() + DATA_PATH;
+
     QList<QListWidgetItem*> items = ui->filesList->selectedItems();
     if(items.size() > 0)
     {
-        QString file = path + items.at(0)->text();
-        qDebug() << "Draw graphs for evaluation " << file;
-        GraphsEvalWindow * window = new GraphsEvalWindow(file, drawer);
+        QString file = items.at(0)->text();
 
-        connect(window, SIGNAL(autoRec()), this, SLOT(autoRecording()));
-        connect(window, SIGNAL(rec()), this, SLOT(manualRecording()));
+        GraphsEvalWindow * window = this->evaluation(file, drawer);
 
-        connect(window, SIGNAL(recFinish()), this, SLOT(updateFileList()));
-
-        window->show();
-        window->fullFit();
         if(items.size() > 1)
         {
             QString file2 = path + items.at(1)->text();
             window->drawFile(file2);
         }
     }
+}
+
+GraphsEvalWindow * MainWindow::evaluation(QString filePath, Drawer * drawer)
+{
+    QString path = QApplication::applicationDirPath() + DATA_PATH;
+
+    QString file = path + filePath;
+    qDebug() << "Draw graphs for evaluation " << file;
+    GraphsEvalWindow * window = new GraphsEvalWindow(file, drawer);
+
+    connect(window, SIGNAL(autoRec()), this, SLOT(autoRecording()));
+    connect(window, SIGNAL(rec()), this, SLOT(manualRecording()));
+
+    connect(window, SIGNAL(recFinish()), this, SLOT(updateFileList()));
+
+    window->show();
+    window->fullFit();
+    return window;
 }
 
 void MainWindow::plotting()

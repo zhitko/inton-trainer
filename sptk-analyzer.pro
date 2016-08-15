@@ -5,7 +5,7 @@
 #-------------------------------------------------
 QMAKE_CFLAGS += -std=gnu++11 -std=c99
 
-QT       += core gui
+QT       += core gui webkitwidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -49,7 +49,8 @@ SOURCES += \
     drawerevalenergybyspectr.cpp \
     DP/spectrdp.cpp \
     drawerevalspectr.cpp \
-    drawerevalpitchviaspectr.cpp
+    drawerevalpitchviaspectr.cpp \
+    webwindow.cpp
 
 HEADERS  += \
     mainwindow.h \
@@ -70,7 +71,8 @@ HEADERS  += \
     DP/vectordp.h \
     DP/spectrdp.h \
     drawerevalspectr.h \
-    drawerevalpitchviaspectr.h
+    drawerevalpitchviaspectr.h \
+    webwindow.h
 
 # OpenAL
 SOURCES += \
@@ -335,7 +337,8 @@ HEADERS  += \
 FORMS += \
     mainwindow.ui \
     graphswindow.ui \
-    settingsdialog.ui
+    settingsdialog.ui \
+    webwindow.ui
 
 RESOURCES += \
     icons.qrc
