@@ -38,14 +38,12 @@ void WebWindow::linkClickedWebView(QUrl url) {
     qDebug() << url.path();
     qDebug() << url.fileName();
     qDebug() << url.toString();
-    if (url.toString().endsWith(".wav#pitch"))
-    {
-        qDebug() << url.path();
+    if (url.toString().endsWith(".wav#pitch")) {
         this->mainWindow->evaluation(url.path(), new DrawerEvalPitchBySpectr());
-    }else if (url.toString().endsWith(".wav#energy"))
-    {
-        qDebug() << url.path();
+    }else if (url.toString().endsWith(".wav#energy")) {
         this->mainWindow->evaluation(url.path(), new DrawerEvalEnergyBySpectr());
+    }else if (url.toString().endsWith(".wav#play")) {
+        this->mainWindow->playRecord(url.path());
     }else if(url.fileName() == "settings.window"){
         this->mainWindow->settingsShow();
     }else if(url.fileName() == "main.window"){

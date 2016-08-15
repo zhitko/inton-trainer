@@ -488,13 +488,18 @@ void MainWindow::settingsShow()
 
 void MainWindow::playRecord()
 {
-    QString path = QApplication::applicationDirPath() + DATA_PATH;
     QList<QListWidgetItem*> items = ui->filesList->selectedItems();
     for(int i=0; i<items.size(); i++)
     {
         qDebug() << "play file " << items.at(i)->text();
-        QString file = path + items.at(i)->text();
-        SoundPlayer * player = new SoundPlayer(file);
-        player->start();
+        this->playRecord(items.at(i)->text());
     }
+}
+
+void MainWindow::playRecord(QString filePath)
+{
+    QString path = QApplication::applicationDirPath() + DATA_PATH;
+    QString file = path +filePath;
+    SoundPlayer * player = new SoundPlayer(file);
+    player->start();
 }

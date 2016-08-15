@@ -23,7 +23,7 @@
     <script type="text/javascript">
       $(document).ready(function(){
         $('[data-toggle="popover"]').popover({ 
-          trigger: 'click hover', 
+          trigger: 'hover', 
           placement: 'auto', 
           delay: {show: 50, hide: 400},
           html: true
@@ -52,7 +52,11 @@
       <p></p>
       
       <ul>
-      <li><a data-toggle="tooltip" data-placement="bottom" data-html="true" title="" href="/ИК//.wav"></a></li>
+      <li><a data-toggle="popover" title="" data-content="
+          <a href='/ИК//.wav#pitch'>Основной тон</a><br>
+          <a href='/ИК//.wav#energy'>Энергия</a><br>
+          <a href='/ИК//.wav#play'>Воспроизвести</a>
+        "></a></li>
       </ul>
 
       <a class="btn btn-default" href="rus.html">Назад</a>

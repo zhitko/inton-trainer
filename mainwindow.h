@@ -79,6 +79,7 @@ private slots:
 public slots:
     void settingsShow();
     GraphsEvalWindow * evaluation(QString, Drawer*);
+    void playRecord(QString);
 };
 
 #endif // MAINWINDOW_H
