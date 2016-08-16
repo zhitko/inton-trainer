@@ -43,22 +43,22 @@ int DrawerEvalEnergy::Draw(mglGraph *gr)
     gr->DefaultPlotParam();
     gr->Clf();
 
-    if(!isCompare) gr->AddLegend(QString("Энергия образца (без обработки)").toLocal8Bit().data(),"-G1");
-    gr->AddLegend(QString("Энергия образца").toLocal8Bit().data(),"-g2");
-    if(isCompare) gr->AddLegend(QString("Энергия записи").toLocal8Bit().data(),"-B4");
+    if(!isCompare) gr->AddLegend(QString("Энергия образца (без обработки)").toLocal8Bit().data(),"-b1");
+    gr->AddLegend(QString("Энергия образца").toLocal8Bit().data(),"-B3");
+    if(isCompare) gr->AddLegend(QString("Энергия записи").toLocal8Bit().data(),"-G3");
 //    if(isCompare) gr->AddLegend(QString("Оригинальня энергия записи").toLocal8Bit().data(),"-n1");
     gr->Legend(0,"-A");
 
     qDebug() << "waveData";
     gr->MultiPlot(1, 12, 0, 1, 1, "#");
     gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
-    gr->Plot(waveData, "-G");
+    gr->Plot(waveData, "-B");
 
     qDebug() << "enegryData";
     gr->MultiPlot(1, 12, 4, 1, 6, "#");
     gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
-    if(!isCompare) gr->Plot(intensiveDataOriginal, "-G1");
-    gr->Plot(intensiveData, "-g2");
+    if(!isCompare) gr->Plot(intensiveDataOriginal, "-b1");
+    gr->Plot(intensiveData, "-B3");
 
     gr->Axis("Y", "");
     gr->Grid("y", "W", "");
@@ -69,7 +69,7 @@ int DrawerEvalEnergy::Draw(mglGraph *gr)
         qDebug() << "secWaveData";
         gr->MultiPlot(1, 12, 1, 1, 1, "#");
         gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
-        gr->Plot(secWaveData, "B");
+        gr->Plot(secWaveData, "G");
 
         gr->MultiPlot(1, 12, 3, 1, 1, "#");
         gr->Puts(mglPoint(0,0),QString("Совпадение: \\big{#r{%1}}%").arg(this->result).toLocal8Bit().data(), ":C", 30);
@@ -77,7 +77,7 @@ int DrawerEvalEnergy::Draw(mglGraph *gr)
         qDebug() << "secEnegryData";
         gr->MultiPlot(1, 12, 4, 1, 6, "#");
         gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
-        gr->Plot(secIntensiveData, "-B4");
+        gr->Plot(secIntensiveData, "-G3");
 
 //        qDebug() << "secEnegryDataOrig";
 //        gr->MultiPlot(1, 12, 4, 1, 6, "#");
