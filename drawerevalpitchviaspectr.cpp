@@ -46,7 +46,7 @@ int DrawerEvalPitchViaSpectr::Draw(mglGraph *gr)
 
     qDebug() << "waveData";
     gr->MultiPlot(1, 11, 0, 1, 1, "#");
-    gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
+    gr->SetRange('y', 0, 1);
     gr->Plot(waveData, "-G");
 
     qDebug() << "pitchData";
@@ -97,8 +97,7 @@ void DrawerEvalPitchViaSpectr::Proc(QString fname)
         GraphData dataSec = ProcWave2Data(this->secFileName);
         dataSec.d_pitch = vector_fill_empty(dataSec.d_pitch);
 
-        vectorToData(dataSec.d_wave, &secWaveData);
-        secWaveData.Norm(GRAPH_Y_VAL_MAX);
+        vectorToData(dataSec.d_full_wave, &secWaveData);
         qDebug() << "waveData New Filled";
 
         vectorToData(dataSec.d_pitch, &secPitchDataOrig);

@@ -95,42 +95,71 @@ vector vector_log(vector data)
     return result;
 }
 
+vector zero_to_nan(vector data)
+{
+    for(int i=0;i<data.x;i++)
+        if (data.v[i] == 0)
+            data.v[i] = NAN;
+    return data;
+}
 
 vector vector_cut_by_mask(vector data, vector mask)
 {
-    vector result = makev(data.x);
-
-    double min_value = DBL_MAX;
-    double max_value = -DBL_MAX;
-    for(int i=0; i<data.x && i<mask.x; i++ )
+    vector result = zerov(data.x);
+    for (int i=0; i<data.x && i<mask.x; i++ )
     {
         if(mask.v[i] > MASK_LIMIT)
-        {
-            if(data.v[i] > max_value)
-            {
-                max_value = data.v[i];
-            }
-            if(data.v[i] < min_value)
-            {
-                min_value = data.v[i];
-            }
-        }
-    }
-    for(int i=0; i<data.x; i++ )
-    {
-        if(data.v[i] > max_value)
-        {
-            result.v[i] = max_value;
-        }
-        else if(data.v[i] < min_value)
-        {
-            result.v[i] = min_value;
-        }
-        else
         {
             result.v[i] = data.v[i];
         }
     }
+
+//    for(int i=0; i<data.x && i<mask.x; i++ )
+//    {
+//        if(mask.v[i] > MASK_LIMIT)
+//        {
+//            if(data.v[i] > max_value)
+//            {
+//                max_value = data.v[i];
+//            }
+//            if(data.v[i] < min_value)
+//            {
+//                min_value = data.v[i];
+//            }
+//        }
+//    }
+
+//    double min_value = DBL_MAX;
+//    double max_value = -DBL_MAX;
+//    for(int i=0; i<data.x && i<mask.x; i++ )
+//    {
+//        if(mask.v[i] > MASK_LIMIT)
+//        {
+//            if(data.v[i] > max_value)
+//            {
+//                max_value = data.v[i];
+//            }
+//            if(data.v[i] < min_value)
+//            {
+//                min_value = data.v[i];
+//            }
+//        }
+//    }
+//    for(int i=0; i<data.x; i++ )
+//    {
+//        if(data.v[i] > max_value)
+//        {
+//            result.v[i] = max_value;
+//        }
+//        else if(data.v[i] < min_value)
+//        {
+//            result.v[i] = min_value;
+//        }
+//        else
+//        {
+//            result.v[i] = data.v[i];
+//        }
+//    }
     return result;
 }
 
@@ -149,5 +178,34 @@ vector vector_invert_mask(vector mask)
         }
     }
     return inverted;
+}
+
+vector make_mask(int length, int count, int * points_from, int * points_length)
+{
+    vector mask = zerov(length);
+
+    for (int i=0; i<count; i++)
+    {
+        for (int j=points_from[i]; j<(points_from[i]+points_length[i]); j++)
+        {
+            mask.v[j] = 1;
+        }
+    }
+
+    return mask;
+}
+
+vector vector_resize(vector orig, int new_size)
+{
+    int orig_size = orig.x;
+    vector result = zerov(new_size);
+
+    for (int i=0; i<new_size; i++)
+    {
+        int scaled_i = (i*orig_size)/new_size;
+        result.v[i] = orig.v[scaled_i];
+    }
+
+    return result;
 }
 

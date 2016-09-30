@@ -46,8 +46,11 @@ int DrawerEvalSpectr::Draw(mglGraph *gr)
 
     qDebug() << "waveData";
     gr->MultiPlot(1, 23, 0, 1, 1, "#");
-    gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
-    gr->Plot(waveData, "-G");
+    gr->SetRange('y', 0, 1);
+    gr->Plot(waveData, "-B");
+    gr->Plot(pWaveData, "-y1");
+    gr->Plot(nWaveData, "-q1");
+    gr->Plot(tWaveData, "-c1");
 
     specData.Norm(0, 1);
     gr->MultiPlot(1, 23, 4, 1, 6, "#");
@@ -59,7 +62,7 @@ int DrawerEvalSpectr::Draw(mglGraph *gr)
     if(!this->secFileName.isEmpty()){
         qDebug() << "secWaveData";
         gr->MultiPlot(1, 23, 1, 1, 1, "#");
-        gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
+        gr->SetRange('y', 0, 1);
         gr->Plot(secWaveData, "B");
 
         gr->MultiPlot(1, 23, 3, 1, 1, "#");
@@ -101,7 +104,7 @@ void DrawerEvalSpectr::Proc(QString fname)
         GraphData dataSec = ProcWave2Data(this->secFileName);
 
         vectorToData(dataSec.d_wave, &secWaveData);
-        secWaveData.Norm(GRAPH_Y_VAL_MAX);
+        secWaveData.Norm(1);
         qDebug() << "waveData New Filled";
 
         int speksize = sptk_settings->spec->leng / 2 + 1;

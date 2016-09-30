@@ -75,10 +75,6 @@ GraphsWindow::~GraphsWindow()
 void GraphsWindow::initUI()
 {
     ui->setupUi(this);
-
-    connect(this->ui->applyBtn, SIGNAL(clicked()), this, SLOT(rangeChanged()));
-    connect(this->ui->pitchAutoBtn, SIGNAL(clicked()), this, SLOT(pitchAuto()));
-    connect(this->ui->specAutoBtn, SIGNAL(clicked()), this, SLOT(specAuto()));
     connect(this->ui->to3DBtn, SIGNAL(clicked()), this, SLOT(stereo()));
 
     connect(this->ui->recordBtn, SIGNAL(clicked()), this, SLOT(_rec()));

@@ -72,14 +72,14 @@ void MainWindow::initUI()
     connect(ratingF0Act, SIGNAL(triggered()), this, SLOT(evaluationF0()));
     QAction * ratingIAct = new QAction(tr("Show Energy"), this);
     connect(ratingIAct, SIGNAL(triggered()), this, SLOT(evaluationI()));
-    QAction * ratingSpecAct = new QAction(tr("Show Spectr"), this);
-    connect(ratingSpecAct, SIGNAL(triggered()), this, SLOT(evaluationSpec()));
     QAction * ratingF0SpectrAct = new QAction(tr("Show F0 By Spectr"), this);
     connect(ratingF0SpectrAct, SIGNAL(triggered()), this, SLOT(evaluationF0_Spec()));
     QAction * ratingISpectrAct = new QAction(tr("Show Energy By Spectr"), this);
     connect(ratingISpectrAct, SIGNAL(triggered()), this, SLOT(evaluationI_Spec()));
-    menu->addAction(ratingF0Act);
-    menu->addAction(ratingIAct);
+    QAction * ratingSpecAct = new QAction(tr("Show Spectr"), this);
+    connect(ratingSpecAct, SIGNAL(triggered()), this, SLOT(evaluationSpec()));
+//    menu->addAction(ratingF0Act);
+//    menu->addAction(ratingIAct);
     menu->addAction(ratingF0SpectrAct);
     menu->addAction(ratingISpectrAct);
     menu->addAction(ratingSpecAct);

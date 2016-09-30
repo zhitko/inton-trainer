@@ -91,6 +91,14 @@ static void  SOLVE(int, double **, double *);
 static void  dgels(int, vector, vector);
 #endif
 
+// init vector by data
+vector initv(int size, double* data) {
+    vector nw_vector;
+    nw_vector.x = size;
+    nw_vector.v = data;
+    return(nw_vector);
+}
+
 // create a vector of size xSz
 vector makev(int xSz) {
     vector nw_vector;

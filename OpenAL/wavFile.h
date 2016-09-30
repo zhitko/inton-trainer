@@ -48,6 +48,40 @@ typedef struct {
     CuePoint *cuePoints;
 } CueChunk;
 
+// LablChunk
+typedef struct {
+    char chunkID[4];        // String: Must be "labl" (0x6C61626C)
+    char chunkDataSize[4];
+    char cuePointID[4];
+    char *text;
+} LablChunk;
+
+// LtxtChunk
+typedef struct {
+    char chunkID[4];        // String: Must be "ltxt" (0x6C747874)
+    char chunkDataSize[4];
+    char cuePointID[4];
+    char sampleLength[4];
+    char purposeID[4];
+    char country[2];
+    char language[2];
+    char dialect[2];
+    char codePage[2];
+    char *text;
+} LtxtChunk;
+
+
+// Names are stored in a ListChunk
+typedef struct {
+    char chunkID[4];        // String: Must be "list" (0x6C696E74).
+    char chunkDataSize[4];  // Unsigned 4-byte little endian int: Byte count for the remainder of the chunk: 4 (size of typeID) + (24 (size of ListItem struct) * number of ListItems).
+    char typeID[4];         // "adtl" (0x6164746C)
+    int ltxtCount;
+    LtxtChunk *ltxtChunks;
+    int lablCount;
+    LablChunk *lablChunks;
+} ListChunk;
+
 // Some chunks we don't care about the contents and will just copy them from the input file to the output,
 // so this struct just stores positions of such chunks in the input file
 typedef struct {
@@ -63,6 +97,7 @@ typedef struct {
     FormatChunk *formatChunk;
     DataChunk *dataChunk;
     CueChunk *cueChunk;
+    ListChunk *listChunk;
 } WaveFile;
 
 WaveFile * initWaveFile();

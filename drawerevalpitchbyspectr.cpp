@@ -5,9 +5,6 @@
 
 #include "settingsdialog.h"
 
-#include "DP/vectordp.h"
-#include "DP/spectrdp.h"
-
 extern "C" {
     #include "./OpenAL/wavFile.h"
 
@@ -50,44 +47,45 @@ void DrawerEvalPitchBySpectr::Proc(QString fname)
         GraphData dataSec = ProcWave2Data(this->secFileName);
         dataSec.d_pitch = vector_fill_empty(dataSec.d_pitch);
 
-        vectorToData(dataSec.d_wave, &secWaveData);
-        secWaveData.Norm(GRAPH_Y_VAL_MAX);
+//        vectorToData(dataSec.d_full_wave, &secWaveData);
         qDebug() << "waveData New Filled";
 
         vectorToData(dataSec.d_pitch, &secPitchDataOrig);
         secPitchDataOrig.Norm(GRAPH_Y_VAL_MAX);
         qDebug() << "pitchData New Filled";
 
-        vector pitchOrig;
-        pitchOrig.v = pitchData.a;
-        pitchOrig.x = data->d_pitch.x;
+        vector pitchOrig = initv(data->d_pitch.x, pitchData.a);
         (*pitchOrig.v) = 0;
 
-//        vector pitchOrigNorm = normalizev(pitchOrig, 0.0, 10.0);
-
-        vector pitch;
-        pitch.v = secPitchDataOrig.a;
-        pitch.x = dataSec.d_pitch.x;
+        vector pitch = initv(dataSec.d_pitch.x, secPitchDataOrig.a);
         (*pitch.v) = 0;
 
-//        vector pitchNorm = normalizev(pitch, 0.0, 10.0);
-
         qDebug() << "Pitch sizes " << pitchOrig.x << " " << pitch.x;
-
-//        qDebug() << "Start DP";
-//        VectorDP dp(new VectorSignal(copyv(pitchOrigNorm)), new VectorSignal(copyv(pitchNorm)));
-//        vector newPitch = dp.getScaledSignal()->getArray();
-//        this->result = calcResultMark(newPitch,pitchOrigNorm, dp.getSignalMask()->value.globalError);
-//        qDebug() << "Stop DP";
 
         qDebug() << "Start DP";
         SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
         int speksize = sptk_settings->spec->leng / 2 + 1;
         SpectrDP dp(new SpectrSignal(copyv(data->d_spec), speksize),
                     new SpectrSignal(copyv(dataSec.d_spec), speksize));
-        VectorSignal data(makev(dataSec.d_spec.x/speksize));
-        for(int i=0; i<pitch.x; i++) data.setValueAt(pitch.v[i], i);
-        vector newPitch = ((VectorSignal*)dp.applyMask<double>(&data))->getArray();
+
+        vector newPitch = scaleVectorByDPResults(pitch, &dp);
+
+        vector n_wave = getSignalWithMask(data->n_mask, &dp, dataSec.d_full_wave);
+        vectorToData(n_wave, &nSecWaveData);
+        freev(n_wave);
+
+        vector p_wave = getSignalWithMask(data->p_mask, &dp, dataSec.d_full_wave);
+        vectorToData(p_wave, &pSecWaveData);
+        freev(p_wave);
+
+        vector t_wave = getSignalWithMask(data->t_mask, &dp, dataSec.d_full_wave);
+        vectorToData(t_wave, &tSecWaveData);
+        freev(t_wave);
+
+        vector pnt_wave = getSignalWithMask(data->pnt_mask, &dp, dataSec.d_full_wave);
+        vectorToData(pnt_wave, &secWaveData);
+        freev(pnt_wave);
+
         this->result = calcResultMark(newPitch,pitchOrig, dp.getSignalMask()->value.globalError);
         qDebug() << "Stop DP";
 
@@ -96,7 +94,6 @@ void DrawerEvalPitchBySpectr::Proc(QString fname)
         qDebug() << "pitchData New Filled";
 
         freev(newPitch);
-//        freev(pitchNorm);
         freeGraphData(dataSec);
         qDebug() << "New Data Processed";
     }

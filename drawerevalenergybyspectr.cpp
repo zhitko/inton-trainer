@@ -46,8 +46,7 @@ void DrawerEvalEnergyBySpectr::Proc(QString fname)
 
         GraphData dataSec = ProcWave2Data(this->secFileName);
 
-        vectorToData(dataSec.d_wave, &secWaveData);
-        secWaveData.Norm(GRAPH_Y_VAL_MAX);
+        vectorToData(dataSec.d_full_wave, &secWaveData);
         qDebug() << "waveData New Filled";
 
         vectorToData(dataSec.d_intensive, &secIntensiveDataOrig);
@@ -67,7 +66,6 @@ void DrawerEvalEnergyBySpectr::Proc(QString fname)
         qDebug() << "Start DP";
         VectorDP dp(new VectorSignal(copyv(intensiveOrig)), new VectorSignal(copyv(intensive)));
         vector newIntensive = dp.getScaledSignal()->getArray();
-//        this->result = dp.getSignalMask()->value.globalError;
         this->result = calcResultMark(newIntensive,intensiveOrig, dp.getSignalMask()->value.globalError);
         qDebug() << "Stop DP";
 

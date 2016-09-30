@@ -13,5 +13,8 @@ vector vector_fill_empty(vector);
 vector vector_log(vector);
 vector vector_cut_by_mask(vector, vector);
 vector vector_invert_mask(vector);
+vector make_mask(int, int, int*, int*);
+vector vector_resize(vector,int);
+vector zero_to_nan(vector);
 
 #endif

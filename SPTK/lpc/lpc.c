@@ -109,10 +109,10 @@ vector sptk_lpc(vector data, LPC_SETTINGS * settings)
       flag = lpc(x, len, a, m, f);
       switch (flag) {
           case -1:
-             fprintf(stderr, "The coefficient matrix of the normal equation is singular at %dth frame!\n", t);
+             //fprintf(stderr, "The coefficient matrix of the normal equation is singular at %dth frame!\n", t);
              break;
           case -2:
-             fprintf(stderr, "Extracted LPC coefficients become unstable at %dth frame!\n", t);
+             //fprintf(stderr, "Extracted LPC coefficients become unstable at %dth frame!\n", t);
              break;
       }
 

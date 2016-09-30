@@ -49,13 +49,15 @@ int DrawerEvalPitch::Draw(mglGraph *gr)
     if(!isCompare) gr->AddLegend(QString("F0 образца (без обработки)").toLocal8Bit().data(),"-b1");
     gr->AddLegend(QString("F0 образца").toLocal8Bit().data(),"-B3");
     if(isCompare) gr->AddLegend(QString("F0 записи").toLocal8Bit().data(),"-G3");
-//    if(isCompare) gr->AddLegend(QString("Оригинальня F0 записи").toLocal8Bit().data(),"-n1");
     gr->Legend(0,"-A");
 
     qDebug() << "waveData";
     gr->MultiPlot(1, 12, 0, 1, 1, "#");
-    gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
-    gr->Plot(waveData, "-B");
+    gr->SetRange('y', 0, 1);
+    gr->Plot(waveData, "B");
+    gr->Plot(pWaveData, "y1");
+    gr->Plot(nWaveData, "q1");
+    gr->Plot(tWaveData, "c1");
 
     qDebug() << "pitchData";
     gr->MultiPlot(1, 12, 4, 1, 6, "#");
@@ -68,8 +70,11 @@ int DrawerEvalPitch::Draw(mglGraph *gr)
     if(isCompare){
         qDebug() << "secWaveData";
         gr->MultiPlot(1, 12, 1, 1, 1, "#");
-        gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
+        gr->SetRange('y', 0, 1);
         gr->Plot(secWaveData, "G");
+        gr->Plot(pSecWaveData, "y1");
+        gr->Plot(nSecWaveData, "q1");
+        gr->Plot(tSecWaveData, "c1");
 
         gr->MultiPlot(1, 12, 3, 1, 1, "#");
         gr->Puts(mglPoint(0,0),QString("Совпадение: \\big{#r{%1}}%").arg(this->result).toLocal8Bit().data(), ":C", 30);
@@ -78,11 +83,6 @@ int DrawerEvalPitch::Draw(mglGraph *gr)
         gr->MultiPlot(1, 12, 4, 1, 6, "#");
         gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
         gr->Plot(secPitchData, "-G3");
-
-//        qDebug() << "secPitchData";
-//        gr->MultiPlot(1, 12, 4, 1, 6, "#");
-//        gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
-//        gr->Plot(secPitchDataOrig, "-n1");
     }
 
     qDebug() << "finish drawing";
@@ -105,8 +105,7 @@ void DrawerEvalPitch::Proc(QString fname)
         GraphData dataSec = ProcWave2Data(this->secFileName);
         dataSec.d_pitch = vector_fill_empty(dataSec.d_pitch);
 
-        vectorToData(dataSec.d_wave, &secWaveData);
-        secWaveData.Norm(GRAPH_Y_VAL_MAX);
+        vectorToData(dataSec.d_full_wave, &secWaveData);
         qDebug() << "waveData New Filled";
 
         vectorToData(dataSec.d_pitch, &secPitchDataOrig);
@@ -130,25 +129,11 @@ void DrawerEvalPitch::Proc(QString fname)
         qDebug() << "Pitch sizes " << pitchOrig.x << " " << pitch.x;
 
         qDebug() << "Start DP";
-//        VectorDP dp(new VectorSignal(copyv(pitchOrig)), new VectorSignal(copyv(pitch)));
         VectorDP dp(new VectorSignal(copyv(pitchOrigNorm)), new VectorSignal(copyv(pitchNorm)));
         vector newPitch = dp.getScaledSignal()->getArray();
-//        this->result = dp.getSignalMask()->value.globalError;
-//        this->result = calcResultMark(newPitch,pitchOrig, dp.getSignalMask()->value.globalError);
         this->result = calcResultMark(newPitch,pitchOrigNorm, dp.getSignalMask()->value.globalError);
 
         qDebug() << "Stop DP";
-
-//        qDebug() << "Start DP";
-//        SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
-//        int speksize = sptk_settings->spec->leng / 2 + 1;
-//        SpectrDP dp(new SpectrSignal(copyv(data->d_spec), speksize),
-//                    new SpectrSignal(copyv(dataSec.d_spec), speksize));
-//        VectorSignal data(makev(dataSec.d_spec.x/speksize));
-//        for(int i=0; i<pitch.x; i++) data.setValueAt(pitch.v[i], i);
-//        vector newPitch = ((VectorSignal*)dp.applyMask<double>(&data))->getArray();
-//        this->result = dp.getSignalMask()->value.globalError;
-//        qDebug() << "Stop DP";
 
         vectorToData(newPitch, &secPitchData);
         secPitchData.Norm(GRAPH_Y_VAL_MAX);

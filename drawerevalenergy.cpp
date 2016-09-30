@@ -46,13 +46,15 @@ int DrawerEvalEnergy::Draw(mglGraph *gr)
     if(!isCompare) gr->AddLegend(QString("Энергия образца (без обработки)").toLocal8Bit().data(),"-b1");
     gr->AddLegend(QString("Энергия образца").toLocal8Bit().data(),"-B3");
     if(isCompare) gr->AddLegend(QString("Энергия записи").toLocal8Bit().data(),"-G3");
-//    if(isCompare) gr->AddLegend(QString("Оригинальня энергия записи").toLocal8Bit().data(),"-n1");
     gr->Legend(0,"-A");
 
     qDebug() << "waveData";
     gr->MultiPlot(1, 12, 0, 1, 1, "#");
-    gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
+    gr->SetRange('y', 0, 1);
     gr->Plot(waveData, "-B");
+    gr->Plot(pWaveData, "-y1");
+    gr->Plot(nWaveData, "-q1");
+    gr->Plot(tWaveData, "-c1");
 
     qDebug() << "enegryData";
     gr->MultiPlot(1, 12, 4, 1, 6, "#");
@@ -68,7 +70,7 @@ int DrawerEvalEnergy::Draw(mglGraph *gr)
     if(isCompare){
         qDebug() << "secWaveData";
         gr->MultiPlot(1, 12, 1, 1, 1, "#");
-        gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
+        gr->SetRange('y', 0, 1);
         gr->Plot(secWaveData, "G");
 
         gr->MultiPlot(1, 12, 3, 1, 1, "#");
@@ -78,11 +80,6 @@ int DrawerEvalEnergy::Draw(mglGraph *gr)
         gr->MultiPlot(1, 12, 4, 1, 6, "#");
         gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
         gr->Plot(secIntensiveData, "-G3");
-
-//        qDebug() << "secEnegryDataOrig";
-//        gr->MultiPlot(1, 12, 4, 1, 6, "#");
-//        gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
-//        gr->Plot(secIntensiveDataOrig, "-n1");
     }
 
     qDebug() << "finish drawing";
@@ -104,8 +101,7 @@ void DrawerEvalEnergy::Proc(QString fname)
 
         GraphData dataSec = ProcWave2Data(this->secFileName);
 
-        vectorToData(dataSec.d_wave, &secWaveData);
-        secWaveData.Norm(GRAPH_Y_VAL_MAX);
+        vectorToData(dataSec.d_full_wave, &secWaveData);
         qDebug() << "waveData New Filled";
 
         vectorToData(dataSec.d_intensive, &secIntensiveDataOrig);
@@ -125,7 +121,6 @@ void DrawerEvalEnergy::Proc(QString fname)
         qDebug() << "Start DP";
         VectorDP dp(new VectorSignal(copyv(intensiveOrig)), new VectorSignal(copyv(intensive)));
         vector newIntensive = dp.getScaledSignal()->getArray();
-//        this->result = dp.getSignalMask()->value.globalError;
         this->result = calcResultMark(newIntensive,intensiveOrig, dp.getSignalMask()->value.globalError);
         qDebug() << "Stop DP";
 

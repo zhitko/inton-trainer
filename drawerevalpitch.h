@@ -17,6 +17,7 @@ protected:
     bool first;
     QString secFileName;
     mglData secWaveData, secPitchData, secPitchDataOrig;
+    mglData pSecWaveData, nSecWaveData, tSecWaveData;
 };
 
 #endif // DRAWEREVALPITCH_H

@@ -71,6 +71,7 @@
 // vector stuff
 typedef struct                   { int x; double* v; } vector;
 
+vector                            initv(int, double*);
 vector                            makev(int);
 vector                            zerov(int);
 vector                            onesv(int);

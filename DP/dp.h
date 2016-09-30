@@ -136,6 +136,16 @@ public:
         delete signal;
     }
 
+    int getSignalSize()
+    {
+        return this->signal->size();
+    }
+
+    int getPatternSize()
+    {
+        return this->pattern->size();
+    }
+
     DPStateStack * getSignalMask()
     {
         if(!this->mask)
