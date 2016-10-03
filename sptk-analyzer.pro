@@ -342,3 +342,33 @@ FORMS += \
 
 RESOURCES += \
     icons.qrc
+
+DISTFILES += \
+    html/rus.html
+
+# Copy external files post build
+win32{
+    PWD_WIN = $${PWD}
+    DESTDIR_WIN = $${OUT_PWD}
+    PWD_WIN ~= s,/,\\,g
+    DESTDIR_WIN ~= s,/,\\,g
+
+    CONFIG(release, debug|release) {
+        data-html.commands = $(COPY_DIR) $$quote($$PWD_WIN\\html) $$quote($$DESTDIR_WIN\\release\\html)
+    } else {
+        data-html.commands = $(COPY_DIR) $$quote($$PWD_WIN\\html) $$quote($$DESTDIR_WIN\\debug\\html)
+    }
+
+    CONFIG(release, debug|release) {
+        data-wav.commands = $(COPY_DIR) $$quote($$PWD_WIN\\data) $$quote($$DESTDIR_WIN\\release\\data)
+    } else {
+        data-wav.commands = $(COPY_DIR) $$quote($$PWD_WIN\\data) $$quote($$DESTDIR_WIN\\debug\\data)
+    }
+}
+unix{
+    data-html.commands = $(COPY_DIR) $$quote($$PWD/html) $$quote($$OUT_PWD)
+    data-wav.commands = $(COPY_DIR) $$quote($$PWD/data) $$quote($$OUT_PWD)
+}
+
+QMAKE_EXTRA_TARGETS += data-html data-wav
+POST_TARGETDEPS += data-html data-wav
