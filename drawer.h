@@ -18,6 +18,8 @@ struct GraphData{
     vector d_wave;
     vector d_pitch_originl;
     vector d_pitch;
+    double pitch_min;
+    double pitch_max;
     vector d_intensive_original;
     vector d_intensive;
     vector d_avg_intensive;

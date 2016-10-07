@@ -103,7 +103,7 @@ vector readMaskFromFile(WaveFile* waveFile, int length, char marker)
                 markedPointsFrom[count-1] = pointsFrom[id-1];
                 markedPointsLength[count-1] = pointsLength[id-1];
             }
-            qDebug() << "lablChunk cuePointID " << id << " text " << text;
+            qDebug() << "lablChunk cuePointID " << id << " text " << text[0];
         }
         free(pointsFrom);
         free(pointsLength);
@@ -145,8 +145,14 @@ vector getFileMask(WaveFile* waveFile, vector wave, vector pitch, char marker = 
             && (waveFile->listChunk->lablChunks != NULL)
             && (waveFile->listChunk->lablCount > 0);
 
+//    qDebug() << "waveFile->cueChunk " << (waveFile->cueChunk != NULL);
+//    qDebug() << "waveFile->listChunk " << (waveFile->listChunk != NULL);
+//    qDebug() << "waveFile->listChunk->ltxtCount " << (waveFile->listChunk->ltxtCount);
+//    qDebug() << "waveFile->listChunk->lablCount " << (waveFile->listChunk->lablCount);
+
     if (tryFileData)
     {
+        qDebug() << "tryFileData";
         vector mask_from_file = readMaskFromFile(waveFile, wave.x, marker);
         mask = vector_resize(mask_from_file, pitch.x);
         freev(mask_from_file);
@@ -154,6 +160,7 @@ vector getFileMask(WaveFile* waveFile, vector wave, vector pitch, char marker = 
     }
 
     if (!tryFileData || !validateMask(mask)) {
+        qDebug() << "!tryFileData";
         mask = calculateMask(wave, pitch);
     }
 
@@ -180,6 +187,39 @@ vector getSignalWithMask(vector mask, SpectrDP* dp, vector signal)
     return new_signal;
 }
 
+vector processZeros(vector data)
+{
+    bool needProcess = false;
+    int start = 0;
+    int end = 0;
+    for (int i=0; i<data.x; i++)
+    {
+        end = i - 1;
+        if (data.v[i] != 0 && needProcess)
+        {
+            needProcess = false;
+            for (int j=end; j>=start; j--)
+            {
+                data.v[j] = data.v[i];
+            }
+        }
+        else if (data.v[i] == 0 && !needProcess)
+        {
+            start = i;
+            needProcess = true;
+        }
+    }
+    if (needProcess)
+    {
+        end++;
+        for (int i=start; i<=end; i++)
+        {
+            data.v[i] = data.v[start-1];
+        }
+    }
+    return data;
+}
+
 GraphData ProcWave2Data(QString fname)
 {
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
@@ -190,7 +230,9 @@ GraphData ProcWave2Data(QString fname)
     qDebug() << "waveOpenFile";
 
     int size = littleEndianBytesToUInt32(waveFile->dataChunk->chunkDataSize);
+    qDebug() << "chunkDataSize";
     short int bits = littleEndianBytesToUInt16(waveFile->formatChunk->significantBitsPerSample);
+    qDebug() << "significantBitsPerSample";
 
     vector wave = sptk_v2v(waveFile->dataChunk->waveformData, size, bits);
     qDebug() << "wave";
@@ -213,14 +255,17 @@ GraphData ProcWave2Data(QString fname)
     vector spec = sptk_spec(lpc, sptk_settings->spec);
     qDebug() << "spec";
 
-    vector pitch = sptk_pitch_spec(wave, sptk_settings->pitch, intensive.x);
+    vector pitch = processZeros(sptk_pitch_spec(wave, sptk_settings->pitch, intensive.x));
     qDebug() << "pitch";
+//    for (int i=0; i<pitch.x; i++) qDebug() << pitch.v[i];
 
     vector mask = getFileMask(waveFile, wave, pitch);
     qDebug() << "mask";
 
-    vector pitch_cutted = vector_cut_by_mask(pitch, mask);
+    vector pitch_cutted = processZeros(vector_cut_by_mask(pitch, mask));
     qDebug() << "pitch_cutted";
+    double pitch_min = pitch_cutted.v[minv(pitch_cutted)];
+    double pitch_max = pitch_cutted.v[maxv(pitch_cutted)];
 
     vector intensive_cutted = vector_cut_by_mask(intensive, mask);
     qDebug() << "intensive_cutted";
@@ -306,6 +351,8 @@ GraphData ProcWave2Data(QString fname)
     data.d_t_wave = t_wave;
     data.d_pitch_originl = pitch;
     data.d_pitch = pitch_mid;
+    data.pitch_max = pitch_max;
+    data.pitch_min = pitch_min;
     data.d_intensive_original = intensive;
     data.d_intensive = intensive_mid;
     data.d_avg_intensive = intensive_avg;
@@ -464,12 +511,14 @@ int Drawer::Draw(mglGraph *gr)
     gr->Plot(nWaveData, "q1");
     gr->Plot(tWaveData, "c1");
 
-    qDebug() << "pitchData";
+    qDebug() << "pitchData " << data->pitch_min << " " << data->pitch_max;
     gr->MultiPlot(1, 16, 3, 1, 6, "#");
+    gr->Puts(mglPoint(-0.9,1),QString("%1").arg(data->pitch_max).toLocal8Bit().data());
     gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
     gr->Plot(pitchData, "-G6");
     gr->Axis("Y", "");
     gr->Grid("y", "W", "");
+    gr->Puts(mglPoint(-0.9,-1),QString("%1").arg(data->pitch_min).toLocal8Bit().data());
 
     qDebug() << "scaledMaskData";
     gr->MultiPlot(1, 16, 3, 1, 6, "#");

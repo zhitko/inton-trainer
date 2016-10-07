@@ -68,7 +68,7 @@ void DrawerEvalPitchBySpectr::Proc(QString fname)
         SpectrDP dp(new SpectrSignal(copyv(data->d_spec), speksize),
                     new SpectrSignal(copyv(dataSec.d_spec), speksize));
 
-        vector newPitch = scaleVectorByDPResults(pitch, &dp);
+        // Wave processing
 
         vector n_wave = getSignalWithMask(data->n_mask, &dp, dataSec.d_full_wave);
         vectorToData(n_wave, &nSecWaveData);
@@ -85,6 +85,27 @@ void DrawerEvalPitchBySpectr::Proc(QString fname)
         vector pnt_wave = getSignalWithMask(data->pnt_mask, &dp, dataSec.d_full_wave);
         vectorToData(pnt_wave, &secWaveData);
         freev(pnt_wave);
+
+        // Pitch processing
+
+        vector scalledPitch = scaleVectorByDPResults(pitch, &dp);
+
+        vector pntMask = vector_invert_mask(data->pnt_mask);
+        vector pntMaskScalled = vector_resize(pntMask, scalledPitch.x);
+        vector pntMaskScalledInverted = vector_invert_mask(pntMaskScalled);
+        vector cuttedPitch = vector_cut_by_mask(scalledPitch, pntMaskScalled);
+        vector newPitch = vector_interpolate_by_mask(
+                    cuttedPitch,
+                    pntMaskScalledInverted,
+                    sptk_settings->plotF0->interpolation_edges,
+                    sptk_settings->plotF0->interpolation_type
+                    );
+        qDebug() << "pitch_interpolate";
+        freev(scalledPitch);
+        freev(pntMask);
+        freev(pntMaskScalled);
+        freev(pntMaskScalledInverted);
+        freev(cuttedPitch);
 
         this->result = calcResultMark(newPitch,pitchOrig, dp.getSignalMask()->value.globalError);
         qDebug() << "Stop DP";

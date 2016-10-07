@@ -61,11 +61,13 @@ int DrawerEvalPitch::Draw(mglGraph *gr)
 
     qDebug() << "pitchData";
     gr->MultiPlot(1, 12, 4, 1, 6, "#");
+    gr->Puts(mglPoint(-0.9,1),QString("%1").arg(data->pitch_max).toLocal8Bit().data());
     gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
     gr->Plot(pitchData, "-B3");
     if(!isCompare) gr->Plot(pitchDataOriginal, "-b1");
     gr->Axis("Y", "");
     gr->Grid("y", "W", "");
+    gr->Puts(mglPoint(-0.9,-1),QString("%1").arg(data->pitch_min).toLocal8Bit().data());
 
     if(isCompare){
         qDebug() << "secWaveData";
