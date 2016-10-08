@@ -13,6 +13,11 @@ int SpectrSignal::size()
     return array.x / this->spectrSize;
 }
 
+int SpectrSignal::sizeSpectr()
+{
+    return this->spectrSize;
+}
+
 void SpectrSignal::setValueAt(double* value, int index)
 {
     for(int i=0; i<this->spectrSize; i++)
@@ -32,7 +37,15 @@ void SpectrSignal::freeSignal()
 int SpectrDP::calculateError(double* value1, double* value2)
 {
     int error = 0;
+    double a = 0.0;
+    double b = 0.0;
+    double c = 0.0;
     for(int i=0; i<this->spectrSize; i++)
-        error += (value1[i] - value2[i])*(value1[i] - value2[i]);
+    {
+        a = value1[i];
+        b = value2[i];
+        c = a - b;
+        error += c*c;
+    }
     return sqrt(error);
 }

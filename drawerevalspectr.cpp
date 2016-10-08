@@ -103,8 +103,7 @@ void DrawerEvalSpectr::Proc(QString fname)
 
         GraphData dataSec = ProcWave2Data(this->secFileName);
 
-        vectorToData(dataSec.d_wave, &secWaveData);
-        secWaveData.Norm(1);
+        vectorToData(dataSec.d_full_wave, &secWaveData);
         qDebug() << "waveData New Filled";
 
         int speksize = sptk_settings->spec->leng / 2 + 1;
@@ -123,7 +122,6 @@ void DrawerEvalSpectr::Proc(QString fname)
         qDebug() << "Start DP";
         SpectrDP dp(new SpectrSignal(copyv(data->d_spec), speksize),
                     new SpectrSignal(copyv(dataSec.d_spec), speksize));
-        VectorSignal data(makev(dataSec.d_spec.x/speksize));
         vector newSpec = dp.getScaledSignal()->getArray();
         this->result = dp.getSignalMask()->value.globalError;
         qDebug() << "Stop DP";

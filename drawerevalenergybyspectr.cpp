@@ -56,15 +56,18 @@ void DrawerEvalEnergyBySpectr::Proc(QString fname)
         vector intensiveOrig;
         intensiveOrig.v = intensiveData.a;
         intensiveOrig.x = data->d_intensive.x;
+        qDebug() << "intensiveOrig " << intensiveOrig.x;
         (*intensiveOrig.v) = 0;
 
         vector intensive;
         intensive.v = secIntensiveDataOrig.a;
         intensive.x = dataSec.d_intensive.x;
+        qDebug() << "intensive " << intensive.x;
         (*intensive.v) = 0;
 
         qDebug() << "Start DP";
         VectorDP dp(new VectorSignal(copyv(intensiveOrig)), new VectorSignal(copyv(intensive)));
+        qDebug() << "Start DP";
         vector newIntensive = dp.getScaledSignal()->getArray();
         this->result = calcResultMark(newIntensive,intensiveOrig, dp.getSignalMask()->value.globalError);
         qDebug() << "Stop DP";

@@ -18,6 +18,7 @@ public:
     void freeSignal();
 
     int size();
+    int sizeSpectr();
     double* valueAt(int index);
     void setValueAt(double* value, int index);
 
@@ -27,7 +28,7 @@ public:
 class SpectrDP : public DP<double*>
 {
 public:
-    SpectrDP(SpectrSignal * pttrn, SpectrSignal * sig) : DP(pttrn, sig), spectrSize(pttrn->size()) {;}
+    SpectrDP(SpectrSignal * pttrn, SpectrSignal * sig) : DP(pttrn, sig), spectrSize(pttrn->sizeSpectr()) {;}
 
     SpectrSignal * getScaledSignal() { return (SpectrSignal*) DP<double*>::getScaledSignal(); }
 
