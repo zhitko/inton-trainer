@@ -93,7 +93,7 @@ void AutoSoundRecorder::allocateNewBuffer()
     if(this->currentBuffer)
     {
         buffersCounter++;
-        if(!isOver && buffersCounter >= MAX_EMPTY_BUFFERS && this->initBuffer->next)
+        if(!isOver && buffersCounter >= MAX_EMPTY_BUFFERS_BEFORE && this->initBuffer->next)
         {
             buffersCounter--;
             buffer * tmp = this->initBuffer;
@@ -118,7 +118,7 @@ void AutoSoundRecorder::allocateNewBuffer()
             this->emptyBuffersCounter = 0;
             this->lastActiveBuffer = NULL;
         }
-        else if(this->isOver && this->emptyBuffersCounter >= MAX_EMPTY_BUFFERS)
+        else if(this->isOver && this->emptyBuffersCounter >= MAX_EMPTY_BUFFERS_AFTER)
         {
             if(this->lastActiveBuffer && this->lastActiveBuffer->prev)
             {

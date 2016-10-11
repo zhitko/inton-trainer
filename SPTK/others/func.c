@@ -16,7 +16,7 @@ vector vector_intensive(vector data, FRAME_SETTINGS * settings)
     for(int i=0;i<resultLength;i++)
     {
         middle = 0.0;
-        for(int j=(i*frameLength);j<((i+1)*frameLength);j++)
+        for(int j=(i*frameLength);j<((i+1)*frameLength) && j<data.x;j++)
             middle += fabs(data.v[j]);
         middle /= frameLength;
         result.v[i] = middle;

@@ -3,7 +3,8 @@
 
 #include "soundrecorder.h"
 
-const int MAX_EMPTY_BUFFERS = 2;
+const int MAX_EMPTY_BUFFERS_BEFORE = 4;
+const int MAX_EMPTY_BUFFERS_AFTER = 2;
 
 struct buffer;
 

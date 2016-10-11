@@ -161,7 +161,8 @@ vector getFileMask(WaveFile* waveFile, vector wave, vector pitch, char marker = 
 
     if (!tryFileData || !validateMask(mask)) {
         qDebug() << "!tryFileData";
-        mask = calculateMask(wave, pitch);
+//        mask = calculateMask(wave, pitch);
+        mask = onesv(wave.x);
     }
 
     return mask;
@@ -257,7 +258,6 @@ GraphData ProcWave2Data(QString fname)
 
     vector pitch = processZeros(sptk_pitch_spec(wave, sptk_settings->pitch, intensive.x));
     qDebug() << "pitch";
-//    for (int i=0; i<pitch.x; i++) qDebug() << pitch.v[i];
 
     vector mask = getFileMask(waveFile, wave, pitch);
     qDebug() << "mask";
