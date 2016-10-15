@@ -66,10 +66,10 @@ void DrawerEvalPitchBySpectr::Proc(QString fname)
         SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
         int speksize = sptk_settings->spec->leng / 2 + 1;
         qDebug() << "Start DP " << (sptk_settings->spec->leng / 2 + 1);
-        qDebug() << "Start DP " << data->d_spec.x;
-        qDebug() << "Start DP " << dataSec.d_spec.x;
-        SpectrDP dp(new SpectrSignal(copyv(data->d_spec), speksize),
-                    new SpectrSignal(copyv(dataSec.d_spec), speksize));
+        qDebug() << "Start DP " << data->d_spec_exp.x;
+        qDebug() << "Start DP " << dataSec.d_spec_exp.x;
+        SpectrDP dp(new SpectrSignal(copyv(data->d_spec_exp), speksize),
+                    new SpectrSignal(copyv(dataSec.d_spec_exp), speksize));
 
         // Wave processing
 

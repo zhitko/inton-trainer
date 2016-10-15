@@ -119,9 +119,9 @@ void DrawerEvalPitchViaSpectr::Proc(QString fname)
         qDebug() << "Start DP";
         SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
         int speksize = sptk_settings->spec->leng / 2 + 1;
-        SpectrDP dp(new SpectrSignal(copyv(data->d_spec), speksize),
-                    new SpectrSignal(copyv(dataSec.d_spec), speksize));
-        VectorSignal data(makev(dataSec.d_spec.x/speksize));
+        SpectrDP dp(new SpectrSignal(copyv(data->d_spec_exp), speksize),
+                    new SpectrSignal(copyv(dataSec.d_spec_exp), speksize));
+        VectorSignal data(makev(dataSec.d_spec_exp.x/speksize));
         for(int i=0; i<pitch.x; i++) data.setValueAt(pitch.v[i], i);
         vector newPitch = ((VectorSignal*)dp.applyMask<double>(&data))->getArray();
         this->result = dp.getSignalMask()->value.globalError;

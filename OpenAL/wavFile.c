@@ -123,6 +123,7 @@ WaveFile * processFile(WaveFile * waveFile)
 
         if (strncmp(&nextChunkID[0], "fmt ", 4) == 0)
         {
+            fprintf(stdout, "Found fmt chunk\n");
             waveFile->formatChunk = (FormatChunk *)malloc(sizeof(FormatChunk));
             if (waveFile->formatChunk == NULL)
             {
@@ -167,6 +168,7 @@ WaveFile * processFile(WaveFile * waveFile)
 
         else if (strncmp(&nextChunkID[0], "data", 4) == 0)
         {
+            fprintf(stdout, "Found data chunk\n");
             // We found the data chunk
 
             waveFile->dataChunk = (DataChunk *)malloc(sizeof(DataChunk));
@@ -218,6 +220,7 @@ WaveFile * processFile(WaveFile * waveFile)
 
         else if (strncmp(&nextChunkID[0], "cue ", 4) == 0)
         {
+            fprintf(stdout, "Found cue chunk\n");
             // We found an existing Cue Chunk
 
             char cueChunkDataSizeBytes[4];
@@ -271,26 +274,30 @@ WaveFile * processFile(WaveFile * waveFile)
         }
         else if (strncmp(&nextChunkID[0], "LIST", 4) == 0)
         {
+            fprintf(stdout, "Found LIST chunk\n");
             // We found an existing List Chunk
 
             // Populate the existingListChunk struct
-            waveFile->listChunk = (ListChunk *) malloc(sizeof(ListChunk));
-
-            if (waveFile->dataChunk == NULL)
+            if (waveFile->listChunk == NULL)
             {
-                fprintf(stderr, "Memory Allocation Error: Could not allocate memory for Wave File Cue Chunk\n");
-                waveCloseFile(waveFile);
-                return 0;
-            }
-            waveFile->listChunk->chunkID[0] = 'L';
-            waveFile->listChunk->chunkID[1] = 'I';
-            waveFile->listChunk->chunkID[2] = 'S';
-            waveFile->listChunk->chunkID[3] = 'T';
+                waveFile->listChunk = (ListChunk *) malloc(sizeof(ListChunk));
 
-            waveFile->listChunk->lablChunks = NULL;
-            waveFile->listChunk->ltxtChunks = NULL;
-            waveFile->listChunk->lablCount = 0;
-            waveFile->listChunk->ltxtCount = 0;
+                if (waveFile->dataChunk == NULL)
+                {
+                    fprintf(stderr, "Memory Allocation Error: Could not allocate memory for Wave File Cue Chunk\n");
+                    waveCloseFile(waveFile);
+                    return 0;
+                }
+                waveFile->listChunk->chunkID[0] = 'L';
+                waveFile->listChunk->chunkID[1] = 'I';
+                waveFile->listChunk->chunkID[2] = 'S';
+                waveFile->listChunk->chunkID[3] = 'T';
+
+                waveFile->listChunk->lablChunks = NULL;
+                waveFile->listChunk->ltxtChunks = NULL;
+                waveFile->listChunk->lablCount = 0;
+                waveFile->listChunk->ltxtCount = 0;
+            }
 
             char listChunkDataSizeBytes[4];
             fread(listChunkDataSizeBytes, sizeof(char), 4, waveFile->file);
@@ -314,6 +321,7 @@ WaveFile * processFile(WaveFile * waveFile)
         }
         else if (strncmp(&nextChunkID[0], "labl", 4) == 0)
         {
+            fprintf(stdout, "Found labl chunk\n");
             // We found an existing labl Chunk in LIST chunk
             waveFile->listChunk->lablChunks = realloc(waveFile->listChunk->lablChunks, sizeof(LablChunk)*(waveFile->listChunk->lablCount+1));
 
@@ -356,6 +364,8 @@ WaveFile * processFile(WaveFile * waveFile)
         }
         else if (strncmp(&nextChunkID[0], "ltxt", 4) == 0)
         {
+            fprintf(stdout, "Found ltxt chunk\n");
+
             // We found an existing ltxt Chunk in LIST chunk
             waveFile->listChunk->ltxtChunks = realloc(waveFile->listChunk->ltxtChunks, sizeof(LtxtChunk)*(waveFile->listChunk->ltxtCount+1));
 
@@ -448,6 +458,7 @@ WaveFile * processFile(WaveFile * waveFile)
         }
         else
         {
+            fprintf(stdout, "Found unsuppoted chunk %s\n", nextChunkID);
             // We have found a chunk type that we are not going to work with.
             otherChunkLocation.startOffset = ftell(waveFile->file) - sizeof(nextChunkID);
 

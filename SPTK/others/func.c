@@ -87,12 +87,17 @@ vector vector_fill_empty(vector data)
     return data;
 }
 
-vector vector_log(vector data)
+vector vector_pow_exp(vector data, int factor, double min)
 {
-    vector result = makev(data.x);
+    vector data_norm = normalizev(data, 0.0, 1.0);
+    vector data_log = makev(data_norm.x);
     for(int i=0;i<data.x;i++)
-        result.v[i] = log10(data.v[i])*2000;
-    return result;
+    {
+        data_log.v[i] = pow(exp(data_norm.v[i]-1), factor);
+        if (data_log.v[i] < min) data_log.v[i] = 0.0;
+    }
+    freev(data_norm);
+    return data_log;
 }
 
 vector zero_to_nan(vector data)
@@ -113,53 +118,6 @@ vector vector_cut_by_mask(vector data, vector mask)
             result.v[i] = data.v[i];
         }
     }
-
-//    for(int i=0; i<data.x && i<mask.x; i++ )
-//    {
-//        if(mask.v[i] > MASK_LIMIT)
-//        {
-//            if(data.v[i] > max_value)
-//            {
-//                max_value = data.v[i];
-//            }
-//            if(data.v[i] < min_value)
-//            {
-//                min_value = data.v[i];
-//            }
-//        }
-//    }
-
-//    double min_value = DBL_MAX;
-//    double max_value = -DBL_MAX;
-//    for(int i=0; i<data.x && i<mask.x; i++ )
-//    {
-//        if(mask.v[i] > MASK_LIMIT)
-//        {
-//            if(data.v[i] > max_value)
-//            {
-//                max_value = data.v[i];
-//            }
-//            if(data.v[i] < min_value)
-//            {
-//                min_value = data.v[i];
-//            }
-//        }
-//    }
-//    for(int i=0; i<data.x; i++ )
-//    {
-//        if(data.v[i] > max_value)
-//        {
-//            result.v[i] = max_value;
-//        }
-//        else if(data.v[i] < min_value)
-//        {
-//            result.v[i] = min_value;
-//        }
-//        else
-//        {
-//            result.v[i] = data.v[i];
-//        }
-//    }
     return result;
 }
 

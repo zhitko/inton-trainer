@@ -99,15 +99,6 @@ void SoundRecorder::run()
         int maxToWrite = INIT_BUFFER_SIZE - currentPos;
         int size = getSample(this->device, pointToWrite, this->sampleByteSize, maxToWrite);
         currentPos += size;
-
-//        int volume = 0;
-//        int j = 1;
-//        for(j=1; j<100 && j<size; j++,pos+=this->sampleByteSize)
-//        {
-//            int cVolume = getValue(pos, this->sampleByteSize);
-//            if(cVolume > volume) volume = cVolume;
-//        }
-//        this->avgVolumeLevel = volume;
         msleep(200);
     }
     qDebug() << "stopCapture";

@@ -54,13 +54,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::initUI()
 {
-    // trainig tool bar
-    QAction * triningAct = new QAction(tr("&Training"), this);
-    triningAct->setIcon(QIcon(":/icons/icons/guru-26.png"));
-    triningAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_T));
-    triningAct->setStatusTip(tr("Start manual training"));
-    connect(triningAct, SIGNAL(triggered()), this, SLOT(training()));
-
     QToolButton * ratingButton = new QToolButton(this);
     ratingButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     ratingButton->setText(tr("&Evaluation"));
@@ -78,8 +71,6 @@ void MainWindow::initUI()
     connect(ratingISpectrAct, SIGNAL(triggered()), this, SLOT(evaluationI_Spec()));
     QAction * ratingSpecAct = new QAction(tr("Show Spectr"), this);
     connect(ratingSpecAct, SIGNAL(triggered()), this, SLOT(evaluationSpec()));
-//    menu->addAction(ratingF0Act);
-//    menu->addAction(ratingIAct);
     menu->addAction(ratingF0SpectrAct);
     menu->addAction(ratingISpectrAct);
     menu->addAction(ratingSpecAct);
@@ -89,7 +80,6 @@ void MainWindow::initUI()
     QToolBar * trainingToolBar = addToolBar(tr("Training"));
     trainingToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     trainingToolBar->setIconSize(QSize(16,16));
-    trainingToolBar->addAction(triningAct);
     trainingToolBar->addWidget(ratingButton);
 
     // sound actions
@@ -117,16 +107,6 @@ void MainWindow::initUI()
     actionToolBar->addAction(playAct);
 
     // Files' actions
-    QAction * plottingAct = new QAction(tr("Show &Graphs"), this);
-    plottingAct->setIcon(QIcon(":/icons/icons/electrical_threshold-26.png"));
-    plottingAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_G));
-    plottingAct->setStatusTip(tr("Show graphs"));
-    connect(plottingAct, SIGNAL(triggered()), this, SLOT(plotting()));
-
-    QAction * compareAct = new QAction(tr("Compare"), this);
-    compareAct->setIcon(QIcon(":/icons/icons/compare-26.png"));
-    compareAct->setStatusTip(tr("Show compare graphs"));
-    connect(compareAct, SIGNAL(triggered()), this, SLOT(compare()));
 
     QAction * removeAct = new QAction(tr("Remove"), this);
     removeAct->setIcon(QIcon(":/icons/icons/delete-26.png"));
@@ -138,12 +118,9 @@ void MainWindow::initUI()
     renameAct->setStatusTip(tr("Rename selected file"));
     connect(renameAct, SIGNAL(triggered()), this, SLOT(rename()));
 
-    addToolBarBreak();
     QToolBar * fileToolBar = addToolBar(tr("Files Operations"));
     fileToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     fileToolBar->setIconSize(QSize(16,16));
-    fileToolBar->addAction(plottingAct);
-    fileToolBar->addAction(compareAct);
     fileToolBar->addAction(removeAct);
     fileToolBar->addAction(renameAct);
 
@@ -296,40 +273,6 @@ void MainWindow::compare()
 
         connect(first, SIGNAL(changeSig(int)), second, SLOT(setK(int)));
         connect(second, SIGNAL(changeSig(int)), first, SLOT(setK(int)));
-
-        layout->addWidget(first);
-        layout->addWidget(second);
-        window->show();
-        first->fullFit();
-        second->fullFit();
-    }
-}
-
-void MainWindow::trainingGraph(QListWidgetItem* item)
-{
-    this->training();
-}
-
-void MainWindow::training()
-{
-    QString path = QApplication::applicationDirPath() + DATA_PATH;
-    QList<QListWidgetItem*> items = ui->filesList->selectedItems();
-    if(items.size() > 0)
-    {
-        QString file = path + items.at(0)->text();
-        qDebug() << "Draw graphs for training " << file;
-        QWidget * window = new QWidget();
-        QVBoxLayout *layout = new QVBoxLayout(window);
-        GraphsWindow * first = this->showGraph(file);
-        GraphsWindow * second = new GraphsWindow();
-
-        connect(first, SIGNAL(changeSig(int)), second, SLOT(setK(int)));
-        connect(second, SIGNAL(changeSig(int)), first, SLOT(setK(int)));
-
-        connect(second, SIGNAL(recFinish()), this, SLOT(updateFileList()));
-
-        connect(second, SIGNAL(autoRec()), this, SLOT(autoRecording()));
-        connect(second, SIGNAL(rec()), this, SLOT(manualRecording()));
 
         layout->addWidget(first);
         layout->addWidget(second);

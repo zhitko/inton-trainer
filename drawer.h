@@ -24,6 +24,7 @@ struct GraphData{
     vector d_intensive;
     vector d_avg_intensive;
     vector d_spec;
+    vector d_spec_exp;
     vector d_mask;
     vector d_p_wave;
     vector d_n_wave;

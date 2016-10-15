@@ -169,6 +169,8 @@ typedef struct _LPC_SETTINGS {
 typedef struct _SPEC_SETTINGS {
     int leng;
     int order;
+    int factor;
+    double min;
 } SPEC_SETTINGS;
 
 typedef struct _PLOT_SETTINGS {

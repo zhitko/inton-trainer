@@ -56,6 +56,8 @@ SPEC_SETTINGS *initSpecSettings()
     SPEC_SETTINGS * spec = malloc(sizeof(SPEC_SETTINGS));
     spec->leng = 512;
     spec->order = 25;
+    spec->factor = 10;
+    spec->min = 0.1;
     return spec;
 }
 

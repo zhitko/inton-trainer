@@ -123,6 +123,8 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->lpc->order = instance->ui->lpcOrderSpin->value();
     sptk_settings->spec->leng = instance->ui->frameSizeBox->currentText().toInt();
     sptk_settings->spec->order = instance->ui->lpcOrderSpin->value();
+    sptk_settings->spec->factor = instance->ui->specFactorSpin->value();
+    sptk_settings->spec->min = instance->ui->specMinSpin->value();
 
     return sptk_settings;
 }
@@ -180,6 +182,11 @@ void SettingsDialog::loadSettings()
         this->ui->energyMidThresholdStart->setValue(settings.value("energyFrame/threshold_start").toDouble());
     if(settings.contains("energyFrame/threshold_end"))
         this->ui->energyMidThresholdEnd->setValue(settings.value("energyFrame/threshold_end").toDouble());
+
+    if(settings.contains("spec/factor"))
+        this->ui->specFactorSpin->setValue(settings.value("spec/factor").toInt());
+    if(settings.contains("spec/min"))
+        this->ui->specMinSpin->setValue(settings.value("spec/min").toDouble());
 
     if(settings.contains("frame/leng"))
         this->ui->frameSizeBox->setCurrentText(QString::number(settings.value("frame/leng").toInt()));
@@ -240,6 +247,8 @@ void SettingsDialog::saveSettings()
     settings.setValue("lpc/order", this->ui->lpcOrderSpin->value());
     settings.setValue("spec/leng", this->ui->frameSizeBox->currentText().toInt());
     settings.setValue("spec/order", this->ui->lpcOrderSpin->value());
+    settings.setValue("spec/factor", this->ui->specFactorSpin->value());
+    settings.setValue("spec/min", this->ui->specMinSpin->value());
 
     settings.setValue("mathGL/quality", this->ui->mathGLQualitySpin->value());
     settings.setValue("mathGL/autoOpen", this->ui->isAutoOpen->isChecked());

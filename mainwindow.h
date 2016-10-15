@@ -56,7 +56,6 @@ private:
     SettingsDialog *settingsDialog;
 
 private slots:
-    void training();
     void evaluationF0();
     void evaluationF0_Spec();
     void evaluationSpec();
@@ -74,7 +73,6 @@ private slots:
     void playRecord();
     void updateFileList();
     void plottingGraph(QListWidgetItem*);
-    void trainingGraph(QListWidgetItem*);
 
 public slots:
     void settingsShow();
