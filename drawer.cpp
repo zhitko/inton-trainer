@@ -533,11 +533,8 @@ int Drawer::Draw(mglGraph *gr)
     gr->Puts(mglPoint(-0.9,-1),QString("%1").arg(data->pitch_min).toLocal8Bit().data());
 
     qDebug() << "scaledMaskData";
-    gr->MultiPlot(1, 16, 3, 1, 6, "#");
     gr->SetRange('y', 0, 1);
     gr->Plot(maskData, "-G1");
-    gr->Axis("Y", "");
-    gr->Grid("y", "W", "");
 
     qDebug() << "specData";
     gr->MultiPlot(1, 16, 10, 1, 6, "#");

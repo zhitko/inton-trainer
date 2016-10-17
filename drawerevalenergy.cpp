@@ -62,6 +62,10 @@ int DrawerEvalEnergy::Draw(mglGraph *gr)
     if(!isCompare) gr->Plot(intensiveDataOriginal, "-b1");
     gr->Plot(intensiveData, "-B3");
 
+    qDebug() << "scaledMaskData";
+    gr->SetRange('y', 0, 1);
+    gr->Plot(maskData, "-G1");
+
     gr->Axis("Y", "");
     gr->Grid("y", "W", "");
 

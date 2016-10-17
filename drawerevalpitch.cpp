@@ -69,6 +69,10 @@ int DrawerEvalPitch::Draw(mglGraph *gr)
     gr->Grid("y", "W", "");
     gr->Puts(mglPoint(-0.9,-1),QString("%1").arg(data->pitch_min).toLocal8Bit().data());
 
+    qDebug() << "scaledMaskData";
+    gr->SetRange('y', 0, 1);
+    gr->Plot(maskData, "-G1");
+
     if(isCompare){
         qDebug() << "secWaveData";
         gr->MultiPlot(1, 12, 1, 1, 1, "#");
