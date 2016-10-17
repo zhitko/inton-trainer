@@ -256,7 +256,14 @@ GraphData ProcWave2Data(QString fname)
     vector spec = sptk_spec(lpc, sptk_settings->spec);
     qDebug() << "spec";
 
-    vector spec_exp = vector_pow_exp(spec, sptk_settings->spec->factor, sptk_settings->spec->min);
+    vector spec_proc;
+    if (sptk_settings->spec->proc == 0){
+        spec_proc = vector_pow_log(spec, sptk_settings->spec->factor, sptk_settings->spec->min);
+        qDebug() << "spec_log";
+    } else if (sptk_settings->spec->proc == 1){
+        spec_proc = vector_pow_exp(spec, sptk_settings->spec->factor, sptk_settings->spec->min);
+        qDebug() << "spec_exp";
+    }
     qDebug() << "spec_log";
 
     vector pitch = processZeros(sptk_pitch_spec(wave, sptk_settings->pitch, intensive.x));
@@ -359,7 +366,7 @@ GraphData ProcWave2Data(QString fname)
     data.d_intensive_original = intensive;
     data.d_intensive = intensive_mid;
     data.d_avg_intensive = intensive_avg;
-    data.d_spec_exp = spec_exp;
+    data.d_spec_proc = spec_proc;
     data.d_spec = spec;
     data.d_mask = mask;
     data.p_mask = p_mask;
@@ -378,7 +385,7 @@ void freeGraphData(GraphData data)
     freev(data.d_pitch_originl);
     freev(data.d_pitch);
     freev(data.d_spec);
-    freev(data.d_spec_exp);
+    freev(data.d_spec_proc);
     freev(data.d_wave);
     freev(data.d_full_wave);
     freev(data.d_mask);
@@ -480,7 +487,7 @@ void Drawer::Proc(QString fname)
     qDebug() << "pitchData Filled";
 
     int speksize = sptk_settings->spec->leng / 2 + 1;
-    int specX = data->d_spec_exp.x/speksize;
+    int specX = data->d_spec_proc.x/speksize;
     int specY = speksize;
     specData.Create(specX, specY);
     for(long j=0;j<specY;j++)
@@ -488,7 +495,7 @@ void Drawer::Proc(QString fname)
         {
             long i0 = i+specX*j;
             long i1 = j+specY*i;
-            specData.a[i0] = data->d_spec_exp.v[i1];
+            specData.a[i0] = data->d_spec_proc.v[i1];
         }
     specData.Squeeze(mathgl_settings->quality, 1);
     qDebug() << "specData Filled " << specX << " " << specY;

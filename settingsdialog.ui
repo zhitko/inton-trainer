@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>802</width>
-    <height>531</height>
+    <width>806</width>
+    <height>538</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,7 +36,7 @@
          <item>
           <widget class="QGroupBox" name="groupBox">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -323,25 +323,11 @@
            <property name="title">
             <string>Настройка спектра</string>
            </property>
-           <layout class="QFormLayout" name="formLayout_8">
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_25">
-              <property name="text">
-               <string>Фактор</string>
-              </property>
-             </widget>
-            </item>
+           <layout class="QGridLayout" name="gridLayout">
             <item row="1" column="1">
              <widget class="QSpinBox" name="specFactorSpin">
               <property name="value">
                <number>10</number>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0" colspan="2">
-             <widget class="QLabel" name="label_26">
-              <property name="text">
-               <string>Обработка спектра: y = exp(x-1)^фактор</string>
               </property>
              </widget>
             </item>
@@ -363,6 +349,27 @@
               <property name="value">
                <double>0.050000000000000</double>
               </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_25">
+              <property name="text">
+               <string>Фактор</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0" colspan="2">
+             <widget class="QComboBox" name="specProcBox">
+              <item>
+               <property name="text">
+                <string>Обработка спектра: y= (log(x)+1)^фактор</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Обработка спектра: y = exp(x-1)^фактор</string>
+               </property>
+              </item>
              </widget>
             </item>
            </layout>

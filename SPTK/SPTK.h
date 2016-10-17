@@ -171,6 +171,7 @@ typedef struct _SPEC_SETTINGS {
     int order;
     int factor;
     double min;
+    int proc; // 0 - log; 1 - exp
 } SPEC_SETTINGS;
 
 typedef struct _PLOT_SETTINGS {

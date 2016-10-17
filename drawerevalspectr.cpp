@@ -107,7 +107,7 @@ void DrawerEvalSpectr::Proc(QString fname)
         qDebug() << "waveData New Filled";
 
         int speksize = sptk_settings->spec->leng / 2 + 1;
-        int specX = dataSec.d_spec_exp.x/speksize;
+        int specX = dataSec.d_spec_proc.x/speksize;
         int specY = speksize;
         secSpecDataOrig.Create(specX, specY);
         for(long j=0;j<specY;j++)
@@ -115,13 +115,13 @@ void DrawerEvalSpectr::Proc(QString fname)
             {
                 long i0 = i+specX*j;
                 long i1 = j+specY*i;
-                secSpecDataOrig.a[i0] = dataSec.d_spec_exp.v[i1];
+                secSpecDataOrig.a[i0] = dataSec.d_spec_proc.v[i1];
             }
         secSpecDataOrig.Squeeze(mathgl_settings->quality, 1);
 
         qDebug() << "Start DP";
-        SpectrDP dp(new SpectrSignal(copyv(data->d_spec_exp), speksize),
-                    new SpectrSignal(copyv(dataSec.d_spec_exp), speksize));
+        SpectrDP dp(new SpectrSignal(copyv(data->d_spec_proc), speksize),
+                    new SpectrSignal(copyv(dataSec.d_spec_proc), speksize));
         vector newSpec = dp.getScaledSignal()->getArray();
         this->result = dp.getSignalMask()->value.globalError;
         qDebug() << "Stop DP";

@@ -87,6 +87,19 @@ vector vector_fill_empty(vector data)
     return data;
 }
 
+vector vector_pow_log(vector data, int factor, double min)
+{
+    vector data_norm = normalizev(data, 0.0, 1.0);
+    vector data_log = zerov(data_norm.x);
+    for(int i=0;i<data.x;i++)
+    {
+        if (data_norm.v[i] > 0.1) data_log.v[i] = pow(log(data_norm.v[i])+1, factor);
+        if (data_log.v[i] < min) data_log.v[i] = 0.0;
+    }
+    freev(data_norm);
+    return data_log;
+}
+
 vector vector_pow_exp(vector data, int factor, double min)
 {
     vector data_norm = normalizev(data, 0.0, 1.0);
