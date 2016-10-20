@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>IntonTrainer</title>
+
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <link href="./css/into-trainer.css" rel="stylesheet">
+
+    <script src="./js/react-with-addons.js"></script>
+    <script src="./js/react-dom.js"></script>
+    <script src="./js/browser.min.js"></script>
+
+    <script src="./js/jquery-3.1.0.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/popover-override.js"></script>
+
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('[data-toggle="popover"]').popover({ 
+          trigger: 'hover', 
+          placement: 'auto', 
+          delay: {show: 50, hide: 400},
+          html: true
+        });
+      });
+    </script>
+
+    <script type="text/javascript">
+      var files = [
+        {
+          'title': 'Разное (женский голос)',
+          'files': [
+            {
+              'title': "А это бык, бык?",
+              'text': "Бык",
+              'path': "/rus-female/бык.wav"
+            },
+            {
+              'title': "А это кит, кит?",
+              'text': "Кит",
+              'path': "/rus-female/кит.wav"
+            },
+            {
+              'title': "А это кот, кот?",
+              'text': "Кот",
+              'path': "/rus-female/кот.wav"
+            },
+            {
+              'title': "А это сад, сад?",
+              'text': "Сад",
+              'path': "/rus-female/сад.wav"
+            },
+            {
+              'title': "А это сук, сук?",
+              'text': "Сук",
+              'path': "/rus-female/сук.wav"
+            },
+            {
+              'title': "А это тэц, тэц?",
+              'text': "Тэц",
+              'path': "/rus-female/тэц.wav"
+            }
+          ]
+        },
+        {
+          'title': 'ИК1 (мужской голос)',
+          'files': [
+            {
+              'title': "Он гуляет",
+              'text': "Он гуляет",
+              'path': "/rus-male/IK1/1.wav"
+            },
+            {
+              'title': "Он гуляет в парке",
+              'text': "Он гуляет в парке",
+              'path': "/rus-male/IK1/2.wav"
+            },
+            {
+              'title': "Он гуляет в парке с собакой",
+              'text': "Он гуляет в парке с собакой",
+              'path': "/rus-male/IK1/3.wav"
+            }
+          ]
+        },
+        {
+          'title': 'ИК2 (мужской голос)',
+          'files': [
+            {
+              'title': "Откуда",
+              'text': "Откуда",
+              'path': "/rus-male/IK2/1.wav"
+            },
+            {
+              'title': "Отку+да ты приехал сегодня",
+              'text': "Отку+да ты приехал сегодня",
+              'path': "/rus-male/IK2/2.wav"
+            },
+            {
+              'title': "Откуда ты+ приехал сегодня",
+              'text': "Откуда ты+ приехал сегодня",
+              'path': "/rus-male/IK2/3.wav"
+            },
+            {
+              'title': "Откуда ты прие+хал сегодня",
+              'text': "Откуда ты прие+хал сегодня",
+              'path': "/rus-male/IK2/4.wav"
+            }
+          ]
+        },
+        {
+          'title': 'ИК3 (мужской голос)',
+          'files': [
+            {
+              'title': "Елена",
+              'text': "Елена",
+              'path': "/rus-male/IK3/1.wav"
+            },
+            {
+              'title': "Еле+на завтра уезжает",
+              'text': "Еле+на завтра уезжает",
+              'path': "/rus-male/IK3/2.wav"
+            },
+            {
+              'title': "Елена за+втра уезжает",
+              'text': "Елена за+втра уезжает",
+              'path': "/rus-male/IK3/3.wav"
+            },
+            {
+              'title': "Елена завтра уезжа+ет",
+              'text': "Елена завтра уезжа+ет",
+              'path': "/rus-male/IK3/4.wav"
+            }
+          ]
+        },
+        {
+          'title': 'ИК4 (мужской голос)',
+          'files': [
+            {
+              'title': "А Елена",
+              'text': "А Елена",
+              'path': "/rus-male/IK4/1.wav"
+            },
+            {
+              'title': "А сегодня",
+              'text': "А сегодня",
+              'path': "/rus-male/IK4/2.wav"
+            }
+          ]
+        },
+        {
+          'title': 'ИК5 (мужской голос)',
+          'files': [
+            {
+              'title': "Какой сегодня день",
+              'text': "Какой сегодня день",
+              'path': "/rus-male/IK5/1.wav"
+            },
+            {
+              'title': "Кому она только не писала",
+              'text': "Кому она только не писала",
+              'path': "/rus-male/IK5/2.wav"
+            }
+          ]
+        },
+        {
+          'title': 'ИК6 (мужской голос)',
+          'files': [
+            {
+              'title': "Какая музыка прекрасная",
+              'text': "Какая музыка прекрасная",
+              'path': "/rus-male/IK6/1.wav"
+            },
+            {
+              'title': "Что за костюм такой хороший",
+              'text': "Что за костюм такой хороший",
+              'path': "/rus-male/IK6/2.wav"
+            }
+          ]
+        },
+        {
+          'title': 'ИК7 (мужской голос)',
+          'files': [
+            {
+              'title': "Да какая это выставка",
+              'text': "Да какая это выставка",
+              'path': "/rus-male/IK7/1.wav"
+            },
+            {
+              'title': "Да о чём мне с тобой разговаривать",
+              'text': "Да о чём мне с тобой разговаривать",
+              'path': "/rus-male/IK7/2.wav"
+            },
+            {
+              'title': "Да какая она актриса",
+              'text': "Да какая она актриса",
+              'path': "/rus-male/IK7/3.wav"
+            }
+          ]
+        },
+        {
+          'title': 'Разное (мужской голос)',
+          'files': [
+            {
+              'title': "А Са+ша ку+шал кашу",
+              'text': "А Са+ша ку+шал кашу",
+              'path': "/rus-male/А Са+ша ку+шал кашу.wav"
+            },
+            {
+              'title': "А Саша ку+шал кашу",
+              'text': "А Саша ку+шал кашу",
+              'path': "/rus-male/А Саша ку+шал кашу.wav"
+            },
+            {
+              'title': "А Саша кушал ка+шу",
+              'text': "А Саша кушал ка+шу",
+              'path': "/rus-male/А Саша кушал ка+шу.wav"
+            },
+            {
+              'title': "Саша ку+шал кашу",
+              'text': "Саша ку+шал кашу",
+              'path': "/rus-male/Саша ку+шал кашу.wav"
+            },
+            {
+              'title': "Так а+втором в газете стал Са+ша вчера",
+              'text': "Так а+втором в газете стал Са+ша вчера",
+              'path': "/rus-male/Так а+втором в газете стал Са+ша вчера.wav"
+            },
+            {
+              'title': "А это бык, бык?",
+              'text': "Бык",
+              'path': "/rus-male/бык.wav"
+            },
+            {
+              'title': "А это кит, кит?",
+              'text': "Кит",
+              'path': "/rus-male/кит.wav"
+            },
+            {
+              'title': "А это кот, кот?",
+              'text': "Кот",
+              'path': "/rus-male/кот.wav"
+            },
+            {
+              'title': "А это сад, сад?",
+              'text': "Сад",
+              'path': "/rus-male/сад.wav"
+            },
+            {
+              'title': "А это сук, сук?",
+              'text': "Сук",
+              'path': "/rus-male/сук.wav"
+            },
+            {
+              'title': "А это тэц, тэц?",
+              'text': "Тэц",
+              'path': "/rus-male/тэц.wav"
+            }
+          ]
+        }
+      ];
+    </script>    
+
+    <script type="text/babel">
+
+      var ListFiles = React.createClass({
+        render: function() {
+          var fileNodes = this.props.data.map(function(node) {
+            return (
+              <ListFileElement data={node} />
+            );
+          });
+
+          return (
+            <ul>
+              {fileNodes}
+            </ul>
+          );
+        }
+      });
+
+      var FileLink = React.createClass({
+        render: function() {
+          return (
+            <a href={this.props.data.path+this.props.type}>{this.props.children}</a>
+          );
+        }
+      });
+
+      var ListFileElement = React.createClass({
+        render: function() {
+          var links = "\
+            <span> \
+              <a href='"+this.props.data.path+"#pitch'>Основной тон</a> \
+              <br /> \
+              <a href='"+this.props.data.path+"#energy'>Энергия</a> \
+              <br /> \
+              <a href='"+this.props.data.path+"#spectr'>Спектр</a> \
+            </span> \
+          ";
+
+          return (
+            <li>
+              <FileLink data={this.props.data} type='#play'>
+                <img height="20px" src="./images/play.png"></img>
+              </FileLink>
+              <span data-toggle="popover" 
+                    title={this.props.data.title} 
+                    data-content={links} >
+                {this.props.data.text}
+              </span>
+            </li>
+          );
+        }
+      });
+
+      var Section = React.createClass({
+        render: function() {
+          return (
+            <div>
+              <h2>{this.props.title}</h2>
+              <br />
+              <ListFiles data={this.props.data} />
+            </div>
+          );
+        }
+      });
+
+      var SectionsList = React.createClass({
+        render: function() {
+          var sectionNodes = this.props.data.map(function(node) {
+            return (
+              <Section title={node.title} data={node.files} />
+            );
+          });
+
+          return (
+            <div>
+              {sectionNodes}
+            </div>
+          );
+        }
+      });
+
+      ReactDOM.render(
+        <SectionsList data={files} />,
+        document.getElementById('container')
+      );
+    </script>
+
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" class="active"><a href="index.html">Начало</a></li>
+            <li role="presentation"><a href="settings.window">Настройки</a></li>
+            <li role="presentation"><a href="main.window">Режим разработчика</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">IntonTrainer<span class="top-text">@</span></h3>
+      </div>
+
+      <div class="jumbotron">
+        <h1>Русский</h1>
+        <p class="lead">изучение русской интонации</p>
+      </div>
+
+      <div class="row marketing">
+        <div class="col-lg-6">
+          <div id="container"></div>
+          <br>
+          <a class="btn btn-default" href="index.html">Назад</a>
+        </div>
+
+        <div class="col-lg-6">
+        </div>
+      </div>
+
+    </div>
+  </body>
+</html>

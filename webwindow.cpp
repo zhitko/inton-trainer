@@ -40,6 +40,8 @@ void WebWindow::linkClickedWebView(QUrl url) {
     qDebug() << url.toString();
     if (url.toString().endsWith(".wav#pitch")) {
         this->mainWindow->evaluation(url.path(), new DrawerEvalPitchBySpectr());
+    }else if (url.toString().endsWith(".wav#spectr")) {
+        this->mainWindow->evaluation(url.path(), new Drawer());
     }else if (url.toString().endsWith(".wav#energy")) {
         this->mainWindow->evaluation(url.path(), new DrawerEvalEnergyBySpectr());
     }else if (url.toString().endsWith(".wav#play")) {

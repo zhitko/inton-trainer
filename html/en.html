@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>IntonTrainer</title>
+
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <link href="./css/into-trainer.css" rel="stylesheet">
+
+    <script src="./js/react-with-addons.js"></script>
+    <script src="./js/react-dom.js"></script>
+    <script src="./js/browser.min.js"></script>
+
+    <script src="./js/jquery-3.1.0.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/popover-override.js"></script>
+
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('[data-toggle="popover"]').popover({ 
+          trigger: 'hover', 
+          placement: 'auto', 
+          delay: {show: 50, hide: 400},
+          html: true
+        });
+      });
+    </script>
+
+    <script type="text/javascript">
+      var files = [
+        {
+          'title': 'Falling',
+          'files': [
+            {
+              'title': "Come back!",
+              'text': "Come back!",
+              'path': "/Start training/Falling_come back!.wav"
+            },
+            {
+              'title': "Go home!",
+              'text': "Go home!",
+              'path': "/Start training/Falling_go home!.wav"
+            },
+            {
+              'title': "I know",
+              'text': "I know",
+              'path': "/Start training/Falling_I know.wav"
+            },
+            {
+              'title': "It's full",
+              'text': "It's full",
+              'path': "/Start training/Falling_it's full.wav"
+            },
+            {
+              'title': "It's very intresting",
+              'text': "It's very intresting",
+              'path': "/Start training/Falling_it's very intresting.wav"
+            },
+            {
+              'title': "Newer",
+              'text': "Newer",
+              'path': "/Start training/Falling_newer.wav"
+            },
+            {
+              'title': "Of course!",
+              'text': "Of course!",
+              'path': "/Start training/Falling_of course!.wav"
+            },
+            {
+              'title': "Open the door!",
+              'text': "Open the door!",
+              'path': "/Start training/Falling_open the door!.wav"
+            },
+            {
+              'title': "Shut the window!",
+              'text': "Shut the window!",
+              'path': "/Start training/Falling_shut the window!.wav"
+            },
+            {
+              'title': "Splending!",
+              'text': "Splending!",
+              'path': "/Start training/Falling_splending!.wav"
+            },
+            {
+              'title': "The door is shut",
+              'text': "The door is shut",
+              'path': "/Start training/Falling_the door is shut.wav"
+            },
+            {
+              'title': "They come",
+              'text': "They come",
+              'path': "/Start training/Falling_they come.wav"
+            },
+            {
+              'title': "Well",
+              'text': "Well",
+              'path': "/Start training/Falling_Well.wav"
+            },
+            {
+              'title': "What's your name",
+              'text': "What's your name",
+              'path': "/Start training/Falling_what's your name.wav"
+            },
+            {
+              'title': "When you play",
+              'text': "When you play",
+              'path': "/Start training/Falling_when you play.wav"
+            },
+            {
+              'title': "Where are you",
+              'text': "Where are you",
+              'path': "/Start training/Falling_where are you.wav"
+            },
+            {
+              'title': "Who is open door",
+              'text': "Who is open door",
+              'path': "/Start training/Falling_who is open door.wav"
+            },
+            {
+              'title': "Yes",
+              'text': "Yes",
+              'path': "/Start training/Falling_Yes.wav"
+            }
+          ]
+        },
+        {
+          'title': 'Fall-Rising',
+          'files': [
+            {
+              'title': "Do'nt do it again",
+              'text': "Do'nt do it again",
+              'path': "/Start training/Fall-Rising_do'nt do it again.wav"
+            },
+            {
+              'title': "Is'nt bad",
+              'text': "Is'nt bad",
+              'path': "/Start training/Fall-Rising_is'nt bad.wav"
+            },
+            {
+              'title': "One is enoughl",
+              'text': "One is enoughl",
+              'path': "/Start training/Fall-Rising_one is enoughl.wav"
+            },
+            {
+              'title': "She has nice eyes",
+              'text': "She has nice eyes",
+              'path': "/Start training/Fall-Rising_she has nice eyes.wav"
+            },
+            {
+              'title': "Well",
+              'text': "Well",
+              'path': "/Start training/Fall-Rising_Well.wav"
+            },
+            {
+              'title': "Yes",
+              'text': "Yes",
+              'path': "/Start training/Fall-Rising_Yes.wav"
+            }
+          ]
+        },
+        {
+          'title': 'h-m-l',
+          'files': [
+            {
+              'title': "Well",
+              'text': "Well",
+              'path': "/Start training/h-m-l_Well.wav"
+            },
+            {
+              'title': "Yes",
+              'text': "Yes",
+              'path': "/Start training/h-m-l_Yes.wav"
+            }
+          ]
+        },
+        {
+          'title': 'Long fall',
+          'files': [
+            {
+              'title': "Well",
+              'text': "Well",
+              'path': "/Start training/Long fall_Well.wav"
+            },
+            {
+              'title': "Yes",
+              'text': "Yes",
+              'path': "/Start training/Long fall_Yes.wav"
+            }
+          ]
+        },
+        {
+          'title': 'Rising',
+          'files': [
+            {
+              'title': "1-2-3-4-5",
+              'text': "1-2-3-4-5",
+              'path': "/Start training/Rising_1-2-3-4-5.wav"
+            },
+            {
+              'title': "Are you shure",
+              'text': "Are you shure",
+              'path': "/Start training/Rising_are you shure.wav"
+            },
+            {
+              'title': "Befor you open the door",
+              'text': "Befor you open the door",
+              'path': "/Start training/Rising_befor you open the door.wav"
+            },
+            {
+              'title': "Do'nt open a door!",
+              'text': "Do'nt open a door!",
+              'path': "/Start training/Rising_do'nt open a door!.wav"
+            },
+            {
+              'title': "Good buy!",
+              'text': "Good buy!",
+              'path': "/Start training/Rising_good buy!.wav"
+            },
+            {
+              'title': "Good morning!",
+              'text': "Good morning!",
+              'path': "/Start training/Rising_good morning!.wav"
+            },
+            {
+              'title': "Is it in a room",
+              'text': "Is it in a room",
+              'path': "/Start training/Rising_is it in a room.wav"
+            },
+            {
+              'title': "Is it never won",
+              'text': "Is it never won",
+              'path': "/Start training/Rising_is it never won.wav"
+            },
+            {
+              'title': "It's not dificult!",
+              'text': "It's not dificult!",
+              'path': "/Start training/Rising_it's not dificult!.wav"
+            },
+            {
+              'title': "Well",
+              'text': "Well",
+              'path': "/Start training/Rising_Well.wav"
+            },
+            {
+              'title': "Yes",
+              'text': "Yes",
+              'path': "/Start training/Rising_yes.wav"
+            }
+          ]
+        },
+        {
+          'title': 'Special Question',
+          'files': [
+            {
+              'title': "1-F",
+              'text': "1-F",
+              'path': "/Special Question/1-F.wav"
+            },
+            {
+              'title': "1-M",
+              'text': "1-M",
+              'path': "/Special Question/1-M.wav"
+            },
+            {
+              'title': "2-F",
+              'text': "2-F",
+              'path': "/Special Question/2-F.wav"
+            },
+            {
+              'title': "2-M",
+              'text': "2-M",
+              'path': "/Special Question/2-M.wav"
+            }
+          ]
+        }
+      ];
+    </script>    
+
+    <script type="text/babel">
+
+      var ListFiles = React.createClass({
+        render: function() {
+          var fileNodes = this.props.data.map(function(node) {
+            return (
+              <ListFileElement data={node} />
+            );
+          });
+
+          return (
+            <ul>
+              {fileNodes}
+            </ul>
+          );
+        }
+      });
+
+      var FileLink = React.createClass({
+        render: function() {
+          return (
+            <a href={this.props.data.path+this.props.type}>{this.props.children}</a>
+          );
+        }
+      });
+
+      var ListFileElement = React.createClass({
+        render: function() {
+          var links = "\
+            <span> \
+              <a href='"+this.props.data.path+"#pitch'>Show pith</a> \
+              <br /> \
+              <a href='"+this.props.data.path+"#energy'>Show energy</a> \
+              <br /> \
+              <a href='"+this.props.data.path+"#spectr'>Show spectr</a> \
+            </span> \
+          ";
+
+          return (
+            <li>
+              <FileLink data={this.props.data} type='#play'>
+                <img height="20px" src="./images/play.png"></img>
+              </FileLink>
+              <span data-toggle="popover" 
+                    title={this.props.data.title} 
+                    data-content={links} >
+                {this.props.data.text}
+              </span>
+            </li>
+          );
+        }
+      });
+
+      var Section = React.createClass({
+        render: function() {
+          return (
+            <div>
+              <h2>{this.props.title}</h2>
+              <br />
+              <ListFiles data={this.props.data} />
+            </div>
+          );
+        }
+      });
+
+      var SectionsList = React.createClass({
+        render: function() {
+          var sectionNodes = this.props.data.map(function(node) {
+            return (
+              <Section title={node.title} data={node.files} />
+            );
+          });
+
+          return (
+            <div>
+              {sectionNodes}
+            </div>
+          );
+        }
+      });
+
+      ReactDOM.render(
+        <SectionsList data={files} />,
+        document.getElementById('container')
+      );
+    </script>
+
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" class="active"><a href="index.html">Home</a></li>
+            <li role="presentation"><a href="settings.window">Settings</a></li>
+            <li role="presentation"><a href="main.window">Developer mode</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">IntonTrainer<span class="top-text">@</span></h3>
+      </div>
+
+      <div class="jumbotron">
+        <h1>English</h1>
+        <p class="lead">intonation learning tool</p>
+      </div>
+
+      <div class="row marketing">
+        <div class="col-lg-6">
+          <div id="container"></div>
+          <br>
+          <a class="btn btn-default" href="index.html">Back</a>
+        </div>
+
+        <div class="col-lg-6">
+        </div>
+      </div>
+
+    </div>
+  </body>
+</html>
