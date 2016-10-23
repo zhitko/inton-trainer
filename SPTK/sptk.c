@@ -70,6 +70,13 @@ PLOT_SETTINGS *initPlotSettings()
     return plot;
 }
 
+MOVE_SETTINGS *initMoveSettings()
+{
+    MOVE_SETTINGS * move = malloc(sizeof(MOVE_SETTINGS));
+    move->type = 0;
+    return move;
+}
+
 SPTK_SETTINGS *initSptkSettings()
 {
     SPTK_SETTINGS * settings = malloc(sizeof(SPTK_SETTINGS));
@@ -82,5 +89,6 @@ SPTK_SETTINGS *initSptkSettings()
     settings->spec = initSpecSettings();
     settings->plotEnergy = initPlotSettings();
     settings->plotF0 = initPlotSettings();
+    settings->move = initMoveSettings();
     return settings;
 }

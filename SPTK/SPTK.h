@@ -166,6 +166,10 @@ typedef struct _LPC_SETTINGS {
     int order;
 } LPC_SETTINGS;
 
+typedef struct _MOVE_SETTINGS {
+    int type;
+} MOVE_SETTINGS;
+
 typedef struct _SPEC_SETTINGS {
     int leng;
     int order;
@@ -189,6 +193,7 @@ typedef struct _SPTK_SETTINGS {
     SPEC_SETTINGS * spec;
     PLOT_SETTINGS * plotEnergy;
     PLOT_SETTINGS * plotF0;
+    MOVE_SETTINGS * move;
 } SPTK_SETTINGS;
 
 SPTK_SETTINGS *initSptkSettings();
@@ -198,6 +203,7 @@ FRAME_SETTINGS *initFrameSettings();
 WINDOW_SETTINGS *initWindowSettings();
 LPC_SETTINGS *initLpcSettings();
 SPEC_SETTINGS *initSpecSettings();
+MOVE_SETTINGS *initMoveSettings();
 
 /* library routines */
 double agexp(double r, double x, double y);

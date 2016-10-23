@@ -137,7 +137,7 @@ void DrawerEvalPitch::Proc(QString fname)
         qDebug() << "Start DP";
         VectorDP dp(new VectorSignal(copyv(pitchOrigNorm)), new VectorSignal(copyv(pitchNorm)));
         vector newPitch = dp.getScaledSignal()->getArray();
-        this->result = calcResultMark(newPitch,pitchOrigNorm, dp.getSignalMask()->value.globalError);
+        this->result = calcResultMark(newPitch,pitchOrigNorm);
 
         qDebug() << "Stop DP";
 

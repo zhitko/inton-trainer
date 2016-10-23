@@ -188,6 +188,8 @@ vector getSignalWithMask(vector mask, SpectrDP* dp, vector signal)
     return new_signal;
 }
 
+
+
 vector processZeros(vector data)
 {
     bool needProcess = false;
@@ -426,7 +428,7 @@ Drawer::~Drawer()
     qDebug() << "Drawer removed";
 }
 
-double Drawer::calcResultMark(vector v1, vector v2, int errors)
+double Drawer::calcResultMark(vector v1, vector v2)
 {
     vector v1norm = normalizev(v1, 0.0, 1.0);
     vector v2norm = normalizev(v2, 0.0, 1.0);
@@ -435,10 +437,9 @@ double Drawer::calcResultMark(vector v1, vector v2, int errors)
     double diff = 0;
     for(int i=0; i<v1norm.x && i<v1norm.x; i++)
     {
-        diff += std::abs(v1norm.v[i] - v2norm.v[i]);
-//        qDebug() << "diff" << diff;
-//        qDebug() << "v1norm" << v1norm.v[i];
-//        qDebug() << "v2norm" << v2norm.v[i];
+        double a = v1norm.v[i];
+        double b = v2norm.v[i];
+        diff += std::abs(a - b);
     }
     diff /= v1norm.x;
     freev(v1norm);

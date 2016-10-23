@@ -54,7 +54,7 @@ public:
 
     virtual int Draw(mglGraph *gr);
     virtual void Proc(QString fname);
-    double calcResultMark(vector, vector, int);
+    double calcResultMark(vector, vector);
 
     void Reload();
     void Click();

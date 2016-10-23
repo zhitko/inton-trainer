@@ -125,7 +125,7 @@ void DrawerEvalEnergy::Proc(QString fname)
         qDebug() << "Start DP";
         VectorDP dp(new VectorSignal(copyv(intensiveOrig)), new VectorSignal(copyv(intensive)));
         vector newIntensive = dp.getScaledSignal()->getArray();
-        this->result = calcResultMark(newIntensive,intensiveOrig, dp.getSignalMask()->value.globalError);
+        this->result = calcResultMark(newIntensive,intensiveOrig);
         qDebug() << "Stop DP";
 
         vectorToData(newIntensive, &secIntensiveData);

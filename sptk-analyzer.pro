@@ -49,7 +49,6 @@ SOURCES += \
     drawerevalenergybyspectr.cpp \
     DP/spectrdp.cpp \
     drawerevalspectr.cpp \
-    drawerevalpitchviaspectr.cpp \
     webwindow.cpp
 
 HEADERS  += \
@@ -71,7 +70,6 @@ HEADERS  += \
     DP/vectordp.h \
     DP/spectrdp.h \
     drawerevalspectr.h \
-    drawerevalpitchviaspectr.h \
     webwindow.h
 
 # OpenAL

@@ -128,6 +128,8 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->spec->min = instance->ui->specMinSpin->value();
     sptk_settings->spec->proc = instance->ui->specProcBox->currentIndex();
 
+    sptk_settings->move->type = instance->ui->moveTypeBox->currentIndex();
+
     return sptk_settings;
 }
 
@@ -192,6 +194,9 @@ void SettingsDialog::loadSettings()
     if(settings.contains("spec/proc"))
         this->ui->specProcBox->setCurrentText(settings.value("spec/proc").toString());
 
+    if(settings.contains("move/type"))
+        this->ui->moveTypeBox->setCurrentText(settings.value("move/type").toString());
+
     if(settings.contains("frame/leng"))
         this->ui->frameSizeBox->setCurrentText(QString::number(settings.value("frame/leng").toInt()));
     if(settings.contains("frame/shift"))
@@ -255,6 +260,8 @@ void SettingsDialog::saveSettings()
     settings.setValue("spec/factor", this->ui->specFactorSpin->value());
     settings.setValue("spec/min", this->ui->specMinSpin->value());
     settings.setValue("spec/proc", this->ui->specProcBox->currentText());
+
+    settings.setValue("move/type", this->ui->moveTypeBox->currentText());
 
     settings.setValue("mathGL/quality", this->ui->mathGLQualitySpin->value());
     settings.setValue("mathGL/autoOpen", this->ui->isAutoOpen->isChecked());

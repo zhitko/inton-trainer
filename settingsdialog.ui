@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>806</width>
-    <height>538</height>
+    <height>550</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -680,6 +680,29 @@
               <item>
                <property name="text">
                 <string>Steffen’s method</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupBox_8">
+           <property name="title">
+            <string>Перенос меток</string>
+           </property>
+           <layout class="QFormLayout" name="formLayout_8">
+            <item row="0" column="1">
+             <widget class="QComboBox" name="moveTypeBox">
+              <item>
+               <property name="text">
+                <string>Линейный перенос</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>ДП</string>
                </property>
               </item>
              </widget>

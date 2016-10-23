@@ -62,36 +62,66 @@ void DrawerEvalPitchBySpectr::Proc(QString fname)
 
         qDebug() << "Pitch sizes " << pitchOrig.x << " " << pitch.x;
 
-        qDebug() << "Start DP";
+        qDebug() << "Start MOVE";
         SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
-        int speksize = sptk_settings->spec->leng / 2 + 1;
-        qDebug() << "Start DP " << (sptk_settings->spec->leng / 2 + 1);
-        qDebug() << "Start DP " << data->d_spec_proc.x;
-        qDebug() << "Start DP " << dataSec.d_spec_proc.x;
-        SpectrDP dp(new SpectrSignal(copyv(data->d_spec_proc), speksize),
-                    new SpectrSignal(copyv(dataSec.d_spec_proc), speksize));
+        vector scalledPitch;
 
-        // Wave processing
+        if (sptk_settings->move->type == 1)
+        {
+            int speksize = sptk_settings->spec->leng / 2 + 1;
+            SpectrDP dp(new SpectrSignal(copyv(data->d_spec_proc), speksize),
+                        new SpectrSignal(copyv(dataSec.d_spec_proc), speksize));
 
-        vector n_wave = getSignalWithMask(data->n_mask, &dp, dataSec.d_full_wave);
-        vectorToData(n_wave, &nSecWaveData);
-        freev(n_wave);
+            // Wave processing
 
-        vector p_wave = getSignalWithMask(data->p_mask, &dp, dataSec.d_full_wave);
-        vectorToData(p_wave, &pSecWaveData);
-        freev(p_wave);
+            vector n_wave = getSignalWithMask(data->n_mask, &dp, dataSec.d_full_wave);
+            vectorToData(n_wave, &nSecWaveData);
+            freev(n_wave);
 
-        vector t_wave = getSignalWithMask(data->t_mask, &dp, dataSec.d_full_wave);
-        vectorToData(t_wave, &tSecWaveData);
-        freev(t_wave);
+            vector p_wave = getSignalWithMask(data->p_mask, &dp, dataSec.d_full_wave);
+            vectorToData(p_wave, &pSecWaveData);
+            freev(p_wave);
 
-        vector pnt_wave = getSignalWithMask(data->pnt_mask, &dp, dataSec.d_full_wave);
-        vectorToData(pnt_wave, &secWaveData);
-        freev(pnt_wave);
+            vector t_wave = getSignalWithMask(data->t_mask, &dp, dataSec.d_full_wave);
+            vectorToData(t_wave, &tSecWaveData);
+            freev(t_wave);
 
-        // Pitch processing
+            vector pnt_wave = getSignalWithMask(data->pnt_mask, &dp, dataSec.d_full_wave);
+            vectorToData(pnt_wave, &secWaveData);
+            freev(pnt_wave);
 
-        vector scalledPitch = scaleVectorByDPResults(pitch, &dp);
+            // Pitch processing
+
+            scalledPitch = scaleVectorByDPResults(pitch, &dp);
+        } else if (sptk_settings->move->type == 0) {
+            qDebug() << "moom " << dataSec.d_full_wave.x << " " << data->n_mask.x << " " << data->pnt_mask.x << " " << data->t_mask.x;
+
+            vector scalled_n_mask = vector_resize(data->n_mask, dataSec.d_full_wave.x);
+            vector n_wave = vector_cut_by_mask(dataSec.d_full_wave, scalled_n_mask);
+            vectorToData(n_wave, &nSecWaveData);
+            freev(n_wave);
+            freev(scalled_n_mask);
+
+            vector scalled_p_mask = vector_resize(data->p_mask, dataSec.d_full_wave.x);
+            vector p_wave = vector_cut_by_mask(dataSec.d_full_wave, scalled_p_mask);
+            vectorToData(p_wave, &pSecWaveData);
+            freev(p_wave);
+            freev(scalled_p_mask);
+
+            vector scalled_t_mask = vector_resize(data->t_mask, dataSec.d_full_wave.x);
+            vector t_wave = vector_cut_by_mask(dataSec.d_full_wave, scalled_t_mask);
+            vectorToData(t_wave, &tSecWaveData);
+            freev(t_wave);
+            freev(scalled_t_mask);
+
+            vector scalled_pnt_mask = vector_resize(data->pnt_mask, dataSec.d_full_wave.x);
+            vector pnt_wave = vector_cut_by_mask(dataSec.d_full_wave, scalled_pnt_mask);
+            vectorToData(pnt_wave, &secWaveData);
+            freev(pnt_wave);
+            freev(scalled_pnt_mask);
+
+            scalledPitch = vector_resize(pitch, pitchOrig.x);
+        }
 
         vector pntMask = vector_invert_mask(data->pnt_mask);
         vector pntMaskScalled = vector_resize(pntMask, scalledPitch.x);
@@ -110,7 +140,7 @@ void DrawerEvalPitchBySpectr::Proc(QString fname)
         freev(pntMaskScalledInverted);
         freev(cuttedPitch);
 
-        this->result = calcResultMark(newPitch,pitchOrig, dp.getSignalMask()->value.globalError);
+        this->result = calcResultMark(newPitch,pitchOrig);
         qDebug() << "Stop DP";
 
         vectorToData(newPitch, &secPitchData);
