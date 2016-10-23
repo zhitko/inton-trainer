@@ -1,7 +1,14 @@
 #ifndef GRAPHSEVALWINDOW_H
 #define GRAPHSEVALWINDOW_H
 
+#include <QWidget>
+
 #include "graphswindow.h"
+
+//class GraphsWindow;
+//class Drawer;
+//class QScrollArea;
+//class SoundRecorder;
 
 class GraphsEvalWindow : public GraphsWindow
 {
@@ -12,10 +19,12 @@ public:
 
 protected:
     virtual Drawer * createNewDrawer(QString path);
+    QString templatePath;
 
 signals:
 
 public slots:
+    void playTemplate();
 
 };
 

@@ -110,7 +110,6 @@ void GraphsWindow::drawFile(QString path)
     this->path = path;
     this->drawer = this->createNewDrawer(path);
     this->w_graph = this->drawer->getDataLenght();
-//    this->setFitByK();
     this->QMGL->update();
 }
 

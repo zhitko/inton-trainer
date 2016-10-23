@@ -102,6 +102,23 @@
           </widget>
          </item>
          <item>
+          <widget class="QPushButton" name="playTemplateBtn">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="text">
+            <string>Play Template</string>
+           </property>
+           <property name="icon">
+            <iconset resource="icons.qrc">
+             <normaloff>:/icons/icons/speaker-26.png</normaloff>:/icons/icons/speaker-26.png</iconset>
+           </property>
+           <property name="flat">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QToolButton" name="setRecordBtn">
            <property name="baseSize">
             <size>
