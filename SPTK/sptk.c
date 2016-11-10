@@ -77,6 +77,14 @@ MOVE_SETTINGS *initMoveSettings()
     return move;
 }
 
+DP_SETTINGS *initDpSettings()
+{
+    DP_SETTINGS * dp = malloc(sizeof(DP_SETTINGS));
+    dp->globalLimit = -1;
+    dp->localLimit = 1;
+    return dp;
+}
+
 SPTK_SETTINGS *initSptkSettings()
 {
     SPTK_SETTINGS * settings = malloc(sizeof(SPTK_SETTINGS));
@@ -90,5 +98,6 @@ SPTK_SETTINGS *initSptkSettings()
     settings->plotEnergy = initPlotSettings();
     settings->plotF0 = initPlotSettings();
     settings->move = initMoveSettings();
+    settings->dp = initDpSettings();
     return settings;
 }

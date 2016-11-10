@@ -26,7 +26,7 @@ public:
 class VectorDP : public DP<double>
 {
 public:
-    VectorDP(VectorSignal * pttrn, VectorSignal * sig) : DP(pttrn, sig) {;}
+    VectorDP(VectorSignal * pttrn, VectorSignal * sig, int global = -1, double local = 1.0) : DP(pttrn, sig, global, local) {;}
 
     VectorSignal * getScaledSignal() { return (VectorSignal*) DP<double>::getScaledSignal(); }
 

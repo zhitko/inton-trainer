@@ -2,8 +2,11 @@
 #define DP_H
 
 #include <climits>
+#include <math.h>
 
 #include <QDebug>
+
+#define DP_GLOBAL_LIMIT_ERROR 0.001
 
 enum DPStateOperation{
     opDrop = -1,
@@ -47,6 +50,10 @@ private:
     DPStateStack * mask;
     DPStateStack ** stateCache;
 
+    int globalLimit;
+    double localLimit;
+    double a, b, c1, c2, d, aabb;
+
     DPStateStack * calcNextIter(const int signalPos, const int patternPos)
     {
         // Check state cache for value
@@ -62,7 +69,7 @@ private:
                     this->pattern->valueAt(patternPos)
                 );
 
-        DPState currentState = {localError, localError, opNone, signalPos, patternPos};
+        DPState currentState = {localLimit * localError, 0, opNone, signalPos, patternPos};
         DPStateStack * currentBranch = &(stateCache[signalPos][patternPos]);
         currentBranch->value = currentState;
 
@@ -71,9 +78,9 @@ private:
         DPStateStack * branchDrop   = 0;
 
         // Try next operations
-        if(patternPos > 0 && signalPos > 0) branchAdd    = calcNextIter(signalPos-1, patternPos-1);
-        if(signalPos  > 0)                  branchDrop   = calcNextIter(signalPos-1, patternPos);
-        if(patternPos > 0)                  branchRepeat = calcNextIter(signalPos,   patternPos-1);
+        if(isGlobalPass(signalPos-1, patternPos-1) && patternPos > 0 && signalPos > 0) branchAdd    = calcNextIter(signalPos-1, patternPos-1);
+        if(isGlobalPass(signalPos-1, patternPos  ) && signalPos  > 0)                  branchDrop   = calcNextIter(signalPos-1, patternPos);
+        if(isGlobalPass(signalPos  , patternPos-1) && patternPos > 0)                  branchRepeat = calcNextIter(signalPos,   patternPos-1);
 
         // If this is last iteration, return current branch
         if(branchDrop == 0 && branchAdd == 0 && branchRepeat == 0)
@@ -96,14 +103,16 @@ private:
         if( stateAdd.globalError <= stateDrop.globalError &&
             stateAdd.globalError <= stateRepeat.globalError)
         { // Add operation
+//            qDebug() << "Add";
             currentBranch->next = branchAdd;
-            currentBranch->value.globalError = currentBranch->value.localError + stateAdd.globalError;
+            currentBranch->value.globalError = localLimit * currentBranch->value.localError + stateAdd.globalError;
             currentBranch->value.operation = opAdd;
         }
         else
         if( stateRepeat.globalError <= stateAdd.globalError &&
             stateRepeat.globalError <= stateDrop.globalError)
         { // Repeat operation
+//            qDebug() << "Repeat";
             currentBranch->next = branchRepeat;
             currentBranch->value.globalError = currentBranch->value.localError + stateRepeat.globalError;
             currentBranch->value.operation = opRepeat;
@@ -112,6 +121,7 @@ private:
         if( stateDrop.globalError <= stateAdd.globalError &&
             stateDrop.globalError <= stateRepeat.globalError)
         { // Drop operation
+//            qDebug() << "Drop";
             currentBranch->next = branchDrop;
             currentBranch->value.globalError = currentBranch->value.localError + stateDrop.globalError;
             currentBranch->value.operation = opDrop;
@@ -121,12 +131,29 @@ private:
     }
 
 public:
-    DP(Signal<ValueType> * pttrn, Signal<ValueType> * sig) :
+    DP(Signal<ValueType> * pttrn, Signal<ValueType> * sig, int global, double local) :
         pattern(pttrn),
         signal(sig),
         mask(0),
-        stateCache(0)
-    { ; }
+        stateCache(0),
+        globalLimit(global),
+        localLimit(local)
+    {
+        double x11 = 0.0;
+        double y11 = global;
+        double x12 = sig->size() - global;
+        double y12 = pttrn->size();
+        double x21 = global;
+        double y21 = 0.0;
+        double x22 = sig->size();
+        double y22 = pttrn->size() - global;
+        a = y11 - y12;
+        b = x12 - x11;
+        c1 = x11 * y12 - x12 * y11;
+        c2 = x21 * y22 - x22 * y21;
+        aabb = sqrt(a*a+b*b);
+        d = abs(c1-c2)/aabb;
+    }
 
     ~DP()
     {
@@ -134,6 +161,13 @@ public:
         signal->freeSignal();
         delete pattern;
         delete signal;
+    }
+
+    bool isGlobalPass(int sX,int pY)
+    {
+        if ( (sX == 0 || pY == 0) && sX != pY ) return false;
+        double dd = abs( (a*sX+b*pY+c1)/aabb ) + abs( (a*sX+b*pY+c2)/aabb );
+        return globalLimit == -1 || (abs(d-dd) <= DP_GLOBAL_LIMIT_ERROR);
     }
 
     int getSignalSize()

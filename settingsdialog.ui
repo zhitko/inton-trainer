@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>806</width>
-    <height>550</height>
+    <height>675</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -611,14 +611,14 @@
             <string>Обработка графика энергии</string>
            </property>
            <layout class="QFormLayout" name="formLayout_7">
-            <item row="1" column="0">
+            <item row="0" column="0">
              <widget class="QLabel" name="label_22">
               <property name="text">
                <string>Окно медианного сглаживания</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="1">
+            <item row="0" column="1">
              <widget class="QSpinBox" name="plotMidFrameEnergySpin">
               <property name="minimum">
                <number>1</number>
@@ -628,24 +628,14 @@
               </property>
              </widget>
             </item>
-            <item row="2" column="0">
+            <item row="1" column="0">
              <widget class="QLabel" name="label_23">
               <property name="text">
                <string>Тип интерполяции</string>
               </property>
              </widget>
             </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="label_24">
-              <property name="text">
-               <string>Смещение краев интерполяции</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QSpinBox" name="plotInterpolationEdgesEnergySpin"/>
-            </item>
-            <item row="2" column="1">
+            <item row="1" column="1">
              <widget class="QComboBox" name="plotInterpolationTypeEnergyBox">
               <item>
                <property name="text">
@@ -684,6 +674,16 @@
               </item>
              </widget>
             </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_24">
+              <property name="text">
+               <string>Смещение краев интерполяции</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QSpinBox" name="plotInterpolationEdgesEnergySpin"/>
+            </item>
            </layout>
           </widget>
          </item>
@@ -693,7 +693,7 @@
             <string>Перенос меток</string>
            </property>
            <layout class="QFormLayout" name="formLayout_8">
-            <item row="0" column="1">
+            <item row="0" column="0" colspan="2">
              <widget class="QComboBox" name="moveTypeBox">
               <item>
                <property name="text">
@@ -707,8 +707,70 @@
               </item>
              </widget>
             </item>
+            <item row="1" column="0" colspan="2">
+             <widget class="QGroupBox" name="groupBox_9">
+              <property name="title">
+               <string>Настройка ДП</string>
+              </property>
+              <layout class="QFormLayout" name="formLayout_9">
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_26">
+                 <property name="text">
+                  <string>Глобальное ограничение ('-1' - отключен)</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_28">
+                 <property name="text">
+                  <string>Локальное ограничение</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QSpinBox" name="dpGlobalLimit">
+                 <property name="minimum">
+                  <number>-1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>99999</number>
+                 </property>
+                 <property name="value">
+                  <number>-1</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QDoubleSpinBox" name="dpLocalLimit">
+                 <property name="maximum">
+                  <double>10.000000000000000</double>
+                 </property>
+                 <property name="singleStep">
+                  <double>0.100000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>1.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
            </layout>
           </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
          </item>
         </layout>
        </item>

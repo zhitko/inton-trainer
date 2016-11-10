@@ -70,7 +70,10 @@ void DrawerEvalPitchBySpectr::Proc(QString fname)
         {
             int speksize = sptk_settings->spec->leng / 2 + 1;
             SpectrDP dp(new SpectrSignal(copyv(data->d_spec_proc), speksize),
-                        new SpectrSignal(copyv(dataSec.d_spec_proc), speksize));
+                        new SpectrSignal(copyv(dataSec.d_spec_proc), speksize),
+                        sptk_settings->dp->globalLimit,
+                        sptk_settings->dp->localLimit
+                        );
 
             // Wave processing
 

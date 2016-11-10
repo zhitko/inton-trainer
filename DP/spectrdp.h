@@ -28,7 +28,7 @@ public:
 class SpectrDP : public DP<double*>
 {
 public:
-    SpectrDP(SpectrSignal * pttrn, SpectrSignal * sig) : DP(pttrn, sig), spectrSize(pttrn->sizeSpectr()) {;}
+    SpectrDP(SpectrSignal * pttrn, SpectrSignal * sig, int global, double local) : DP(pttrn, sig, global, local), spectrSize(pttrn->sizeSpectr()) {;}
 
     SpectrSignal * getScaledSignal() { return (SpectrSignal*) DP<double*>::getScaledSignal(); }
 

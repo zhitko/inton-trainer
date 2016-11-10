@@ -120,8 +120,13 @@ void DrawerEvalSpectr::Proc(QString fname)
         secSpecDataOrig.Squeeze(mathgl_settings->quality, 1);
 
         qDebug() << "Start DP";
+        qDebug() << "globalLimit DP" << sptk_settings->dp->globalLimit;
+        qDebug() << "localLimit DP" << sptk_settings->dp->localLimit;
         SpectrDP dp(new SpectrSignal(copyv(data->d_spec_proc), speksize),
-                    new SpectrSignal(copyv(dataSec.d_spec_proc), speksize));
+                    new SpectrSignal(copyv(dataSec.d_spec_proc), speksize),
+                    sptk_settings->dp->globalLimit,
+                    sptk_settings->dp->localLimit
+                    );
         vector newSpec = dp.getScaledSignal()->getArray();
         this->result = dp.getSignalMask()->value.globalError;
         qDebug() << "Stop DP";

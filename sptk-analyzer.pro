@@ -16,8 +16,10 @@ win32{
     INCLUDEPATH += "c:/Dev/MathGL/include"
     LIBS += -L"c:/Dev/MathGL/lib" -llibmgl -llibmgl-qt5
 
-    INCLUDEPATH += "c:/Dev/openal-soft-1.15.1-bin/include"
-    LIBS += -L"c:/Dev/openal-soft-1.15.1-bin/lib/Win32" -llibOpenAL32
+#    INCLUDEPATH += "c:/Dev/openal-soft-1.15.1-bin/include"
+#    LIBS += -L"c:/Dev/openal-soft-1.15.1-bin/lib/Win32" -llibOpenAL32
+    INCLUDEPATH += "c:/Dev/openal-soft-1.17.2-bin/include"
+    LIBS += -L"c:/Dev/openal-soft-1.17.2-bin/lib/Win32" -llibOpenAL32
 
     INCLUDEPATH += "c:/Dev/Libs/gsl-2.1-bin/include"
     LIBS += -L"c:/Dev/Libs/gsl-2.1-bin/lib" -llibgsl -llibgslcblas

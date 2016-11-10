@@ -130,6 +130,9 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
 
     sptk_settings->move->type = instance->ui->moveTypeBox->currentIndex();
 
+    sptk_settings->dp->globalLimit = instance->ui->dpGlobalLimit->value();
+    sptk_settings->dp->localLimit = instance->ui->dpLocalLimit->value();
+
     return sptk_settings;
 }
 
@@ -197,6 +200,11 @@ void SettingsDialog::loadSettings()
     if(settings.contains("move/type"))
         this->ui->moveTypeBox->setCurrentText(settings.value("move/type").toString());
 
+    if(settings.contains("dp/global"))
+        this->ui->dpGlobalLimit->setValue(settings.value("dp/global").toInt());
+    if(settings.contains("dp/local"))
+        this->ui->dpLocalLimit->setValue(settings.value("dp/local").toDouble());
+
     if(settings.contains("frame/leng"))
         this->ui->frameSizeBox->setCurrentText(QString::number(settings.value("frame/leng").toInt()));
     if(settings.contains("frame/shift"))
@@ -262,6 +270,9 @@ void SettingsDialog::saveSettings()
     settings.setValue("spec/proc", this->ui->specProcBox->currentText());
 
     settings.setValue("move/type", this->ui->moveTypeBox->currentText());
+
+    settings.setValue("dp/global", this->ui->dpGlobalLimit->value());
+    settings.setValue("dp/local", this->ui->dpLocalLimit->value());
 
     settings.setValue("mathGL/quality", this->ui->mathGLQualitySpin->value());
     settings.setValue("mathGL/autoOpen", this->ui->isAutoOpen->isChecked());
