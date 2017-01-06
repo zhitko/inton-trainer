@@ -122,8 +122,8 @@ void DrawerEvalSpectr::Proc(QString fname)
         qDebug() << "Start DP";
         qDebug() << "globalLimit DP" << sptk_settings->dp->globalLimit;
         qDebug() << "localLimit DP" << sptk_settings->dp->localLimit;
-        SpectrDP dp(new SpectrSignal(copyv(data->d_spec_proc), speksize),
-                    new SpectrSignal(copyv(dataSec.d_spec_proc), speksize),
+        SpectrDP dp(new SpectrSignal(copyv(data->d_spec), speksize),
+                    new SpectrSignal(copyv(dataSec.d_spec), speksize),
                     sptk_settings->dp->globalLimit,
                     sptk_settings->dp->localLimit
                     );

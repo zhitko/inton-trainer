@@ -9,7 +9,7 @@
 #include "settingsdialog.h"
 #include "drawer.h"
 #include "soundplayer.h"
-#include "autosoundrecorder.h"
+#include "Recorder/autosoundrecorder.h"
 
 #include <QDebug>
 

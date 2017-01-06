@@ -31,8 +31,6 @@ oal_devices_list * ALCchar2DevicesList(const ALCchar *devices)
         current->next = NULL;
 
         strncpy(current->device->name, devices, len);
-
-        printf("%s\n", devices);
         devices += len + 1;
     } while(*devices != '\0');
 

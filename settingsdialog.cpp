@@ -35,8 +35,8 @@ void SettingsDialog::initAudio()
 
     if(inputDevices) currentInputDevice = inputDevices->device;
     if(outputDevices) currentOutputDevice = outputDevices->device;
-    qDebug() << "currentInputDevice " << QString::fromLocal8Bit(this->currentInputDevice->name);
-    qDebug() << "currentOutputDevice " << QString::fromLocal8Bit(this->currentOutputDevice->name);
+    qDebug() << "currentInputDevice " << this->currentInputDevice->name;
+    qDebug() << "currentOutputDevice " << this->currentOutputDevice->name;
 }
 
 void SettingsDialog::inputDeviceChanged(int index)
@@ -44,7 +44,7 @@ void SettingsDialog::inputDeviceChanged(int index)
     oal_devices_list *list = this->inputDevices;
     for(int i=0;i<index;i++) list = list->next;
     this->currentInputDevice = list->device;
-    qDebug() << "inputDeviceChanged " << QString::fromLocal8Bit(this->currentInputDevice->name);
+    qDebug() << "inputDeviceChanged " << this->currentInputDevice->name;
 }
 
 void SettingsDialog::outputDeviceChanged(int index)
@@ -52,7 +52,7 @@ void SettingsDialog::outputDeviceChanged(int index)
     oal_devices_list *list = this->outputDevices;
     for(int i=0;i<index;i++) list = list->next;
     this->currentOutputDevice = list->device;
-    qDebug() << "outputDeviceChanged " << QString::fromLocal8Bit(this->currentOutputDevice->name);
+    qDebug() << "outputDeviceChanged " << this->currentOutputDevice->name;
 }
 
 void SettingsDialog::initUI()
@@ -60,7 +60,7 @@ void SettingsDialog::initUI()
     oal_devices_list *list = this->inputDevices;
     while(list)
     {
-        QString name = QString::fromLocal8Bit(list->device->name);
+        QString name = list->device->name;
         this->ui->audioInputDeviceBox->addItem(name);
         list = list->next;
     }
@@ -69,7 +69,7 @@ void SettingsDialog::initUI()
     list = this->outputDevices;
     while(list)
     {
-        QString name = QString::fromLocal8Bit(list->device->name);
+        QString name = list->device->name;
         this->ui->audioOutputDeviceBox->addItem(name);
         list = list->next;
     }
@@ -132,6 +132,7 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
 
     sptk_settings->dp->globalLimit = instance->ui->dpGlobalLimit->value();
     sptk_settings->dp->localLimit = instance->ui->dpLocalLimit->value();
+    sptk_settings->dp->continiusLimit = instance->ui->continiusDpLimit->value();
 
     return sptk_settings;
 }
@@ -204,6 +205,9 @@ void SettingsDialog::loadSettings()
         this->ui->dpGlobalLimit->setValue(settings.value("dp/global").toInt());
     if(settings.contains("dp/local"))
         this->ui->dpLocalLimit->setValue(settings.value("dp/local").toDouble());
+    if(settings.contains("dp/continiusLimit"))
+        this->ui->continiusDpLimit->setValue(settings.value("dp/continiusLimit").toDouble());
+
 
     if(settings.contains("frame/leng"))
         this->ui->frameSizeBox->setCurrentText(QString::number(settings.value("frame/leng").toInt()));
@@ -273,6 +277,7 @@ void SettingsDialog::saveSettings()
 
     settings.setValue("dp/global", this->ui->dpGlobalLimit->value());
     settings.setValue("dp/local", this->ui->dpLocalLimit->value());
+    settings.setValue("dp/continiusLimit", this->ui->continiusDpLimit->value());
 
     settings.setValue("mathGL/quality", this->ui->mathGLQualitySpin->value());
     settings.setValue("mathGL/autoOpen", this->ui->isAutoOpen->isChecked());

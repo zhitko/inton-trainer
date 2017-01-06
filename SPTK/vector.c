@@ -470,6 +470,16 @@ intmatrix onesim(int xSz, int ySz) {
     return(nw_matrix);
 }
 
+intmatrix nansim(int xSz, int ySz) {
+    int i;
+    int j;
+    intmatrix nw_matrix = makeim(xSz, ySz);
+    for (i = 0; i < nw_matrix.x; i++) {
+        for (j = 0; j < nw_matrix.y; j++) nw_matrix.m[i][j] = NAN;
+    }
+    return(nw_matrix);
+}
+
 intmatrix copyim(intmatrix yr_matrix) { 
     int i;
     intmatrix nw_matrix = makeim(yr_matrix.x, yr_matrix.y);

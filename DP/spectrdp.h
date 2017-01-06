@@ -34,7 +34,7 @@ public:
 
 protected:
     int spectrSize;
-    int calculateError(double* value1, double* value2);
+    virtual double calculateError(double* value1, double* value2);
 };
 
 #endif // SPECTRDP_H

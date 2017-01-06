@@ -27,7 +27,7 @@ void VectorSignal::freeSignal()
     freev(this->array);
 }
 
-int VectorDP::calculateError(double value1, double value2)
+double VectorDP::calculateError(double value1, double value2)
 {
     return abs(value1 - value2);
 }

@@ -34,18 +34,12 @@ void SpectrSignal::freeSignal()
     freev(this->array);
 }
 
-int SpectrDP::calculateError(double* value1, double* value2)
+double SpectrDP::calculateError(double* value1, double* value2)
 {
-    int error = 0;
-    double a = 0.0;
-    double b = 0.0;
-    double c = 0.0;
+    double error = 0.0;
     for(int i=0; i<this->spectrSize; i++)
-    {
-        a = value1[i];
-        b = value2[i];
-        c = a - b;
-        error += c*c;
-    }
-    return sqrt(error);
+        error += abs(value1[i] - value2[i]);
+    return error/this->spectrSize;
 }
+
+

@@ -3,25 +3,28 @@
 
 #include <climits>
 #include <math.h>
+#include <limits>
+#include <cstddef>
 
 #include <QDebug>
 
 #define DP_GLOBAL_LIMIT_ERROR 0.001
 
 enum DPStateOperation{
-    opDrop = -1,
-    opAdd = 0,
-    opRepeat = 1,
+    trHoriz = -1,
+    trDiag = 0,
+    trVert = 1,
     opNone = 2,
     opFirst = 3
 };
 
 struct DPState{
-    int localError;
-    int globalError;
+    double localError;
+    double globalError;
     DPStateOperation operation;
     int signalPos;
     int patternPos;
+    int time;
 };
 
 struct DPStateStack{
@@ -45,86 +48,120 @@ template< typename ValueType >
 class DP
 {
 private:
-    Signal<ValueType> * pattern;
-    Signal<ValueType> * signal;
     DPStateStack * mask;
-    DPStateStack ** stateCache;
-
     int globalLimit;
     double localLimit;
     double a, b, c1, c2, d, aabb;
 
-    DPStateStack * calcNextIter(const int signalPos, const int patternPos)
+protected:
+    double kH, kV, kD, kT, kQ;
+    DPStateStack ** stateCache;
+    Signal<ValueType> * pattern;
+    Signal<ValueType> * signal;
+    int signalSize;
+    int patternSize;
+
+    virtual DPStateStack * getStateCache(const int signalPos, const int patternPos)
     {
+        if (stateCache == 0) this->reinitCache();
+        return &(stateCache[signalPos][patternPos]);
+    }
+
+    virtual double getNormKt(const int signalPos, const int patternPos, int t)
+    {
+        return kT*abs(signalSize*patternPos - patternSize*signalPos)/kQ;
+    }
+
+    virtual DPStateStack * calcNextIter(const int signalPos, const int patternPos)
+    {
+        DPStateStack * currentBranch = this->getStateCache(signalPos, patternPos);
         // Check state cache for value
-        if(stateCache[signalPos][patternPos].value.operation != opNone)
-            return &(stateCache[signalPos][patternPos]);
+        if(currentBranch->value.operation != opNone)
+            return currentBranch;
 
         static int iter = 0;
         ++iter;
 
         // Init current errors
-        int localError = this->calculateError(
+        double localError = this->calculateError(
                     this->signal->valueAt(signalPos),
                     this->pattern->valueAt(patternPos)
                 );
 
-        DPState currentState = {localLimit * localError, 0, opNone, signalPos, patternPos};
-        DPStateStack * currentBranch = &(stateCache[signalPos][patternPos]);
+        DPState currentState = {localLimit * localError, localError, opFirst, signalPos, patternPos, 0};
         currentBranch->value = currentState;
 
-        DPStateStack * branchRepeat = 0;
-        DPStateStack * branchAdd    = 0;
-        DPStateStack * branchDrop   = 0;
+        DPStateStack * branchVert = 0;
+        DPStateStack * branchDiag    = 0;
+        DPStateStack * branchHoriz   = 0;
 
         // Try next operations
-        if(isGlobalPass(signalPos-1, patternPos-1) && patternPos > 0 && signalPos > 0) branchAdd    = calcNextIter(signalPos-1, patternPos-1);
-        if(isGlobalPass(signalPos-1, patternPos  ) && signalPos  > 0)                  branchDrop   = calcNextIter(signalPos-1, patternPos);
-        if(isGlobalPass(signalPos  , patternPos-1) && patternPos > 0)                  branchRepeat = calcNextIter(signalPos,   patternPos-1);
+        if(isGlobalPass(signalPos-1, patternPos-1) && patternPos > 0 && signalPos > 0) branchDiag  = calcNextIter(signalPos-1, patternPos-1);
+        if(isGlobalPass(signalPos-1, patternPos  ) && signalPos  > 0)                  branchHoriz = calcNextIter(signalPos-1, patternPos);
+        if(isGlobalPass(signalPos  , patternPos-1) && patternPos > 0)                  branchVert  = calcNextIter(signalPos,   patternPos-1);
 
         // If this is last iteration, return current branch
-        if(branchDrop == 0 && branchAdd == 0 && branchRepeat == 0)
-        {
-            currentBranch->value.operation = opFirst;
+        if(branchHoriz == 0 && branchDiag == 0 && branchVert == 0)
             return currentBranch;
-        }
 
         // Init last states for all branches
-        DPState stateAdd    = {INT_MAX, INT_MAX, opAdd,    signalPos-1, patternPos-1};
-        DPState stateRepeat = {INT_MAX, INT_MAX, opRepeat, signalPos,   patternPos-1};
-        DPState stateDrop   = {INT_MAX, INT_MAX, opDrop,   signalPos-1, patternPos};
+        DPState stateDiag    = {localError, localError, trDiag,  signalPos-1, patternPos-1, 0};
+        DPState stateVert = {localError, localError, trVert,  signalPos,   patternPos-1, 0};
+        DPState stateHoriz   = {localError, localError, trHoriz, signalPos-1, patternPos, 0};
+
+        double globalDiag = std::numeric_limits<double>::max();
+        double globalVert = std::numeric_limits<double>::max();
+        double globalHoriz = std::numeric_limits<double>::max();
 
         // Set value to state if branch calculated
-        if(branchAdd    != 0) stateAdd    = branchAdd->value;
-        if(branchRepeat != 0) stateRepeat = branchRepeat->value;
-        if(branchDrop   != 0) stateDrop   = branchDrop->value;
+        if(branchDiag != 0)
+        {
+            stateDiag = branchDiag->value;
+            globalDiag = currentBranch->value.localError*kD
+                    + stateDiag.globalError
+                    + this->getNormKt(signalPos-1, patternPos-1, branchDiag->value.time+1);
+        }
+        if(branchVert != 0)
+        {
+            stateVert = branchVert->value;
+            globalVert = currentBranch->value.localError*kV
+                    + stateVert.globalError
+                    + this->getNormKt(signalPos,   patternPos-1, branchVert->value.time);
+        }
+        if(branchHoriz != 0)
+        {
+            stateHoriz = branchHoriz->value;
+            globalHoriz = currentBranch->value.localError*kH
+                    + stateHoriz.globalError
+                    + this->getNormKt(signalPos-1, patternPos, branchHoriz->value.time+1);
+        }
 
         // Search branch with minimal global error
-        if( stateAdd.globalError <= stateDrop.globalError &&
-            stateAdd.globalError <= stateRepeat.globalError)
+        if( globalDiag <= globalHoriz && globalDiag <= globalVert)
         { // Add operation
-//            qDebug() << "Add";
-            currentBranch->next = branchAdd;
-            currentBranch->value.globalError = localLimit * currentBranch->value.localError + stateAdd.globalError;
-            currentBranch->value.operation = opAdd;
+            currentBranch->next = branchDiag;
+            currentBranch->value.globalError = globalDiag;
+            currentBranch->value.operation = trDiag;
+            if(patternPos != 0)
+                currentBranch->value.time = branchDiag->value.time + 1;
         }
         else
-        if( stateRepeat.globalError <= stateAdd.globalError &&
-            stateRepeat.globalError <= stateDrop.globalError)
-        { // Repeat operation
-//            qDebug() << "Repeat";
-            currentBranch->next = branchRepeat;
-            currentBranch->value.globalError = currentBranch->value.localError + stateRepeat.globalError;
-            currentBranch->value.operation = opRepeat;
-        }
-        else
-        if( stateDrop.globalError <= stateAdd.globalError &&
-            stateDrop.globalError <= stateRepeat.globalError)
+        if( globalHoriz <= globalDiag && globalHoriz <= globalVert)
         { // Drop operation
-//            qDebug() << "Drop";
-            currentBranch->next = branchDrop;
-            currentBranch->value.globalError = currentBranch->value.localError + stateDrop.globalError;
-            currentBranch->value.operation = opDrop;
+            currentBranch->next = branchHoriz;
+            currentBranch->value.globalError = globalHoriz;
+            currentBranch->value.operation = trHoriz;
+            if(patternPos != 0)
+                currentBranch->value.time = branchHoriz->value.time + 1;
+        }
+        else
+        if( globalVert <= globalDiag && globalVert <= globalHoriz)
+        { // Repeat operation
+            currentBranch->next = branchVert;
+            currentBranch->value.globalError = globalVert;
+            currentBranch->value.operation = trVert;
+            if(patternPos != 0)
+                currentBranch->value.time = branchVert->value.time;
         }
 
         return currentBranch;
@@ -132,21 +169,28 @@ private:
 
 public:
     DP(Signal<ValueType> * pttrn, Signal<ValueType> * sig, int global, double local) :
+        kH(0.1),
+        kV(1.0),
+        kD(0.5),
+        kT(20),
         pattern(pttrn),
         signal(sig),
         mask(0),
         stateCache(0),
         globalLimit(global),
-        localLimit(local)
+        localLimit(local),
+        signalSize(sig->size()),
+        patternSize(pttrn->size())
     {
+        kQ = sqrt(patternSize*patternSize + signalSize*signalSize);
         double x11 = 0.0;
         double y11 = global;
-        double x12 = sig->size() - global;
-        double y12 = pttrn->size();
+        double x12 = signalSize - global;
+        double y12 = patternSize;
         double x21 = global;
         double y21 = 0.0;
-        double x22 = sig->size();
-        double y22 = pttrn->size() - global;
+        double x22 = signalSize;
+        double y22 = patternSize - global;
         a = y11 - y12;
         b = x12 - x11;
         c1 = x11 * y12 - x12 * y11;
@@ -163,61 +207,57 @@ public:
         delete signal;
     }
 
-    bool isGlobalPass(int sX,int pY)
+    virtual bool isGlobalPass(int sX,int pY)
     {
-        if ( (sX == 0 || pY == 0) && sX != pY ) return false;
-        double dd = abs( (a*sX+b*pY+c1)/aabb ) + abs( (a*sX+b*pY+c2)/aabb );
-        return globalLimit == -1 || (abs(d-dd) <= DP_GLOBAL_LIMIT_ERROR);
+        return true;
+//        if ( (sX == 0 || pY == 0) && sX != pY ) return false;
+//        double dd = abs( (a*sX+b*pY+c1)/aabb ) + abs( (a*sX+b*pY+c2)/aabb );
+//        return globalLimit == -1 || (abs(d-dd) <= DP_GLOBAL_LIMIT_ERROR);
     }
 
-    int getSignalSize()
+    virtual int getSignalSize()
     {
-        return this->signal->size();
+        return this->signalSize;
     }
 
-    int getPatternSize()
+    virtual int getPatternSize()
     {
-        return this->pattern->size();
+        return this->patternSize;
     }
 
-    DPStateStack * getSignalMask()
+    virtual DPStateStack * getSignalMask()
     {
         if(!this->mask)
         {
-            int signalSize = this->signal->size();
-            int patternSize = this->pattern->size();
-            qDebug() << "DP Init " << signalSize << " : " << patternSize << " iterations->" << signalSize*patternSize;
-            this->mask = this->calcNextIter(signalSize - 1, patternSize - 1);
-            qDebug() << "DP Finish " << this->stateCache[signalSize - 1][patternSize - 1].value.globalError;
+            qDebug() << "DP Init " << this->signalSize << " : " << this->patternSize << " iterations->" << this->signalSize*this->patternSize;
+            this->mask = this->calcNextIter(this->signalSize - 1, this->patternSize - 1);
+            qDebug() << "DP Finish " << this->stateCache[this->signalSize - 1][this->patternSize - 1].value.globalError;
         }
         return this->mask;
     }
 
-    Signal<ValueType> * getScaledSignal()
+    virtual Signal<ValueType> * getScaledSignal()
     {
         return this->applyMask(this->signal);
     }
 
-    void reinitCache()
+    virtual void reinitCache()
     {
-        int signalSize = this->signal->size();
-        int resultSize = this->pattern->size();
-
         if(stateCache)
         {
-            for(int i=0; i<signalSize; i++)
+            for(int i=0; i<this->signalSize; i++)
                 delete[] stateCache[i];
             delete[] stateCache;
         }
 
-        DPState stabState = {INT_MAX, INT_MAX, opNone};
-        stateCache = new DPStateStack* [signalSize];
-        for(int i=0; i<signalSize; i++)
+        DPState stubState = {0, 0, opNone};
+        stateCache = new DPStateStack* [this->signalSize];
+        for(int i=0; i<this->signalSize; i++)
         {
-            stateCache[i] = new DPStateStack[resultSize];
-            for(int j=0; j<resultSize; j++)
+            stateCache[i] = new DPStateStack[this->patternSize];
+            for(int j=0; j<this->patternSize; j++)
             {
-                stateCache[i][j].value = stabState;
+                stateCache[i][j].value = stubState;
                 stateCache[i][j].next = 0;
             }
         }
@@ -235,37 +275,21 @@ public:
             return array;
         }
 
-        int resultSize = pattern->size();
-
-        Signal<SignalValueType> * result = array->makeSignal(resultSize);
+        Signal<SignalValueType> * result = array->makeSignal(this->patternSize);
 
         DPStateStack * stateStep = this->mask;
-
-//        qDebug() << "opDrop = -1";
-//        qDebug() << "opAdd = 0";
-//        qDebug() << "opRepeat = 1";
-//        qDebug() << "opNone = 2";
-//        qDebug() << "opFirst = 3";
-//        qDebug() << "operation\t global\t local\t signal\t pattern\t next";
         DPStateOperation operation = opNone;
         while(stateStep != 0)
         {
             operation = stateStep->value.operation;
-//            qDebug() << stateStep->value.operation << " \t "
-//                     << stateStep->value.globalError << " \t "
-//                     << stateStep->value.localError << " \t "
-//                     << stateStep->value.signalPos << " \t "
-//                     << stateStep->value.patternPos << " \t "
-//                     << stateStep->next;
             switch (operation) {
-                case opAdd:
-                case opRepeat:
+                case trDiag:
+                case trVert:
                     result->setValueAt(array->valueAt(stateStep->value.signalPos), stateStep->value.patternPos);
                     break;
-                case opDrop:
+                case trHoriz:
                     break;
                 default:
-//                    qDebug() << "opNone";
                     break;
             }
             stateStep = stateStep->next;
@@ -275,7 +299,7 @@ public:
     }
 
 protected:
-    virtual int calculateError(ValueType value1, ValueType value2) = 0;
+    virtual double calculateError(ValueType value1, ValueType value2) = 0;
 };
 
 #endif // DP_H

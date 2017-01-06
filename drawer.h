@@ -35,6 +35,7 @@ struct GraphData{
     vector pnt_mask;
 };
 
+mglData * createMglData(vector vec, mglData * data, bool nan = false);
 void vectorToData(vector vec, mglData * data);
 void vectorToDataWithNan(vector vec, mglData * data);
 GraphData ProcWave2Data(QString fname);

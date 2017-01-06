@@ -25,6 +25,7 @@ class QListWidgetItem;
 class Drawer;
 class SoundRecorder;
 class AutoSoundRecorder;
+class DPSoundRecorder;
 class GraphsWindow;
 class SettingsDialog;
 class GraphsEvalWindow;
@@ -45,9 +46,11 @@ private:
 
     SoundRecorder *recorder;
     AutoSoundRecorder *autoRecorder;
+    DPSoundRecorder *dpRecorder;
 
     QAction *recordingAct;
     QAction *autoRecordingAct;
+    QAction *dpRecordingAct;
 
     void recording(SoundRecorder*);
 
@@ -58,6 +61,7 @@ private:
 private slots:
     void evaluationF0();
     void evaluationF0_Spec();
+    void evaluationDP();
     void evaluationSpec();
     void evaluationI();
     void evaluationI_Spec();
@@ -65,6 +69,7 @@ private slots:
     void remove();
     void rename();
     void autoRecording();
+    void dpRecording();
     void manualRecording();
     void plotting();
     void compare();

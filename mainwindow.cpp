@@ -20,8 +20,10 @@
 #include <QInputDialog>
 
 #include "soundplayer.h"
-#include "soundrecorder.h"
-#include "autosoundrecorder.h"
+#include "Recorder/soundrecorder.h"
+#include "Recorder/autosoundrecorder.h"
+#include "Recorder/dpsoundrecorder.h"
+#include "Recorder/dpsoundrecorder.h"
 
 #include "graphswindow.h"
 #include "graphsevalwindow.h"
@@ -30,6 +32,7 @@
 #include "drawer.h"
 #include "drawerevalpitch.h"
 #include "drawerevalpitchbyspectr.h"
+#include "drawerdp.h"
 #include "drawerevalenergy.h"
 #include "drawerevalenergybyspectr.h"
 #include "drawerevalspectr.h"
@@ -39,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent)
       ui(new Ui::MainWindow),
       recorder(NULL),
       autoRecorder(NULL),
+      dpRecorder(NULL),
       settingsDialog(NULL)
 {
     ui->setupUi(this);
@@ -48,7 +52,10 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 MainWindow::~MainWindow()
-{    
+{
+    if(this->recorder) this->recorder->deleteLater();
+    if(this->autoRecorder) this->autoRecorder->deleteLater();
+    if(this->dpRecorder) this->dpRecorder->deleteLater();
     delete ui;
 }
 
@@ -71,9 +78,12 @@ void MainWindow::initUI()
     connect(ratingISpectrAct, SIGNAL(triggered()), this, SLOT(evaluationI_Spec()));
     QAction * ratingSpecAct = new QAction(tr("Show Spectr"), this);
     connect(ratingSpecAct, SIGNAL(triggered()), this, SLOT(evaluationSpec()));
+    QAction * ratingDpAct = new QAction(tr("Show DP"), this);
+    connect(ratingDpAct, SIGNAL(triggered()), this, SLOT(evaluationDP()));
     menu->addAction(ratingF0SpectrAct);
     menu->addAction(ratingISpectrAct);
     menu->addAction(ratingSpecAct);
+    menu->addAction(ratingDpAct);
     ratingButton->setMenu(menu);
     ratingButton->setPopupMode(QToolButton::InstantPopup);
 
@@ -99,11 +109,17 @@ void MainWindow::initUI()
     this->recordingAct->setStatusTip(tr("Start/Stop auto recording audio"));
     connect(this->autoRecordingAct, SIGNAL(triggered()), this, SLOT(autoRecording()));
 
+    this->dpRecordingAct = new QAction(tr("&DP Record"), this);
+    this->dpRecordingAct->setIcon(QIcon(":/icons/icons/voice_recognition_scan-26.png"));
+    this->recordingAct->setStatusTip(tr("Start/Stop auto recording audio"));
+    connect(this->dpRecordingAct, SIGNAL(triggered()), this, SLOT(dpRecording()));
+
     QToolBar * actionToolBar = addToolBar(tr("Actions"));
     actionToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     actionToolBar->setIconSize(QSize(16,16));
     actionToolBar->addAction(this->recordingAct);
     actionToolBar->addAction(this->autoRecordingAct);
+    actionToolBar->addAction(this->dpRecordingAct);
     actionToolBar->addAction(playAct);
 
     // Files' actions
@@ -159,6 +175,39 @@ void MainWindow::autoRecording()
     this->recording(this->autoRecorder);
 }
 
+void MainWindow::dpRecording()
+{
+    this->raise();
+    if(this->dpRecorder == NULL)
+    {
+        QString path = QApplication::applicationDirPath() + DATA_PATH;
+        bool ok = true;
+
+        QList<QListWidgetItem*> items = ui->filesList->selectedItems();
+        if(items.size() > 0)
+        {
+            path += items.at(0)->text();
+        } else {
+            QStringList items;
+            for(int i=0;i<this->ui->filesList->count();i++)
+                items.append(this->ui->filesList->item(i)->text());
+            path += QInputDialog::getItem(this, tr("Pattern"), tr("Record"), items, 0, false, &ok);
+        }
+
+        if (ok && !path.isEmpty()){
+            qDebug() << "Start DP Recorder for " << path;
+            oal_device * currentDevice = this->settingsDialog->getInputDevice();
+            qDebug() << "new SoundRecorder: " << currentDevice->name;
+            this->dpRecorder = new DPSoundRecorder(path, currentDevice, sizeof(short int), this);
+            qDebug() << "is recording: " << this->dpRecorder->isRecording();
+            connect(this->dpRecorder, SIGNAL(resultReady(SoundRecorder *)), this, SLOT(recordFinished(SoundRecorder *)));
+            this->dpRecordingAct->setIconText(tr("&DP Recording..."));
+            this->recordingAct->setEnabled(false);
+        }
+    }
+    this->recording(this->dpRecorder);
+}
+
 void MainWindow::manualRecording()
 {
     this->setFocus();
@@ -195,6 +244,8 @@ void MainWindow::recordFinished(SoundRecorder * recorder)
     this->recordingAct->setEnabled(true);
     this->autoRecordingAct->setIconText(tr("&Auto Record"));
     this->autoRecordingAct->setEnabled(true);
+    this->dpRecordingAct->setIconText(tr("&DP Record"));
+    this->dpRecordingAct->setEnabled(true);
 
     char *data;
     int size = recorder->getData((void**) &data);
@@ -213,6 +264,7 @@ void MainWindow::recordFinished(SoundRecorder * recorder)
     recorder->deleteLater();
     this->recorder = NULL;
     this->autoRecorder = NULL;
+    this->dpRecorder = NULL;
     this->updateFileList();
 
     if(SettingsDialog::getInstance()->getMathGLSettings()->autoOpen)
@@ -290,6 +342,11 @@ void MainWindow::evaluationF0()
 void MainWindow::evaluationF0_Spec()
 {
     evaluation(new DrawerEvalPitchBySpectr());
+}
+
+void MainWindow::evaluationDP()
+{
+    evaluation(new DrawerDP());
 }
 
 void MainWindow::evaluationI_Spec()

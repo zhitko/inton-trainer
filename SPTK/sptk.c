@@ -82,6 +82,7 @@ DP_SETTINGS *initDpSettings()
     DP_SETTINGS * dp = malloc(sizeof(DP_SETTINGS));
     dp->globalLimit = -1;
     dp->localLimit = 1;
+    dp->continiusLimit = 100;
     return dp;
 }
 

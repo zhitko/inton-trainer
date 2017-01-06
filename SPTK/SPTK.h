@@ -173,6 +173,7 @@ typedef struct _MOVE_SETTINGS {
 typedef struct _DP_SETTINGS {
     int globalLimit;
     double localLimit;
+    int continiusLimit;
 } DP_SETTINGS;
 
 typedef struct _SPEC_SETTINGS {

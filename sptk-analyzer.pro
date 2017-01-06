@@ -36,11 +36,11 @@ unix:!mac {
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    soundrecorder.cpp \
+    Recorder/soundrecorder.cpp \
     graphswindow.cpp \
     settingsdialog.cpp \
-    autosoundrecorder.cpp \
-    buffer.cpp \
+    Recorder/autosoundrecorder.cpp \
+    Recorder/buffer.cpp \
     drawer.cpp \
     soundplayer.cpp \
     graphsevalwindow.cpp \
@@ -51,15 +51,18 @@ SOURCES += \
     drawerevalenergybyspectr.cpp \
     DP/spectrdp.cpp \
     drawerevalspectr.cpp \
-    webwindow.cpp
+    webwindow.cpp \
+    Recorder/dpsoundrecorder.cpp \
+    DP/continuousdp.cpp \
+    drawerdp.cpp
 
 HEADERS  += \
     mainwindow.h \
-    soundrecorder.h \
+    Recorder/soundrecorder.h \
     graphswindow.h \
     settingsdialog.h \
-    autosoundrecorder.h \
-    buffer.h \
+    Recorder/autosoundrecorder.h \
+    Recorder/buffer.h \
     drawer.h \
     soundplayer.h \
     graphsevalwindow.h \
@@ -72,7 +75,10 @@ HEADERS  += \
     DP/vectordp.h \
     DP/spectrdp.h \
     drawerevalspectr.h \
-    webwindow.h
+    webwindow.h \
+    Recorder/dpsoundrecorder.h \
+    DP/continuousdp.h \
+    drawerdp.h
 
 # OpenAL
 SOURCES += \

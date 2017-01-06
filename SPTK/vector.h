@@ -127,6 +127,7 @@ typedef struct                    { int x; int y; int** m; } intmatrix;
 intmatrix                         makeim(int, int);
 intmatrix                         zeroim(int, int); 
 intmatrix                         onesim(int, int); 
+intmatrix                         nansim(int, int);
 intmatrix                         copyim(intmatrix);
 
 matrix                            im2m(intmatrix); // cast

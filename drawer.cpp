@@ -256,7 +256,7 @@ GraphData ProcWave2Data(QString fname)
     qDebug() << "lpc";
 
     vector spec = sptk_spec(lpc, sptk_settings->spec);
-    qDebug() << "spec";
+    qDebug() << "spec " << maxv(spec);
 
     vector spec_proc;
     if (sptk_settings->spec->proc == 0){
@@ -266,7 +266,7 @@ GraphData ProcWave2Data(QString fname)
         spec_proc = vector_pow_exp(spec, sptk_settings->spec->factor, sptk_settings->spec->min);
         qDebug() << "spec_exp";
     }
-    qDebug() << "spec_log";
+    qDebug() << "spec_proc " << maxv(spec_proc);
 
     vector pitch = processZeros(sptk_pitch_spec(wave, sptk_settings->pitch, intensive.x));
     qDebug() << "pitch";
@@ -398,6 +398,21 @@ void freeGraphData(GraphData data)
     freev(data.n_mask);
     freev(data.t_mask);
     freev(data.pnt_mask);
+}
+
+mglData * createMglData(vector vec, mglData * data, bool nan)
+{
+    if (data != NULL) {
+        delete data;
+    }
+    data = new mglData();
+    if (nan)
+    {
+        vectorToDataWithNan(vec, data);
+    } else {
+        vectorToData(vec, data);
+    }
+    return data;
 }
 
 void vectorToData(vector vec, mglData * data)
