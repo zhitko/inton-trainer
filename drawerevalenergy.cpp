@@ -27,10 +27,16 @@ DrawerEvalEnergy::DrawerEvalEnergy() :
     result(0),
     first(true)
 {
+    secWaveData = NULL;
+    secIntensiveData = NULL;
+    secIntensiveDataOrig = NULL;
 }
 
 DrawerEvalEnergy::~DrawerEvalEnergy()
 {
+    if (secWaveData) delete secWaveData;
+    if (secIntensiveData) delete secIntensiveData;
+    if (secIntensiveDataOrig) delete secIntensiveDataOrig;
     qDebug() << "DrawerEvalEnergy removed";
 }
 
@@ -51,20 +57,20 @@ int DrawerEvalEnergy::Draw(mglGraph *gr)
     qDebug() << "waveData";
     gr->MultiPlot(1, 12, 0, 1, 1, "#");
     gr->SetRange('y', 0, 1);
-    gr->Plot(waveData, "-B");
-    gr->Plot(pWaveData, "-y1");
-    gr->Plot(nWaveData, "-q1");
-    gr->Plot(tWaveData, "-c1");
+    gr->Plot(*waveData, "-B");
+    gr->Plot(*pWaveData, "-y1");
+    gr->Plot(*nWaveData, "-q1");
+    gr->Plot(*tWaveData, "-c1");
 
     qDebug() << "enegryData";
     gr->MultiPlot(1, 12, 4, 1, 6, "#");
     gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
-    if(!isCompare) gr->Plot(intensiveDataOriginal, "-b1");
-    gr->Plot(intensiveData, "-B3");
+    if(!isCompare) gr->Plot(*intensiveDataOriginal, "-b1");
+    gr->Plot(*intensiveData, "-B3");
 
     qDebug() << "scaledMaskData";
     gr->SetRange('y', 0, 1);
-    gr->Plot(maskData, "-G1");
+    gr->Plot(*maskData, "-G1");
 
     gr->Axis("Y", "");
     gr->Grid("y", "W", "");
@@ -75,7 +81,7 @@ int DrawerEvalEnergy::Draw(mglGraph *gr)
         qDebug() << "secWaveData";
         gr->MultiPlot(1, 12, 1, 1, 1, "#");
         gr->SetRange('y', 0, 1);
-        gr->Plot(secWaveData, "G");
+        gr->Plot(*secWaveData, "G");
 
         gr->MultiPlot(1, 12, 3, 1, 1, "#");
         gr->Puts(mglPoint(0,0),QString("Совпадение: \\big{#r{%1}}%").arg(this->result).toLocal8Bit().data(), ":C", 30);
@@ -83,7 +89,7 @@ int DrawerEvalEnergy::Draw(mglGraph *gr)
         qDebug() << "secEnegryData";
         gr->MultiPlot(1, 12, 4, 1, 6, "#");
         gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
-        gr->Plot(secIntensiveData, "-G3");
+        gr->Plot(*secIntensiveData, "-G3");
     }
 
     qDebug() << "finish drawing";
@@ -105,20 +111,20 @@ void DrawerEvalEnergy::Proc(QString fname)
 
         GraphData dataSec = ProcWave2Data(this->secFileName);
 
-        vectorToData(dataSec.d_full_wave, &secWaveData);
+        secWaveData = createMglData(dataSec.d_full_wave, secWaveData);
         qDebug() << "waveData New Filled";
 
-        vectorToData(dataSec.d_intensive, &secIntensiveDataOrig);
-        secIntensiveDataOrig.Norm(GRAPH_Y_VAL_MAX);
+        secIntensiveDataOrig = createMglData(dataSec.d_intensive, secIntensiveDataOrig);
+        secIntensiveDataOrig->Norm(GRAPH_Y_VAL_MAX);
         qDebug() << "secIntensiveDataOrig New Filled";
 
         vector intensiveOrig;
-        intensiveOrig.v = intensiveData.a;
+        intensiveOrig.v = intensiveData->a;
         intensiveOrig.x = data->d_intensive.x;
         (*intensiveOrig.v) = 0;
 
         vector intensive;
-        intensive.v = secIntensiveDataOrig.a;
+        intensive.v = secIntensiveDataOrig->a;
         intensive.x = dataSec.d_intensive.x;
         (*intensive.v) = 0;
 
@@ -128,7 +134,7 @@ void DrawerEvalEnergy::Proc(QString fname)
         this->result = calcResultMark(newIntensive,intensiveOrig);
         qDebug() << "Stop DP";
 
-        vectorToData(newIntensive, &secIntensiveData);
+        secIntensiveData = createMglData(newIntensive, secIntensiveData);
         qDebug() << "secIntensiveDataOrig New Filled";
 
         freev(newIntensive);

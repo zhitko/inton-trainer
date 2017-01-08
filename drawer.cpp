@@ -434,10 +434,34 @@ void vectorToDataWithNan(vector vec, mglData * data)
 Drawer::Drawer() : mglDraw(),
     data(NULL), stereo(false)
 {
+    waveData = NULL;
+    pitchData = NULL;
+    pitchDataOriginal = NULL;
+    specData = NULL;
+    maskData = NULL;
+    scaledMaskData = NULL;
+    intensiveData = NULL;
+    intensiveDataOriginal = NULL;
+    midIntensiveData = NULL;
+    pWaveData = NULL;
+    nWaveData = NULL;
+    tWaveData = NULL;
 }
 
 Drawer::~Drawer()
 {
+    if (this->waveData) delete this->waveData;
+    if (this->pitchData) delete this->pitchData;
+    if (this->pitchDataOriginal) delete this->pitchDataOriginal;
+    if (this->specData) delete this->specData;
+    if (this->maskData) delete this->maskData;
+    if (this->scaledMaskData) delete this->scaledMaskData;
+    if (this->intensiveData) delete this->intensiveData;
+    if (this->intensiveDataOriginal) delete this->intensiveDataOriginal;
+    if (this->midIntensiveData) delete this->midIntensiveData;
+    if (this->pWaveData) delete this->pWaveData;
+    if (this->nWaveData) delete this->nWaveData;
+    if (this->tWaveData) delete this->tWaveData;
     freeGraphData(*data);
     free(data);
     qDebug() << "Drawer removed";
@@ -473,47 +497,49 @@ void Drawer::Proc(QString fname)
     *(data) = ProcWave2Data(this->fileName);
     data->d_pitch = vector_fill_empty(data->d_pitch);
 
-    vectorToData(data->d_wave, &waveData);
-    waveDataLen = waveData.GetNx();
+    waveData = createMglData(data->d_wave, waveData);
+    waveDataLen = waveData->GetNx();
     qDebug() << "waveData Filled";
 
-    vectorToData(data->d_n_wave, &nWaveData);
-    vectorToData(data->d_t_wave, &tWaveData);
-    vectorToData(data->d_p_wave, &pWaveData);
+    nWaveData = createMglData(data->d_n_wave, nWaveData);
+    tWaveData = createMglData(data->d_t_wave, tWaveData);
+    pWaveData = createMglData(data->d_p_wave, pWaveData);
 
-    vectorToData(data->d_mask, &maskData);
+    maskData = createMglData(data->d_mask, maskData);
     qDebug() << "maskData Filled";
 
-    vectorToDataWithNan(data->d_intensive_original, &intensiveDataOriginal);
-    intensiveDataOriginal.Norm(GRAPH_Y_VAL_MAX);
+    intensiveDataOriginal = createMglData(data->d_intensive_original, intensiveDataOriginal, true);
+    intensiveDataOriginal->Norm(GRAPH_Y_VAL_MAX);
     qDebug() << "intensiveData Filled";
 
-    vectorToData(data->d_intensive, &intensiveData);
-    intensiveData.Norm(GRAPH_Y_VAL_MAX);
+    intensiveData = createMglData(data->d_intensive, intensiveData);
+    intensiveData->Norm(GRAPH_Y_VAL_MAX);
     qDebug() << "intensiveData Filled";
 
-    vectorToData(data->d_avg_intensive, &midIntensiveData);
-    midIntensiveData.Norm(GRAPH_Y_VAL_MAX);
+    midIntensiveData = createMglData(data->d_avg_intensive, midIntensiveData);
+    midIntensiveData->Norm(GRAPH_Y_VAL_MAX);
     qDebug() << "midIntensiveData Filled";
 
-    vectorToDataWithNan(data->d_pitch_originl, &pitchDataOriginal);
-    pitchDataOriginal.Norm(GRAPH_Y_VAL_MAX);
-    vectorToData(data->d_pitch, &pitchData);
-    pitchData.Norm(GRAPH_Y_VAL_MAX);
+    pitchDataOriginal = createMglData(data->d_pitch_originl, pitchDataOriginal, true);
+    pitchDataOriginal->Norm(GRAPH_Y_VAL_MAX);
+    pitchData = createMglData(data->d_pitch, pitchData);
+    pitchData->Norm(GRAPH_Y_VAL_MAX);
     qDebug() << "pitchData Filled";
 
     int speksize = sptk_settings->spec->leng / 2 + 1;
     int specX = data->d_spec_proc.x/speksize;
     int specY = speksize;
-    specData.Create(specX, specY);
+    if (specData) delete specData;
+    specData = new mglData();
+    specData->Create(specX, specY);
     for(long j=0;j<specY;j++)
         for(long i=0;i<specX;i++)
         {
             long i0 = i+specX*j;
             long i1 = j+specY*i;
-            specData.a[i0] = data->d_spec_proc.v[i1];
+            specData->a[i0] = data->d_spec_proc.v[i1];
         }
-    specData.Squeeze(mathgl_settings->quality, 1);
+    specData->Squeeze(mathgl_settings->quality, 1);
     qDebug() << "specData Filled " << specX << " " << specY;
 
     qDebug() << "Data Processed";
@@ -534,23 +560,23 @@ int Drawer::Draw(mglGraph *gr)
     qDebug() << "waveData";
     gr->MultiPlot(1, 16, 0, 1, 2, "#");
     gr->SetRange('y', 0, 1);
-    gr->Plot(waveData);
-    gr->Plot(pWaveData, "y1");
-    gr->Plot(nWaveData, "q1");
-    gr->Plot(tWaveData, "c1");
+    gr->Plot(*waveData);
+    gr->Plot(*pWaveData, "y1");
+    gr->Plot(*nWaveData, "q1");
+    gr->Plot(*tWaveData, "c1");
 
     qDebug() << "pitchData " << data->pitch_min << " " << data->pitch_max;
     gr->MultiPlot(1, 16, 3, 1, 6, "#");
     gr->Puts(mglPoint(-0.9,1),QString("%1").arg(data->pitch_max).toLocal8Bit().data());
     gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
-    gr->Plot(pitchData, "-G6");
+    gr->Plot(*pitchData, "-G6");
     gr->Axis("Y", "");
     gr->Grid("y", "W", "");
     gr->Puts(mglPoint(-0.9,-1),QString("%1").arg(data->pitch_min).toLocal8Bit().data());
 
     qDebug() << "scaledMaskData";
     gr->SetRange('y', 0, 1);
-    gr->Plot(maskData, "-G1");
+    gr->Plot(*maskData, "-G1");
 
     qDebug() << "specData";
     gr->MultiPlot(1, 16, 10, 1, 6, "#");
@@ -558,7 +584,7 @@ int Drawer::Draw(mglGraph *gr)
     QString colors = QString("w{w,%1}k").arg(QString::number(0));
     qDebug() << colors;
     gr->SetDefScheme(colors.toStdString().c_str());
-    gr->Surf(specData);
+    gr->Surf(*specData);
 
     qDebug() << "finish drawing";
     return 0;

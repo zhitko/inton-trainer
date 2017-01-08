@@ -16,7 +16,7 @@ public:
 private:
     bool first;
     QString secFileName;
-    mglData secWaveData, secSpecData, secSpecDataOrig;
+    mglData *secWaveData, *secSpecData, *secSpecDataOrig;
 };
 
 #endif // DRAWEREVALSPECTR_H

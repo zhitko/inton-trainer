@@ -30,10 +30,22 @@ DrawerEvalPitch::DrawerEvalPitch() :
     result(0),
     first(true)
 {
+    secWaveData = NULL;
+    secPitchData = NULL;
+    secPitchDataOrig = NULL;
+    pSecWaveData = NULL;
+    nSecWaveData = NULL;
+    tSecWaveData = NULL;
 }
 
 DrawerEvalPitch::~DrawerEvalPitch()
 {
+    if (secWaveData) delete secWaveData;
+    if (secPitchData) delete secPitchData;
+    if (secPitchDataOrig) delete secPitchDataOrig;
+    if (pSecWaveData) delete pSecWaveData;
+    if (nSecWaveData) delete nSecWaveData;
+    if (tSecWaveData) delete tSecWaveData;
     qDebug() << "DrawerEval removed";
 }
 
@@ -54,33 +66,33 @@ int DrawerEvalPitch::Draw(mglGraph *gr)
     qDebug() << "waveData";
     gr->MultiPlot(1, 12, 0, 1, 1, "#");
     gr->SetRange('y', 0, 1);
-    gr->Plot(waveData, "B");
-    gr->Plot(pWaveData, "y1");
-    gr->Plot(nWaveData, "q1");
-    gr->Plot(tWaveData, "c1");
+    gr->Plot(*waveData, "B");
+    gr->Plot(*pWaveData, "y1");
+    gr->Plot(*nWaveData, "q1");
+    gr->Plot(*tWaveData, "c1");
 
     qDebug() << "pitchData";
     gr->MultiPlot(1, 12, 4, 1, 6, "#");
     gr->Puts(mglPoint(-0.9,1),QString("%1").arg(data->pitch_max).toLocal8Bit().data());
     gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
-    gr->Plot(pitchData, "-B3");
-    if(!isCompare) gr->Plot(pitchDataOriginal, "-b1");
+    gr->Plot(*pitchData, "-B3");
+    if(!isCompare) gr->Plot(*pitchDataOriginal, "-b1");
     gr->Axis("Y", "");
     gr->Grid("y", "W", "");
     gr->Puts(mglPoint(-0.9,-1),QString("%1").arg(data->pitch_min).toLocal8Bit().data());
 
     qDebug() << "scaledMaskData";
     gr->SetRange('y', 0, 1);
-    gr->Plot(maskData, "-G1");
+    gr->Plot(*maskData, "-G1");
 
     if(isCompare){
         qDebug() << "secWaveData";
         gr->MultiPlot(1, 12, 1, 1, 1, "#");
         gr->SetRange('y', 0, 1);
-        gr->Plot(secWaveData, "G");
-        gr->Plot(pSecWaveData, "y1");
-        gr->Plot(nSecWaveData, "q1");
-        gr->Plot(tSecWaveData, "c1");
+        gr->Plot(*secWaveData, "G");
+        gr->Plot(*pSecWaveData, "y1");
+        gr->Plot(*nSecWaveData, "q1");
+        gr->Plot(*tSecWaveData, "c1");
 
         gr->MultiPlot(1, 12, 3, 1, 1, "#");
         gr->Puts(mglPoint(0,0),QString("Совпадение: \\big{#r{%1}}%").arg(this->result).toLocal8Bit().data(), ":C", 30);
@@ -88,7 +100,7 @@ int DrawerEvalPitch::Draw(mglGraph *gr)
         qDebug() << "secPitchData";
         gr->MultiPlot(1, 12, 4, 1, 6, "#");
         gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
-        gr->Plot(secPitchData, "-G3");
+        gr->Plot(*secPitchData, "-G3");
     }
 
     qDebug() << "finish drawing";
@@ -111,22 +123,22 @@ void DrawerEvalPitch::Proc(QString fname)
         GraphData dataSec = ProcWave2Data(this->secFileName);
         dataSec.d_pitch = vector_fill_empty(dataSec.d_pitch);
 
-        vectorToData(dataSec.d_full_wave, &secWaveData);
+        secWaveData = createMglData(dataSec.d_full_wave, secWaveData);
         qDebug() << "waveData New Filled";
 
-        vectorToData(dataSec.d_pitch, &secPitchDataOrig);
-        secPitchDataOrig.Norm(GRAPH_Y_VAL_MAX);
+        secPitchDataOrig = createMglData(dataSec.d_pitch, secPitchDataOrig);
+        secPitchDataOrig->Norm(GRAPH_Y_VAL_MAX);
         qDebug() << "pitchData New Filled";
 
         vector pitchOrig;
-        pitchOrig.v = pitchData.a;
+        pitchOrig.v = pitchData->a;
         pitchOrig.x = data->d_pitch.x;
         (*pitchOrig.v) = 0;
 
         vector pitchOrigNorm = normalizev(pitchOrig, 0.0, 10.0);
 
         vector pitch;
-        pitch.v = secPitchDataOrig.a;
+        pitch.v = secPitchDataOrig->a;
         pitch.x = dataSec.d_pitch.x;
         (*pitch.v) = 0;
 
@@ -141,8 +153,8 @@ void DrawerEvalPitch::Proc(QString fname)
 
         qDebug() << "Stop DP";
 
-        vectorToData(newPitch, &secPitchData);
-        secPitchData.Norm(GRAPH_Y_VAL_MAX);
+        secPitchData = createMglData(newPitch, secPitchData);
+        secPitchData->Norm(GRAPH_Y_VAL_MAX);
         qDebug() << "pitchData New Filled";
 
         freev(newPitch);

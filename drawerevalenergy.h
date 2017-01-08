@@ -16,7 +16,7 @@ public:
 protected:
     bool first;
     QString secFileName;
-    mglData secWaveData, secIntensiveData, secIntensiveDataOrig;
+    mglData *secWaveData, *secIntensiveData, *secIntensiveDataOrig;
 };
 
 #endif // DRAWEREVALENERGY_H

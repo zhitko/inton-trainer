@@ -27,12 +27,18 @@ DrawerDP::DrawerDP() :
     first(true)
 {
     this->dpData = NULL;
+    this->secWaveData = NULL;
+    this->errorData = NULL;
+    this->timeData = NULL;
 }
 
 DrawerDP::~DrawerDP()
 {
     qDebug() << "DrawerDP removed";
     if (this->dpData) delete this->dpData;
+    if (this->secWaveData) delete this->secWaveData;
+    if (this->errorData) delete this->errorData;
+    if (this->timeData) delete this->timeData;
 }
 
 int DrawerDP::Draw(mglGraph *gr)
@@ -47,14 +53,13 @@ int DrawerDP::Draw(mglGraph *gr)
     qDebug() << "waveData";
     gr->MultiPlot(1, 12, 0, 1, 1, "#");
     gr->SetRange('y', 0, 1);
-    gr->Plot(waveData, "B");
-    gr->Plot(pWaveData, "y1");
-    gr->Plot(nWaveData, "q1");
-    gr->Plot(tWaveData, "c1");
+    gr->Plot(*waveData, "B");
+    gr->Plot(*pWaveData, "y1");
+    gr->Plot(*nWaveData, "q1");
+    gr->Plot(*tWaveData, "c1");
 
     gr->MultiPlot(1, 12, 4, 1, 6, "#");
     gr->SetRange('y', 0, 1);
-//    gr->Plot(maskData, "-G1");
     gr->Axis("Y", "");
     gr->Grid("y", "W", "");
 
@@ -62,21 +67,17 @@ int DrawerDP::Draw(mglGraph *gr)
         qDebug() << "secWaveData";
         gr->MultiPlot(1, 12, 1, 1, 1, "#");
         gr->SetRange('y', 0, 1);
-        gr->Plot(secWaveData, "G");
+        gr->Plot(*secWaveData, "G");
         gr->Plot(*dpData, "R9");
-//        gr->Plot(pSecWaveData, "y1");
-//        gr->Plot(nSecWaveData, "q1");
-//        gr->Plot(tSecWaveData, "c1");
 
         gr->MultiPlot(1, 12, 3, 1, 1, "#");
         gr->Puts(mglPoint(0,0),QString("Max: %1 Min: %2").arg(this->errorMax).arg(this->errorMin).toLocal8Bit().data(), ":C", 24);
 
         qDebug() << "errorData";
         gr->MultiPlot(1, 12, 4, 1, 6, "#");
-//        gr->SetRange('y', this->errorMin, this->errorMax);
         gr->SetRange('y', 0, 1);
-        gr->Plot(errorData, "-B3");
-        gr->Plot(timeData, "-R3");
+        gr->Plot(*errorData, "-B3");
+        gr->Plot(*timeData, "-R3");
     }
 
     qDebug() << "finish drawing";
@@ -111,7 +112,7 @@ void DrawerDP::Proc(QString fname)
 
         GraphData dataSec = ProcWave2Data(this->secFileName);
 
-        vectorToData(dataSec.d_full_wave, &secWaveData);
+        secWaveData = createMglData(dataSec.d_full_wave, secWaveData);
         qDebug() << "waveData New Filled";
 
         qDebug() << "Start DP";
@@ -129,12 +130,12 @@ void DrawerDP::Proc(QString fname)
         int minPos = minv(errorVector);
         this->errorMax = errorVector.v[maxv(errorVector)];
         this->errorMin = errorVector.v[minPos];
-        vectorToData(errorVector, &errorData);
-        errorData.Norm();
+        errorData = createMglData(errorVector, errorData);
+        errorData->Norm();
 
         vector timeVector = dp.getTimeVector();
-        vectorToData(timeVector, &timeData);
-        timeData.Norm();
+        timeData = createMglData(timeVector, timeData);
+        timeData->Norm();
 
         qDebug() << "errorVector " << errorVector.x;
         qDebug() << "timeVector " << timeVector.x;

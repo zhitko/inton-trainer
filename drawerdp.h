@@ -15,8 +15,7 @@ public:
 protected:
     bool first;
     QString secFileName;
-    mglData secWaveData, errorData, timeData;
-    mglData * dpData;
+    mglData *dpData, *secWaveData, *errorData, *timeData;
     int errorMax, errorMin;
 };
 

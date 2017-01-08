@@ -46,21 +46,21 @@ void DrawerEvalEnergyBySpectr::Proc(QString fname)
 
         GraphData dataSec = ProcWave2Data(this->secFileName);
 
-        vectorToData(dataSec.d_full_wave, &secWaveData);
+        secWaveData = createMglData(dataSec.d_full_wave, secWaveData);
         qDebug() << "waveData New Filled";
 
-        vectorToData(dataSec.d_intensive, &secIntensiveDataOrig);
-        secIntensiveDataOrig.Norm(GRAPH_Y_VAL_MAX);
+        secIntensiveDataOrig = createMglData(dataSec.d_intensive, secIntensiveDataOrig);
+        secIntensiveDataOrig->Norm(GRAPH_Y_VAL_MAX);
         qDebug() << "secIntensiveDataOrig New Filled";
 
         vector intensiveOrig;
-        intensiveOrig.v = intensiveData.a;
+        intensiveOrig.v = intensiveData->a;
         intensiveOrig.x = data->d_intensive.x;
         qDebug() << "intensiveOrig " << intensiveOrig.x;
         (*intensiveOrig.v) = 0;
 
         vector intensive;
-        intensive.v = secIntensiveDataOrig.a;
+        intensive.v = secIntensiveDataOrig->a;
         intensive.x = dataSec.d_intensive.x;
         qDebug() << "intensive " << intensive.x;
         (*intensive.v) = 0;
@@ -72,7 +72,7 @@ void DrawerEvalEnergyBySpectr::Proc(QString fname)
         this->result = calcResultMark(newIntensive,intensiveOrig);
         qDebug() << "Stop DP";
 
-        vectorToData(newIntensive, &secIntensiveData);
+        secIntensiveData = createMglData(newIntensive, secIntensiveData);
         qDebug() << "secIntensiveDataOrig New Filled";
 
         freev(newIntensive);
