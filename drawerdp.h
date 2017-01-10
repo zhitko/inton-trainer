@@ -16,6 +16,7 @@ protected:
     bool first;
     QString secFileName;
     mglData *dpData, *secWaveData, *errorData, *timeData;
+    mglData *pSecData, *nSecData, *tSecData;
     int errorMax, errorMin;
 };
 

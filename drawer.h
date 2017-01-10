@@ -9,9 +9,15 @@
 #include "DP/spectrdp.h"
 
 extern "C" {
+    #include "./OpenAL/wavFile.h"
     #include "./SPTK/SPTK.h"
     #include "./SPTK/vector.h"
 }
+
+struct MaskData{
+    intvector pointsFrom;
+    intvector pointsLength;
+};
 
 struct GraphData{
     vector d_full_wave;
@@ -33,7 +39,13 @@ struct GraphData{
     vector n_mask;
     vector t_mask;
     vector pnt_mask;
+
+    MaskData md_p;
+    MaskData md_n;
+    MaskData md_t;
 };
+
+MaskData getLabelsFromFile(WaveFile* waveFile, char marker);
 
 mglData * createMglData(vector vec, mglData * data, bool nan = false);
 void vectorToData(vector vec, mglData * data);

@@ -8,8 +8,6 @@
 #include "settingsdialog.h"
 
 extern "C" {
-    #include "./OpenAL/wavFile.h"
-
     #include "float.h"
 
     #include "./SPTK/SPTK.h"
@@ -42,11 +40,15 @@ vector calculateMask(vector wave, vector pitch)
     return mask;
 }
 
-vector readMaskFromFile(WaveFile* waveFile, int length, char marker)
+MaskData getLabelsFromFile(WaveFile* waveFile, char marker)
 {
-    qDebug() << "Use file data for mask";
+    MaskData data;
+    data.pointsFrom.x = 0;
+    data.pointsLength.x = 0;
+    data.pointsFrom.v = NULL;
+    data.pointsLength.v = NULL;
 
-    vector mask_from_file;
+    qDebug() << "Use file data for mask";
 
     if (!((waveFile->cueChunk != NULL)
             && (littleEndianBytesToUInt16(waveFile->cueChunk->cuePointsCount) > 0)
@@ -55,7 +57,7 @@ vector readMaskFromFile(WaveFile* waveFile, int length, char marker)
             && (waveFile->listChunk->ltxtCount > 0)
             && (waveFile->listChunk->lablChunks != NULL)
             && (waveFile->listChunk->lablCount > 0)))
-            return zerov(0);
+            return data;
 
     int cuePointsCount = littleEndianBytesToUInt16(waveFile->cueChunk->cuePointsCount);
 
@@ -112,11 +114,25 @@ vector readMaskFromFile(WaveFile* waveFile, int length, char marker)
         cuePointsCount = count;
     }
 
-    mask_from_file = make_mask(length, cuePointsCount, pointsFrom, pointsLength);
+    data.pointsFrom.x = cuePointsCount;
+    data.pointsLength.x = cuePointsCount;
+    data.pointsFrom.v = pointsFrom;
+    data.pointsLength.v = pointsLength;
+
+    return data;
+}
+
+vector readMaskFromFile(WaveFile* waveFile, int length, char marker)
+{
+    vector mask_from_file;
+
+    MaskData data = getLabelsFromFile(waveFile, marker);
+
+    mask_from_file = make_mask(length, data.pointsFrom.x, data.pointsFrom.v, data.pointsLength.v);
     qDebug() << "make_mask";
 
-    free(pointsFrom);
-    free(pointsLength);
+    freeiv(data.pointsFrom);
+    freeiv(data.pointsLength);
 
     return mask_from_file;
 }
@@ -309,6 +325,10 @@ GraphData ProcWave2Data(QString fname)
 
     vector norm_wave = normalizev(wave, 0.0, 1.0);
 
+    MaskData md_p = getLabelsFromFile(waveFile, 'P');
+    MaskData md_n = getLabelsFromFile(waveFile, 'N');
+    MaskData md_t = getLabelsFromFile(waveFile, 'T');
+
     vector p_mask = readMaskFromFile(waveFile, wave.x, 'P');
     qDebug() << "p_mask";
 
@@ -375,6 +395,10 @@ GraphData ProcWave2Data(QString fname)
     data.n_mask = n_mask;
     data.t_mask = t_mask;
     data.pnt_mask = pnt_mask;
+
+    data.md_p = md_p;
+    data.md_t = md_t;
+    data.md_n = md_n;
 
     return data;
 }

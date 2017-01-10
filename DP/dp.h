@@ -47,13 +47,11 @@ public:
 template< typename ValueType >
 class DP
 {
-private:
-    DPStateStack * mask;
+protected:
     int globalLimit;
     double localLimit;
     double a, b, c1, c2, d, aabb;
-
-protected:
+    DPStateStack * mask;
     double kH, kV, kD, kT, kQ;
     DPStateStack ** stateCache;
     Signal<ValueType> * pattern;
@@ -91,7 +89,9 @@ protected:
         DPState currentState = {localLimit * localError, localError, opFirst, signalPos, patternPos, 0};
         currentBranch->value = currentState;
 
-        DPStateStack * branchVert = 0;
+        if (patternPos == 0) return currentBranch;
+
+        DPStateStack * branchVert    = 0;
         DPStateStack * branchDiag    = 0;
         DPStateStack * branchHoriz   = 0;
 
@@ -296,6 +296,42 @@ public:
         }
 
         return result;
+    }
+
+    int * getTemplateMapping()
+    {
+        if(!this->mask){
+            reinitCache();
+            getSignalMask();
+        }
+
+        int * templateIndex = new int[this->patternSize];
+        for (int i=0; i<this->patternSize; i++) templateIndex[i] = i;
+
+        int * templateMapping = new int[this->patternSize];
+        for (int i=0; i<this->patternSize; i++) templateMapping[i] = 0;
+
+        DPStateStack * stateStep = this->mask;
+        DPStateOperation operation = opNone;
+        while(stateStep != 0)
+        {
+            operation = stateStep->value.operation;
+            switch (operation) {
+                case trDiag:
+                case trVert:
+                    templateMapping[stateStep->value.patternPos] = templateIndex[stateStep->value.signalPos];
+                    break;
+                case trHoriz:
+                    break;
+                default:
+                    break;
+            }
+            stateStep = stateStep->next;
+        }
+
+        delete templateIndex;
+
+        return templateMapping;
     }
 
 protected:

@@ -80,12 +80,53 @@ vector ContinuousDP::getErrorVector()
 
 vector ContinuousDP::getTimeVector()
 {
-    vector errors = zerov(this->signalSize);
+    vector time = zerov(this->signalSize);
     for(int i=0; i<this->signalSize; i++)
     {
-        errors.v[i] = this->getStateCache(i, this->patternSize - 1)->value.time;
+        time.v[i] = this->getStateCache(i, this->patternSize - 1)->value.time;
     }
-    return errors;
+    return time;
+}
+
+intvector ContinuousDP::getMapping(int pos)
+{
+    intvector mapping = zeroiv(this->patternSize);
+    int pattern_index = 0;
+    int signal_index = 0;
+    qDebug() << "signalSize " << this->signalSize;
+    qDebug() << "patternSize " << this->patternSize;
+
+    DPStateStack * stateStep = this->getStateCache(pos, this->patternSize - 1);
+    DPStateOperation operation = opNone;
+    while(stateStep != 0)
+    {
+        if (pattern_index < mapping.x)
+        {
+            mapping.v[pattern_index] = signal_index;
+        } else {
+            qDebug() << "WARNING getMapping " << pattern_index << " " << signal_index;
+        }
+        operation = stateStep->value.operation;
+        switch (operation) {
+            case trDiag:
+                signal_index++;
+                pattern_index++;
+                break;
+            case trVert:
+                pattern_index++;
+                break;
+            case trHoriz:
+                signal_index++;
+                break;
+            default:
+                break;
+        }
+        stateStep = stateStep->next;
+    }
+    qDebug() << "Mask size pattern_index " << pattern_index << " (pattern size equal)";
+    qDebug() << "Mask size signal_index " << signal_index << " (mached signal size equal)";
+
+    return mapping;
 }
 
 double ContinuousDP::getNormKt(const int signalPos, const int patternPos, int t)
@@ -105,7 +146,6 @@ DPStateStack * ContinuousDP::getStateCache(const int signalPos, const int patter
 {
     int pos = signalPos + this->signalOffset;
     if(pos >= this->cacheSize) pos -= this->cacheSize;
-//    qDebug() << pos << " = " << signalPos << " + " << this->signalOffset;
     return &(stateCache[pos][patternPos]);
 }
 

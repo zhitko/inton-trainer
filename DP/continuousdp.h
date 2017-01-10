@@ -12,6 +12,7 @@ public:
     virtual void reinitCache();
     virtual vector getErrorVector();
     virtual vector getTimeVector();
+    virtual intvector getMapping(int);
 protected:
     int signalShift;
     int signalOffset;
