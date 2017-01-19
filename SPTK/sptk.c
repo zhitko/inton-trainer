@@ -83,6 +83,10 @@ DP_SETTINGS *initDpSettings()
     dp->globalLimit = -1;
     dp->localLimit = 1;
     dp->continiusLimit = 100;
+    dp->continiusKD = 0.5;
+    dp->continiusKV = 1.0;
+    dp->continiusKH = 0.1;
+    dp->continiusKT = 20;
     return dp;
 }
 

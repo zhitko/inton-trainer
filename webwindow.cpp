@@ -4,11 +4,19 @@
 #include "qdebug.h"
 
 #include "drawer.h"
+#include "drawerdp.h"
 #include "drawerevalpitch.h"
 #include "drawerevalpitchbyspectr.h"
 #include "drawerevalenergy.h"
 #include "drawerevalenergybyspectr.h"
 #include "drawerevalspectr.h"
+
+#include <QDir>
+#include <QDirIterator>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonValue>
 
 WebWindow::WebWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -24,14 +32,91 @@ WebWindow::~WebWindow()
     delete ui;
 }
 
+void WebWindow::attachObject()
+{
+    QWebFrame * frame = this->ui->webView->page()->mainFrame();
+    frame->addToJavaScriptWindowObject( QString("api"), this );
+}
+
+QStringList scanDirItems()
+{
+    QDir fullDir(QApplication::applicationDirPath() + DATA_PATH_TRAINING);
+    QDir dir(QApplication::applicationDirPath() + DATA_PATH);
+    QStringList files;
+    QString fullPath = fullDir.absolutePath();
+    QString path = dir.absolutePath();
+    qDebug() << "Search in " << path;
+    QDirIterator iterator(fullPath, QDirIterator::Subdirectories);
+    while (iterator.hasNext()) {
+        iterator.next();
+        if (!iterator.fileInfo().isDir()) {
+            QString filename = iterator.filePath();
+            if (filename.endsWith(WAVE_TYPE))
+                files.append(filename.remove(path));
+        }
+    }
+    return files;
+}
+
+QString WebWindow::getFiles()
+{
+    QStringList files = scanDirItems();
+    files.sort();
+    QString lastPath = "";
+
+    QJsonArray jResult;
+    QJsonObject jSection;
+    QJsonArray jList;
+    for(int i=0; i<files.size();i++)
+    {
+        QString file = files.at(i);
+        int lastIndex = file.lastIndexOf("/");
+        int firstIndex = file.indexOf("/", 1);
+
+        QString filePath = file.left(lastIndex).replace("/", " ");
+        QString fileTitle = filePath.mid(firstIndex).replace("/", " ");
+        QString fileName = file.mid(lastIndex).replace("/", " ");
+
+        if (lastPath == "") lastPath = fileTitle;
+
+        if (lastPath != fileTitle)
+        {
+            jSection["title"] = lastPath;
+            jSection["files"] = jList;
+            jResult.append(jSection);
+
+            QJsonObject jNewSection;
+            jSection = jNewSection;
+            lastPath = fileTitle;
+            QJsonArray jNewList;
+            jList = jNewList;
+        }
+
+        QJsonObject jItem;
+        jItem["title"] = fileName;
+        jItem["text"] = fileName;
+        jItem["path"] = file;
+        jList.append(jItem);
+    }
+    jSection["title"] = lastPath;
+    jSection["files"] = jList;
+    jResult.append(jSection);
+
+    QJsonDocument jDoc(jResult);
+    return QString(jDoc.toJson(QJsonDocument::Compact));
+}
+
 void WebWindow::initWeb()
 {
+    QWebFrame * frame = this->ui->webView->page()->mainFrame();
+    attachObject();
+    connect(frame , SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(attachObject()) );
+
     qDebug() << (QApplication::applicationDirPath() + "/html/index.html");
     this->ui->webView->load(QUrl::fromLocalFile(QApplication::applicationDirPath() + "/html/index.html"));
 
     ui->webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
     connect(ui->webView, SIGNAL(linkClicked(QUrl)), this, SLOT(linkClickedWebView(QUrl)));
-
 }
 
 void WebWindow::linkClickedWebView(QUrl url) {
@@ -42,6 +127,8 @@ void WebWindow::linkClickedWebView(QUrl url) {
         this->mainWindow->evaluation(url.path(), new DrawerEvalPitchBySpectr());
     }else if (url.toString().endsWith(".wav#spectr")) {
         this->mainWindow->evaluation(url.path(), new Drawer());
+    }else if (url.toString().endsWith(".wav#dp")) {
+        this->mainWindow->evaluation(url.path(), new DrawerDP());
     }else if (url.toString().endsWith(".wav#energy")) {
         this->mainWindow->evaluation(url.path(), new DrawerEvalEnergyBySpectr());
     }else if (url.toString().endsWith(".wav#play")) {

@@ -9,8 +9,10 @@ extern "C" {
 }
 
 #define DATA_PATH "/data"
+#define DATA_PATH_TRAINING "/data/training"
 #define USER_DATA_PATH "/RECORDS/"
 #define WAVE_TYPE ".wav"
+#define TEXT_TYPE ".txt"
 
 namespace Ui {
     class MainWindow;

@@ -102,7 +102,7 @@ intvector ContinuousDP::getMapping(int pos)
     {
         if (pattern_index < mapping.x)
         {
-            mapping.v[pattern_index] = signal_index;
+            mapping.v[mapping.x - pattern_index] = signal_index;
         } else {
             qDebug() << "WARNING getMapping " << pattern_index << " " << signal_index;
         }
@@ -125,6 +125,11 @@ intvector ContinuousDP::getMapping(int pos)
     }
     qDebug() << "Mask size pattern_index " << pattern_index << " (pattern size equal)";
     qDebug() << "Mask size signal_index " << signal_index << " (mached signal size equal)";
+
+    for (int i=0; i<mapping.x; i++)
+    {
+        mapping.v[i] = signal_index - mapping.v[i];
+    }
 
     return mapping;
 }

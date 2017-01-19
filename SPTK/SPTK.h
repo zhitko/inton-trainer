@@ -174,6 +174,10 @@ typedef struct _DP_SETTINGS {
     int globalLimit;
     double localLimit;
     int continiusLimit;
+    double continiusKD;
+    double continiusKV;
+    double continiusKH;
+    double continiusKT;
 } DP_SETTINGS;
 
 typedef struct _SPEC_SETTINGS {

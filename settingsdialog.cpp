@@ -134,6 +134,11 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->dp->localLimit = instance->ui->dpLocalLimit->value();
     sptk_settings->dp->continiusLimit = instance->ui->continiusDpLimit->value();
 
+    sptk_settings->dp->continiusKD = instance->ui->continiusDpKD->value();
+    sptk_settings->dp->continiusKH = instance->ui->continiusDpKH->value();
+    sptk_settings->dp->continiusKT = instance->ui->continiusDpKT->value();
+    sptk_settings->dp->continiusKV = instance->ui->continiusDpKV->value();
+
     return sptk_settings;
 }
 
@@ -208,6 +213,15 @@ void SettingsDialog::loadSettings()
     if(settings.contains("dp/continiusLimit"))
         this->ui->continiusDpLimit->setValue(settings.value("dp/continiusLimit").toDouble());
 
+    if(settings.contains("dp/continiusDpKV"))
+        this->ui->continiusDpKV->setValue(settings.value("dp/continiusDpKV").toDouble());
+    if(settings.contains("dp/continiusDpKT"))
+        this->ui->continiusDpKT->setValue(settings.value("dp/continiusDpKT").toDouble());
+    if(settings.contains("dp/continiusDpKH"))
+        this->ui->continiusDpKH->setValue(settings.value("dp/continiusDpKH").toDouble());
+    if(settings.contains("dp/continiusDpKD"))
+        this->ui->continiusDpKD->setValue(settings.value("dp/continiusDpKD").toDouble());
+
 
     if(settings.contains("frame/leng"))
         this->ui->frameSizeBox->setCurrentText(QString::number(settings.value("frame/leng").toInt()));
@@ -278,6 +292,11 @@ void SettingsDialog::saveSettings()
     settings.setValue("dp/global", this->ui->dpGlobalLimit->value());
     settings.setValue("dp/local", this->ui->dpLocalLimit->value());
     settings.setValue("dp/continiusLimit", this->ui->continiusDpLimit->value());
+
+    settings.setValue("dp/continiusDpKD", this->ui->continiusDpKD->value());
+    settings.setValue("dp/continiusDpKH", this->ui->continiusDpKH->value());
+    settings.setValue("dp/continiusDpKT", this->ui->continiusDpKT->value());
+    settings.setValue("dp/continiusDpKV", this->ui->continiusDpKV->value());
 
     settings.setValue("mathGL/quality", this->ui->mathGLQualitySpin->value());
     settings.setValue("mathGL/autoOpen", this->ui->isAutoOpen->isChecked());

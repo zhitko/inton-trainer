@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QUrl>
+#include <QWebFrame>
 
 namespace Ui {
 class WebWindow;
@@ -26,6 +27,10 @@ private:
 
 private slots:
     void linkClickedWebView(QUrl);
+
+public slots:
+    void attachObject();
+    QString getFiles();
 };
 
 #endif // WEBWINDOW_H

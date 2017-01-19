@@ -207,6 +207,18 @@ public:
         delete signal;
     }
 
+    void applySettings(double kh, double kv, double kd, double kt)
+    {
+        qDebug() << this->kH << " to " << kh;
+        this->kH = kh;
+        qDebug() << this->kD << " to " << kd;
+        this->kD = kd;
+        qDebug() << this->kT << " to " << kt;
+        this->kT = kt;
+        qDebug() << this->kV << " to " << kv;
+        this->kV = kv;
+    }
+
     virtual bool isGlobalPass(int sX,int pY)
     {
         return true;

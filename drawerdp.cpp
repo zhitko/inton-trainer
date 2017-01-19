@@ -158,6 +158,12 @@ void DrawerDP::Proc(QString fname)
             1,
             sptk_settings->dp->continiusLimit
         );
+        dp.applySettings(
+            sptk_settings->dp->continiusKH,
+            sptk_settings->dp->continiusKV,
+            sptk_settings->dp->continiusKD,
+            sptk_settings->dp->continiusKT
+        );
         dp.calculate();
         qDebug() << "Stop DP";
         vector errorVector = dp.getErrorVector();
