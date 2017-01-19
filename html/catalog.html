@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>IntonTrainer</title>
+
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <link href="./css/into-trainer.css" rel="stylesheet">
+
+    <script src="./js/react-with-addons.js"></script>
+    <script src="./js/react-dom.js"></script>
+    <script src="./js/browser.min.js"></script>
+
+    <script src="./js/jquery-3.1.0.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/popover-override.js"></script>
+
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('[data-toggle="popover"]').popover({ 
+          trigger: 'hover', 
+          placement: 'auto', 
+          delay: {show: 50, hide: 400},
+          html: true
+        });
+      });
+    </script>
+
+    <script type="text/javascript">
+      var files = JSON.parse(api.getFiles());
+    </script>    
+
+    <script type="text/babel">
+
+      var ListFiles = React.createClass({
+        render: function() {
+          var fileNodes = this.props.data.map(function(node) {
+            return (
+              <ListFileElement data={node} />
+            );
+          });
+
+          return (
+            <ul>
+              {fileNodes}
+            </ul>
+          );
+        }
+      });
+
+      var FileLink = React.createClass({
+        render: function() {
+          return (
+            <a href={this.props.data.path+this.props.type}>{this.props.children}</a>
+          );
+        }
+      });
+
+      var ListFileElement = React.createClass({
+        render: function() {
+          var links = "\
+            <span> \
+              <a href='"+this.props.data.path+"#pitch'>Show pith</a> \
+              <br /> \
+              <a href='"+this.props.data.path+"#energy'>Show energy</a> \
+              <br /> \
+              <a href='"+this.props.data.path+"#spectr'>Show spectr</a> \
+            </span> \
+          ";
+
+          return (
+            <li>
+              <FileLink data={this.props.data} type='#play'>
+                <img height="20px" src="./images/play.png"></img>
+              </FileLink>
+              <span data-toggle="popover" 
+                    title={this.props.data.title} 
+                    data-content={links} >
+                {this.props.data.text}
+              </span>
+            </li>
+          );
+        }
+      });
+
+      var Section = React.createClass({
+        render: function() {
+          return (
+            <div>
+              <h2>{this.props.title}</h2>
+              <br />
+              <ListFiles data={this.props.data} />
+            </div>
+          );
+        }
+      });
+
+      var SectionsList = React.createClass({
+        render: function() {
+          var sectionNodes = this.props.data.map(function(node) {
+            return (
+              <Section title={node.title} data={node.files} />
+            );
+          });
+
+          return (
+            <div>
+              {sectionNodes}
+            </div>
+          );
+        }
+      });
+
+      ReactDOM.render(
+        <SectionsList data={files} />,
+        document.getElementById('container')
+      );
+    </script>
+
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" class="active"><a href="index.html">Home</a></li>
+            <li role="presentation"><a href="settings.window">Settings</a></li>
+            <li role="presentation"><a href="main.window">Developer mode</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">IntonTrainer<span class="top-text">@</span></h3>
+      </div>
+
+      <div class="jumbotron">
+        <h1>English</h1>
+        <p class="lead">intonation learning tool</p>
+      </div>
+
+      <div class="row marketing">
+        <div class="col-lg-6">
+          <div id="container"></div>
+          <br>
+          <a class="btn btn-default" href="index.html">Back</a>
+        </div>
+
+        <div class="col-lg-6">
+        </div>
+      </div>
+
+    </div>
+  </body>
+</html>
