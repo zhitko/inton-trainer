@@ -239,7 +239,7 @@ vector processZeros(vector data)
     return data;
 }
 
-GraphData ProcWave2Data(QString fname)
+GraphData * ProcWave2Data(QString fname)
 {
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
 
@@ -374,54 +374,54 @@ GraphData ProcWave2Data(QString fname)
     waveCloseFile(waveFile);
     qDebug() << "waveCloseFile";
 
-    GraphData data;
+    GraphData * data = new GraphData();
 
-    data.d_full_wave = norm_wave;
-    data.d_wave = display_wave;
-    data.d_p_wave = p_wave;
-    data.d_n_wave = n_wave;
-    data.d_t_wave = t_wave;
-    data.d_pitch_originl = pitch;
-    data.d_pitch = pitch_mid;
-    data.pitch_max = pitch_max;
-    data.pitch_min = pitch_min;
-    data.d_intensive_original = intensive;
-    data.d_intensive = intensive_mid;
-    data.d_avg_intensive = intensive_avg;
-    data.d_spec_proc = spec_proc;
-    data.d_spec = spec;
-    data.d_mask = mask;
-    data.p_mask = p_mask;
-    data.n_mask = n_mask;
-    data.t_mask = t_mask;
-    data.pnt_mask = pnt_mask;
+    data->d_full_wave = norm_wave;
+    data->d_wave = display_wave;
+    data->d_p_wave = p_wave;
+    data->d_n_wave = n_wave;
+    data->d_t_wave = t_wave;
+    data->d_pitch_originl = pitch;
+    data->d_pitch = pitch_mid;
+    data->pitch_max = pitch_max;
+    data->pitch_min = pitch_min;
+    data->d_intensive_original = intensive;
+    data->d_intensive = intensive_mid;
+    data->d_avg_intensive = intensive_avg;
+    data->d_spec_proc = spec_proc;
+    data->d_spec = spec;
+    data->d_mask = mask;
+    data->p_mask = p_mask;
+    data->n_mask = n_mask;
+    data->t_mask = t_mask;
+    data->pnt_mask = pnt_mask;
 
-    data.md_p = md_p;
-    data.md_t = md_t;
-    data.md_n = md_n;
+    data->md_p = md_p;
+    data->md_t = md_t;
+    data->md_n = md_n;
 
     return data;
 }
 
-void freeGraphData(GraphData data)
+void freeGraphData(GraphData * data)
 {
-    freev(data.d_intensive_original);
-    freev(data.d_intensive);
-    freev(data.d_avg_intensive);
-    freev(data.d_pitch_originl);
-    freev(data.d_pitch);
-    freev(data.d_spec);
-    freev(data.d_spec_proc);
-    freev(data.d_wave);
-    freev(data.d_full_wave);
-    freev(data.d_mask);
-    freev(data.d_p_wave);
-    freev(data.d_t_wave);
-    freev(data.d_n_wave);
-    freev(data.p_mask);
-    freev(data.n_mask);
-    freev(data.t_mask);
-    freev(data.pnt_mask);
+    freev(data->d_intensive_original);
+    freev(data->d_intensive);
+    freev(data->d_avg_intensive);
+    freev(data->d_pitch_originl);
+    freev(data->d_pitch);
+    freev(data->d_spec);
+    freev(data->d_spec_proc);
+    freev(data->d_wave);
+    freev(data->d_full_wave);
+    freev(data->d_mask);
+    freev(data->d_p_wave);
+    freev(data->d_t_wave);
+    freev(data->d_n_wave);
+    freev(data->p_mask);
+    freev(data->n_mask);
+    freev(data->t_mask);
+    freev(data->pnt_mask);
 }
 
 mglData * createMglData(vector vec, mglData * data, bool nan)
@@ -486,7 +486,7 @@ Drawer::~Drawer()
     if (this->pWaveData) delete this->pWaveData;
     if (this->nWaveData) delete this->nWaveData;
     if (this->tWaveData) delete this->tWaveData;
-    freeGraphData(*data);
+    freeGraphData(data);
     free(data);
     qDebug() << "Drawer removed";
 }
@@ -518,7 +518,7 @@ void Drawer::Proc(QString fname)
     this->fileName = fname;
 
     data = (GraphData*) malloc(sizeof(GraphData));
-    *(data) = ProcWave2Data(this->fileName);
+    data = ProcWave2Data(this->fileName);
     data->d_pitch = vector_fill_empty(data->d_pitch);
 
     waveData = createMglData(data->d_wave, waveData);
@@ -533,21 +533,21 @@ void Drawer::Proc(QString fname)
     qDebug() << "maskData Filled";
 
     intensiveDataOriginal = createMglData(data->d_intensive_original, intensiveDataOriginal, true);
-    intensiveDataOriginal->Norm(GRAPH_Y_VAL_MAX);
+    intensiveDataOriginal->Norm();
     qDebug() << "intensiveData Filled";
 
     intensiveData = createMglData(data->d_intensive, intensiveData);
-    intensiveData->Norm(GRAPH_Y_VAL_MAX);
+    intensiveData->Norm();
     qDebug() << "intensiveData Filled";
 
     midIntensiveData = createMglData(data->d_avg_intensive, midIntensiveData);
-    midIntensiveData->Norm(GRAPH_Y_VAL_MAX);
+    midIntensiveData->Norm();
     qDebug() << "midIntensiveData Filled";
 
     pitchDataOriginal = createMglData(data->d_pitch_originl, pitchDataOriginal, true);
-    pitchDataOriginal->Norm(GRAPH_Y_VAL_MAX);
+    pitchDataOriginal->Norm();
     pitchData = createMglData(data->d_pitch, pitchData);
-    pitchData->Norm(GRAPH_Y_VAL_MAX);
+    pitchData->Norm();
     qDebug() << "pitchData Filled";
 
     int speksize = sptk_settings->spec->leng / 2 + 1;
@@ -592,7 +592,7 @@ int Drawer::Draw(mglGraph *gr)
     qDebug() << "pitchData " << data->pitch_min << " " << data->pitch_max;
     gr->MultiPlot(1, 16, 3, 1, 6, "#");
     gr->Puts(mglPoint(-0.9,1),QString("%1").arg(data->pitch_max).toLocal8Bit().data());
-    gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
+    gr->SetRange('y', 0, 1);
     gr->Plot(*pitchData, "-G6");
     gr->Axis("Y", "");
     gr->Grid("y", "W", "");

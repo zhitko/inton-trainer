@@ -158,7 +158,8 @@ vector cutv(vector yr_vector, int start_index, int end_index)
 
 // free the memory associated with the vector
 void freev(vector yr_vector) {
-    free(yr_vector.v);
+    if (yr_vector.v)
+        free(yr_vector.v);
 }
 
 // print the vector
@@ -292,6 +293,15 @@ intvector onesiv(int xSz) {
 intvector copyiv(intvector yr_vector) { 
     intvector nw_vector = makeiv(yr_vector.x);
     memcpy(nw_vector.v, yr_vector.v, sizeof(int) * nw_vector.x);
+    return(nw_vector);
+}
+
+// cut intvector and make a deep copy of a cutted
+intvector cutiv(intvector yr_vector, int start_index, int end_index)
+{
+    int nw_size = end_index-start_index;
+    intvector nw_vector = makeiv(nw_size);
+    memcpy(nw_vector.v, &yr_vector.v[start_index], sizeof(double) * nw_size);
     return(nw_vector);
 }
 

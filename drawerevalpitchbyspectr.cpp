@@ -44,20 +44,20 @@ void DrawerEvalPitchBySpectr::Proc(QString fname)
         qDebug() << "DrawerEval::Proc";
         this->secFileName = fname;
 
-        GraphData dataSec = ProcWave2Data(this->secFileName);
-        dataSec.d_pitch = vector_fill_empty(dataSec.d_pitch);
+        GraphData * dataSec = ProcWave2Data(this->secFileName);
+        dataSec->d_pitch = vector_fill_empty(dataSec->d_pitch);
 
-//        vectorToData(dataSec.d_full_wave, &secWaveData);
+//        vectorToData(dataSec->d_full_wave, &secWaveData);
         qDebug() << "waveData New Filled";
 
-        secPitchDataOrig = createMglData(dataSec.d_pitch, secPitchDataOrig);
-        secPitchDataOrig->Norm(GRAPH_Y_VAL_MAX);
+        secPitchDataOrig = createMglData(dataSec->d_pitch, secPitchDataOrig);
+        secPitchDataOrig->Norm();
         qDebug() << "pitchData New Filled";
 
         vector pitchOrig = initv(data->d_pitch.x, pitchData->a);
         (*pitchOrig.v) = 0;
 
-        vector pitch = initv(dataSec.d_pitch.x, secPitchDataOrig->a);
+        vector pitch = initv(dataSec->d_pitch.x, secPitchDataOrig->a);
         (*pitch.v) = 0;
 
         qDebug() << "Pitch sizes " << pitchOrig.x << " " << pitch.x;
@@ -70,26 +70,26 @@ void DrawerEvalPitchBySpectr::Proc(QString fname)
         {
             int speksize = sptk_settings->spec->leng / 2 + 1;
             SpectrDP dp(new SpectrSignal(copyv(data->d_spec), speksize),
-                        new SpectrSignal(copyv(dataSec.d_spec), speksize),
+                        new SpectrSignal(copyv(dataSec->d_spec), speksize),
                         sptk_settings->dp->globalLimit,
                         sptk_settings->dp->localLimit
                         );
 
             // Wave processing
 
-            vector n_wave = getSignalWithMask(data->n_mask, &dp, dataSec.d_full_wave);
+            vector n_wave = getSignalWithMask(data->n_mask, &dp, dataSec->d_full_wave);
             nSecWaveData = createMglData(n_wave, nSecWaveData);
             freev(n_wave);
 
-            vector p_wave = getSignalWithMask(data->p_mask, &dp, dataSec.d_full_wave);
+            vector p_wave = getSignalWithMask(data->p_mask, &dp, dataSec->d_full_wave);
             pSecWaveData = createMglData(p_wave, pSecWaveData);
             freev(p_wave);
 
-            vector t_wave = getSignalWithMask(data->t_mask, &dp, dataSec.d_full_wave);
+            vector t_wave = getSignalWithMask(data->t_mask, &dp, dataSec->d_full_wave);
             tSecWaveData = createMglData(t_wave, tSecWaveData);
             freev(t_wave);
 
-            vector pnt_wave = getSignalWithMask(data->pnt_mask, &dp, dataSec.d_full_wave);
+            vector pnt_wave = getSignalWithMask(data->pnt_mask, &dp, dataSec->d_full_wave);
             secWaveData = createMglData(pnt_wave, secWaveData);
             freev(pnt_wave);
 
@@ -97,28 +97,28 @@ void DrawerEvalPitchBySpectr::Proc(QString fname)
 
             scalledPitch = scaleVectorByDPResults(pitch, &dp);
         } else if (sptk_settings->move->type == 0) {
-            qDebug() << "moom " << dataSec.d_full_wave.x << " " << data->n_mask.x << " " << data->pnt_mask.x << " " << data->t_mask.x;
+            qDebug() << "moom " << dataSec->d_full_wave.x << " " << data->n_mask.x << " " << data->pnt_mask.x << " " << data->t_mask.x;
 
-            vector scalled_n_mask = vector_resize(data->n_mask, dataSec.d_full_wave.x);
-            vector n_wave = vector_cut_by_mask(dataSec.d_full_wave, scalled_n_mask);
+            vector scalled_n_mask = vector_resize(data->n_mask, dataSec->d_full_wave.x);
+            vector n_wave = vector_cut_by_mask(dataSec->d_full_wave, scalled_n_mask);
             nSecWaveData = createMglData(n_wave, nSecWaveData);
             freev(n_wave);
             freev(scalled_n_mask);
 
-            vector scalled_p_mask = vector_resize(data->p_mask, dataSec.d_full_wave.x);
-            vector p_wave = vector_cut_by_mask(dataSec.d_full_wave, scalled_p_mask);
+            vector scalled_p_mask = vector_resize(data->p_mask, dataSec->d_full_wave.x);
+            vector p_wave = vector_cut_by_mask(dataSec->d_full_wave, scalled_p_mask);
             pSecWaveData = createMglData(p_wave, pSecWaveData);
             freev(p_wave);
             freev(scalled_p_mask);
 
-            vector scalled_t_mask = vector_resize(data->t_mask, dataSec.d_full_wave.x);
-            vector t_wave = vector_cut_by_mask(dataSec.d_full_wave, scalled_t_mask);
+            vector scalled_t_mask = vector_resize(data->t_mask, dataSec->d_full_wave.x);
+            vector t_wave = vector_cut_by_mask(dataSec->d_full_wave, scalled_t_mask);
             tSecWaveData = createMglData(t_wave, tSecWaveData);
             freev(t_wave);
             freev(scalled_t_mask);
 
-            vector scalled_pnt_mask = vector_resize(data->pnt_mask, dataSec.d_full_wave.x);
-            vector pnt_wave = vector_cut_by_mask(dataSec.d_full_wave, scalled_pnt_mask);
+            vector scalled_pnt_mask = vector_resize(data->pnt_mask, dataSec->d_full_wave.x);
+            vector pnt_wave = vector_cut_by_mask(dataSec->d_full_wave, scalled_pnt_mask);
             secWaveData = createMglData(pnt_wave, secWaveData);
             freev(pnt_wave);
             freev(scalled_pnt_mask);
@@ -147,7 +147,7 @@ void DrawerEvalPitchBySpectr::Proc(QString fname)
         qDebug() << "Stop DP";
 
         secPitchData = createMglData(newPitch, secPitchData);
-        secPitchData->Norm(GRAPH_Y_VAL_MAX);
+        secPitchData->Norm();
         qDebug() << "pitchData New Filled";
 
         freev(newPitch);

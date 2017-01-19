@@ -74,7 +74,7 @@ int DrawerEvalPitch::Draw(mglGraph *gr)
     qDebug() << "pitchData";
     gr->MultiPlot(1, 12, 4, 1, 6, "#");
     gr->Puts(mglPoint(-0.9,1),QString("%1").arg(data->pitch_max).toLocal8Bit().data());
-    gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
+    gr->SetRange('y', 0, 1);
     gr->Plot(*pitchData, "-B3");
     if(!isCompare) gr->Plot(*pitchDataOriginal, "-b1");
     gr->Axis("Y", "");
@@ -99,7 +99,7 @@ int DrawerEvalPitch::Draw(mglGraph *gr)
 
         qDebug() << "secPitchData";
         gr->MultiPlot(1, 12, 4, 1, 6, "#");
-        gr->SetRange('y', 0, GRAPH_Y_VAL_MAX);
+        gr->SetRange('y', 0, 1);
         gr->Plot(*secPitchData, "-G3");
     }
 
@@ -120,14 +120,14 @@ void DrawerEvalPitch::Proc(QString fname)
         qDebug() << "DrawerEval::Proc";
         this->secFileName = fname;
 
-        GraphData dataSec = ProcWave2Data(this->secFileName);
-        dataSec.d_pitch = vector_fill_empty(dataSec.d_pitch);
+        GraphData * dataSec = ProcWave2Data(this->secFileName);
+        dataSec->d_pitch = vector_fill_empty(dataSec->d_pitch);
 
-        secWaveData = createMglData(dataSec.d_full_wave, secWaveData);
+        secWaveData = createMglData(dataSec->d_full_wave, secWaveData);
         qDebug() << "waveData New Filled";
 
-        secPitchDataOrig = createMglData(dataSec.d_pitch, secPitchDataOrig);
-        secPitchDataOrig->Norm(GRAPH_Y_VAL_MAX);
+        secPitchDataOrig = createMglData(dataSec->d_pitch, secPitchDataOrig);
+        secPitchDataOrig->Norm();
         qDebug() << "pitchData New Filled";
 
         vector pitchOrig;
@@ -139,7 +139,7 @@ void DrawerEvalPitch::Proc(QString fname)
 
         vector pitch;
         pitch.v = secPitchDataOrig->a;
-        pitch.x = dataSec.d_pitch.x;
+        pitch.x = dataSec->d_pitch.x;
         (*pitch.v) = 0;
 
         vector pitchNorm = normalizev(pitch, 0.0, 10.0);
@@ -154,7 +154,7 @@ void DrawerEvalPitch::Proc(QString fname)
         qDebug() << "Stop DP";
 
         secPitchData = createMglData(newPitch, secPitchData);
-        secPitchData->Norm(GRAPH_Y_VAL_MAX);
+        secPitchData->Norm();
         qDebug() << "pitchData New Filled";
 
         freev(newPitch);

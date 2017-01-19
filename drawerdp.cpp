@@ -33,6 +33,7 @@ DrawerDP::DrawerDP() :
     pSecData = NULL;
     nSecData = NULL;
     tSecData = NULL;
+    secPitchData = NULL;
 }
 
 DrawerDP::~DrawerDP()
@@ -45,6 +46,7 @@ DrawerDP::~DrawerDP()
     if (pSecData) delete pSecData;
     if (nSecData) delete nSecData;
     if (tSecData) delete tSecData;
+    if (secPitchData) delete secPitchData;
 }
 
 int DrawerDP::Draw(mglGraph *gr)
@@ -68,6 +70,8 @@ int DrawerDP::Draw(mglGraph *gr)
     gr->SetRange('y', 0, 1);
     gr->Axis("Y", "");
     gr->Grid("y", "W", "");
+    gr->Plot(*pitchData, "-r3");
+    gr->Plot(*intensiveData, "-g3");
 
     if(isCompare){
         qDebug() << "secWaveData";
@@ -87,6 +91,8 @@ int DrawerDP::Draw(mglGraph *gr)
         gr->SetRange('y', 0, 1);
         gr->Plot(*errorData, "-B3");
         gr->Plot(*timeData, "-R3");
+//        gr->Plot(*secPitchData, "-C3");
+
     }
 
     qDebug() << "finish drawing";
@@ -144,9 +150,9 @@ void DrawerDP::Proc(QString fname)
         qDebug() << "DrawerDP::Proc";
         this->secFileName = fname;
 
-        GraphData dataSec = ProcWave2Data(this->secFileName);
+        GraphData * dataSec = ProcWave2Data(this->secFileName);
 
-        secWaveData = createMglData(dataSec.d_full_wave, secWaveData);
+        secWaveData = createMglData(dataSec->d_full_wave, secWaveData);
         qDebug() << "waveData New Filled";
 
         qDebug() << "Start DP";
@@ -154,7 +160,7 @@ void DrawerDP::Proc(QString fname)
         int speksize = sptk_settings->spec->leng / 2 + 1;
         ContinuousDP dp(
             new SpectrSignal(copyv(this->data->d_spec), speksize),
-            new SpectrSignal(copyv(dataSec.d_spec), speksize),
+            new SpectrSignal(copyv(dataSec->d_spec), speksize),
             1,
             sptk_settings->dp->continiusLimit
         );
@@ -196,6 +202,7 @@ void DrawerDP::Proc(QString fname)
         vector pSecVector = zerov(timeVector.x);
         vector nSecVector = zerov(timeVector.x);
         vector tSecVector = zerov(timeVector.x);
+
         qDebug() << "len " << endPos - startPos ;
         qDebug() << "startPos " << startPos;
         qDebug() << "endPos " << endPos;
@@ -224,21 +231,21 @@ void DrawerDP::Proc(QString fname)
             qDebug() << "setMark tSecVector " << from << " - " << to;
         }
 
-//        vector spSecVector = scaleVectorByDPResults(pSecVector, &dp);
-//        vector snSecVector = scaleVectorByDPResults(nSecVector, &dp);
-//        vector stSecVector = scaleVectorByDPResults(tSecVector, &dp);
-
         pSecData = createMglData(pSecVector, pSecData, true);
         nSecData = createMglData(nSecVector, nSecData, true);
         tSecData = createMglData(tSecVector, tSecData, true);
 
-//        freev(spSecVector);
-//        freev(snSecVector);
-//        freev(stSecVector);
-
         freev(pSecVector);
         freev(nSecVector);
         freev(tSecVector);
+
+//        double pitchScale = 1.0 * dataSec->d_pitch_originl.x / errorVector.x;
+//        int pitchFrom = 1.0 * startPos / pitchScale;
+//        int pitchTo = 1.0 * endPos / pitchScale;
+//        vector pitchCutted = cutv(dataSec->d_pitch_originl, pitchFrom, pitchTo);
+        secPitchData = createMglData(dataSec->d_pitch_originl, secPitchData, true);
+        secPitchData->Norm();
+//        freev(pitchCutted);
 
         freev(errorVector);
         freev(timeVector);

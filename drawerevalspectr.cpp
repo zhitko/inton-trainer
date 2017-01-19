@@ -107,13 +107,13 @@ void DrawerEvalSpectr::Proc(QString fname)
         qDebug() << "DrawerEval::Proc";
         this->secFileName = fname;
 
-        GraphData dataSec = ProcWave2Data(this->secFileName);
+        GraphData * dataSec = ProcWave2Data(this->secFileName);
 
-        secWaveData = createMglData(dataSec.d_full_wave, secWaveData);
+        secWaveData = createMglData(dataSec->d_full_wave, secWaveData);
         qDebug() << "waveData New Filled";
 
         int speksize = sptk_settings->spec->leng / 2 + 1;
-        int specX = dataSec.d_spec_proc.x/speksize;
+        int specX = dataSec->d_spec_proc.x/speksize;
         int specY = speksize;
         if (secSpecDataOrig) delete secSpecDataOrig;
         secSpecDataOrig = new mglData();
@@ -123,7 +123,7 @@ void DrawerEvalSpectr::Proc(QString fname)
             {
                 long i0 = i+specX*j;
                 long i1 = j+specY*i;
-                secSpecDataOrig->a[i0] = dataSec.d_spec_proc.v[i1];
+                secSpecDataOrig->a[i0] = dataSec->d_spec_proc.v[i1];
             }
         secSpecDataOrig->Squeeze(mathgl_settings->quality, 1);
 
@@ -131,7 +131,7 @@ void DrawerEvalSpectr::Proc(QString fname)
         qDebug() << "globalLimit DP" << sptk_settings->dp->globalLimit;
         qDebug() << "localLimit DP" << sptk_settings->dp->localLimit;
         SpectrDP dp(new SpectrSignal(copyv(data->d_spec), speksize),
-                    new SpectrSignal(copyv(dataSec.d_spec), speksize),
+                    new SpectrSignal(copyv(dataSec->d_spec), speksize),
                     sptk_settings->dp->globalLimit,
                     sptk_settings->dp->localLimit
                     );
