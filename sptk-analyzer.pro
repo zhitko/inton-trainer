@@ -54,7 +54,8 @@ SOURCES += \
     webwindow.cpp \
     Recorder/dpsoundrecorder.cpp \
     DP/continuousdp.cpp \
-    drawerdp.cpp
+    drawerdp.cpp \
+    dataprocessing.cpp
 
 HEADERS  += \
     mainwindow.h \
@@ -78,7 +79,8 @@ HEADERS  += \
     webwindow.h \
     Recorder/dpsoundrecorder.h \
     DP/continuousdp.h \
-    drawerdp.h
+    drawerdp.h \
+    dataprocessing.h
 
 # OpenAL
 SOURCES += \

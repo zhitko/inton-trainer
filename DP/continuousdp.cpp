@@ -17,6 +17,7 @@ ContinuousDP::ContinuousDP(SpectrSignal * pttrn, SpectrSignal * sig, int dpSigna
 
 bool ContinuousDP::calculate()
 {
+//    qDebug() << "ContinuousDP::calculate " << this->signalSize << " " << this->patternSize;
     this->calcNextIter(this->signalSize - 1, this->patternSize - 1);
     return false;
 }
@@ -91,7 +92,7 @@ vector ContinuousDP::getTimeVector()
 intvector ContinuousDP::getMapping(int pos)
 {
     intvector mapping = zeroiv(this->patternSize);
-    int pattern_index = 0;
+    int pattern_index = 1;
     int signal_index = 0;
     qDebug() << "signalSize " << this->signalSize;
     qDebug() << "patternSize " << this->patternSize;
@@ -102,6 +103,7 @@ intvector ContinuousDP::getMapping(int pos)
     {
         if (pattern_index < mapping.x)
         {
+//            qDebug() << "mapping_index " << (mapping.x - pattern_index);
             mapping.v[mapping.x - pattern_index] = signal_index;
         } else {
             qDebug() << "WARNING getMapping " << pattern_index << " " << signal_index;
@@ -141,6 +143,7 @@ double ContinuousDP::getNormKt(const int signalPos, const int patternPos, int t)
 
 DPStateStack * ContinuousDP::calcNextIter(const int signalPos, const int patternPos)
 {
+//    qDebug() << "ContinuousDP::calcNextIter " << signalPos << " " << patternPos;
     DPStateStack * stack = SpectrDP::calcNextIter(signalPos, patternPos);
     if (patternPos == (this->patternSize - 1) && this->minimum > stack->value.globalError)
         this->minimum = stack->value.globalError;
@@ -149,8 +152,10 @@ DPStateStack * ContinuousDP::calcNextIter(const int signalPos, const int pattern
 
 DPStateStack * ContinuousDP::getStateCache(const int signalPos, const int patternPos)
 {
+//    qDebug() << "ContinuousDP::getStateCache " << signalPos << " " << patternPos;
     int pos = signalPos + this->signalOffset;
     if(pos >= this->cacheSize) pos -= this->cacheSize;
+//    qDebug() << "ContinuousDP::getStateCache " << pos << " " << patternPos;
     return &(stateCache[pos][patternPos]);
 }
 

@@ -72,6 +72,7 @@ protected:
 
     virtual DPStateStack * calcNextIter(const int signalPos, const int patternPos)
     {
+//        qDebug() << "DPStateStack::calcNextIter " << signalPos << " " << patternPos;
         DPStateStack * currentBranch = this->getStateCache(signalPos, patternPos);
         // Check state cache for value
         if(currentBranch->value.operation != opNone)

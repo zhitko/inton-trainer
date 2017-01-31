@@ -34,6 +34,8 @@ DrawerDP::DrawerDP() :
     nSecData = NULL;
     tSecData = NULL;
     secPitchData = NULL;
+    errorMax = 0;
+    errorMin = 0;
 }
 
 DrawerDP::~DrawerDP()
@@ -77,9 +79,9 @@ int DrawerDP::Draw(mglGraph *gr)
         qDebug() << "secWaveData";
         gr->MultiPlot(1, 12, 1, 1, 1, "#");
         gr->SetRange('y', 0, 1);
-        gr->Plot(*pSecData, "y1");
-        gr->Plot(*nSecData, "q1");
-        gr->Plot(*tSecData, "c1");
+        gr->Plot(*pSecData, "y9");
+        gr->Plot(*nSecData, "q9");
+        gr->Plot(*tSecData, "c9");
         gr->Plot(*secWaveData, "G");
         gr->Plot(*dpData, "R9");
 
@@ -121,10 +123,13 @@ void setMark(vector * vec, int pos)
 
 void setMark(vector * vec, int from, int to)
 {
-    for (int i=from; i<=to; i+=2)
+    int i=from;
+    for (i=from; i<to; i++)
     {
-        setMark(vec, i);
+        vec->v[i] = 1.0;
     }
+    vec->v[from] = 0.0001;
+    vec->v[i] = 0.0001;
 }
 
 int getMappingValue(intvector* mapping, int index)
@@ -134,6 +139,17 @@ int getMappingValue(intvector* mapping, int index)
         return mapping->v[mapping->x - 1];
     } else {
         return mapping->v[index];
+    }
+}
+
+void getMark(vector * vec, MaskData * points, int startPos, double marksScale, intvector * mapping)
+{
+    for (int i=0; i<points->pointsFrom.x; i++)
+    {
+        int from = getMappingValue(mapping, 1.0*(points->pointsFrom.v[i])/marksScale) + startPos;
+        int to = getMappingValue(mapping, 1.0*(points->pointsFrom.v[i] + points->pointsLength.v[i])/marksScale) + startPos;
+        setMark(vec, from, to);
+        qDebug() << "setMark pSecVector " << from << " - " << to;
     }
 }
 
@@ -150,7 +166,7 @@ void DrawerDP::Proc(QString fname)
         qDebug() << "DrawerDP::Proc";
         this->secFileName = fname;
 
-        GraphData * dataSec = ProcWave2Data(this->secFileName);
+        SimpleGraphData * dataSec = SimpleProcWave2Data(this->secFileName);
 
         secWaveData = createMglData(dataSec->d_full_wave, secWaveData);
         qDebug() << "waveData New Filled";
@@ -158,6 +174,8 @@ void DrawerDP::Proc(QString fname)
         qDebug() << "Start DP";
         SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
         int speksize = sptk_settings->spec->leng / 2 + 1;
+        qDebug() << "data->d_spec " << this->data->d_spec.x;
+        qDebug() << "dataSec->d_spec " << dataSec->d_spec.x;
         ContinuousDP dp(
             new SpectrSignal(copyv(this->data->d_spec), speksize),
             new SpectrSignal(copyv(dataSec->d_spec), speksize),
@@ -192,6 +210,9 @@ void DrawerDP::Proc(QString fname)
         setMark(&dpVector, endPos);
         dpData = createMglData(dpVector, dpData, true);
 
+        freev(dpVector);
+        freev(errorVector);
+
         intvector mapping = dp.getMapping(endPos);
 
         double marksScale = 1.0 * data->d_wave.x / mapping.x;
@@ -203,33 +224,17 @@ void DrawerDP::Proc(QString fname)
         vector nSecVector = zerov(timeVector.x);
         vector tSecVector = zerov(timeVector.x);
 
+        freev(timeVector);
+
         qDebug() << "len " << endPos - startPos ;
         qDebug() << "startPos " << startPos;
         qDebug() << "endPos " << endPos;
 
-        for (int i=0; i<data->md_p.pointsFrom.x; i++)
-        {
-            int from = getMappingValue(&mapping, 1.0*(data->md_p.pointsFrom.v[i])/marksScale) + startPos;
-            int to = getMappingValue(&mapping, 1.0*(data->md_p.pointsFrom.v[i] + data->md_p.pointsLength.v[i])/marksScale) + startPos;
-            setMark(&pSecVector, from, to);
-            qDebug() << "setMark pSecVector " << from << " - " << to;
-        }
+        getMark(&pSecVector, &data->md_p, startPos, marksScale, &mapping);
+        getMark(&nSecVector, &data->md_n, startPos, marksScale, &mapping);
+        getMark(&tSecVector, &data->md_t, startPos, marksScale, &mapping);
 
-        for (int i=0; i<data->md_n.pointsFrom.x; i++)
-        {
-            int from = getMappingValue(&mapping, 1.0*(data->md_n.pointsFrom.v[i])/marksScale) + startPos;
-            int to = getMappingValue(&mapping, 1.0*(data->md_n.pointsFrom.v[i] + data->md_n.pointsLength.v[i])/marksScale) + startPos;
-            setMark(&nSecVector, from, to);
-            qDebug() << "setMark nSecVector " << from << " - " << to;
-        }
-
-        for (int i=0; i<data->md_t.pointsFrom.x; i++)
-        {
-            int from = getMappingValue(&mapping, 1.0*(data->md_t.pointsFrom.v[i])/marksScale) + startPos;
-            int to = getMappingValue(&mapping, 1.0*(data->md_t.pointsFrom.v[i] + data->md_t.pointsLength.v[i])/marksScale) + startPos;
-            setMark(&tSecVector, from, to);
-            qDebug() << "setMark tSecVector " << from << " - " << to;
-        }
+        freeiv(mapping);
 
         pSecData = createMglData(pSecVector, pSecData, true);
         nSecData = createMglData(nSecVector, nSecData, true);
@@ -238,7 +243,7 @@ void DrawerDP::Proc(QString fname)
         freev(pSecVector);
         freev(nSecVector);
         freev(tSecVector);
-
+/*
 //        double pitchScale = 1.0 * dataSec->d_pitch_originl.x / errorVector.x;
 //        int pitchFrom = 1.0 * startPos / pitchScale;
 //        int pitchTo = 1.0 * endPos / pitchScale;
@@ -246,11 +251,8 @@ void DrawerDP::Proc(QString fname)
         secPitchData = createMglData(dataSec->d_pitch_originl, secPitchData, true);
         secPitchData->Norm();
 //        freev(pitchCutted);
-
-        freev(errorVector);
-        freev(timeVector);
-        freev(dpVector);
-        freeGraphData(dataSec);
+*/
+        freeSimpleGraphData(dataSec);
         qDebug() << "New Data Processed";
     }
 }
