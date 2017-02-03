@@ -178,6 +178,11 @@ typedef struct _DP_SETTINGS {
     double continiusKV;
     double continiusKH;
     double continiusKT;
+
+    int showA0;
+    int showF0;
+    int showTime;
+    int showError;
 } DP_SETTINGS;
 
 typedef struct _SPEC_SETTINGS {

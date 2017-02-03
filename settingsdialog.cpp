@@ -139,6 +139,11 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->dp->continiusKT = instance->ui->continiusDpKT->value();
     sptk_settings->dp->continiusKV = instance->ui->continiusDpKV->value();
 
+    sptk_settings->dp->showA0 = instance->ui->showA0->isChecked();
+    sptk_settings->dp->showError = instance->ui->showError->isChecked();
+    sptk_settings->dp->showF0 = instance->ui->showF0->isChecked();
+    sptk_settings->dp->showTime = instance->ui->showTime->isChecked();
+
     return sptk_settings;
 }
 
@@ -222,6 +227,15 @@ void SettingsDialog::loadSettings()
     if(settings.contains("dp/continiusDpKD"))
         this->ui->continiusDpKD->setValue(settings.value("dp/continiusDpKD").toDouble());
 
+    if(settings.contains("dp/showA0"))
+        this->ui->showA0->setChecked(settings.value("dp/showA0").toBool());
+    if(settings.contains("dp/showError"))
+        this->ui->showError->setChecked(settings.value("dp/showError").toBool());
+    if(settings.contains("dp/showF0"))
+        this->ui->showF0->setChecked(settings.value("dp/showF0").toBool());
+    if(settings.contains("dp/showTime"))
+        this->ui->showTime->setChecked(settings.value("dp/showTime").toBool());
+
 
     if(settings.contains("frame/leng"))
         this->ui->frameSizeBox->setCurrentText(QString::number(settings.value("frame/leng").toInt()));
@@ -297,6 +311,11 @@ void SettingsDialog::saveSettings()
     settings.setValue("dp/continiusDpKH", this->ui->continiusDpKH->value());
     settings.setValue("dp/continiusDpKT", this->ui->continiusDpKT->value());
     settings.setValue("dp/continiusDpKV", this->ui->continiusDpKV->value());
+
+    settings.setValue("dp/showA0", this->ui->showA0->isChecked());
+    settings.setValue("dp/showError", this->ui->showError->isChecked());
+    settings.setValue("dp/showF0", this->ui->showF0->isChecked());
+    settings.setValue("dp/showTime", this->ui->showTime->isChecked());
 
     settings.setValue("mathGL/quality", this->ui->mathGLQualitySpin->value());
     settings.setValue("mathGL/autoOpen", this->ui->isAutoOpen->isChecked());
