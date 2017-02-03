@@ -176,8 +176,6 @@ vector norm(vector data, double targetMin, double targetMax, bool procZeros = tr
         sourceMin = data.v[min_greaterv(data, 0.0)];
     }
     double sourceMax = data.v[maxv(data)];
-    qDebug() << "sourceMin " << sourceMin;
-    qDebug() << "sourceMax " << sourceMax;
 
     double sourceScale = sourceMax - sourceMin;
     double targetScale = targetMax - targetMin;
@@ -194,43 +192,28 @@ vector norm(vector data, double targetMin, double targetMax, bool procZeros = tr
     return result;
 }
 
-int compare (const void * a, const void * b)
-{
-  return ( *(double*)a - *(double*)b );
-}
+//vector mid(vector data, int frame, bool procZeros = true)
+//{
+//    int resultLength = data.x;
+//    vector result = makev(resultLength);
 
-vector mid(vector data, int frame, bool procZeros = true)
-{
-    int resultLength = data.x;
-    vector result = zerov(resultLength);
-    int frameIndex = 0;
-    vector middle = zerov(frame);
-    for(int i=0;i<resultLength;i++)
-    {
-        frameIndex = 0;
-        for(int j=0; j < frame; j++)
-        {
-            int position = i+j-frame/2;
-            if (procZeros || data.v[i] != 0)
-                {
-                if( position < 0 || position > resultLength )
-                    middle.v[frameIndex] = 0.0;
-                else {
-                    middle.v[frameIndex] = fabs(data.v[position]);
-                    frameIndex++;
-                }
-            }
-        }
-        if (frameIndex > frame/3)
-        {
-            qsort (middle.v, frameIndex-1, sizeof(double), compare);
-            result.v[i] = middle.v[frameIndex/2];
-        }
-    }
-    freev(middle);
+//    double* middle = (double*) malloc(frame * sizeof(double));
+//    for(int i=0;i<resultLength;i++)
+//    {
+//        for(int j=0; j < frame; j++)
+//        {
+//            int position = i+j-frame/2;
+//            if( position < 0 || position > resultLength )
+//                middle[j] = 0.0;
+//            else
+//                middle[j] = fabs(data.v[position]);
+//        }
+//        qsort (middle, frame, sizeof(double), compare);
+//        result.v[i] = middle[frame/2];
+//    }
 
-    return result;
-}
+//    return result;
+//}
 
 void applyMask(vector * data, vector * mask)
 {
@@ -240,42 +223,31 @@ void applyMask(vector * data, vector * mask)
     qDebug() << "scaledMask";
     vector cuttedData = vector_cut_by_mask(*data, scaledMask);
     qDebug() << "newData";
-    vector dataMid = mid(cuttedData, sptk_settings->plotF0->midFrame);
+    vector dataMid = vector_mid(cuttedData, sptk_settings->plotF0->midFrame);
     qDebug() << "pitch_mid";
     vector newDataNorm = norm(dataMid, 0.0, 1.0, false);
-    qDebug() << "newDataNorm";    
-    vector dataInterpolate = copyv(newDataNorm);
-    qDebug() << "dataInterpolate " << dataInterpolate.x;
+    qDebug() << "newDataNorm";
+    vector invertedMask = vector_invert_mask(scaledMask);
+    qDebug() << "inverted_mask";
 
-    int start = first_fromv(dataInterpolate, 0, 0.0);
-    int end = first_greater_fromv(dataInterpolate, start, 0.0);
+//    vector data_interpolate = vector_interpolate_by_mask(
+//        *data,
+//        inverted_mask,
+//        sptk_settings->plotF0->interpolation_edges,
+//        sptk_settings->plotF0->interpolation_type
+//    );
+//    qDebug() << "pitch_interpolate";
 
-    do
-    {
-        qDebug() << start << " " << end;
-        vector_interpolate_part(
-                    &dataInterpolate,
-                    start,
-                    end,
-                    sptk_settings->plotF0->interpolation_type
-        );
-        start = first_fromv(dataInterpolate, end, 0.0) - 1;
-        end = first_greater_fromv(dataInterpolate, start + 1, 0.0);
-    } while (end != start && end != dataInterpolate.x);
-    vector_interpolate_part(
-                &dataInterpolate,
-                start,
-                dataInterpolate.x - 1,
-                sptk_settings->plotF0->interpolation_type
-    );
+
+//    freev(data_interpolate);
 
     freev(scaledMask);
-    freev(cuttedData);
+//    freev(cuttedData);
     freev(dataMid);
-    freev(newDataNorm);
-    freev(*data);
-    data->v = newDataNorm.v;
-    data->v = dataInterpolate.v;
+    freev(invertedMask);
+//    freev(*data);
+//    data->v = cuttedData.v;
+//    data->v = data_mid.v;
 }
 
 void getMark(vector * vec, MaskData * points, int startPos, double marksScale, intvector * mapping)
@@ -335,8 +307,8 @@ void DrawerDP::Proc(QString fname)
         vector pitch_cutted = copyv(this->simple_data->d_pitch_originl);
         applyMask(&pitch_cutted, &this->simple_data->d_mask);
 //        this->pitchData = createMglData(this->simple_data->d_pitch, this->pitchData);
-        this->pitchData = createMglData(pitch_cutted, this->pitchData, true);
-//        this->pitchData->Norm();
+        this->pitchData = createMglData(pitch_cutted, this->pitchData);
+        this->pitchData->Norm();
         freev(pitch_cutted);
         qDebug() << "pitchData Filled";
 
@@ -428,7 +400,7 @@ void DrawerDP::Proc(QString fname)
         applyMapping(&pitch_cutted, &mapping);
         applyMask(&pitch_cutted, &this->simple_data->d_mask);
         this->secPitchData = createMglData(pitch_cutted, this->secPitchData, true);
-//        this->secPitchData->Norm();
+        this->secPitchData->Norm();
         freev(pitch_cutted);
         qDebug() << "pitchData Filled " << dataSec->d_pitch.x;
 

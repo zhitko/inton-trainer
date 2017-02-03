@@ -15,9 +15,11 @@ public:
 protected:
     bool first;
     QString secFileName;
-    mglData *dpData, *secWaveData, *errorData, *timeData, *secPitchData;
+    mglData *dpData, *secWaveData, *errorData, *timeData, *secPitchData, *secIntensiveData;
     mglData *pSecData, *nSecData, *tSecData;
     int errorMax, errorMin;
+
+    SimpleGraphData * simple_data;
 };
 
 #endif // DRAWERDP_H

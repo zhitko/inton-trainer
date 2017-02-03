@@ -174,3 +174,68 @@ vector vector_interpolate_by_mask(vector data, vector mask, int cut, int type)
     }
     return result;
 }
+
+void interpolate_part(vector * data, int start, int end, const gsl_interp_type * T)
+{
+    int edges = gsl_interp_type_min_size(T) * 2;
+
+    int start_index = start - edges;
+    if (start_index < 0) start_index = 0;
+    int end_index = end + edges;
+    if (end_index >= data->x) end_index = data->x;
+
+    int n = (start - start_index) + (end_index - end) + 1;
+    int index = 0;
+    vector x = zerov(n);
+    vector y = zerov(n);
+
+    for (int i=start_index; i<end_index; i++)
+    {
+//        if(data->v[i] != 0 || i==start_index || i==end_index)
+        if((i<=start || i>=end)&&(index<n))
+        {
+            y.v[index] = data->v[i];
+            x.v[index] = i;
+            index++;
+        }
+    }
+
+    gsl_interp_accel *acc = gsl_interp_accel_alloc ();
+    gsl_spline *liner = gsl_spline_alloc(T, n);
+    gsl_spline_init (liner, x.v, y.v, n);
+
+    for(int j=(start); j<end; j++)
+    {
+        data->v[j] = gsl_spline_eval (liner, j, acc);
+    }
+
+    gsl_spline_free (liner);
+    gsl_interp_accel_free (acc);
+
+    freev(x);
+    freev(y);
+}
+
+void vector_interpolate_part(vector * data, int start, int end, int type)
+{
+    switch (type) {
+    case 1: // Linear interpolation
+        interpolate_part(data, start, end, gsl_interp_linear);
+        break;
+    case 2: // Cubic spline (тatural boundary conditions)
+        interpolate_part(data, start, end, gsl_interp_cspline);
+        break;
+    case 3: // Cubic spline (periodic boundary conditions)
+        interpolate_part(data, start, end, gsl_interp_cspline_periodic);
+        break;
+    case 4: // Non-rounded Akima spline (natural boundary conditions)
+        interpolate_part(data, start, end, gsl_interp_akima);
+        break;
+    case 5: // Non-rounded Akima spline (periodic boundary conditions)
+        interpolate_part(data, start, end, gsl_interp_akima_periodic);
+        break;
+    case 6: // Steffen’s method
+         interpolate_part(data, start, end, gsl_interp_steffen);
+        break;
+    }
+}

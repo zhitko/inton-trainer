@@ -147,6 +147,17 @@ vector subv(vector yr_vector, int nw_size) {
     return(nw_vector);
 }
 
+double getv(vector yr_vector, int index)
+{
+    if (index < 0) {
+        return yr_vector.v[0];
+    } else if (index >= yr_vector.x) {
+        return yr_vector.v[yr_vector.x - 1];
+    } else {
+        return yr_vector.v[index];
+    }
+}
+
 // cut vector and make a deep copy of a cutted
 vector cutv(vector yr_vector, int start_index, int end_index)
 {
@@ -189,12 +200,44 @@ vector normalizev(vector data, double targetMin, double targetMax)
     return result;
 }
 
+// Find index of the minimum item is greater than value
+int min_greaterv(vector data, double value)
+{
+    int index = 0;
+    double min_value = data.v[maxv(data)];
+    for(int i = 0; i < data.x; i++)
+        if(data.v[i] > value && data.v[i] < min_value)
+        {
+            min_value = data.v[i];
+            index = i;
+        }
+    return index;
+}
+
 // Find index of the first item is greater than value
 int first_greaterv(vector data, double value)
 {
     int index;
     for(index = 0; index < data.x; index++)
         if(data.v[index] > value)
+            break;
+    return index;
+}
+
+int first_greater_fromv(vector data, int from, double value)
+{
+    int index;
+    for(index = from; index < data.x; index++)
+        if(data.v[index] > value)
+            break;
+    return index;
+}
+
+int first_fromv(vector data, int from, double value)
+{
+    int index;
+    for(index = from; index < data.x; index++)
+        if(data.v[index] == value)
             break;
     return index;
 }

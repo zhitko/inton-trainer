@@ -21,6 +21,7 @@ struct SimpleGraphData{
     vector d_intensive;
     vector d_spec_proc;
     vector d_spec;
+    vector d_mask;
 
     MaskData md_p;
     MaskData md_t;
@@ -39,7 +40,7 @@ struct GraphData: SimpleGraphData{
     vector d_avg_intensive;
 //    vector d_spec;
 //    vector d_spec_proc;
-    vector d_mask;
+//    vector d_mask;
     vector d_p_wave;
     vector d_n_wave;
     vector d_t_wave;

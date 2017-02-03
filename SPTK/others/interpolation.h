@@ -4,5 +4,6 @@
 #define SPTK_INTERPOLATION
 
 vector vector_interpolate_by_mask(vector, vector, int, int);
+void vector_interpolate_part(vector*, int, int, int);
 
 #endif

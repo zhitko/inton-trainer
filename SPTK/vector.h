@@ -80,6 +80,8 @@ vector                            copyv(vector);
 vector                            subv(vector, int);
 vector                            cutv(vector, int, int);
 
+double                            getv(vector, int);
+
 int                               maxv(vector);
 int                               minv(vector);
 int                               bisectv(vector, double);
@@ -89,8 +91,12 @@ void                              freev(vector);
 void                              printv(vector);
 
 vector                            normalizev(vector, double, double);
+int                               min_greaterv(vector, double);
 int                               first_greaterv(vector, double);
 int                               last_greaterv(vector, double);
+
+int                               first_greater_fromv(vector, int, double);
+int                               first_fromv(vector, int, double);
 
 // intvector stuff
 typedef struct                    { int x; int* v; } intvector;

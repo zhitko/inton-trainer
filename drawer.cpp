@@ -122,8 +122,8 @@ Drawer::~Drawer()
     if (this->pWaveData) delete this->pWaveData;
     if (this->nWaveData) delete this->nWaveData;
     if (this->tWaveData) delete this->tWaveData;
-    freeGraphData(data);
-    free(data);
+    if (data) freeGraphData(data);
+    if (data) free(data);
     qDebug() << "Drawer removed";
 }
 
