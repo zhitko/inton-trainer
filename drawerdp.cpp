@@ -250,21 +250,35 @@ void applyMask(vector * data, vector * mask)
     int start = first_fromv(dataInterpolate, 0, 0.0);
     int end = first_greater_fromv(dataInterpolate, start, 0.0);
 
-    do
+    if (start == 0)
     {
-        qDebug() << start << " " << end;
         vector_interpolate_part(
                     &dataInterpolate,
                     start,
                     end,
                     sptk_settings->plotF0->interpolation_type
         );
-        start = first_fromv(dataInterpolate, end, 0.0) - 1;
-        end = first_greater_fromv(dataInterpolate, start + 1, 0.0);
+
+        start = first_fromv(dataInterpolate, end, 0.0);
+        end = first_greater_fromv(dataInterpolate, start, 0.0);
+    }
+
+    do
+    {
+        qDebug() << start << " " << end;
+        vector_interpolate_part(
+                    &dataInterpolate,
+                    start-1,
+                    end,
+                    sptk_settings->plotF0->interpolation_type
+        );
+        start = first_fromv(dataInterpolate, end, 0.0);
+        end = first_greater_fromv(dataInterpolate, start, 0.0);
     } while (end != start && end != dataInterpolate.x);
+
     vector_interpolate_part(
                 &dataInterpolate,
-                start,
+                start-1,
                 dataInterpolate.x - 1,
                 sptk_settings->plotF0->interpolation_type
     );

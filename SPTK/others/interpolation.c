@@ -192,13 +192,15 @@ void interpolate_part(vector * data, int start, int end, const gsl_interp_type *
     for (int i=start_index; i<end_index; i++)
     {
 //        if(data->v[i] != 0 || i==start_index || i==end_index)
-        if((i<=start || i>=end)&&(index<n))
+        if((i<=start || i>=end)&&(index<n)&&(data->v[i]!=0||i==start||i==end))
         {
             y.v[index] = data->v[i];
             x.v[index] = i;
             index++;
         }
     }
+
+    n = index;
 
     gsl_interp_accel *acc = gsl_interp_accel_alloc ();
     gsl_spline *liner = gsl_spline_alloc(T, n);
