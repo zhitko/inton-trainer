@@ -32,7 +32,6 @@ private:
     explicit SettingsDialog(QWidget *parent = 0);
     Ui::SettingsDialog *ui;
 
-    void loadSettings();
     void initAudio();
     void initUI();
 
@@ -40,6 +39,7 @@ private:
     oal_device *currentInputDevice, *currentOutputDevice;
 
 public:
+    void loadSettings();
     oal_device * getInputDevice();
     oal_device * getOutputDevice();
     static SPTK_SETTINGS * getSPTKsettings();

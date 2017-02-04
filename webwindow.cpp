@@ -10,6 +10,7 @@
 #include "drawerevalenergy.h"
 #include "drawerevalenergybyspectr.h"
 #include "drawerevalspectr.h"
+#include "settingsdialog.h"
 
 #include <QDir>
 #include <QDirIterator>
@@ -17,6 +18,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonValue>
+#include <QSettings>
 
 WebWindow::WebWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -56,6 +58,63 @@ QStringList scanDirItems()
         }
     }
     return files;
+}
+
+
+bool WebWindow::isShowA0()
+{
+    SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
+    return sptk_settings->dp->showA0;
+}
+
+bool WebWindow::isShowF0()
+{
+    SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
+    return sptk_settings->dp->showF0;
+}
+
+bool WebWindow::isShowError()
+{
+    SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
+    return sptk_settings->dp->showError;
+}
+
+bool WebWindow::isShowTime()
+{
+    SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
+    return sptk_settings->dp->showTime;
+}
+
+void WebWindow::setShowA0(QVariant value)
+{
+    QSettings settings(SETTINGS_FILE, QSettings::IniFormat);
+    settings.setPath(QSettings::IniFormat, QSettings::UserScope, QApplication::applicationDirPath());
+    settings.setValue("dp/showA0", value.toBool());
+    qDebug() << "setShowA0 " << value.toBool();
+}
+
+void WebWindow::setShowF0(QVariant value)
+{
+    QSettings settings(SETTINGS_FILE, QSettings::IniFormat);
+    settings.setPath(QSettings::IniFormat, QSettings::UserScope, QApplication::applicationDirPath());
+    settings.setValue("dp/showF0", value.toBool());
+    qDebug() << "setShowF0 " << value.toBool();
+}
+
+void WebWindow::setShowError(QVariant value)
+{
+    QSettings settings(SETTINGS_FILE, QSettings::IniFormat);
+    settings.setPath(QSettings::IniFormat, QSettings::UserScope, QApplication::applicationDirPath());
+    settings.setValue("dp/showError", value.toBool());
+    qDebug() << "setShowError " << value.toBool();
+}
+
+void WebWindow::setShowTime(QVariant value)
+{
+    QSettings settings(SETTINGS_FILE, QSettings::IniFormat);
+    settings.setPath(QSettings::IniFormat, QSettings::UserScope, QApplication::applicationDirPath());
+    settings.setValue("dp/showTime", value.toBool());
+    qDebug() << "setShowTime " << value.toBool();
 }
 
 QString WebWindow::getFiles()

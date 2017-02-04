@@ -31,6 +31,14 @@ private slots:
 public slots:
     void attachObject();
     QString getFiles();
+    bool isShowA0();
+    bool isShowF0();
+    bool isShowError();
+    bool isShowTime();
+    void setShowA0(QVariant);
+    void setShowF0(QVariant);
+    void setShowError(QVariant);
+    void setShowTime(QVariant);
 };
 
 #endif // WEBWINDOW_H

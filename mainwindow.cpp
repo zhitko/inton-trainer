@@ -483,7 +483,10 @@ void MainWindow::rename()
 void MainWindow::settingsShow()
 {
     if(this->settingsDialog)
+    {
+        this->settingsDialog->loadSettings();
         this->settingsDialog->show();
+    }
 }
 
 void MainWindow::playRecord()

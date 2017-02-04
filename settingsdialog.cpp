@@ -93,6 +93,7 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     SPTK_SETTINGS * sptk_settings = initSptkSettings();
 
     SettingsDialog * instance = getInstance();
+    instance->loadSettings();
 
 //    sptk_settings->pitch->SAMPLE_FREQ = instance->ui->pitchSampleFreqSpin->value();
     sptk_settings->pitch->MAX_FREQ = instance->ui->pitchMaxFreqSpin->value();
