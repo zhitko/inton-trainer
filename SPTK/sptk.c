@@ -67,6 +67,7 @@ PLOT_SETTINGS *initPlotSettings()
     plot->midFrame = 10;
     plot->interpolation_edges = 0;
     plot->interpolation_type = 1;
+    plot->normF0MinMax = 1;
     return plot;
 }
 

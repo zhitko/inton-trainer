@@ -109,8 +109,9 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->energyFrame->threshold_end = instance->ui->energyMidThresholdEnd->value();
 
     sptk_settings->plotF0->midFrame = instance->ui->plotMidFrameF0Spin->value();
-    sptk_settings->plotF0->interpolation_edges = instance->ui->plotInterpolationEdgesF0Spin->value();
+//    sptk_settings->plotF0->interpolation_edges = instance->ui->plotInterpolationEdgesF0Spin->value();
     sptk_settings->plotF0->interpolation_type = instance->ui->plotInterpolationTypeF0Box->currentIndex();
+    sptk_settings->plotF0->normF0MinMax = instance->ui->normF0MinMax->isChecked();
 
     sptk_settings->plotEnergy->midFrame = instance->ui->plotMidFrameEnergySpin->value();
     sptk_settings->plotEnergy->interpolation_edges = instance->ui->plotInterpolationEdgesEnergySpin->value();
@@ -185,8 +186,10 @@ void SettingsDialog::loadSettings()
         this->ui->plotMidFrameF0Spin->setValue(settings.value("plot_f0/mid_frame").toInt());
     if(settings.contains("plot_f0/interpolation_type"))
         this->ui->plotInterpolationTypeF0Box->setCurrentIndex(settings.value("plot_f0/interpolation_type").toInt());
-    if(settings.contains("plot_f0/interpolation_edges"))
-        this->ui->plotInterpolationEdgesF0Spin->setValue(settings.value("plot_f0/interpolation_edges").toInt());
+//    if(settings.contains("plot_f0/interpolation_edges"))
+//        this->ui->plotInterpolationEdgesF0Spin->setValue(settings.value("plot_f0/interpolation_edges").toInt());
+    if(settings.contains("plot_f0/normF0MinMax"))
+        this->ui->normF0MinMax->setChecked(settings.value("plot_f0/normF0MinMax").toBool());
 
     if(settings.contains("plot_energy/mid_frame"))
         this->ui->plotMidFrameEnergySpin->setValue(settings.value("plot_energy/mid_frame").toInt());
@@ -278,8 +281,9 @@ void SettingsDialog::saveSettings()
     settings.setValue("pitch/THRESH_SWIPE", this->ui->pitchThreshSwipeSpin->value());
 
     settings.setValue("plot_f0/mid_frame", this->ui->plotMidFrameF0Spin->value());
-    settings.setValue("plot_f0/interpolation_edges", this->ui->plotInterpolationEdgesF0Spin->value());
+//    settings.setValue("plot_f0/interpolation_edges", this->ui->plotInterpolationEdgesF0Spin->value());
     settings.setValue("plot_f0/interpolation_type", this->ui->plotInterpolationTypeF0Box->currentIndex());
+    settings.setValue("plot_f0/normF0MinMax", this->ui->normF0MinMax->isChecked());
 
     settings.setValue("plot_energy/mid_frame", this->ui->plotMidFrameEnergySpin->value());
     settings.setValue("plot_energy/interpolation_edges", this->ui->plotInterpolationEdgesEnergySpin->value());

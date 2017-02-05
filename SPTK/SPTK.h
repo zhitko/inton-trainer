@@ -197,6 +197,7 @@ typedef struct _PLOT_SETTINGS {
     int midFrame;
     int interpolation_type;
     int interpolation_edges;
+    int normF0MinMax;
 } PLOT_SETTINGS;
 
 typedef struct _SPTK_SETTINGS {

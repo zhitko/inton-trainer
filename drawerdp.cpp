@@ -242,7 +242,7 @@ void applyMask(vector * data, vector * mask)
     qDebug() << "newData";
     vector dataMid = mid(cuttedData, sptk_settings->plotF0->midFrame);
     qDebug() << "pitch_mid";
-    vector newDataNorm = norm(dataMid, 0.0, 1.0, false);
+    vector newDataNorm = norm(dataMid, 0.0, 1.0, !sptk_settings->plotF0->normF0MinMax);
     qDebug() << "newDataNorm";    
     vector dataInterpolate = copyv(newDataNorm);
     qDebug() << "dataInterpolate " << dataInterpolate.x;
