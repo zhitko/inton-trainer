@@ -18,6 +18,7 @@ protected:
     mglData *dpData, *secWaveData, *errorData, *timeData, *secPitchData, *secIntensiveData;
     mglData *pSecData, *nSecData, *tSecData;
     int errorMax, errorMin;
+    double result;
 
     SimpleGraphData * simple_data;
 };

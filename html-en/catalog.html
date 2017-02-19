@@ -65,13 +65,11 @@
         render: function() {
           var links = "\
             <span> \
-              <a href='"+this.props.data.path+"#dp'>ДП</a> \
+              <a href='"+this.props.data.path+"#pitch'>Show pith</a> \
               <br /> \
-              <a href='"+this.props.data.path+"#pitch'>Основной тон</a> \
+              <a href='"+this.props.data.path+"#energy'>Show energy</a> \
               <br /> \
-              <a href='"+this.props.data.path+"#energy'>Энергия</a> \
-              <br /> \
-              <a href='"+this.props.data.path+"#spectr'>Спектр</a> \
+              <a href='"+this.props.data.path+"#spectr'>Show spectr</a> \
             </span> \
           ";
 
@@ -86,6 +84,18 @@
                 {this.props.data.text}
               </a>
             </li>
+          );
+        }
+      });
+
+      var Section = React.createClass({
+        render: function() {
+          return (
+            <div>
+              <h2>{this.props.title}</h2>
+              <br />
+              <ListFiles data={this.props.data} />
+            </div>
           );
         }
       });
@@ -106,18 +116,6 @@
         }
       });
 
-      var Section = React.createClass({
-        render: function() {
-          return (
-            <div>
-              <h2>{this.props.title}</h2>
-              <br />
-              <ListFiles data={this.props.data} />
-            </div>
-          );
-        }
-      });
-
       ReactDOM.render(
         <SectionsList data={files} />,
         document.getElementById('container')
@@ -130,10 +128,10 @@
 
     <div class="container">
       <div class="header clearfix">
-        <label><input type='checkbox' id='showA0' onclick='handleClick(this);'/> Отображать A0</label>
-        <label><input type='checkbox' id='showF0' onclick='handleClick(this);'/> Отображать F0</label>
-        <label><input type='checkbox' id='showError' onclick='handleClick(this);'/> Отображать Ошибку</label>
-        <label><input type='checkbox' id='showTime' onclick='handleClick(this);'/> Отображать Вмемя</label>
+        <label><input type='checkbox' id='showA0' onclick='handleClick(this);'/> Show A0</label>
+        <label><input type='checkbox' id='showF0' onclick='handleClick(this);'/> Show F0</label>
+        <label><input type='checkbox' id='showError' onclick='handleClick(this);'/> Show Error</label>
+        <label><input type='checkbox' id='showTime' onclick='handleClick(this);'/> Show Time</label>
         <script type="text/javascript">
           function handleClick(cb) {
             if (cb.id === 'showA0') {
@@ -154,24 +152,24 @@
         </script>
         <nav>
           <ul class="nav nav-pills pull-right">
-            <li role="presentation" class="active"><a href="index.html">Начало</a></li>
-            <li role="presentation"><a href="settings.window">Настройки</a></li>
-            <li role="presentation"><a href="main.window">Режим разработчика</a></li>
+            <li role="presentation" class="active"><a href="index.html">Home</a></li>
+            <li role="presentation"><a href="settings.window">Settings</a></li>
+            <li role="presentation"><a href="main.window">Developer mode</a></li>
           </ul>
         </nav>
         <h3 class="text-muted">IntonTrainer<span class="top-text">@</span></h3>
       </div>
 
       <div class="jumbotron">
-        <h1>Русский</h1>
-        <p class="lead">изучение русской интонации</p>
+        <h1>English</h1>
+        <p class="lead">intonation learning tool</p>
       </div>
 
       <div class="row marketing">
         <div class="col-lg-6">
           <div id="container"></div>
           <br>
-          <a class="btn btn-default" href="index.html">Назад</a>
+          <a class="btn btn-default" href="index.html">Back</a>
         </div>
 
         <div class="col-lg-6">

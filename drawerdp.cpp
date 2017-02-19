@@ -4,8 +4,9 @@
 #include <QDebug>
 
 #include "settingsdialog.h"
-
+#include <QApplication>
 #include "DP/continuousdp.h"
+#define DATA_PATH_TRAINING "/data/training/"
 
 extern "C" {
     #include "./OpenAL/wavFile.h"
@@ -39,6 +40,7 @@ DrawerDP::DrawerDP() :
     this->secIntensiveData = NULL;
     this->errorMax = 0;
     this->errorMin = 0;
+    this->result = 0.0;
 }
 
 DrawerDP::~DrawerDP()
@@ -59,6 +61,7 @@ DrawerDP::~DrawerDP()
 
 int DrawerDP::Draw(mglGraph *gr)
 {
+    SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
     qDebug() << "start drawing";
 
     bool isCompare = !this->secFileName.isEmpty();
@@ -78,8 +81,21 @@ int DrawerDP::Draw(mglGraph *gr)
     gr->SetRange('y', 0, 1);
     gr->Axis("Y", "");
     gr->Grid("y", "W", "");
-    if(this->pitchData) gr->Plot(*this->pitchData, "-r3");
-    if(this->intensiveData) gr->Plot(*this->intensiveData, "-g3");
+    if(sptk_settings->dp->showF0)
+    {
+        gr->Plot(*this->pitchData, "-r3");
+        if(!isCompare){
+            if(this->pitchDataOriginal) gr->Plot(*this->pitchDataOriginal, "-r2");
+        }
+    }
+    if(sptk_settings->dp->showA0) gr->Plot(*this->intensiveData, "-g3");
+    gr->Plot(*pWaveData, "y2");
+    gr->Plot(*nWaveData, "q2");
+    gr->Plot(*tWaveData, "c2");
+
+    gr->MultiPlot(1, 12, 10, 1, 1, "#");
+    QString path = QApplication::applicationDirPath() + DATA_PATH_TRAINING;
+    gr->Puts(mglPoint(0,0),fileName.replace(path,"").replace(".wav","").replace("/"," - ").toLocal8Bit().data(), ":C", 24);
 
     if(isCompare){
         qDebug() << "secWaveData";
@@ -92,15 +108,17 @@ int DrawerDP::Draw(mglGraph *gr)
         gr->Plot(*dpData, "R9");
 
         gr->MultiPlot(1, 12, 3, 1, 1, "#");
-        gr->Puts(mglPoint(0,0),QString("Max: %1 Min: %2").arg(this->errorMax).arg(this->errorMin).toLocal8Bit().data(), ":C", 24);
+        gr->Puts(mglPoint(0,0),QString("%1%").arg(this->result).toLocal8Bit().data(), ":C", 24);
 
         qDebug() << "errorData";
         gr->MultiPlot(1, 12, 4, 1, 6, "#");
         gr->SetRange('y', 0, 1);
         if(this->errorData) gr->Plot(*this->errorData, "-B3");
         if(this->timeData) gr->Plot(*this->timeData, "-R3");
-        if(this->secPitchData) gr->Plot(*this->secPitchData, "-R3");
-        if(this->secIntensiveData) gr->Plot(*this->secIntensiveData, "-G3");
+        if(sptk_settings->dp->showF0) gr->Plot(*this->secPitchData, "-R3");
+        if(sptk_settings->dp->showA0) gr->Plot(*this->secIntensiveData, "-G3");
+
+//        gr->MultiPlot(1, 12, 5, 1, 1, "#");
     }
 
     qDebug() << "finish drawing";
@@ -252,12 +270,14 @@ void applyMask(vector * data, vector * mask)
 
     if (start == 0)
     {
-        vector_interpolate_part(
-                    &dataInterpolate,
-                    start,
-                    end,
-                    sptk_settings->plotF0->interpolation_type
-        );
+        try {
+            vector_interpolate_part(
+                        &dataInterpolate,
+                        start,
+                        end,
+                        sptk_settings->plotF0->interpolation_type
+            );
+        } catch(int err){ qDebug() << "Error " << err; }
 
         start = first_fromv(dataInterpolate, end, 0.0);
         end = first_greater_fromv(dataInterpolate, start, 0.0);
@@ -266,22 +286,26 @@ void applyMask(vector * data, vector * mask)
     do
     {
         qDebug() << start << " " << end;
-        vector_interpolate_part(
-                    &dataInterpolate,
-                    start-1,
-                    end,
-                    sptk_settings->plotF0->interpolation_type
-        );
+        try {
+            vector_interpolate_part(
+                        &dataInterpolate,
+                        start-1,
+                        end,
+                        sptk_settings->plotF0->interpolation_type
+            );
+        } catch(int err){ qDebug() << "Error " << err; }
         start = first_fromv(dataInterpolate, end, 0.0);
         end = first_greater_fromv(dataInterpolate, start, 0.0);
     } while (end != start && end != dataInterpolate.x);
 
-    vector_interpolate_part(
-                &dataInterpolate,
-                start-1,
-                dataInterpolate.x - 1,
-                sptk_settings->plotF0->interpolation_type
-    );
+    try {
+        vector_interpolate_part(
+                    &dataInterpolate,
+                    start-1,
+                    dataInterpolate.x - 1,
+                    sptk_settings->plotF0->interpolation_type
+        );
+    } catch(int err){ qDebug() << "Error " << err; }
 
     freev(scaledMask);
     freev(cuttedData);
@@ -346,21 +370,19 @@ void DrawerDP::Proc(QString fname)
         freev(nVector);
         freev(tVector);
 
-        if (sptk_settings->dp->showF0)
-        {
-            vector pitch_cutted = copyv(this->simple_data->d_pitch_originl);
-            applyMask(&pitch_cutted, &this->simple_data->d_mask);
-            this->pitchData = createMglData(pitch_cutted, this->pitchData, true);
-            freev(pitch_cutted);
-            qDebug() << "pitchData Filled";
-        }
+        vector pitch_cutted = copyv(this->simple_data->d_pitch_originl);
+        applyMask(&pitch_cutted, &this->simple_data->d_mask);
+        this->pitchData = createMglData(pitch_cutted, this->pitchData, true);
+        this->pitchData->Norm();
+        freev(pitch_cutted);
+        qDebug() << "pitchData Filled";
 
-        if (sptk_settings->dp->showA0)
-        {
-            this->intensiveData = createMglData(this->simple_data->d_intensive, this->intensiveData);
-            this->intensiveData->Norm();
-            qDebug() << "intensiveData Filled";
-        }
+        this->pitchDataOriginal = createMglData(this->simple_data->d_pitch_originl, this->pitchDataOriginal, true);
+        this->pitchDataOriginal->Norm();
+
+        this->intensiveData = createMglData(this->simple_data->d_intensive, this->intensiveData);
+        this->intensiveData->Norm();
+        qDebug() << "intensiveData Filled";
     }
     else
     {
@@ -449,25 +471,36 @@ void DrawerDP::Proc(QString fname)
         freev(nSecVector);
         freev(tSecVector);
 
-        if (sptk_settings->dp->showF0)
-        {
-            vector pitch_cutted = cutv(dataSec->d_pitch_originl, startPos, endPos);
-            applyMapping(&pitch_cutted, &mapping);
-            applyMask(&pitch_cutted, &this->simple_data->d_mask);
-            this->secPitchData = createMglData(pitch_cutted, this->secPitchData, true);
-            freev(pitch_cutted);
-            qDebug() << "pitchData Filled " << dataSec->d_pitch.x;
-        }
+        vector pitch_cutted = cutv(dataSec->d_pitch_originl, startPos, endPos);
+        applyMapping(&pitch_cutted, &mapping);
+        applyMask(&pitch_cutted, &this->simple_data->d_mask);
+        this->secPitchData = createMglData(pitch_cutted, this->secPitchData, true);
+        qDebug() << "pitchData Filled " << dataSec->d_pitch.x;
+        qDebug() << "intensiveData Filled " << this->pitchData->nx;
 
-        if (sptk_settings->dp->showA0)
+        vector o_pitch_cutted = copyv(this->simple_data->d_pitch_originl);
+        applyMask(&o_pitch_cutted, &this->simple_data->d_mask);
+
+        this->result = 0;
+        int i = 0;
+        for (i=0; i<o_pitch_cutted.x && i<pitch_cutted.x; i++)
         {
-            vector intensive_cutted = cutv(dataSec->d_intensive, startPos, endPos);
-            applyMapping(&intensive_cutted, &mapping);
-            this->secIntensiveData = createMglData(intensive_cutted, this->secIntensiveData);
-            this->secIntensiveData->Norm();
-            freev(intensive_cutted);
-            qDebug() << "intensiveData Filled " << dataSec->d_intensive.x;
+            this->result += fabs(o_pitch_cutted.v[i] - pitch_cutted.v[i]);
         }
+        this->result /= 1.0*i;
+        this->result = 1.0 - this->result;
+        this->result *= 100;
+        this->result = round(this->result);
+        freev(o_pitch_cutted);
+        freev(pitch_cutted);
+
+        vector intensive_cutted = cutv(dataSec->d_intensive, startPos, endPos);
+        applyMapping(&intensive_cutted, &mapping);
+        this->secIntensiveData = createMglData(intensive_cutted, this->secIntensiveData);
+        this->secIntensiveData->Norm();
+        freev(intensive_cutted);
+
+        qDebug() << "intensiveData Filled " << this->secIntensiveData->nx;
 
         freeiv(mapping);
 
