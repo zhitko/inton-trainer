@@ -19,6 +19,7 @@ protected:
     mglData *pSecData, *nSecData, *tSecData;
     int errorMax, errorMin;
     double result;
+    int f0mix, f0max, of0mix, of0max;
 
     SimpleGraphData * simple_data;
 };

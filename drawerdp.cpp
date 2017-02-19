@@ -24,6 +24,8 @@ extern "C" {
     #include "./SPTK/spec/spec.h"
 }
 
+typedef struct { double min; double max; } MinMax;
+
 DrawerDP::DrawerDP() :
     Drawer(),
     secFileName(""),
@@ -41,6 +43,10 @@ DrawerDP::DrawerDP() :
     this->errorMax = 0;
     this->errorMin = 0;
     this->result = 0.0;
+    this->f0max = 0;
+    this->f0mix = 0;
+    this->of0max = 0;
+    this->of0mix = 0;
 }
 
 DrawerDP::~DrawerDP()
@@ -96,6 +102,14 @@ int DrawerDP::Draw(mglGraph *gr)
     gr->MultiPlot(1, 12, 10, 1, 1, "#");
     QString path = QApplication::applicationDirPath() + DATA_PATH_TRAINING;
     gr->Puts(mglPoint(0,0),fileName.replace(path,"").replace(".wav","").replace("/"," - ").toLocal8Bit().data(), ":C", 24);
+
+    gr->MultiPlot(1, 12, 11, 1, 1, "#");
+    gr->Puts(
+        mglPoint(0,0),
+        QString("F0 min = %1 max = %2 (origin  min = %3 max = %4)").arg(this->f0mix).arg(this->f0max).arg(this->of0mix).arg(this->of0max).toLocal8Bit().data(),
+        ":C",
+        24
+    );
 
     if(isCompare){
         qDebug() << "secWaveData";
@@ -250,14 +264,17 @@ vector mid(vector data, int frame, bool procZeros = true)
     return result;
 }
 
-void applyMask(vector * data, vector * mask)
+MinMax applyMask(vector * data, vector * mask)
 {
+    double min, max;
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
 
     vector scaledMask = vector_resize(*mask, data->x);
     qDebug() << "scaledMask";
     vector cuttedData = vector_cut_by_mask(*data, scaledMask);
     qDebug() << "newData";
+    min = cuttedData.v[min_greaterv(cuttedData, 0.0)];
+    max = cuttedData.v[maxv(cuttedData)];
     vector dataMid = mid(cuttedData, sptk_settings->plotF0->midFrame);
     qDebug() << "pitch_mid";
     vector newDataNorm = norm(dataMid, 0.0, 1.0, !sptk_settings->plotF0->normF0MinMax);
@@ -314,6 +331,8 @@ void applyMask(vector * data, vector * mask)
     freev(*data);
     data->v = newDataNorm.v;
     data->v = dataInterpolate.v;
+
+    return MinMax{min, max};
 }
 
 void getMark(vector * vec, MaskData * points, int startPos, double marksScale, intvector * mapping)
@@ -371,9 +390,15 @@ void DrawerDP::Proc(QString fname)
         freev(tVector);
 
         vector pitch_cutted = copyv(this->simple_data->d_pitch_originl);
-        applyMask(&pitch_cutted, &this->simple_data->d_mask);
+        MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_mask);
         this->pitchData = createMglData(pitch_cutted, this->pitchData, true);
         this->pitchData->Norm();
+
+        this->f0max = mm.max;
+        this->f0mix = mm.min;
+        this->of0max = this->simple_data->d_pitch_originl.v[maxv(this->simple_data->d_pitch_originl)];
+        this->of0mix = this->simple_data->d_pitch_originl.v[minv(this->simple_data->d_pitch_originl)];
+
         freev(pitch_cutted);
         qDebug() << "pitchData Filled";
 
@@ -382,6 +407,7 @@ void DrawerDP::Proc(QString fname)
 
         this->intensiveData = createMglData(this->simple_data->d_intensive, this->intensiveData);
         this->intensiveData->Norm();
+
         qDebug() << "intensiveData Filled";
     }
     else
