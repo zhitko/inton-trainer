@@ -35,7 +35,8 @@ GraphsWindow::GraphsWindow(QWidget *parent) :
     path(""),
     fileName(""),
     k_graph(GRAPH_K_INIT),
-    drawer(NULL)
+    drawer(NULL),
+    recorder(NULL)
 {
     this->initUI();
     this->ui->fileNameLabel->setText(tr("Training"));
@@ -49,7 +50,8 @@ GraphsWindow::GraphsWindow(QString path, QWidget *parent) :
     lastImageFile(""),
     path(path),
     k_graph(GRAPH_K_INIT),
-    drawer(NULL)
+    drawer(NULL),
+    recorder(NULL)
 {
     this->initUI();
 
@@ -78,7 +80,6 @@ void GraphsWindow::initUI()
     connect(this->ui->to3DBtn, SIGNAL(clicked()), this, SLOT(stereo()));
 
     connect(this->ui->recordBtn, SIGNAL(clicked()), this, SLOT(_rec()));
-    connect(this->ui->autoRecordBtn, SIGNAL(clicked()), this, SLOT(_autoRec()));
 
     connect(this->ui->lessBtn, SIGNAL(clicked()), this, SLOT(decrease()));
     connect(this->ui->moreBtn, SIGNAL(clicked()), this, SLOT(increase()));
@@ -88,7 +89,10 @@ void GraphsWindow::initUI()
 
     connect(this->ui->playBtn, SIGNAL(clicked()), this, SLOT(playRecord()));
 
+    connect(this->ui->autoRecordBtn, SIGNAL(clicked()), this, SLOT(_autoRec()));
     connect(this->ui->setRecordBtn, SIGNAL(clicked()), this, SLOT(startRecord()));
+    connect(this->ui->stopRecordBtn, SIGNAL(clicked()), this, SLOT(stopRecord()));
+    connect(this->ui->startAutoRecordBtn, SIGNAL(clicked()), this, SLOT(startAutoRecord()));
 
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
     this->ui->pitchMinSpin->setValue(sptk_settings->pitch->MIN_FREQ);
@@ -121,20 +125,45 @@ Drawer * GraphsWindow::createNewDrawer(QString path)
     return drawer;
 }
 
+void GraphsWindow::startAutoRecord()
+{
+    qDebug() << "GraphsWindow::startAutoRecord";
+    this->ui->setRecordBtn->setEnabled(false);
+    this->ui->startAutoRecordBtn->setEnabled(false);
+    this->ui->stopRecordBtn->setEnabled(true);
+    oal_device * currentDevice = SettingsDialog::getInstance()->getInputDevice();
+    if (this->recorder) {
+        this->recorder->deleteLater();
+    }
+    this->recorder = new AutoSoundRecorder(currentDevice, sizeof(short int), this);
+    connect(this->recorder, SIGNAL(resultReady(SoundRecorder *)), this, SLOT(stopRecord(SoundRecorder *)));
+    this->recorder->startRecording();
+}
+
 void GraphsWindow::startRecord()
 {
     qDebug() << "GraphsWindow::setRecord";
     this->ui->setRecordBtn->setEnabled(false);
+    this->ui->startAutoRecordBtn->setEnabled(false);
+    this->ui->stopRecordBtn->setEnabled(true);
     oal_device * currentDevice = SettingsDialog::getInstance()->getInputDevice();
-    AutoSoundRecorder * autoRecorder = new AutoSoundRecorder(currentDevice, sizeof(short int), this);
-    connect(autoRecorder, SIGNAL(resultReady(SoundRecorder *)), this, SLOT(stopRecord(SoundRecorder *)));
-    autoRecorder->startRecording();
+    this->recorder = new SoundRecorder(currentDevice, sizeof(short int), this);
+    connect(this->recorder, SIGNAL(resultReady(SoundRecorder *)), this, SLOT(stopRecord(SoundRecorder *)));
+    this->recorder->startRecording();
+}
+
+void GraphsWindow::stopRecord()
+{
+//    return this->stopRecord(this->recorder);
+    this->recorder->stopRecording();
 }
 
 void GraphsWindow::stopRecord(SoundRecorder * recorder)
 {
     qDebug() << "GraphsWindow::stopRecord";
     this->ui->setRecordBtn->setEnabled(true);
+    this->ui->startAutoRecordBtn->setEnabled(true);
+    this->ui->stopRecordBtn->setEnabled(false);
     char *data;
     int size = recorder->getData((void**) &data);
     recorder->deleteLater();

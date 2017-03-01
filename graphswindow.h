@@ -35,6 +35,7 @@ protected:
     Drawer * drawer;
     QString fileName, path;
     QString lastImageFile;
+    SoundRecorder * recorder;
     int k_graph, w_graph;
     void initUI();
     virtual Drawer * createNewDrawer(QString path);
@@ -52,6 +53,8 @@ public slots:
 
     void startRecord();
     void stopRecord(SoundRecorder *);
+    void stopRecord();
+    void startAutoRecord();
 
     void stereo();
     void increase();

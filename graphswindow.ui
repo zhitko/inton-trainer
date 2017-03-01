@@ -119,31 +119,81 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="setRecordBtn">
-           <property name="baseSize">
-            <size>
-             <width>64</width>
-             <height>64</height>
-            </size>
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QToolButton" name="setRecordBtn">
+             <property name="baseSize">
+              <size>
+               <width>64</width>
+               <height>64</height>
+              </size>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="text">
+              <string>...</string>
+             </property>
+             <property name="icon">
+              <iconset resource="icons.qrc">
+               <normaloff>:/icons/icons/voice_recognition_scan-64.png</normaloff>:/icons/icons/voice_recognition_scan-64.png</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>64</width>
+               <height>64</height>
+              </size>
+             </property>
+             <property name="autoRaise">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QToolButton" name="stopRecordBtn">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="icons.qrc">
+               <normaloff>:/icons/icons/pause.png</normaloff>:/icons/icons/pause.png</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>64</width>
+               <height>63</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QToolButton" name="startAutoRecordBtn">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
            <property name="layoutDirection">
             <enum>Qt::LeftToRight</enum>
            </property>
            <property name="text">
-            <string>...</string>
+            <string>Start autorecording</string>
            </property>
            <property name="icon">
             <iconset resource="icons.qrc">
-             <normaloff>:/icons/icons/voice_recognition_scan-64.png</normaloff>:/icons/icons/voice_recognition_scan-64.png</iconset>
+             <normaloff>:/icons/icons/voice_recognition_scan-26.png</normaloff>:/icons/icons/voice_recognition_scan-26.png</iconset>
            </property>
-           <property name="iconSize">
-            <size>
-             <width>64</width>
-             <height>64</height>
-            </size>
-           </property>
-           <property name="autoRaise">
-            <bool>false</bool>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextBesideIcon</enum>
            </property>
           </widget>
          </item>
@@ -201,7 +251,7 @@
               </property>
              </widget>
             </item>
-            <item row="2" column="0" colspan="2">
+            <item row="1" column="0" colspan="2">
              <widget class="QPushButton" name="autoRecordBtn">
               <property name="text">
                <string>Auto Record</string>

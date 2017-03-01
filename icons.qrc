@@ -19,5 +19,7 @@
         <file>icons/voice_recognition_scan-64.png</file>
         <file>icons/guru-26.png</file>
         <file>icons/trophy-26.png</file>
+        <file>icons/pause26.png</file>
+        <file>icons/pause.png</file>
     </qresource>
 </RCC>
