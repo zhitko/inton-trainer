@@ -76,14 +76,14 @@ int DrawerDP::Draw(mglGraph *gr)
     gr->Clf();
 
     qDebug() << "waveData";
-    gr->MultiPlot(1, 12, 0, 1, 1, "#");
+    gr->MultiPlot(1, 15, 1, 1, 1, "#");
     gr->SetRange('y', 0, 1);
     gr->Plot(*waveData, "B");
     gr->Plot(*pWaveData, "y9");
     gr->Plot(*nWaveData, "q9");
     gr->Plot(*tWaveData, "c9");
 
-    gr->MultiPlot(1, 12, 4, 1, 6, "#");
+    gr->MultiPlot(1, 15, 6, 1, 6, "#");
     gr->SetRange('y', 0, 1);
     gr->Axis("Y", "");
     gr->Grid("y", "W", "");
@@ -99,11 +99,11 @@ int DrawerDP::Draw(mglGraph *gr)
     gr->Plot(*nWaveData, "q2");
     gr->Plot(*tWaveData, "c2");
 
-    gr->MultiPlot(1, 12, 10, 1, 1, "#");
+    gr->MultiPlot(1, 15, 12, 1, 1, "#");
     QString path = QApplication::applicationDirPath() + DATA_PATH_TRAINING;
     gr->Puts(mglPoint(0,0),fileName.replace(path,"").replace(".wav","").replace("/"," - ").toLocal8Bit().data(), ":C", 24);
 
-    gr->MultiPlot(1, 12, 11, 1, 1, "#");
+    gr->MultiPlot(1, 15, 13, 1, 1, "#");
     gr->Puts(
         mglPoint(0,0),
         QString("F0 min = %1 max = %2").arg(this->f0mix).arg(this->f0max).toLocal8Bit().data(),
@@ -113,7 +113,7 @@ int DrawerDP::Draw(mglGraph *gr)
 
     if(isCompare){
         qDebug() << "secWaveData";
-        gr->MultiPlot(1, 12, 1, 1, 1, "#");
+        gr->MultiPlot(1, 15, 3, 1, 1, "#");
         gr->SetRange('y', 0, 1);
         gr->Plot(*pSecData, "y9");
         gr->Plot(*nSecData, "q9");
@@ -121,18 +121,18 @@ int DrawerDP::Draw(mglGraph *gr)
         gr->Plot(*secWaveData, "G");
         gr->Plot(*dpData, "R9");
 
-        gr->MultiPlot(1, 12, 3, 1, 1, "#");
+        gr->MultiPlot(1, 15, 5, 1, 1, "#");
         gr->Puts(mglPoint(0,0),QString("%1%").arg(this->result).toLocal8Bit().data(), ":C", 24);
 
         qDebug() << "errorData";
-        gr->MultiPlot(1, 12, 4, 1, 6, "#");
+        gr->MultiPlot(1, 15, 6, 1, 6, "#");
         gr->SetRange('y', 0, 1);
         if(this->errorData) gr->Plot(*this->errorData, "-B3");
         if(this->timeData) gr->Plot(*this->timeData, "-R3");
         if(sptk_settings->dp->showF0) gr->Plot(*this->secPitchData, "-R3");
         if(sptk_settings->dp->showA0) gr->Plot(*this->secIntensiveData, "-G3");
 
-        gr->MultiPlot(3, 12, 33, 1, 1, "#");
+        gr->MultiPlot(3, 15, 39, 1, 1, "#");
         gr->Puts(
             mglPoint(0,0),
             QString("Error min = %1 max = %2").arg(this->errorMin).arg(this->errorMax).toLocal8Bit().data(),
