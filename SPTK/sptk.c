@@ -90,6 +90,7 @@ DP_SETTINGS *initDpSettings()
     dp->continiusKT = 20;
     dp->showA0 = 1;
     dp->showF0 = 1;
+    dp->showOriginalF0 = 0;
     dp->showError = 0;
     dp->showTime = 0;
     return dp;

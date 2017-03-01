@@ -144,6 +144,7 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->dp->showA0 = instance->ui->showA0->isChecked();
     sptk_settings->dp->showError = instance->ui->showError->isChecked();
     sptk_settings->dp->showF0 = instance->ui->showF0->isChecked();
+    sptk_settings->dp->showOriginalF0 = instance->ui->showOriginalF0->isChecked();
     sptk_settings->dp->showTime = instance->ui->showTime->isChecked();
 
     return sptk_settings;
@@ -237,6 +238,8 @@ void SettingsDialog::loadSettings()
         this->ui->showError->setChecked(settings.value("dp/showError").toBool());
     if(settings.contains("dp/showF0"))
         this->ui->showF0->setChecked(settings.value("dp/showF0").toBool());
+    if(settings.contains("dp/showOriginalF0"))
+        this->ui->showOriginalF0->setChecked(settings.value("dp/showOriginalF0").toBool());
     if(settings.contains("dp/showTime"))
         this->ui->showTime->setChecked(settings.value("dp/showTime").toBool());
 
@@ -320,6 +323,7 @@ void SettingsDialog::saveSettings()
     settings.setValue("dp/showA0", this->ui->showA0->isChecked());
     settings.setValue("dp/showError", this->ui->showError->isChecked());
     settings.setValue("dp/showF0", this->ui->showF0->isChecked());
+    settings.setValue("dp/showOriginalF0", this->ui->showOriginalF0->isChecked());
     settings.setValue("dp/showTime", this->ui->showTime->isChecked());
 
     settings.setValue("mathGL/quality", this->ui->mathGLQualitySpin->value());

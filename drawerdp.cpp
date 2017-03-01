@@ -87,12 +87,10 @@ int DrawerDP::Draw(mglGraph *gr)
     gr->SetRange('y', 0, 1);
     gr->Axis("Y", "");
     gr->Grid("y", "W", "");
-    if(sptk_settings->dp->showF0)
+    if(sptk_settings->dp->showF0 && sptk_settings->dp->showOriginalF0)
     {
         gr->Plot(*this->pitchData, "-r3");
-        if(!isCompare){
-            if(this->pitchDataOriginal) gr->Plot(*this->pitchDataOriginal, "-r2");
-        }
+        if(this->pitchDataOriginal) gr->Plot(*this->pitchDataOriginal, "-r2");
     }
     if(sptk_settings->dp->showA0) gr->Plot(*this->intensiveData, "-g3");
     gr->Plot(*pWaveData, "q2");
