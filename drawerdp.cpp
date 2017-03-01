@@ -79,8 +79,8 @@ int DrawerDP::Draw(mglGraph *gr)
     gr->MultiPlot(1, 15, 1, 1, 1, "#");
     gr->SetRange('y', 0, 1);
     gr->Plot(*waveData, "B");
-    gr->Plot(*pWaveData, "y9");
-    gr->Plot(*nWaveData, "q9");
+    gr->Plot(*pWaveData, "q9");
+    gr->Plot(*nWaveData, "k9");
     gr->Plot(*tWaveData, "c9");
 
     gr->MultiPlot(1, 15, 6, 1, 6, "#");
@@ -95,8 +95,8 @@ int DrawerDP::Draw(mglGraph *gr)
         }
     }
     if(sptk_settings->dp->showA0) gr->Plot(*this->intensiveData, "-g3");
-    gr->Plot(*pWaveData, "y2");
-    gr->Plot(*nWaveData, "q2");
+    gr->Plot(*pWaveData, "q2");
+    gr->Plot(*nWaveData, "k2");
     gr->Plot(*tWaveData, "c2");
 
     gr->MultiPlot(1, 15, 12, 1, 1, "#");
@@ -115,13 +115,13 @@ int DrawerDP::Draw(mglGraph *gr)
         qDebug() << "secWaveData";
         gr->MultiPlot(1, 15, 3, 1, 1, "#");
         gr->SetRange('y', 0, 1);
-        gr->Plot(*pSecData, "y9");
-        gr->Plot(*nSecData, "q9");
+        gr->Plot(*pSecData, "q9");
+        gr->Plot(*nSecData, "k9");
         gr->Plot(*tSecData, "c9");
         gr->Plot(*secWaveData, "G");
         gr->Plot(*dpData, "R9");
 
-        gr->MultiPlot(1, 15, 5, 1, 1, "#");
+        gr->MultiPlot(1, 15, 4, 1, 1, "#");
         gr->Puts(mglPoint(0,0),QString("%1%").arg(this->result).toLocal8Bit().data(), ":C", 24);
 
         qDebug() << "errorData";
