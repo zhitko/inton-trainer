@@ -106,7 +106,7 @@ int DrawerDP::Draw(mglGraph *gr)
     gr->MultiPlot(1, 12, 11, 1, 1, "#");
     gr->Puts(
         mglPoint(0,0),
-        QString("F0 min = %1 max = %2 (origin  min = %3 max = %4)").arg(this->f0mix).arg(this->f0max).arg(this->of0mix).arg(this->of0max).toLocal8Bit().data(),
+        QString("F0 min = %1 max = %2").arg(this->f0mix).arg(this->f0max).toLocal8Bit().data(),
         ":C",
         24
     );
@@ -132,7 +132,13 @@ int DrawerDP::Draw(mglGraph *gr)
         if(sptk_settings->dp->showF0) gr->Plot(*this->secPitchData, "-R3");
         if(sptk_settings->dp->showA0) gr->Plot(*this->secIntensiveData, "-G3");
 
-//        gr->MultiPlot(1, 12, 5, 1, 1, "#");
+        gr->MultiPlot(3, 12, 33, 1, 1, "#");
+        gr->Puts(
+            mglPoint(0,0),
+            QString("Error min = %1 max = %2").arg(this->errorMin).arg(this->errorMax).toLocal8Bit().data(),
+            ":C",
+            24
+        );
     }
 
     qDebug() << "finish drawing";
