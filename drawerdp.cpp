@@ -45,8 +45,8 @@ DrawerDP::DrawerDP() :
     this->result = 0.0;
     this->f0max = 0;
     this->f0mix = 0;
-    this->of0max = 0;
-    this->of0mix = 0;
+    this->userf0max = 0;
+    this->userf0min = 0;
 }
 
 DrawerDP::~DrawerDP()
@@ -101,7 +101,7 @@ int DrawerDP::Draw(mglGraph *gr)
     gr->MultiPlot(1, 15, 13, 1, 1, "#");
     gr->Puts(
         mglPoint(0,0),
-        QString("F0 min = %1 max = %2").arg(this->f0mix).arg(this->f0max).toLocal8Bit().data(),
+        QString("Template F0 min = %1 max = %2").arg(this->f0mix).arg(this->f0max).toLocal8Bit().data(),
         ":C",
         24
     );
@@ -131,6 +131,14 @@ int DrawerDP::Draw(mglGraph *gr)
         gr->Puts(
             mglPoint(0,0),
             QString("Error min = %1 max = %2").arg(this->errorMin).arg(this->errorMax).toLocal8Bit().data(),
+            ":C",
+            24
+        );
+
+        gr->MultiPlot(3, 15, 41, 1, 1, "#");
+        gr->Puts(
+            mglPoint(0,0),
+            QString("User F0 min = %1 max = %2").arg(this->userf0min).arg(this->userf0max).toLocal8Bit().data(),
             ":C",
             24
         );
@@ -397,8 +405,6 @@ void DrawerDP::Proc(QString fname)
 
         this->f0max = mm.max;
         this->f0mix = mm.min;
-        this->of0max = this->simple_data->d_pitch_originl.v[maxv(this->simple_data->d_pitch_originl)];
-        this->of0mix = this->simple_data->d_pitch_originl.v[minv(this->simple_data->d_pitch_originl)];
 
         freev(pitch_cutted);
         qDebug() << "pitchData Filled";
@@ -500,7 +506,9 @@ void DrawerDP::Proc(QString fname)
 
         vector pitch_cutted = cutv(dataSec->d_pitch_originl, startPos, endPos);
         applyMapping(&pitch_cutted, &mapping);
-        applyMask(&pitch_cutted, &this->simple_data->d_mask);
+        MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_mask);
+        this->userf0max = mm.max;
+        this->userf0min = mm.min;
         this->secPitchData = createMglData(pitch_cutted, this->secPitchData, true);
         qDebug() << "pitchData Filled " << dataSec->d_pitch.x;
         qDebug() << "intensiveData Filled " << this->pitchData->nx;
