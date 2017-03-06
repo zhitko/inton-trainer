@@ -154,7 +154,6 @@ void GraphsWindow::startRecord()
 
 void GraphsWindow::stopRecord()
 {
-//    return this->stopRecord(this->recorder);
     this->recorder->stopRecording();
 }
 

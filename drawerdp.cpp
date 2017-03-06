@@ -390,7 +390,6 @@ double calculateResultD(vector x, vector y)
     {
         result += (x.v[i]-y.v[i])*(x.v[i]-y.v[i]);
     }
-//    return result;
     result = sqrt(result) / i;
     return round((1-fabs(result))*100);
 }
@@ -402,7 +401,6 @@ void DrawerDP::Proc(QString fname)
     if(first)
     {
         qDebug() << "Drawer::Proc";
-//        Drawer::Proc(fname);
         first = false;
 
         this->fileName = fname;

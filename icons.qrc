@@ -21,5 +21,7 @@
         <file>icons/trophy-26.png</file>
         <file>icons/pause26.png</file>
         <file>icons/pause.png</file>
+        <file>icons/voice_recognition_scan-64-off.png</file>
+        <file>icons/pause-off.png</file>
     </qresource>
 </RCC>

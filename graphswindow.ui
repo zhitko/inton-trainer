@@ -139,7 +139,9 @@
              </property>
              <property name="icon">
               <iconset resource="icons.qrc">
-               <normaloff>:/icons/icons/voice_recognition_scan-64.png</normaloff>:/icons/icons/voice_recognition_scan-64.png</iconset>
+               <normaloff>:/icons/icons/voice_recognition_scan-64.png</normaloff>
+               <disabledoff>:/icons/icons/voice_recognition_scan-64-off.png</disabledoff>
+               <disabledon>:/icons/icons/voice_recognition_scan-64-off.png</disabledon>:/icons/icons/voice_recognition_scan-64.png</iconset>
              </property>
              <property name="iconSize">
               <size>
@@ -162,7 +164,8 @@
              </property>
              <property name="icon">
               <iconset resource="icons.qrc">
-               <normaloff>:/icons/icons/pause.png</normaloff>:/icons/icons/pause.png</iconset>
+               <normaloff>:/icons/icons/pause.png</normaloff>
+               <disabledoff>:/icons/icons/pause-off.png</disabledoff>:/icons/icons/pause.png</iconset>
              </property>
              <property name="iconSize">
               <size>
@@ -190,7 +193,9 @@
            </property>
            <property name="icon">
             <iconset resource="icons.qrc">
-             <normaloff>:/icons/icons/voice_recognition_scan-26.png</normaloff>:/icons/icons/voice_recognition_scan-26.png</iconset>
+             <normaloff>:/icons/icons/voice_recognition_scan-26.png</normaloff>
+             <disabledoff>:/icons/icons/voice_recognition_scan-64-off.png</disabledoff>
+             <disabledon>:/icons/icons/voice_recognition_scan-64-off.png</disabledon>:/icons/icons/voice_recognition_scan-26.png</iconset>
            </property>
            <property name="toolButtonStyle">
             <enum>Qt::ToolButtonTextBesideIcon</enum>
