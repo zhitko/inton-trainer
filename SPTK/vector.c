@@ -280,6 +280,25 @@ int minv(vector yr_vector) {
     return(index);
 }
 
+
+double midv(vector yr_vector) {
+    int i;
+    double val = 0.0;
+    for (i = 0; i < yr_vector.x; i++) {
+        val += yr_vector.v[i] / yr_vector.x;
+    }
+    return(val);
+}
+
+double sumv(vector yr_vector) {
+    int i;
+    double val = 0.0;
+    for (i = 0; i < yr_vector.x; i++) {
+        val += yr_vector.v[i];
+    }
+    return(val);
+}
+
 // find the bisection index of the vector for key
 int bisectv(vector yr_vector, double key) { 
     int md;                                

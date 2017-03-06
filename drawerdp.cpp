@@ -365,6 +365,23 @@ void getMark(vector * vec, MaskData * points)
     }
 }
 
+double calculateResult(vector x, vector y)
+{
+    double result = 0;
+    double my = midv(y);
+    double mx = midv(x);
+    double xx = 0.0;
+    double yy = 0.0;
+    for(int i=0; i<x.x && i<y.x; i++)
+    {
+        result += (x.v[i]-mx)*(y.v[i]-my);
+        xx += (x.v[i]-mx)*(x.v[i]-mx);
+        yy += (y.v[i]-my)*(y.v[i]-my);
+    }
+    result = result / sqrt(xx*yy);
+    return result;
+}
+
 void DrawerDP::Proc(QString fname)
 {
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
@@ -516,16 +533,7 @@ void DrawerDP::Proc(QString fname)
         vector o_pitch_cutted = copyv(this->simple_data->d_pitch_originl);
         applyMask(&o_pitch_cutted, &this->simple_data->d_mask);
 
-        this->result = 0;
-        int i = 0;
-        for (i=0; i<o_pitch_cutted.x && i<pitch_cutted.x; i++)
-        {
-            this->result += fabs(o_pitch_cutted.v[i] - pitch_cutted.v[i]);
-        }
-        this->result /= 1.0*i;
-        this->result = 1.0 - this->result;
-        this->result *= 100;
-        this->result = round(this->result);
+        this->result = round(calculateResult(o_pitch_cutted, pitch_cutted)*100);
         freev(o_pitch_cutted);
         freev(pitch_cutted);
 

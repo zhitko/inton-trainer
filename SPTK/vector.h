@@ -84,6 +84,8 @@ double                            getv(vector, int);
 
 int                               maxv(vector);
 int                               minv(vector);
+double                            midv(vector);
+double                            sumv(vector);
 int                               bisectv(vector, double);
 int                               bilookv(vector, double, int);
 
