@@ -45,7 +45,7 @@
             <x>0</x>
             <y>0</y>
             <width>528</width>
-            <height>787</height>
+            <height>846</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -259,6 +259,36 @@
                   <property name="value">
                    <number>16</number>
                   </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupBox_12">
+               <property name="title">
+                <string>Расчет ошибки</string>
+               </property>
+               <layout class="QFormLayout" name="formLayout_11">
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_20">
+                  <property name="text">
+                   <string>Мера подобия</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QComboBox" name="errorTypeBox">
+                  <item>
+                   <property name="text">
+                    <string>П% = |r|*100</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>П% = (1 - |d|)*100</string>
+                   </property>
+                  </item>
                  </widget>
                 </item>
                </layout>

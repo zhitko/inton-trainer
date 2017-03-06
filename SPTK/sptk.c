@@ -93,6 +93,7 @@ DP_SETTINGS *initDpSettings()
     dp->showOriginalF0 = 0;
     dp->showError = 0;
     dp->showTime = 0;
+    dp->errorType = 0;
     return dp;
 }
 

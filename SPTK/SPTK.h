@@ -184,6 +184,8 @@ typedef struct _DP_SETTINGS {
     int showOriginalF0;
     int showTime;
     int showError;
+
+    int errorType; // 0 - r; 1 - d
 } DP_SETTINGS;
 
 typedef struct _SPEC_SETTINGS {

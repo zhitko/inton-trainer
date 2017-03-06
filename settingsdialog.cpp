@@ -146,6 +146,7 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->dp->showF0 = instance->ui->showF0->isChecked();
     sptk_settings->dp->showOriginalF0 = instance->ui->showOriginalF0->isChecked();
     sptk_settings->dp->showTime = instance->ui->showTime->isChecked();
+    sptk_settings->dp->errorType = instance->ui->errorTypeBox->currentIndex();
 
     return sptk_settings;
 }
@@ -242,6 +243,8 @@ void SettingsDialog::loadSettings()
         this->ui->showOriginalF0->setChecked(settings.value("dp/showOriginalF0").toBool());
     if(settings.contains("dp/showTime"))
         this->ui->showTime->setChecked(settings.value("dp/showTime").toBool());
+    if(settings.contains("error/type"))
+        this->ui->errorTypeBox->setCurrentIndex(settings.value("error/type").toInt());
 
 
     if(settings.contains("frame/leng"))
@@ -325,6 +328,7 @@ void SettingsDialog::saveSettings()
     settings.setValue("dp/showF0", this->ui->showF0->isChecked());
     settings.setValue("dp/showOriginalF0", this->ui->showOriginalF0->isChecked());
     settings.setValue("dp/showTime", this->ui->showTime->isChecked());
+    settings.setValue("error/type", this->ui->errorTypeBox->currentIndex());
 
     settings.setValue("mathGL/quality", this->ui->mathGLQualitySpin->value());
     settings.setValue("mathGL/autoOpen", this->ui->isAutoOpen->isChecked());

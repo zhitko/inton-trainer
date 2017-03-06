@@ -365,7 +365,7 @@ void getMark(vector * vec, MaskData * points)
     }
 }
 
-double calculateResult(vector x, vector y)
+double calculateResultR(vector x, vector y)
 {
     double result = 0;
     double my = midv(y);
@@ -379,7 +379,20 @@ double calculateResult(vector x, vector y)
         yy += (y.v[i]-my)*(y.v[i]-my);
     }
     result = result / sqrt(xx*yy);
-    return result;
+    return round(fabs(result)*100);
+}
+
+double calculateResultD(vector x, vector y)
+{
+    double result = 0;
+    int i = 0;
+    for(i=0; i<x.x && i<y.x; i++)
+    {
+        result += (x.v[i]-y.v[i])*(x.v[i]-y.v[i]);
+    }
+//    return result;
+    result = sqrt(result) / i;
+    return round((1-fabs(result))*100);
 }
 
 void DrawerDP::Proc(QString fname)
@@ -533,7 +546,16 @@ void DrawerDP::Proc(QString fname)
         vector o_pitch_cutted = copyv(this->simple_data->d_pitch_originl);
         applyMask(&o_pitch_cutted, &this->simple_data->d_mask);
 
-        this->result = round(calculateResult(o_pitch_cutted, pitch_cutted)*100);
+        qDebug() << "sptk_settings->dp->errorType " << sptk_settings->dp->errorType;
+        switch (sptk_settings->dp->errorType) {
+        case 0:
+            this->result = calculateResultR(o_pitch_cutted, pitch_cutted);
+            break;
+        case 1:
+            this->result = calculateResultD(o_pitch_cutted, pitch_cutted);
+            break;
+        }
+
         freev(o_pitch_cutted);
         freev(pitch_cutted);
 
