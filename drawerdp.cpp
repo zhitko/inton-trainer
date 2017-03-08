@@ -282,9 +282,9 @@ MinMax applyMask(vector * data, vector * mask)
     qDebug() << "scaledMask";
     vector cuttedData = vector_cut_by_mask(*data, scaledMask);
     qDebug() << "newData";
-    min = cuttedData.v[min_greaterv(cuttedData, 0.0)];
-    max = cuttedData.v[maxv(cuttedData)];
     vector dataMid = mid(cuttedData, sptk_settings->plotF0->midFrame);
+    min = dataMid.v[min_greaterv(dataMid, 0.0)];
+    max = dataMid.v[maxv(dataMid)];
     qDebug() << "pitch_mid";
     vector newDataNorm = norm(dataMid, 0.0, 1.0, !sptk_settings->plotF0->normF0MinMax);
     qDebug() << "newDataNorm";    
@@ -385,13 +385,12 @@ double calculateResultR(vector x, vector y)
 double calculateResultD(vector x, vector y)
 {
     double result = 0;
-    int i = 0;
-    for(i=0; i<x.x && i<y.x; i++)
+    for(int i=0; i<x.x && i<y.x; i++)
     {
         result += (x.v[i]-y.v[i])*(x.v[i]-y.v[i]);
     }
-    result = sqrt(result) / i;
-    return round((1-fabs(result))*100);
+    result = sqrt(result) / sqrt(x.x);
+    return round((1-result)*100);
 }
 
 void DrawerDP::Proc(QString fname)
@@ -460,8 +459,8 @@ void DrawerDP::Proc(QString fname)
         qDebug() << "data->d_spec " << this->simple_data->d_spec.x;
         qDebug() << "dataSec->d_spec " << dataSec->d_spec.x;
         ContinuousDP dp(
-            new SpectrSignal(copyv(this->simple_data->d_spec), speksize),
-            new SpectrSignal(copyv(dataSec->d_spec), speksize),
+            new SpectrSignal(copyv(this->simple_data->d_spec_proc), speksize),
+            new SpectrSignal(copyv(dataSec->d_spec_proc), speksize),
             1,
             sptk_settings->dp->continiusLimit
         );
