@@ -178,31 +178,6 @@
           </layout>
          </item>
          <item>
-          <widget class="QToolButton" name="startAutoRecordBtn">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="layoutDirection">
-            <enum>Qt::LeftToRight</enum>
-           </property>
-           <property name="text">
-            <string>Start autorecording</string>
-           </property>
-           <property name="icon">
-            <iconset resource="icons.qrc">
-             <normaloff>:/icons/icons/voice_recognition_scan-26.png</normaloff>
-             <disabledoff>:/icons/icons/voice_recognition_scan-64-off.png</disabledoff>
-             <disabledon>:/icons/icons/voice_recognition_scan-64-off.png</disabledon>:/icons/icons/voice_recognition_scan-26.png</iconset>
-           </property>
-           <property name="toolButtonStyle">
-            <enum>Qt::ToolButtonTextBesideIcon</enum>
-           </property>
-          </widget>
-         </item>
-         <item>
           <spacer name="verticalSpacer_2">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
@@ -264,6 +239,31 @@
               <property name="icon">
                <iconset resource="icons.qrc">
                 <normaloff>:/icons/icons/voice_recognition_scan-26.png</normaloff>:/icons/icons/voice_recognition_scan-26.png</iconset>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QToolButton" name="startAutoRecordBtn">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="layoutDirection">
+               <enum>Qt::LeftToRight</enum>
+              </property>
+              <property name="text">
+               <string>Start autorecording</string>
+              </property>
+              <property name="icon">
+               <iconset resource="icons.qrc">
+                <normaloff>:/icons/icons/voice_recognition_scan-26.png</normaloff>
+                <disabledoff>:/icons/icons/voice_recognition_scan-64-off.png</disabledoff>
+                <disabledon>:/icons/icons/voice_recognition_scan-64-off.png</disabledon>:/icons/icons/voice_recognition_scan-26.png</iconset>
+              </property>
+              <property name="toolButtonStyle">
+               <enum>Qt::ToolButtonTextBesideIcon</enum>
               </property>
              </widget>
             </item>
