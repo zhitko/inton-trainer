@@ -425,22 +425,31 @@ void DrawerDP::Proc(QString fname)
         freev(nVector);
         freev(tVector);
 
-        vector pitch_cutted = copyv(this->simple_data->d_pitch_originl);
-        MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_mask);
-        this->pitchData = createMglData(pitch_cutted, this->pitchData, true);
-        this->pitchData->Norm();
+        if(sptk_settings->dp->showF0)
+        {
+            vector pitch_cutted = copyv(this->simple_data->d_pitch_originl);
+            MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_mask);
+            this->pitchData = createMglData(pitch_cutted, this->pitchData, true);
+            this->pitchData->Norm();
 
-        this->f0max = mm.max;
-        this->f0mix = mm.min;
+            this->f0max = mm.max;
+            this->f0mix = mm.min;
 
-        freev(pitch_cutted);
-        qDebug() << "pitchData Filled";
+            freev(pitch_cutted);
+            qDebug() << "pitchData Filled";
+        }
 
-        this->pitchDataOriginal = createMglData(this->simple_data->d_pitch_originl, this->pitchDataOriginal, true);
-        this->pitchDataOriginal->Norm();
+        if(sptk_settings->dp->showOriginalF0)
+        {
+            this->pitchDataOriginal = createMglData(this->simple_data->d_pitch_originl, this->pitchDataOriginal, true);
+            this->pitchDataOriginal->Norm();
+        }
 
-        this->intensiveData = createMglData(this->simple_data->d_intensive, this->intensiveData);
-        this->intensiveData->Norm();
+        if(sptk_settings->dp->showA0)
+        {
+            this->intensiveData = createMglData(this->simple_data->d_intensive, this->intensiveData);
+            this->intensiveData->Norm();
+        }
 
         qDebug() << "intensiveData Filled";
     }
@@ -536,14 +545,14 @@ void DrawerDP::Proc(QString fname)
         MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_mask);
         this->userf0max = mm.max;
         this->userf0min = mm.min;
-        this->secPitchData = createMglData(pitch_cutted, this->secPitchData, true);
-        qDebug() << "pitchData Filled " << dataSec->d_pitch.x;
-        qDebug() << "intensiveData Filled " << this->pitchData->nx;
-
-        vector o_pitch_cutted = copyv(this->simple_data->d_pitch_originl);
-        applyMask(&o_pitch_cutted, &this->simple_data->d_mask);
+        if(sptk_settings->dp->showF0)
+        {
+            this->secPitchData = createMglData(pitch_cutted, this->secPitchData, true);
+        }
 
         qDebug() << "sptk_settings->dp->errorType " << sptk_settings->dp->errorType;
+        vector o_pitch_cutted = copyv(this->simple_data->d_pitch_originl);
+        applyMask(&o_pitch_cutted, &this->simple_data->d_mask);
         switch (sptk_settings->dp->errorType) {
         case 0:
             this->result = calculateResultR(o_pitch_cutted, pitch_cutted);
@@ -556,13 +565,16 @@ void DrawerDP::Proc(QString fname)
         freev(o_pitch_cutted);
         freev(pitch_cutted);
 
-        vector intensive_cutted = cutv(dataSec->d_intensive, startPos, endPos);
-        applyMapping(&intensive_cutted, &mapping);
-        this->secIntensiveData = createMglData(intensive_cutted, this->secIntensiveData);
-        this->secIntensiveData->Norm();
-        freev(intensive_cutted);
+        if(sptk_settings->dp->showA0)
+        {
+            vector intensive_cutted = cutv(dataSec->d_intensive, startPos, endPos);
+            applyMapping(&intensive_cutted, &mapping);
+            this->secIntensiveData = createMglData(intensive_cutted, this->secIntensiveData);
+            this->secIntensiveData->Norm();
+            freev(intensive_cutted);
 
-        qDebug() << "intensiveData Filled " << this->secIntensiveData->nx;
+            qDebug() << "intensiveData Filled " << this->secIntensiveData->nx;
+        }
 
         freeiv(mapping);
 
