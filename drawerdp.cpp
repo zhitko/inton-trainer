@@ -42,9 +42,10 @@ DrawerDP::DrawerDP() :
     this->secIntensiveData = NULL;
     this->errorMax = 0;
     this->errorMin = 0;
-    this->result = 0.0;
+    this->ps = 0.0;
+    this->pr = 0.0;
     this->f0max = 0;
-    this->f0mix = 0;
+    this->f0min = 0;
     this->userf0max = 0;
     this->userf0min = 0;
 }
@@ -101,7 +102,7 @@ int DrawerDP::Draw(mglGraph *gr)
     gr->MultiPlot(1, 15, 13, 1, 1, "#");
     gr->Puts(
         mglPoint(0,0),
-        QString("Template F0 min = %1 max = %2").arg(this->f0mix).arg(this->f0max).toLocal8Bit().data(),
+        QString("Template F0 min = %1 max = %2").arg(this->f0min).arg(this->f0max).toLocal8Bit().data(),
         ":C",
         24
     );
@@ -117,7 +118,12 @@ int DrawerDP::Draw(mglGraph *gr)
         gr->Plot(*dpData, "R9");
 
         gr->MultiPlot(1, 15, 4, 1, 1, "#");
-        gr->Puts(mglPoint(0,0),QString("%1%").arg(this->result).toLocal8Bit().data(), ":C", 24);
+        gr->Puts(
+            mglPoint(0,0),
+            QString("Proximity to curve shape: Ps = %1% \t Proximity to the range: Pr = %2%").arg(this->ps).arg(this->pr).toLocal8Bit().data(),
+            ":C",
+            24
+        );
 
         qDebug() << "errorData";
         gr->MultiPlot(1, 15, 6, 1, 6, "#");
@@ -433,7 +439,7 @@ void DrawerDP::Proc(QString fname)
             this->pitchData->Norm();
 
             this->f0max = mm.max;
-            this->f0mix = mm.min;
+            this->f0min = mm.min;
 
             freev(pitch_cutted);
             qDebug() << "pitchData Filled";
@@ -550,15 +556,17 @@ void DrawerDP::Proc(QString fname)
             this->secPitchData = createMglData(pitch_cutted, this->secPitchData, true);
         }
 
+        this->pr = round((1.0 - fabs(1.0*this->f0max/this->f0min - 1.0*this->userf0max/this->userf0min))*100);
+
         qDebug() << "sptk_settings->dp->errorType " << sptk_settings->dp->errorType;
         vector o_pitch_cutted = copyv(this->simple_data->d_pitch_originl);
         applyMask(&o_pitch_cutted, &this->simple_data->d_mask);
         switch (sptk_settings->dp->errorType) {
         case 0:
-            this->result = calculateResultR(o_pitch_cutted, pitch_cutted);
+            this->ps = calculateResultR(o_pitch_cutted, pitch_cutted);
             break;
         case 1:
-            this->result = calculateResultD(o_pitch_cutted, pitch_cutted);
+            this->ps = calculateResultD(o_pitch_cutted, pitch_cutted);
             break;
         }
 

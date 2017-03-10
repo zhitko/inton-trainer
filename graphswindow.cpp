@@ -39,7 +39,6 @@ GraphsWindow::GraphsWindow(QWidget *parent) :
     recorder(NULL)
 {
     this->initUI();
-    this->ui->fileNameLabel->setText(tr("Training"));
 
     setAttribute( Qt::WA_DeleteOnClose );
 }
@@ -58,8 +57,6 @@ GraphsWindow::GraphsWindow(QString path, QWidget *parent) :
     setAttribute( Qt::WA_DeleteOnClose );
 
     this->fileName = path.left(path.length()-4);
-
-    this->ui->fileNameLabel->setText(QUrl(path).fileName());
 
     this->ui->tabWidget->removeTab(
         this->ui->tabWidget->indexOf(this->ui->tab_training)
