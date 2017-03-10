@@ -120,7 +120,7 @@ int DrawerDP::Draw(mglGraph *gr)
         gr->MultiPlot(1, 15, 4, 1, 1, "#");
         gr->Puts(
             mglPoint(0,0),
-            QString("Proximity to curve shape: Ps = %1% \t Proximity to the range: Pr = %2%").arg(this->ps).arg(this->pr).toLocal8Bit().data(),
+            QString("Proximity to curve shape: \\big{Ps = %1%} \t Proximity to the range: \\big{Pr = %2%}").arg(this->ps).arg(this->pr).toLocal8Bit().data(),
             ":C",
             24
         );
