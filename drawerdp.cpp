@@ -120,7 +120,7 @@ int DrawerDP::Draw(mglGraph *gr)
         gr->MultiPlot(1, 15, 4, 1, 1, "#");
         gr->Puts(
             mglPoint(0,0),
-            QString("Proximity to curve shape: \\big{Ps = %1%} \t Proximity to the range: \\big{Pr = %2%}").arg(this->ps).arg(this->pr).toLocal8Bit().data(),
+            QString("Proximity to curve shape: \\big{Ps = %1%} \t Proximity to the range: \\big{Pr = %2%").arg(this->ps).arg(this->pr).toLocal8Bit().data(),
             ":C",
             24
         );
@@ -555,8 +555,14 @@ void DrawerDP::Proc(QString fname)
         {
             this->secPitchData = createMglData(pitch_cutted, this->secPitchData, true);
         }
-
-        this->pr = round((1.0 - fabs(1.0*this->f0max/this->f0min - 1.0*this->userf0max/this->userf0min))*100);
+//        this->pr = round((1.0 - fabs(1.0*this->f0max/this->f0min - 1.0*this->userf0max/this->userf0min))*100);
+        double user_max = 1.0*this->userf0max;
+        double user_min = 1.0*this->userf0min;
+        double template_max = 1.0*this->f0max;
+        double template_min = 1.0*this->f0min;
+        if (user_min == 0) user_min = 1;
+        if (template_min == 0) template_min = 1;
+        this->pr = round( (user_max/user_min)/(template_max/template_min) )*100;
 
         qDebug() << "sptk_settings->dp->errorType " << sptk_settings->dp->errorType;
         vector o_pitch_cutted = copyv(this->simple_data->d_pitch_originl);
