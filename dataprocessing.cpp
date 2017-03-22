@@ -11,6 +11,7 @@ extern "C" {
     #include "./SPTK/frame/frame.h"
     #include "./SPTK/window/window.h"
     #include "./SPTK/lpc/lpc.h"
+    #include "./SPTK/lpc2c/lpc2c.h"
     #include "./SPTK/spec/spec.h"
     #include "./others/func.h"
     #include "./others/interpolation.h"
@@ -386,7 +387,10 @@ SimpleGraphData * SimpleProcWave2Data(QString fname)
     qDebug() << "window";
 
     vector lpc = sptk_lpc(frame, sptk_settings->lpc);
-    qDebug() << "lpc";
+    qDebug() << "lpc " << lpc.x;
+
+    vector lpc2c = sptk_lpc2c(lpc, sptk_settings->lpc);
+    qDebug() << "lpc2c " << lpc2c.x;
 
     vector spec = sptk_spec(lpc, sptk_settings->spec);
     qDebug() << "spec " << maxv(spec);
@@ -449,6 +453,7 @@ SimpleGraphData * SimpleProcWave2Data(QString fname)
     data->d_intensive = intensive_mid;
     data->d_spec_proc = spec_proc;
     data->d_spec = spec;
+    data->d_cepstrum = lpc2c;
     data->d_mask = mask;
 
     data->md_p = md_p;

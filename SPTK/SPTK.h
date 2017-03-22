@@ -164,6 +164,7 @@ typedef struct _WINDOW_SETTINGS {
 typedef struct _LPC_SETTINGS {
     int leng;
     int order;
+    int cepstrum_order;
 } LPC_SETTINGS;
 
 typedef struct _MOVE_SETTINGS {
@@ -186,6 +187,8 @@ typedef struct _DP_SETTINGS {
     int showError;
 
     int errorType; // 0 - r; 1 - d
+
+    int useForDP; // 0 - Spectr; 1 - Cepstrum
 } DP_SETTINGS;
 
 typedef struct _SPEC_SETTINGS {

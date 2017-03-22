@@ -21,6 +21,7 @@ struct SimpleGraphData{
     vector d_intensive;
     vector d_spec_proc;
     vector d_spec;
+    vector d_cepstrum;
     vector d_mask;
 
     MaskData md_p;

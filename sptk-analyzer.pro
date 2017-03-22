@@ -209,8 +209,8 @@ SOURCES +=  \
 #    SPTK/linear_intpl/linear_intpl.c \
 #    SPTK/lmadf/lmadf.c \
 #    SPTK/lmadf/_lmadf.c \
-#    SPTK/lpc2c/lpc2c.c \
-#    SPTK/lpc2c/_lpc2c.c \
+    SPTK/lpc2c/lpc2c.c \
+    SPTK/lpc2c/_lpc2c.c \
 #    SPTK/lpc2lsp/lpc2lsp.c \
 #    SPTK/lpc2lsp/_lpc2lsp.c \
 #    SPTK/lpc2par/lpc2par.c \
@@ -327,6 +327,7 @@ HEADERS  += \
 #    SPTK/fig+fdrw/fig.h \
 #    SPTK/fig+fdrw/plot.h \
     SPTK/lpc/lpc.h \
+    SPTK/lpc2c/lpc2c.h \
     SPTK/pitch/pitch.h \
     SPTK/pitch/snack/jkGetF0.h \
     SPTK/frame/frame.h \

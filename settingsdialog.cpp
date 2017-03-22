@@ -123,6 +123,7 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->window->window_type = static_cast<Window>(instance->ui->windoTypeBox->currentIndex());
     sptk_settings->lpc->leng = instance->ui->frameSizeBox->currentText().toInt();
     sptk_settings->lpc->order = instance->ui->lpcOrderSpin->value();
+    sptk_settings->lpc->cepstrum_order = instance->ui->lpcCepstrumOrderSpin->value();
     sptk_settings->spec->leng = instance->ui->frameSizeBox->currentText().toInt();
     sptk_settings->spec->order = instance->ui->lpcOrderSpin->value();
 
@@ -147,6 +148,7 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->dp->showOriginalF0 = instance->ui->showOriginalF0->isChecked();
     sptk_settings->dp->showTime = instance->ui->showTime->isChecked();
     sptk_settings->dp->errorType = instance->ui->errorTypeBox->currentIndex();
+    sptk_settings->dp->useForDP = instance->ui->useForDP->currentIndex();
 
     return sptk_settings;
 }
@@ -245,6 +247,8 @@ void SettingsDialog::loadSettings()
         this->ui->showTime->setChecked(settings.value("dp/showTime").toBool());
     if(settings.contains("error/type"))
         this->ui->errorTypeBox->setCurrentIndex(settings.value("error/type").toInt());
+    if(settings.contains("dp/use"))
+        this->ui->useForDP->setCurrentIndex(settings.value("dp/use").toInt());
 
 
     if(settings.contains("frame/leng"))
@@ -259,6 +263,8 @@ void SettingsDialog::loadSettings()
 //        this->ui->frameSizeBox->setCurrentText(QString::number(settings.value("lpc/leng").toInt()));
     if(settings.contains("lpc/order"))
         this->ui->lpcOrderSpin->setValue(settings.value("lpc/order").toInt());
+    if(settings.contains("lpc/cepstrum_order"))
+        this->ui->lpcCepstrumOrderSpin->setValue(settings.value("lpc/cepstrum_order").toInt());
 //    if(settings.contains("spec/leng"))
 //        this->ui->frameSizeBox->setCurrentText(QString::number(settings.value("spec/leng").toInt()));
 //    if(settings.contains("spec/order"))
@@ -305,6 +311,7 @@ void SettingsDialog::saveSettings()
     settings.setValue("window/window_type", this->ui->windoTypeBox->currentText());
     settings.setValue("lpc/leng", this->ui->frameSizeBox->currentText().toInt());
     settings.setValue("lpc/order", this->ui->lpcOrderSpin->value());
+    settings.setValue("lpc/cepstrum_order", this->ui->lpcCepstrumOrderSpin->value());
     settings.setValue("spec/leng", this->ui->frameSizeBox->currentText().toInt());
     settings.setValue("spec/order", this->ui->lpcOrderSpin->value());
 
@@ -329,6 +336,7 @@ void SettingsDialog::saveSettings()
     settings.setValue("dp/showOriginalF0", this->ui->showOriginalF0->isChecked());
     settings.setValue("dp/showTime", this->ui->showTime->isChecked());
     settings.setValue("error/type", this->ui->errorTypeBox->currentIndex());
+    settings.setValue("dp/use", this->ui->useForDP->currentIndex());
 
     settings.setValue("mathGL/quality", this->ui->mathGLQualitySpin->value());
     settings.setValue("mathGL/autoOpen", this->ui->isAutoOpen->isChecked());

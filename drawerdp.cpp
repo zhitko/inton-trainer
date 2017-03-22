@@ -470,12 +470,28 @@ void DrawerDP::Proc(QString fname)
         qDebug() << "waveData New Filled";
 
         qDebug() << "Start DP";
-        int speksize = sptk_settings->spec->leng / 2 + 1;
-        qDebug() << "data->d_spec " << this->simple_data->d_spec.x;
-        qDebug() << "dataSec->d_spec " << dataSec->d_spec.x;
+        SpectrSignal * firstSignal;
+        SpectrSignal * secondSignal;
+        if (sptk_settings->dp->useForDP == 0)
+        {
+            int speksize = sptk_settings->spec->leng / 2 + 1;
+            qDebug() << "data->d_spec " << this->simple_data->d_spec.x;
+            qDebug() << "dataSec->d_spec " << dataSec->d_spec.x;
+            firstSignal = new SpectrSignal(copyv(this->simple_data->d_spec_proc), speksize);
+            secondSignal = new SpectrSignal(copyv(dataSec->d_spec_proc), speksize);
+        }
+        if (sptk_settings->dp->useForDP == 1)
+        {
+            int speksize = sptk_settings->lpc->cepstrum_order + 1;
+            qDebug() << "data->d_cepstrum " << this->simple_data->d_cepstrum.x;
+            qDebug() << "dataSec->d_cepstrum " << dataSec->d_cepstrum.x;
+            firstSignal = new SpectrSignal(copyv(this->simple_data->d_cepstrum), speksize);
+            secondSignal = new SpectrSignal(copyv(dataSec->d_cepstrum), speksize);
+        }
+
         ContinuousDP dp(
-            new SpectrSignal(copyv(this->simple_data->d_spec_proc), speksize),
-            new SpectrSignal(copyv(dataSec->d_spec_proc), speksize),
+            firstSignal,
+            secondSignal,
             1,
             sptk_settings->dp->continiusLimit
         );
@@ -555,6 +571,7 @@ void DrawerDP::Proc(QString fname)
         {
             this->secPitchData = createMglData(pitch_cutted, this->secPitchData, true);
         }
+
 //        this->pr = round((1.0 - fabs(1.0*this->f0max/this->f0min - 1.0*this->userf0max/this->userf0min))*100);
         double user_max = 1.0*this->userf0max;
         double user_min = 1.0*this->userf0min;

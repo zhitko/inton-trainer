@@ -48,6 +48,7 @@ LPC_SETTINGS *initLpcSettings()
     LPC_SETTINGS * lpc = malloc(sizeof(LPC_SETTINGS));
     lpc->leng = 512;
     lpc->order = 25;
+    lpc->cepstrum_order = 25;
     return lpc;
 }
 
@@ -94,6 +95,7 @@ DP_SETTINGS *initDpSettings()
     dp->showError = 0;
     dp->showTime = 0;
     dp->errorType = 0;
+    dp->useForDP = 0;
     return dp;
 }
 

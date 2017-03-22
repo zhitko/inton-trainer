@@ -88,74 +88,42 @@ static char *rcs_id = "$Id: lpc2c.c,v 1.23 2013/12/16 09:01:59 mataki Exp $";
 #  include <SPTK.h>
 #endif
 
+#  include "lpc2c.h"
+
 /*  Default Values  */
 #define ORDERC  25
 #define ORDERA  25
 
-/*  Command Name  */
-char *cmnd;
-
-
-void usage(int status)
+vector sptk_lpc2c(vector data, LPC_SETTINGS * settings)
 {
-   fprintf(stderr, "\n");
-   fprintf(stderr, " %s - transform LPC to cepstrum\n", cmnd);
-   fprintf(stderr, "\n");
-   fprintf(stderr, "  usage:\n");
-   fprintf(stderr, "       %s [ options ] [ infile ] > stdout\n", cmnd);
-   fprintf(stderr, "  options:\n");
-   fprintf(stderr, "       -m m  : order of LPC       [%d]\n", ORDERA);
-   fprintf(stderr, "       -M M  : order of cepstrum  [%d]\n", ORDERC);
-   fprintf(stderr, "       -h    : print this message\n");
-   fprintf(stderr, "  infile:\n");
-   fprintf(stderr, "       LP coefficients (%s)    [stdin]\n", FORMAT);
-   fprintf(stderr, "  stdout:\n");
-   fprintf(stderr, "       cepstrum (%s)\n", FORMAT);
-#ifdef PACKAGE_VERSION
-   fprintf(stderr, "\n");
-   fprintf(stderr, " SPTK: version %s\n", PACKAGE_VERSION);
-   fprintf(stderr, " CVS Info: %s", rcs_id);
-#endif
-   fprintf(stderr, "\n");
-   exit(status);
-}
+   int m = ORDERA, n = ORDERC, i, dPos, rPos;
 
-int main(int argc, char **argv)
-{
-   int m = ORDERA, n = ORDERC;
-   FILE *fp = stdin;
    double *c, *a;
 
-   if ((cmnd = strrchr(argv[0], '/')) == NULL)
-      cmnd = argv[0];
-   else
-      cmnd++;
-   while (--argc)
-      if (**++argv == '-') {
-         switch (*(*argv + 1)) {
-         case 'm':
-            m = atoi(*++argv);
-            --argc;
-            break;
-         case 'M':
-            n = atoi(*++argv);
-            --argc;
-            break;
-         case 'h':
-            usage(0);
-         default:
-            fprintf(stderr, "%s : Invalid option '%c'!\n", cmnd, *(*argv + 1));
-            usage(1);
-         }
-      } else
-         fp = getfp(*argv, "rb");
+   m = settings->order;
+   n = settings->cepstrum_order;
 
    a = dgetmem(m + n + 2);
    c = a + m + 1;
 
-   while (freadf(a, sizeof(*a), m + 1, fp) == m + 1) {
+   dPos = rPos = 0;
+
+   int rLen = data.x/(m + 1)*(n + 1);
+   vector res = zerov(rLen);
+
+   //while (freadf(a, sizeof(*a), m + 1, fp) == m + 1) {
+   while(1) {
+
+      for(i=0;i<(m + 1)&&(i+dPos)<data.x;i++) a[i] = data.v[i+dPos];
+      if(i != (m + 1)) break;
+      dPos += i;
+
       lpc2c(a, m, c, n);
-      fwritef(c, sizeof(*c), n + 1, stdout);
+//      fwritef(c, sizeof(*c), n + 1, stdout);
+
+      for(i=0;i<(n + 1);i++) res.v[i+rPos] = c[i];
+      rPos += i;
    }
-   return (0);
+
+   return res;
 }
