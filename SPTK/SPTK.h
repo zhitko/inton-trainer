@@ -180,11 +180,13 @@ typedef struct _DP_SETTINGS {
     double continiusKH;
     double continiusKT;
 
+    int portLen;
     int showA0;
     int showF0;
     int showOriginalF0;
     int showTime;
     int showError;
+    int showPortr;
 
     int errorType; // 0 - r; 1 - d
 

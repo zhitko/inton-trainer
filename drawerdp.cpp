@@ -24,6 +24,8 @@ extern "C" {
     #include "./SPTK/spec/spec.h"
 }
 
+typedef struct { int from; int len; int type; } MaskDetails;
+
 typedef struct { double min; double max; } MinMax;
 
 DrawerDP::DrawerDP() :
@@ -40,6 +42,8 @@ DrawerDP::DrawerDP() :
     this->tSecData = NULL;
     this->secPitchData = NULL;
     this->secIntensiveData = NULL;
+    this->portrData = NULL;
+    this->secPortrData = NULL;
     this->errorMax = 0;
     this->errorMin = 0;
     this->ps = 0.0;
@@ -63,7 +67,8 @@ DrawerDP::~DrawerDP()
     if (this->secPitchData) delete this->secPitchData;
     if (this->secIntensiveData) delete this->secIntensiveData;
     if (this->simple_data) freeSimpleGraphData(this->simple_data);
-    if (this->simple_data) delete this->simple_data;
+    if (this->portrData) delete this->portrData;
+    if (this->secPortrData) delete this->secPortrData;
 }
 
 int DrawerDP::Draw(mglGraph *gr)
@@ -91,6 +96,7 @@ int DrawerDP::Draw(mglGraph *gr)
     if(sptk_settings->dp->showF0) gr->Plot(*this->pitchData, "-r3");
     if(sptk_settings->dp->showOriginalF0) gr->Plot(*this->pitchDataOriginal, "-r2");
     if(sptk_settings->dp->showA0) gr->Plot(*this->intensiveData, "-g3");
+    if(sptk_settings->dp->showPortr) gr->Plot(*this->portrData, "-e3");
     gr->Plot(*pWaveData, "q2");
     gr->Plot(*nWaveData, "k2");
     gr->Plot(*tWaveData, "c2");
@@ -130,8 +136,9 @@ int DrawerDP::Draw(mglGraph *gr)
         gr->SetRange('y', 0, 1);
         if(this->errorData) gr->Plot(*this->errorData, "-B3");
         if(this->timeData) gr->Plot(*this->timeData, "-R3");
-        if(sptk_settings->dp->showF0) gr->Plot(*this->secPitchData, "-R3");
-        if(sptk_settings->dp->showA0) gr->Plot(*this->secIntensiveData, "-G3");
+        if(sptk_settings->dp->showF0) gr->Plot(*this->secPitchData, "-R4");
+        if(sptk_settings->dp->showA0) gr->Plot(*this->secIntensiveData, "-G4");
+        if(sptk_settings->dp->showPortr) gr->Plot(*this->secPortrData, "-E4");
 
         gr->MultiPlot(3, 15, 39, 1, 1, "#");
         gr->Puts(
@@ -277,6 +284,86 @@ vector mid(vector data, int frame, bool procZeros = true)
     freev(middle);
 
     return result;
+}
+
+int compare_mask_details (const void * a, const void * b)
+{
+  return ( ((MaskDetails*)a)->from - ((MaskDetails*)b)->from );
+}
+
+void makePortr(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, MaskData mask_t, double mask_scale, int part_len)
+{
+    int len_p = mask_p.pointsFrom.x;
+    int len_n = mask_n.pointsFrom.x;
+    int len_t = mask_t.pointsFrom.x;
+    int len = len_p + len_n + len_t;
+    MaskDetails * details = new MaskDetails[len];
+
+    for(int i=0; i<len_p; i++)
+        details[i] = MaskDetails{mask_p.pointsFrom.v[i]/mask_scale, mask_p.pointsLength.v[i]/mask_scale, 1};
+
+    for(int i=0; i<len_n; i++)
+        details[len_p + i] = MaskDetails{mask_n.pointsFrom.v[i]/mask_scale, mask_n.pointsLength.v[i]/mask_scale, 2};
+
+    for(int i=0; i<len_t; i++)
+        details[len_p + len_n + i] = MaskDetails{mask_t.pointsFrom.v[i]/mask_scale, mask_t.pointsLength.v[i]/mask_scale, 3};
+
+    qsort(details, len, sizeof(MaskDetails), compare_mask_details);
+
+    int merge = 0;
+    for(int i=0; i<(len-1); i++)
+        if(details[i].type == details[i+1].type)
+            merge ++;
+
+    int merge_len = len - merge;
+    MaskDetails * merged_details = new MaskDetails[merge_len];
+
+    merged_details[0] = details[0];
+    int ii = 0;
+
+    for(int i=1; i<len; i++)
+    {
+        if(details[i-1].type == details[i].type)
+        {
+            merged_details[ii].len += details[i].len;
+        } else {
+            ii++;
+            merged_details[ii] = details[i];
+            qDebug() << ii << ' ' << details[i].type;
+        }
+    }
+
+    delete details;
+
+    vector strip_data = vector_strip_by_mask(*data, *mask);
+    qDebug() << "strip_data " << strip_data.x;
+
+    vector resized_data = zerov(part_len*merge_len);
+
+    ii = 0;
+    for(int i=0; i<merge_len; i++)
+    {
+        vector in = zerov(merged_details[i].len);
+        for(int jj=0; jj<merged_details[i].len && (jj+ii) < strip_data.x; jj++)
+            in.v[jj] = strip_data.v[jj+ii];
+        qDebug() << "len " << in.x;
+
+        vector out = vector_resize(in, part_len);
+        for (int j=0; j<part_len; j++)
+        {
+            resized_data.v[j + i*part_len] = out.v[j];
+        }
+        freev(in);
+        freev(out);
+
+        ii += merged_details[i].len;
+    }
+
+    freev(strip_data);
+
+    freev(*data);
+    data->v = resized_data.v;
+    data->x = resized_data.x;
 }
 
 MinMax applyMask(vector * data, vector * mask)
@@ -431,7 +518,7 @@ void DrawerDP::Proc(QString fname)
         freev(nVector);
         freev(tVector);
 
-        if(sptk_settings->dp->showF0)
+        if(sptk_settings->dp->showF0 || (sptk_settings->dp->showPortr))
         {
             vector pitch_cutted = copyv(this->simple_data->d_pitch_originl);
             MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_mask);
@@ -440,6 +527,27 @@ void DrawerDP::Proc(QString fname)
 
             this->f0max = mm.max;
             this->f0min = mm.min;
+
+            if (sptk_settings->dp->showPortr)
+            {
+                vector origin_portr = copyv(pitch_cutted);
+
+                double mask_scale = 1.0 * this->simple_data->d_full_wave.x / this->simple_data->d_mask.x;
+                makePortr(
+                    &origin_portr,
+                    &this->simple_data->d_mask,
+                    this->simple_data->md_p,
+                    this->simple_data->md_n,
+                    this->simple_data->md_t,
+                    mask_scale,
+                    sptk_settings->dp->portLen
+                );
+
+                this->portrData = createMglData(origin_portr, this->portrData, true);
+                this->portrData->Norm();
+
+                freev(origin_portr);
+            }
 
             freev(pitch_cutted);
             qDebug() << "pitchData Filled";
@@ -591,6 +699,27 @@ void DrawerDP::Proc(QString fname)
         case 1:
             this->ps = calculateResultD(o_pitch_cutted, pitch_cutted);
             break;
+        }
+
+        if (sptk_settings->dp->showPortr)
+        {
+            vector sec_portr = copyv(pitch_cutted);
+
+            double mask_scale = 1.0 * this->simple_data->d_full_wave.x / this->simple_data->d_mask.x;
+            makePortr(
+                &sec_portr,
+                &this->simple_data->d_mask,
+                this->simple_data->md_p,
+                this->simple_data->md_n,
+                this->simple_data->md_t,
+                mask_scale,
+                sptk_settings->dp->portLen
+            );
+
+            this->secPortrData = createMglData(sec_portr, this->secPortrData, true);
+            this->secPortrData->Norm();
+
+            freev(sec_portr);
         }
 
         freev(o_pitch_cutted);

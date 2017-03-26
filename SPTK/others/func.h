@@ -13,6 +13,7 @@ vector vector_fill_empty(vector);
 vector vector_pow_exp(vector, int, double);
 vector vector_pow_log(vector, int, double);
 vector vector_cut_by_mask(vector, vector);
+vector vector_strip_by_mask(vector, vector);
 vector vector_invert_mask(vector);
 vector make_mask(int, int, int*, int*);
 vector vector_resize(vector,int);

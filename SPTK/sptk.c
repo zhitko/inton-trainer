@@ -96,6 +96,8 @@ DP_SETTINGS *initDpSettings()
     dp->showTime = 0;
     dp->errorType = 0;
     dp->useForDP = 0;
+    dp->showPortr = 1;
+    dp->portLen = 5;
     return dp;
 }
 

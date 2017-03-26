@@ -142,7 +142,9 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->dp->continiusKT = instance->ui->continiusDpKT->value();
     sptk_settings->dp->continiusKV = instance->ui->continiusDpKV->value();
 
+    sptk_settings->dp->portLen = instance->ui->portLen->value();
     sptk_settings->dp->showA0 = instance->ui->showA0->isChecked();
+    sptk_settings->dp->showPortr = instance->ui->showPortr->isChecked();
     sptk_settings->dp->showError = instance->ui->showError->isChecked();
     sptk_settings->dp->showF0 = instance->ui->showF0->isChecked();
     sptk_settings->dp->showOriginalF0 = instance->ui->showOriginalF0->isChecked();
@@ -235,8 +237,12 @@ void SettingsDialog::loadSettings()
     if(settings.contains("dp/continiusDpKD"))
         this->ui->continiusDpKD->setValue(settings.value("dp/continiusDpKD").toDouble());
 
+    if(settings.contains("dp/portLen"))
+        this->ui->portLen->setValue(settings.value("dp/portLen").toInt());
     if(settings.contains("dp/showA0"))
         this->ui->showA0->setChecked(settings.value("dp/showA0").toBool());
+    if(settings.contains("dp/showPortr"))
+        this->ui->showPortr->setChecked(settings.value("dp/showPortr").toBool());
     if(settings.contains("dp/showError"))
         this->ui->showError->setChecked(settings.value("dp/showError").toBool());
     if(settings.contains("dp/showF0"))
@@ -330,7 +336,9 @@ void SettingsDialog::saveSettings()
     settings.setValue("dp/continiusDpKT", this->ui->continiusDpKT->value());
     settings.setValue("dp/continiusDpKV", this->ui->continiusDpKV->value());
 
+    settings.setValue("dp/portLen", this->ui->portLen->value());
     settings.setValue("dp/showA0", this->ui->showA0->isChecked());
+    settings.setValue("dp/showPortr", this->ui->showPortr->isChecked());
     settings.setValue("dp/showError", this->ui->showError->isChecked());
     settings.setValue("dp/showF0", this->ui->showF0->isChecked());
     settings.setValue("dp/showOriginalF0", this->ui->showOriginalF0->isChecked());

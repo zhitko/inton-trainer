@@ -134,6 +134,30 @@ vector vector_cut_by_mask(vector data, vector mask)
     return result;
 }
 
+vector vector_strip_by_mask(vector data, vector mask)
+{
+    int len = 0;
+    for (int i=0; i<data.x && i<mask.x; i++ )
+    {
+        if(mask.v[i] > MASK_LIMIT)
+        {
+            len++;
+        }
+    }
+
+    vector result = zerov(len);
+    int pos = 0;
+    for (int i=0; i<data.x && i<mask.x && pos<len; i++ )
+    {
+        if(mask.v[i] > MASK_LIMIT)
+        {
+            result.v[pos] = data.v[i];
+            pos++;
+        }
+    }
+    return result;
+}
+
 vector vector_invert_mask(vector mask)
 {
     vector inverted = makev(mask.x);
