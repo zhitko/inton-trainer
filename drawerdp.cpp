@@ -386,13 +386,18 @@ vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
     int merge_len = len - merge;
     MaskDetails * merged_details = new MaskDetails[merge_len];
 
-    vector ump_mask = zerov(merge_len);
+    const int UMP_MASK_LEN = 100;
+    vector ump_mask = zerov(merge_len*UMP_MASK_LEN);
 
     merged_details[0] = details[0];
     int ii = 0;
 
     if(merged_details[0].type == TYPE_N)
-        ump_mask.v[0] = 1;
+    {
+        ump_mask.v[0] = 0.01;
+        for(int i=1; i<UMP_MASK_LEN; i++) ump_mask.v[i] = 1;
+        ump_mask.v[UMP_MASK_LEN] = 0.01;
+    }
 
     for(int i=1; i<len; i++)
     {
@@ -403,7 +408,11 @@ vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
             ii++;
             merged_details[ii] = details[i];
             if(merged_details[ii].type == TYPE_N)
-                ump_mask.v[ii] = 1;
+            {
+                ump_mask.v[ii*UMP_MASK_LEN] = 0.01;
+                for(int i=1; i<UMP_MASK_LEN; i++) ump_mask.v[ii*UMP_MASK_LEN+i] = 1;
+                ump_mask.v[(ii+1)*UMP_MASK_LEN] = 0.01;
+            }
             qDebug() << ii << ' ' << details[i].type;
         }
     }
