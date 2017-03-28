@@ -28,6 +28,7 @@ public:
     virtual ~Drawer();
 
     bool stereo;
+    bool showUMP;
 
     int getDataLenght();
 

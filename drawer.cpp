@@ -92,7 +92,7 @@ void vectorToDataWithNan(vector vec, mglData * data)
 }
 
 Drawer::Drawer() : mglDraw(),
-    data(NULL), stereo(false)
+    data(NULL), stereo(false), showUMP(false)
 {
     waveData = NULL;
     pitchData = NULL;

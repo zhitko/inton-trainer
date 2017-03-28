@@ -42,11 +42,15 @@ DrawerDP::DrawerDP() :
     this->tSecData = NULL;
     this->secPitchData = NULL;
     this->secIntensiveData = NULL;
-    this->portrData = NULL;
-    this->secPortrData = NULL;
+    this->umpData = NULL;
+    this->secUmpData = NULL;
+    this->octavData = NULL;
+    this->secOctavData = NULL;
+    this->umpMask = NULL;
     this->errorMax = 0;
     this->errorMin = 0;
     this->ps = 0.0;
+    this->ps_ump = 0.0;
     this->pr = 0.0;
     this->f0max = 0;
     this->f0min = 0;
@@ -67,8 +71,11 @@ DrawerDP::~DrawerDP()
     if (this->secPitchData) delete this->secPitchData;
     if (this->secIntensiveData) delete this->secIntensiveData;
     if (this->simple_data) freeSimpleGraphData(this->simple_data);
-    if (this->portrData) delete this->portrData;
-    if (this->secPortrData) delete this->secPortrData;
+    if (this->umpData) delete this->umpData;
+    if (this->secUmpData) delete this->secUmpData;
+    if (this->octavData) delete this->octavData;
+    if (this->secOctavData) delete this->secOctavData;
+    if (this->umpMask) delete this->umpMask;
 }
 
 int DrawerDP::Draw(mglGraph *gr)
@@ -81,80 +88,138 @@ int DrawerDP::Draw(mglGraph *gr)
     gr->DefaultPlotParam();
     gr->Clf();
 
-    qDebug() << "waveData";
-    gr->MultiPlot(1, 15, 1, 1, 1, "#");
-    gr->SetRange('y', 0, 1);
-    gr->Plot(*waveData, "B");
-    gr->Plot(*pWaveData, "q9");
-    gr->Plot(*nWaveData, "k9");
-    gr->Plot(*tWaveData, "c9");
-
-    gr->MultiPlot(1, 15, 6, 1, 6, "#");
-    gr->SetRange('y', 0, 1);
-    gr->Axis("Y", "");
-    gr->Grid("y", "W", "");
-    if(sptk_settings->dp->showF0) gr->Plot(*this->pitchData, "-r3");
-    if(sptk_settings->dp->showOriginalF0) gr->Plot(*this->pitchDataOriginal, "-r2");
-    if(sptk_settings->dp->showA0) gr->Plot(*this->intensiveData, "-g3");
-    if(sptk_settings->dp->showPortr) gr->Plot(*this->portrData, "-e3");
-    gr->Plot(*pWaveData, "q2");
-    gr->Plot(*nWaveData, "k2");
-    gr->Plot(*tWaveData, "c2");
-
-    gr->MultiPlot(1, 15, 12, 1, 1, "#");
-    QString path = QApplication::applicationDirPath() + DATA_PATH_TRAINING;
-    gr->Puts(mglPoint(0,0),fileName.replace(path,"").replace(".wav","").replace("/"," - ").toLocal8Bit().data(), ":C", 24);
-
-    gr->MultiPlot(1, 15, 13, 1, 1, "#");
-    gr->Puts(
-        mglPoint(0,0),
-        QString("Template F0 min = %1 max = %2").arg(this->f0min).arg(this->f0max).toLocal8Bit().data(),
-        ":C",
-        24
-    );
-
-    if(isCompare){
-        qDebug() << "secWaveData";
-        gr->MultiPlot(1, 15, 3, 1, 1, "#");
+    if(!this->showUMP)
+    {
+        qDebug() << "waveData";
+        gr->MultiPlot(1, 15, 1, 1, 1, "#");
         gr->SetRange('y', 0, 1);
-        gr->Plot(*pSecData, "q9");
-        gr->Plot(*nSecData, "k9");
-        gr->Plot(*tSecData, "c9");
-        gr->Plot(*secWaveData, "G");
-        gr->Plot(*dpData, "R9");
+        gr->Plot(*waveData, "B");
+        gr->Plot(*pWaveData, "q9");
+        gr->Plot(*nWaveData, "k9");
+        gr->Plot(*tWaveData, "c9");
 
-        gr->MultiPlot(1, 15, 4, 1, 1, "#");
-        gr->Puts(
-            mglPoint(0,0),
-            QString("Proximity to curve shape: \\big{Ps = %1%} \t Proximity to the range: \\big{Pr = %2%").arg(this->ps).arg(this->pr).toLocal8Bit().data(),
-            ":C",
-            24
-        );
-
-        qDebug() << "errorData";
         gr->MultiPlot(1, 15, 6, 1, 6, "#");
         gr->SetRange('y', 0, 1);
-        if(this->errorData) gr->Plot(*this->errorData, "-B3");
-        if(this->timeData) gr->Plot(*this->timeData, "-R3");
-        if(sptk_settings->dp->showF0) gr->Plot(*this->secPitchData, "-R4");
-        if(sptk_settings->dp->showA0) gr->Plot(*this->secIntensiveData, "-G4");
-        if(sptk_settings->dp->showPortr) gr->Plot(*this->secPortrData, "-E4");
+        gr->Axis("Y", "");
+        gr->Grid("y", "W", "");
+        if(sptk_settings->dp->showF0) gr->Plot(*this->pitchData, "-r3");
+        if(sptk_settings->dp->showOriginalF0) gr->Plot(*this->pitchDataOriginal, "-r2");
+        if(sptk_settings->dp->showA0) gr->Plot(*this->intensiveData, "-g3");
+        gr->Plot(*pWaveData, "q2");
+        gr->Plot(*nWaveData, "k2");
+        gr->Plot(*tWaveData, "c2");
 
-        gr->MultiPlot(3, 15, 39, 1, 1, "#");
+        gr->MultiPlot(1, 15, 12, 1, 1, "#");
+        QString path = QApplication::applicationDirPath() + DATA_PATH_TRAINING;
+        gr->Puts(mglPoint(0,0),fileName.replace(path,"").replace(".wav","").replace("/"," - ").toLocal8Bit().data(), ":C", 24);
+
+        gr->MultiPlot(1, 15, 13, 1, 1, "#");
         gr->Puts(
             mglPoint(0,0),
-            QString("Error min = %1 max = %2").arg(this->errorMin).arg(this->errorMax).toLocal8Bit().data(),
+            QString("Template F0 min = %1 max = %2").arg(this->f0min).arg(this->f0max).toLocal8Bit().data(),
             ":C",
             24
         );
+    } else {
+        gr->DefaultPlotParam();
+        gr->MultiPlot(1, 12, 11, 1, 1, "#");
+        QString path = QApplication::applicationDirPath() + DATA_PATH_TRAINING;
+        gr->Puts(mglPoint(0,0),fileName.replace(path,"").replace(".wav","").replace("/"," - ").toLocal8Bit().data(), ":C", 24);
 
-        gr->MultiPlot(3, 15, 41, 1, 1, "#");
-        gr->Puts(
-            mglPoint(0,0),
-            QString("User F0 min = %1 max = %2").arg(this->userf0min).arg(this->userf0max).toLocal8Bit().data(),
-            ":C",
-            24
-        );
+        if(!isCompare)
+        {
+            gr->MultiPlot(20, 12, 41, 4, 8, "#");
+            gr->SetRange('y', 0, 2.5);
+            gr->Axis("Y", "");
+            gr->Grid("y", "W", "");
+            gr->Bars(*this->octavData, "e");
+        }
+
+        gr->MultiPlot(20, 12, 46, 13, 8, "#");
+        gr->SetRange('y', 0, 1);
+        gr->SetRange('x', 0, this->umpData->nx);
+        gr->Grid("y", "W", "");
+        gr->SetTicks('x', sptk_settings->dp->portLen);
+        gr->Grid("x", "W", "");
+        gr->Plot(*this->umpData, "-e3");
+        gr->Plot(*this->umpMask, "-k3");
+    }
+
+    if(isCompare){
+        if(!this->showUMP)
+        {
+            qDebug() << "secWaveData";
+            gr->MultiPlot(1, 15, 3, 1, 1, "#");
+            gr->SetRange('y', 0, 1);
+            gr->Plot(*pSecData, "q9");
+            gr->Plot(*nSecData, "k9");
+            gr->Plot(*tSecData, "c9");
+            gr->Plot(*secWaveData, "G");
+            gr->Plot(*dpData, "R9");
+
+            gr->MultiPlot(1, 15, 4, 1, 1, "#");
+            gr->Puts(
+                mglPoint(0,0),
+                QString("Proximity to curve shape: \\big{Ps = %1%} \t Proximity to the range: \\big{Pr = %2%").arg(this->ps).arg(this->pr).toLocal8Bit().data(),
+                ":C",
+                24
+            );
+
+            qDebug() << "errorData";
+            gr->MultiPlot(1, 15, 6, 1, 6, "#");
+            gr->SetRange('y', 0, 1);
+            if(this->errorData) gr->Plot(*this->errorData, "-B3");
+            if(this->timeData) gr->Plot(*this->timeData, "-R3");
+            if(sptk_settings->dp->showF0) gr->Plot(*this->secPitchData, "-R4");
+            if(sptk_settings->dp->showA0) gr->Plot(*this->secIntensiveData, "-G4");
+
+            gr->MultiPlot(3, 15, 39, 1, 1, "#");
+            gr->Puts(
+                mglPoint(0,0),
+                QString("Error min = %1 max = %2").arg(this->errorMin).arg(this->errorMax).toLocal8Bit().data(),
+                ":C",
+                24
+            );
+
+            gr->MultiPlot(3, 15, 41, 1, 1, "#");
+            gr->Puts(
+                mglPoint(0,0),
+                QString("User F0 min = %1 max = %2").arg(this->userf0min).arg(this->userf0max).toLocal8Bit().data(),
+                ":C",
+                24
+            );
+        } else {
+            gr->DefaultPlotParam();
+
+            gr->MultiPlot(1, 12, 1, 1, 1, "#");
+            gr->Puts(
+                mglPoint(0,0),
+                QString("Proximity to curve shape: \\big{Ps = %1%} \t Proximity to the range: \\big{Pr = %2%").arg(this->ps_ump).arg(this->pr).toLocal8Bit().data(),
+                ":C",
+                24
+            );
+
+            gr->MultiPlot(1, 12, 11, 1, 1, "#");
+            QString path = QApplication::applicationDirPath() + DATA_PATH_TRAINING;
+            gr->Puts(mglPoint(0,0),fileName.replace(path,"").replace(".wav","").replace("/"," - ").toLocal8Bit().data(), ":C", 24);
+
+            gr->MultiPlot(20, 12, 41, 4, 8, "#");
+            gr->SetRange('y', 0, 2.5);
+            gr->Axis("Y", "");
+            gr->Grid("y", "W", "");
+            gr->Bars(*this->secOctavData, "E");
+            gr->Bars(*this->octavData, "e");
+
+            gr->MultiPlot(20, 12, 46, 13, 8, "#");
+            gr->SetRange('y', 0, 1);
+            gr->SetRange('x', 0, this->umpData->nx);
+            gr->Grid("y", "W", "");
+            gr->SetTicks('x', sptk_settings->dp->portLen);
+            gr->Grid("x", "W", "");
+            gr->Plot(*this->secUmpData, "-E4");
+            gr->Plot(*this->umpData, "-e3");
+            gr->Plot(*this->umpMask, "-k3");
+        }
     }
 
     qDebug() << "finish drawing";
@@ -291,8 +356,11 @@ int compare_mask_details (const void * a, const void * b)
   return ( ((MaskDetails*)a)->from - ((MaskDetails*)b)->from );
 }
 
-void makePortr(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, MaskData mask_t, double mask_scale, int part_len)
+vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, MaskData mask_t, double mask_scale, int part_len)
 {
+    const int TYPE_P = 1;
+    const int TYPE_N = 2;
+    const int TYPE_T = 3;
     int len_p = mask_p.pointsFrom.x;
     int len_n = mask_n.pointsFrom.x;
     int len_t = mask_t.pointsFrom.x;
@@ -300,13 +368,13 @@ void makePortr(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
     MaskDetails * details = new MaskDetails[len];
 
     for(int i=0; i<len_p; i++)
-        details[i] = MaskDetails{mask_p.pointsFrom.v[i]/mask_scale, mask_p.pointsLength.v[i]/mask_scale, 1};
+        details[i] = MaskDetails{mask_p.pointsFrom.v[i]/mask_scale, mask_p.pointsLength.v[i]/mask_scale, TYPE_P};
 
     for(int i=0; i<len_n; i++)
-        details[len_p + i] = MaskDetails{mask_n.pointsFrom.v[i]/mask_scale, mask_n.pointsLength.v[i]/mask_scale, 2};
+        details[len_p + i] = MaskDetails{mask_n.pointsFrom.v[i]/mask_scale, mask_n.pointsLength.v[i]/mask_scale, TYPE_N};
 
     for(int i=0; i<len_t; i++)
-        details[len_p + len_n + i] = MaskDetails{mask_t.pointsFrom.v[i]/mask_scale, mask_t.pointsLength.v[i]/mask_scale, 3};
+        details[len_p + len_n + i] = MaskDetails{mask_t.pointsFrom.v[i]/mask_scale, mask_t.pointsLength.v[i]/mask_scale, TYPE_T};
 
     qsort(details, len, sizeof(MaskDetails), compare_mask_details);
 
@@ -318,8 +386,13 @@ void makePortr(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
     int merge_len = len - merge;
     MaskDetails * merged_details = new MaskDetails[merge_len];
 
+    vector ump_mask = zerov(merge_len);
+
     merged_details[0] = details[0];
     int ii = 0;
+
+    if(merged_details[0].type == TYPE_N)
+        ump_mask.v[0] = 1;
 
     for(int i=1; i<len; i++)
     {
@@ -329,6 +402,8 @@ void makePortr(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
         } else {
             ii++;
             merged_details[ii] = details[i];
+            if(merged_details[ii].type == TYPE_N)
+                ump_mask.v[ii] = 1;
             qDebug() << ii << ' ' << details[i].type;
         }
     }
@@ -364,6 +439,8 @@ void makePortr(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
     freev(*data);
     data->v = resized_data.v;
     data->x = resized_data.x;
+
+    return ump_mask;
 }
 
 MinMax applyMask(vector * data, vector * mask)
@@ -518,40 +595,39 @@ void DrawerDP::Proc(QString fname)
         freev(nVector);
         freev(tVector);
 
-        if(sptk_settings->dp->showF0 || (sptk_settings->dp->showPortr))
-        {
-            vector pitch_cutted = copyv(this->simple_data->d_pitch_originl);
-            MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_mask);
-            this->pitchData = createMglData(pitch_cutted, this->pitchData, true);
-            this->pitchData->Norm();
+        vector pitch_cutted = copyv(this->simple_data->d_pitch_originl);
+        MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_mask);
+        this->pitchData = createMglData(pitch_cutted, this->pitchData, true);
+        this->pitchData->Norm();
 
-            this->f0max = mm.max;
-            this->f0min = mm.min;
+        this->f0max = mm.max;
+        this->f0min = mm.min;
 
-            if (sptk_settings->dp->showPortr)
-            {
-                vector origin_portr = copyv(pitch_cutted);
+        this->octavData = new mglData(2);
+        this->octavData->a[0] = 1.0 * this->f0max / this->f0min;
 
-                double mask_scale = 1.0 * this->simple_data->d_full_wave.x / this->simple_data->d_mask.x;
-                makePortr(
-                    &origin_portr,
-                    &this->simple_data->d_mask,
-                    this->simple_data->md_p,
-                    this->simple_data->md_n,
-                    this->simple_data->md_t,
-                    mask_scale,
-                    sptk_settings->dp->portLen
-                );
+        vector origin_ump = copyv(pitch_cutted);
 
-                this->portrData = createMglData(origin_portr, this->portrData, true);
-                this->portrData->Norm();
+        double mask_scale = 1.0 * this->simple_data->d_full_wave.x / this->simple_data->d_mask.x;
+        vector ump_mask = makeUmp(
+            &origin_ump,
+            &this->simple_data->d_mask,
+            this->simple_data->md_p,
+            this->simple_data->md_n,
+            this->simple_data->md_t,
+            mask_scale,
+            sptk_settings->dp->portLen
+        );
 
-                freev(origin_portr);
-            }
+        this->umpData = createMglData(origin_ump, this->umpData);
+        this->umpData->Norm();
 
-            freev(pitch_cutted);
-            qDebug() << "pitchData Filled";
-        }
+        this->umpMask = createMglData(ump_mask, this->umpMask, true);
+
+        freev(origin_ump);
+
+        freev(pitch_cutted);
+        qDebug() << "pitchData Filled";
 
         if(sptk_settings->dp->showOriginalF0)
         {
@@ -675,6 +751,10 @@ void DrawerDP::Proc(QString fname)
         MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_mask);
         this->userf0max = mm.max;
         this->userf0min = mm.min;
+
+        this->secOctavData = new mglData(2);
+        this->secOctavData->a[1] = 1.0 * this->userf0max / this->userf0min;
+
         if(sptk_settings->dp->showF0)
         {
             this->secPitchData = createMglData(pitch_cutted, this->secPitchData, true);
@@ -701,26 +781,36 @@ void DrawerDP::Proc(QString fname)
             break;
         }
 
-        if (sptk_settings->dp->showPortr)
-        {
-            vector sec_portr = copyv(pitch_cutted);
+        vector sec_ump = copyv(pitch_cutted);
 
-            double mask_scale = 1.0 * this->simple_data->d_full_wave.x / this->simple_data->d_mask.x;
-            makePortr(
-                &sec_portr,
-                &this->simple_data->d_mask,
-                this->simple_data->md_p,
-                this->simple_data->md_n,
-                this->simple_data->md_t,
-                mask_scale,
-                sptk_settings->dp->portLen
-            );
+        double mask_scale = 1.0 * this->simple_data->d_full_wave.x / this->simple_data->d_mask.x;
+        makeUmp(
+            &sec_ump,
+            &this->simple_data->d_mask,
+            this->simple_data->md_p,
+            this->simple_data->md_n,
+            this->simple_data->md_t,
+            mask_scale,
+            sptk_settings->dp->portLen
+        );
 
-            this->secPortrData = createMglData(sec_portr, this->secPortrData, true);
-            this->secPortrData->Norm();
+        this->secUmpData = createMglData(sec_ump, this->secUmpData);
+        this->secUmpData->Norm();
 
-            freev(sec_portr);
+        vector ump;
+        ump.x = this->umpData->nx;
+        ump.v = this->umpData->a;
+
+        switch (sptk_settings->dp->errorType) {
+        case 0:
+            this->ps_ump = calculateResultR(ump, sec_ump);
+            break;
+        case 1:
+            this->ps_ump = calculateResultD(ump, sec_ump);
+            break;
         }
+
+        freev(sec_ump);
 
         freev(o_pitch_cutted);
         freev(pitch_cutted);

@@ -15,10 +15,10 @@ public:
 protected:
     bool first;
     QString secFileName;
-    mglData *dpData, *secWaveData, *errorData, *timeData, *secPitchData, *secIntensiveData, *portrData, *secPortrData;
+    mglData *dpData, *secWaveData, *errorData, *timeData, *secPitchData, *secIntensiveData, *umpData, *secUmpData, *umpMask, *octavData, *secOctavData;
     mglData *pSecData, *nSecData, *tSecData;
     int errorMax, errorMin;
-    double ps, pr;
+    double ps, pr, ps_ump;
     int f0min, f0max;
     int userf0min, userf0max;
 

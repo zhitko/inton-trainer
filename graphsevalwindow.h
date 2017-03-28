@@ -20,6 +20,7 @@ signals:
 
 public slots:
     void playTemplate();
+    void showUMP();
 
 };
 

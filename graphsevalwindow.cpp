@@ -8,6 +8,9 @@
 
 #include "drawerevalpitch.h"
 #include "soundplayer.h"
+#include "settingsdialog.h"
+
+#include <QSettings>
 
 GraphsEvalWindow::GraphsEvalWindow(QString path, Drawer * drawer, QWidget *parent) :
     GraphsWindow(parent)
@@ -19,6 +22,10 @@ GraphsEvalWindow::GraphsEvalWindow(QString path, Drawer * drawer, QWidget *paren
     this->drawFile(path);
     this->ui->playTemplateBtn->hide();
     connect(this->ui->playTemplateBtn, SIGNAL(clicked()), this, SLOT(playTemplate()));
+    connect(this->ui->showUMP, SIGNAL(clicked()), this, SLOT(showUMP()));
+
+    SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
+    this->drawer->showUMP = sptk_settings->dp->showPortr;
 }
 
 GraphsEvalWindow::~GraphsEvalWindow()
@@ -37,5 +44,11 @@ void GraphsEvalWindow::playTemplate()
 {
     SoundPlayer * player = new SoundPlayer(templatePath);
     player->start();
+}
+
+void GraphsEvalWindow::showUMP()
+{
+    this->drawer->showUMP = !this->drawer->showUMP;
+    this->QMGL->update();
 }
 
