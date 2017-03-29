@@ -386,18 +386,8 @@ vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
     int merge_len = len - merge;
     MaskDetails * merged_details = new MaskDetails[merge_len];
 
-    const int UMP_MASK_LEN = 100;
-    vector ump_mask = zerov(merge_len*UMP_MASK_LEN);
-
     merged_details[0] = details[0];
     int ii = 0;
-
-    if(merged_details[0].type == TYPE_N)
-    {
-        ump_mask.v[0] = 0.01;
-        for(int i=1; i<UMP_MASK_LEN; i++) ump_mask.v[i] = 1;
-        ump_mask.v[UMP_MASK_LEN] = 0.01;
-    }
 
     for(int i=1; i<len; i++)
     {
@@ -407,28 +397,69 @@ vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
         } else {
             ii++;
             merged_details[ii] = details[i];
-            if(merged_details[ii].type == TYPE_N)
-            {
-                ump_mask.v[ii*UMP_MASK_LEN] = 0.01;
-                for(int i=1; i<UMP_MASK_LEN; i++) ump_mask.v[ii*UMP_MASK_LEN+i] = 1;
-                ump_mask.v[(ii+1)*UMP_MASK_LEN] = 0.01;
-            }
-            qDebug() << ii << ' ' << details[i].type;
         }
     }
 
     delete details;
 
+    int clone = 0;
+    for(int i=1; i<(merge_len-1); i++)
+        if(details[i-1].type == TYPE_N && details[i+1].type == TYPE_N)
+            clone++;
+
+    int clone_len = merge_len + clone;
+    MaskDetails * clone_details = new MaskDetails[clone_len];
+
+    ii = 0;
+    clone_details[0] = merged_details[0];
+
+    const int UMP_MASK_LEN = 100;
+    vector ump_mask = zerov(clone_len*UMP_MASK_LEN);
+
+    if(merged_details[0].type == TYPE_N)
+    {
+        ump_mask.v[0] = 0.01;
+        for(int i=1; i<UMP_MASK_LEN; i++) ump_mask.v[i] = 1;
+        ump_mask.v[UMP_MASK_LEN] = 0.01;
+    }
+
+    for(int i=1; i<merge_len; i++)
+    {
+        if(details[i-1].type == TYPE_N && details[i+1].type == TYPE_N)
+        {
+            ii++;
+            clone_details[ii] = merged_details[i];
+            clone_details[ii].len = clone_details[ii].len / 2;
+            ii++;
+            clone_details[ii] = merged_details[i];
+            clone_details[ii].len = clone_details[ii-1].len;
+        } else {
+            ii++;
+            clone_details[ii] = merged_details[i];
+
+            if(clone_details[ii].type == TYPE_N)
+            {
+                ump_mask.v[ii*UMP_MASK_LEN] = 0.01;
+                for(int i=1; i<UMP_MASK_LEN; i++) ump_mask.v[ii*UMP_MASK_LEN+i] = 1;
+                ump_mask.v[(ii+1)*UMP_MASK_LEN] = 0.01;
+            }
+        }
+    }
+
+    clone_details[clone_len-1] = merged_details[merge_len-1];
+
+    delete merged_details;
+
     vector strip_data = vector_strip_by_mask(*data, *mask);
     qDebug() << "strip_data " << strip_data.x;
 
-    vector resized_data = zerov(part_len*merge_len);
+    vector resized_data = zerov(part_len*clone_len);
 
     ii = 0;
-    for(int i=0; i<merge_len; i++)
+    for(int i=0; i<clone_len; i++)
     {
-        vector in = zerov(merged_details[i].len);
-        for(int jj=0; jj<merged_details[i].len && (jj+ii) < strip_data.x; jj++)
+        vector in = zerov(clone_details[i].len);
+        for(int jj=0; jj<clone_details[i].len && (jj+ii) < strip_data.x; jj++)
             in.v[jj] = strip_data.v[jj+ii];
         qDebug() << "len " << in.x;
 
@@ -440,7 +471,7 @@ vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
         freev(in);
         freev(out);
 
-        ii += merged_details[i].len;
+        ii += clone_details[i].len;
     }
 
     freev(strip_data);
@@ -448,6 +479,8 @@ vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
     freev(*data);
     data->v = resized_data.v;
     data->x = resized_data.x;
+
+    delete clone_details;
 
     return ump_mask;
 }
