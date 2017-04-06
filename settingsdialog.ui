@@ -43,9 +43,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-291</y>
+            <y>-260</y>
             <width>528</width>
-            <height>941</height>
+            <height>947</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -477,28 +477,28 @@
                    <string>Непрерывное ДП</string>
                   </property>
                   <layout class="QFormLayout" name="formLayout_10">
-                   <item row="8" column="0">
+                   <item row="9" column="0">
                     <widget class="QLabel" name="label_29">
                      <property name="text">
                       <string>Порог срабатывания</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="8" column="1">
+                   <item row="9" column="1">
                     <widget class="QSpinBox" name="continiusDpLimit">
                      <property name="maximum">
                       <number>9999</number>
                      </property>
                     </widget>
                    </item>
-                   <item row="10" column="0">
+                   <item row="11" column="0">
                     <widget class="QLabel" name="label_30">
                      <property name="text">
                       <string>kH</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="10" column="1">
+                   <item row="11" column="1">
                     <widget class="QDoubleSpinBox" name="continiusDpKH">
                      <property name="singleStep">
                       <double>0.100000000000000</double>
@@ -508,14 +508,14 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="11" column="0">
+                   <item row="12" column="0">
                     <widget class="QLabel" name="label_31">
                      <property name="text">
                       <string>kV</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="11" column="1">
+                   <item row="12" column="1">
                     <widget class="QDoubleSpinBox" name="continiusDpKV">
                      <property name="singleStep">
                       <double>0.100000000000000</double>
@@ -525,14 +525,14 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="12" column="0">
+                   <item row="13" column="0">
                     <widget class="QLabel" name="label_32">
                      <property name="text">
                       <string>kD</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="12" column="1">
+                   <item row="13" column="1">
                     <widget class="QDoubleSpinBox" name="continiusDpKD">
                      <property name="singleStep">
                       <double>0.100000000000000</double>
@@ -542,21 +542,21 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="13" column="0">
+                   <item row="14" column="0">
                     <widget class="QLabel" name="label_33">
                      <property name="text">
                       <string>kT</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="13" column="1">
+                   <item row="14" column="1">
                     <widget class="QDoubleSpinBox" name="continiusDpKT">
                      <property name="value">
                       <double>20.000000000000000</double>
                      </property>
                     </widget>
                    </item>
-                   <item row="1" column="0" colspan="2">
+                   <item row="2" column="0" colspan="2">
                     <widget class="QCheckBox" name="showA0">
                      <property name="text">
                       <string>Отображать А0</string>
@@ -566,7 +566,7 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="2" column="0" colspan="2">
+                   <item row="3" column="0" colspan="2">
                     <widget class="QCheckBox" name="showF0">
                      <property name="text">
                       <string>Отображать F0</string>
@@ -576,7 +576,7 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="6" column="0" colspan="2">
+                   <item row="7" column="0" colspan="2">
                     <widget class="QCheckBox" name="showTime">
                      <property name="text">
                       <string>Отображать ДП время</string>
@@ -586,7 +586,7 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="7" column="0">
+                   <item row="8" column="0">
                     <widget class="QCheckBox" name="showError">
                      <property name="text">
                       <string>Отображать ДП ошибку</string>
@@ -596,21 +596,21 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="3" column="0">
+                   <item row="4" column="0">
                     <widget class="QCheckBox" name="showOriginalF0">
                      <property name="text">
                       <string>Отображать исходную F0</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="0">
+                   <item row="1" column="0">
                     <widget class="QLabel" name="label_35">
                      <property name="text">
                       <string>Использовать данные</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="1">
+                   <item row="1" column="1">
                     <widget class="QComboBox" name="useForDP">
                      <item>
                       <property name="text">
@@ -624,21 +624,14 @@
                      </item>
                     </widget>
                    </item>
-                   <item row="4" column="0">
-                    <widget class="QCheckBox" name="showPortr">
-                     <property name="text">
-                      <string>Отображать портрет</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="5" column="0">
+                   <item row="6" column="0">
                     <widget class="QLabel" name="label_36">
                      <property name="text">
                       <string>Длина части портрета</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="5" column="1">
+                   <item row="6" column="1">
                     <widget class="QSpinBox" name="portLen">
                      <property name="minimum">
                       <number>1</number>
@@ -648,6 +641,13 @@
                      </property>
                      <property name="value">
                       <number>5</number>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QCheckBox" name="showPortr">
+                     <property name="text">
+                      <string>По умолчанию отображать портрет</string>
                      </property>
                     </widget>
                    </item>

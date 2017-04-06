@@ -8,6 +8,8 @@
 #include "DP/continuousdp.h"
 #define DATA_PATH_TRAINING "/data/training/"
 
+#define OCTAVE_MAX 2.5
+
 extern "C" {
     #include "./OpenAL/wavFile.h"
 
@@ -129,10 +131,10 @@ int DrawerDP::Draw(mglGraph *gr)
         if(!isCompare)
         {
             gr->MultiPlot(20, 12, 41, 4, 8, "#");
-            gr->SetRange('y', 0, 2.5);
+            gr->SetRange('y', 0, OCTAVE_MAX);
             gr->Axis("Y", "");
             gr->Grid("y", "W", "");
-            gr->Bars(*this->octavData, "e");
+            gr->Bars(*this->octavData, "r");
         }
 
         gr->MultiPlot(20, 12, 46, 13, 8, "#");
@@ -141,7 +143,7 @@ int DrawerDP::Draw(mglGraph *gr)
         gr->Grid("y", "W", "");
         gr->SetTicks('x', sptk_settings->dp->portLen);
         gr->Grid("x", "W", "");
-        gr->Plot(*this->umpData, "-e3");
+        gr->Plot(*this->umpData, "-r3");
         gr->Plot(*this->umpMask, "-k3");
     }
 
@@ -160,7 +162,7 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->MultiPlot(1, 15, 4, 1, 1, "#");
             gr->Puts(
                 mglPoint(0,0),
-                QString("Proximity to curve shape: \\big{Ps = %1%} \t Proximity to the range: \\big{Pr = %2%").arg(this->ps).arg(this->pr).toLocal8Bit().data(),
+                QString("Proximity to curve shape: \\big{Ps = %1%} \t Proximity to the range: \\big{Pr = %2%}").arg(this->ps).arg(this->pr).toLocal8Bit().data(),
                 ":C",
                 24
             );
@@ -194,7 +196,7 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->MultiPlot(1, 12, 1, 1, 1, "#");
             gr->Puts(
                 mglPoint(0,0),
-                QString("Proximity to curve shape: \\big{Ps = %1%} \t Proximity to the range: \\big{Pr = %2%").arg(this->ps_ump).arg(this->pr).toLocal8Bit().data(),
+                QString("Proximity to curve shape: \\big{Ps = %1%} \t Proximity to the range: \\big{Pr = %2%}").arg(this->ps_ump).arg(this->pr).toLocal8Bit().data(),
                 ":C",
                 24
             );
@@ -204,11 +206,11 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->Puts(mglPoint(0,0),fileName.replace(path,"").replace(".wav","").replace("/"," - ").toLocal8Bit().data(), ":C", 24);
 
             gr->MultiPlot(20, 12, 41, 4, 8, "#");
-            gr->SetRange('y', 0, 2.5);
+            gr->SetRange('y', 0, OCTAVE_MAX);
             gr->Axis("Y", "");
             gr->Grid("y", "W", "");
-            gr->Bars(*this->secOctavData, "E");
-            gr->Bars(*this->octavData, "e");
+            gr->Bars(*this->secOctavData, "R");
+            gr->Bars(*this->octavData, "r");
 
             gr->MultiPlot(20, 12, 46, 13, 8, "#");
             gr->SetRange('y', 0, 1);
@@ -216,8 +218,8 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->Grid("y", "W", "");
             gr->SetTicks('x', sptk_settings->dp->portLen);
             gr->Grid("x", "W", "");
-            gr->Plot(*this->secUmpData, "-E4");
-            gr->Plot(*this->umpData, "-e3");
+            gr->Plot(*this->secUmpData, "-R4");
+            gr->Plot(*this->umpData, "-r3");
             gr->Plot(*this->umpMask, "-k3");
         }
     }
@@ -509,6 +511,7 @@ MinMax applyMask(vector * data, vector * mask)
     if (start == 0)
     {
         try {
+            qDebug() << "vector_interpolate_part(" << &dataInterpolate << ", " << start << ", " << end << ", " << sptk_settings->plotF0->interpolation_type << ")";
             vector_interpolate_part(
                         &dataInterpolate,
                         start,
@@ -525,6 +528,7 @@ MinMax applyMask(vector * data, vector * mask)
     {
         qDebug() << start << " " << end;
         try {
+            qDebug() << "vector_interpolate_part(" << &dataInterpolate << ", " << start-1 << ", " << end << ", " << sptk_settings->plotF0->interpolation_type << ")";
             vector_interpolate_part(
                         &dataInterpolate,
                         start-1,
@@ -537,6 +541,7 @@ MinMax applyMask(vector * data, vector * mask)
     } while (end != start && end != dataInterpolate.x);
 
     try {
+        qDebug() << "vector_interpolate_part(" << &dataInterpolate << ", " << start-1 << ", " << dataInterpolate.x - 1 << ", " << sptk_settings->plotF0->interpolation_type << ")";
         vector_interpolate_part(
                     &dataInterpolate,
                     start-1,
@@ -552,7 +557,7 @@ MinMax applyMask(vector * data, vector * mask)
     freev(*data);
     data->v = newDataNorm.v;
     data->v = dataInterpolate.v;
-
+    qDebug() << "finish applyMask";
     return MinMax{min, max};
 }
 
@@ -639,18 +644,26 @@ void DrawerDP::Proc(QString fname)
 
         vector pitch_cutted = copyv(this->simple_data->d_pitch_originl);
         MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_mask);
+        qDebug() << "MinMax " << mm.min << ":" << mm.max;
         this->pitchData = createMglData(pitch_cutted, this->pitchData, true);
         this->pitchData->Norm();
+        qDebug() << "pitchData createMglData";
 
         this->f0max = mm.max;
         this->f0min = mm.min;
 
         this->octavData = new mglData(2);
-        this->octavData->a[0] = 1.0 * this->f0max / this->f0min;
+        qDebug() << "this->f0max " << this->f0max;
+        qDebug() << "this->f0min " << this->f0min;
+        this->octavData->a[0] = (1.0 * this->f0max / this->f0min) - 1;
+        qDebug() << "this->octavData->a[0] " << this->octavData->a[0];
+        if(this->octavData->a[0] > OCTAVE_MAX) this->octavData->a[0] = OCTAVE_MAX;
+        qDebug() << "octavData createMglData";
 
         vector origin_ump = copyv(pitch_cutted);
 
         double mask_scale = 1.0 * this->simple_data->d_full_wave.x / this->simple_data->d_mask.x;
+        qDebug() << "mask_scale " << mask_scale;
         vector ump_mask = makeUmp(
             &origin_ump,
             &this->simple_data->d_mask,
@@ -795,21 +808,21 @@ void DrawerDP::Proc(QString fname)
         this->userf0min = mm.min;
 
         this->secOctavData = new mglData(2);
-        this->secOctavData->a[1] = 1.0 * this->userf0max / this->userf0min;
+        this->secOctavData->a[1] = (1.0 * this->userf0max / this->userf0min) - 1;
+        if(this->secOctavData->a[1] > OCTAVE_MAX) this->secOctavData->a[1] = OCTAVE_MAX;
 
         if(sptk_settings->dp->showF0)
         {
             this->secPitchData = createMglData(pitch_cutted, this->secPitchData, true);
         }
 
-//        this->pr = round((1.0 - fabs(1.0*this->f0max/this->f0min - 1.0*this->userf0max/this->userf0min))*100);
         double user_max = 1.0*this->userf0max;
         double user_min = 1.0*this->userf0min;
         double template_max = 1.0*this->f0max;
         double template_min = 1.0*this->f0min;
         if (user_min == 0) user_min = 1;
         if (template_min == 0) template_min = 1;
-        this->pr = round( (user_max/user_min*100)/(template_max/template_min) );
+        this->pr = round( ((user_max/user_min-1)*100)/((template_max/template_min-1)) );
 
         qDebug() << "sptk_settings->dp->errorType " << sptk_settings->dp->errorType;
         vector o_pitch_cutted = copyv(this->simple_data->d_pitch_originl);

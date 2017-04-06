@@ -24,8 +24,14 @@ GraphsEvalWindow::GraphsEvalWindow(QString path, Drawer * drawer, QWidget *paren
     connect(this->ui->playTemplateBtn, SIGNAL(clicked()), this, SLOT(playTemplate()));
     connect(this->ui->showUMP, SIGNAL(clicked()), this, SLOT(showUMP()));
 
+
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
+
     this->drawer->showUMP = sptk_settings->dp->showPortr;
+    if(this->drawer->showUMP)
+        this->ui->showUMP->setText("Show original");
+    else
+        this->ui->showUMP->setText("Show UMP");
 }
 
 GraphsEvalWindow::~GraphsEvalWindow()
@@ -48,6 +54,10 @@ void GraphsEvalWindow::playTemplate()
 
 void GraphsEvalWindow::showUMP()
 {
+    if(this->drawer->showUMP)
+        this->ui->showUMP->setText("Show UMP");
+    else
+        this->ui->showUMP->setText("Show original");
     this->drawer->showUMP = !this->drawer->showUMP;
     this->QMGL->update();
 }
