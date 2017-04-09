@@ -177,7 +177,7 @@ vector vector_interpolate_by_mask(vector data, vector mask, int cut, int type)
 
 void interpolate_part(vector * data, int start, int end, const gsl_interp_type * T)
 {
-    int edges = gsl_interp_type_min_size(T) * 2;
+    int edges = gsl_interp_type_min_size(T);
 
     int start_index = start - edges;
     if (start_index < 0) start_index = 0;
@@ -189,16 +189,33 @@ void interpolate_part(vector * data, int start, int end, const gsl_interp_type *
     vector x = zerov(n);
     vector y = zerov(n);
 
-    for (int i=start_index; i<end_index; i++)
+    for(int i=start_index; i<=start; i++)
     {
-//        if(data->v[i] != 0 || i==start_index || i==end_index)
-        if((i<=start || i>=end)&&(index<n)&&(data->v[i]!=0||i==start||i==end))
-        {
-            y.v[index] = data->v[i];
-            x.v[index] = i;
-            index++;
-        }
+        printf("i %i\n", i);
+        fprintf(stdout, "val %f\n", data->v[i]);
+        y.v[index] = data->v[i];
+        x.v[index] = i;
+        index++;
     }
+
+    for(int i=end; i<end_index; i++)
+    {
+        printf("i %i\n", i);
+        fprintf(stdout, "val %f\n", data->v[i]);
+        y.v[index] = data->v[i];
+        x.v[index] = i;
+        index++;
+    }
+
+//    for (int i=start_index; i<end_index; i++)
+//    {
+//        if((i<=start_index || i>=end_index)&&(index<n)&&(data->v[i]!=0||i==start_index||i==end_index))
+//        {
+//            y.v[index] = data->v[i];
+//            x.v[index] = i;
+//            index++;
+//        }
+//    }
 
     n = index;
 
@@ -220,24 +237,25 @@ void interpolate_part(vector * data, int start, int end, const gsl_interp_type *
 
 void vector_interpolate_part(vector * data, int start, int end, int type)
 {
-    switch (type) {
-    case 1: // Linear interpolation
-        interpolate_part(data, start, end, gsl_interp_linear);
-        break;
-    case 2: // Cubic spline (тatural boundary conditions)
-        interpolate_part(data, start, end, gsl_interp_cspline);
-        break;
-    case 3: // Cubic spline (periodic boundary conditions)
-        interpolate_part(data, start, end, gsl_interp_cspline_periodic);
-        break;
-    case 4: // Non-rounded Akima spline (natural boundary conditions)
-        interpolate_part(data, start, end, gsl_interp_akima);
-        break;
-    case 5: // Non-rounded Akima spline (periodic boundary conditions)
-        interpolate_part(data, start, end, gsl_interp_akima_periodic);
-        break;
-    case 6: // Steffen’s method
-         interpolate_part(data, start, end, gsl_interp_steffen);
-        break;
-    }
+    if(end - start > 1)
+        switch (type) {
+        case 1: // Linear interpolation
+            interpolate_part(data, start, end, gsl_interp_linear);
+            break;
+        case 2: // Cubic spline (тatural boundary conditions)
+            interpolate_part(data, start, end, gsl_interp_cspline);
+            break;
+        case 3: // Cubic spline (periodic boundary conditions)
+            interpolate_part(data, start, end, gsl_interp_cspline_periodic);
+            break;
+        case 4: // Non-rounded Akima spline (natural boundary conditions)
+            interpolate_part(data, start, end, gsl_interp_akima);
+            break;
+        case 5: // Non-rounded Akima spline (periodic boundary conditions)
+            interpolate_part(data, start, end, gsl_interp_akima_periodic);
+            break;
+        case 6: // Steffen’s method
+             interpolate_part(data, start, end, gsl_interp_steffen);
+            break;
+        }
 }

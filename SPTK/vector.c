@@ -230,6 +230,7 @@ int first_greater_fromv(vector data, int from, double value)
     for(index = from; index < data.x; index++)
         if(data.v[index] > value)
             break;
+    if(index == data.x) index--;
     return index;
 }
 
@@ -239,6 +240,7 @@ int first_fromv(vector data, int from, double value)
     for(index = from; index < data.x; index++)
         if(data.v[index] == value)
             break;
+    if(index == data.x) index--;
     return index;
 }
 

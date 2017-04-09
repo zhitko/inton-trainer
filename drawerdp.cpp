@@ -58,26 +58,42 @@ DrawerDP::DrawerDP() :
     this->f0min = 0;
     this->userf0max = 0;
     this->userf0min = 0;
+    this->simple_data = NULL;
 }
 
 DrawerDP::~DrawerDP()
 {
     qDebug() << "DrawerDP removed";
     if (this->dpData) delete this->dpData;
+    qDebug() << "DrawerDP removed dpData";
     if (this->secWaveData) delete this->secWaveData;
+    qDebug() << "DrawerDP removed secWaveData";
     if (this->errorData) delete this->errorData;
+    qDebug() << "DrawerDP removed errorData";
     if (this->timeData) delete this->timeData;
+    qDebug() << "DrawerDP removed timeData";
     if (this->pSecData) delete this->pSecData;
+    qDebug() << "DrawerDP removed pSecData";
     if (this->nSecData) delete this->nSecData;
+    qDebug() << "DrawerDP removed nSecData";
     if (this->tSecData) delete this->tSecData;
+    qDebug() << "DrawerDP removed tSecData";
     if (this->secPitchData) delete this->secPitchData;
+    qDebug() << "DrawerDP removed secPitchData";
     if (this->secIntensiveData) delete this->secIntensiveData;
+    qDebug() << "DrawerDP removed secIntensiveData";
     if (this->simple_data) freeSimpleGraphData(this->simple_data);
+    qDebug() << "DrawerDP removed simple_data";
     if (this->umpData) delete this->umpData;
+    qDebug() << "DrawerDP removed umpData";
     if (this->secUmpData) delete this->secUmpData;
+    qDebug() << "DrawerDP removed secUmpData";
     if (this->octavData) delete this->octavData;
+    qDebug() << "DrawerDP removed octavData";
     if (this->secOctavData) delete this->secOctavData;
+    qDebug() << "DrawerDP removed secOctavData";
     if (this->umpMask) delete this->umpMask;
+    qDebug() << "DrawerDP removed umpMask";
 }
 
 int DrawerDP::Draw(mglGraph *gr)
@@ -510,15 +526,13 @@ MinMax applyMask(vector * data, vector * mask)
 
     if (start == 0)
     {
-        try {
-            qDebug() << "vector_interpolate_part(" << &dataInterpolate << ", " << start << ", " << end << ", " << sptk_settings->plotF0->interpolation_type << ")";
-            vector_interpolate_part(
-                        &dataInterpolate,
-                        start,
-                        end,
-                        sptk_settings->plotF0->interpolation_type
-            );
-        } catch(int err){ qDebug() << "Error " << err; }
+        qDebug() << "vector_interpolate_part(" << &dataInterpolate << ", " << start << ", " << end << ", " << sptk_settings->plotF0->interpolation_type << ")";
+        vector_interpolate_part(
+                    &dataInterpolate,
+                    start,
+                    end,
+                    sptk_settings->plotF0->interpolation_type
+        );
 
         start = first_fromv(dataInterpolate, end, 0.0);
         end = first_greater_fromv(dataInterpolate, start, 0.0);
@@ -526,29 +540,24 @@ MinMax applyMask(vector * data, vector * mask)
 
     do
     {
-        qDebug() << start << " " << end;
-        try {
-            qDebug() << "vector_interpolate_part(" << &dataInterpolate << ", " << start-1 << ", " << end << ", " << sptk_settings->plotF0->interpolation_type << ")";
-            vector_interpolate_part(
-                        &dataInterpolate,
-                        start-1,
-                        end,
-                        sptk_settings->plotF0->interpolation_type
-            );
-        } catch(int err){ qDebug() << "Error " << err; }
+        qDebug() << "vector_interpolate_part(" << &dataInterpolate << ", " << start-1 << ", " << end << ", " << sptk_settings->plotF0->interpolation_type << ")";
+        vector_interpolate_part(
+                    &dataInterpolate,
+                    start-1,
+                    end,
+                    sptk_settings->plotF0->interpolation_type
+        );
         start = first_fromv(dataInterpolate, end, 0.0);
         end = first_greater_fromv(dataInterpolate, start, 0.0);
     } while (end != start && end != dataInterpolate.x);
 
-    try {
-        qDebug() << "vector_interpolate_part(" << &dataInterpolate << ", " << start-1 << ", " << dataInterpolate.x - 1 << ", " << sptk_settings->plotF0->interpolation_type << ")";
-        vector_interpolate_part(
-                    &dataInterpolate,
-                    start-1,
-                    dataInterpolate.x - 1,
-                    sptk_settings->plotF0->interpolation_type
-        );
-    } catch(int err){ qDebug() << "Error " << err; }
+    qDebug() << "vector_interpolate_part(" << &dataInterpolate << ", " << start-1 << ", " << dataInterpolate.x - 1 << ", " << sptk_settings->plotF0->interpolation_type << ")";
+    vector_interpolate_part(
+                &dataInterpolate,
+                start-1,
+                dataInterpolate.x - 1,
+                sptk_settings->plotF0->interpolation_type
+    );
 
     freev(scaledMask);
     freev(cuttedData);
