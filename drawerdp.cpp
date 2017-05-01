@@ -254,6 +254,11 @@ int DrawerDP::Draw(mglGraph *gr)
     return 0;
 }
 
+double range_log(double x)
+{
+    return log10(x/10)*500;
+}
+
 void setMark(vector * vec, int pos)
 {
     if (vec->x > pos)
@@ -634,11 +639,6 @@ double calculateResultD(vector x, vector y)
     return round((1-result)*100);
 }
 
-double flog(double x)
-{
-    return log10(x/10)*500;
-}
-
 void DrawerDP::Proc(QString fname)
 {
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
@@ -851,7 +851,7 @@ void DrawerDP::Proc(QString fname)
         double template_min = 1.0*this->f0min;
         if (user_min == 0) user_min = 1;
         if (template_min == 0) template_min = 1;
-        this->proximity_range = round( ((flog(user_max)/flog(user_min-1))*100)/((flog(template_max)/flog(template_min-1))) );
+        this->proximity_range = round( ((range_log(user_max)/range_log(user_min)-1)*100)/((range_log(template_max)/range_log(template_min)-1)) );
         if (this->proximity_range > 100) {
             this->proximity_range = 200 - this->proximity_range;
         }
