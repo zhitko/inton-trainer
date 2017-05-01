@@ -814,6 +814,9 @@ void DrawerDP::Proc(QString fname)
 
         freev(timeVector);
 
+        vector pitch_log_cutted = cutv(dataSec->d_pitch_originl, startPos, endPos);
+        applyMapping(&pitch_log_cutted, &mapping);
+
         qDebug() << "len " << endPos - startPos ;
         qDebug() << "startPos " << startPos;
         qDebug() << "endPos " << endPos;
@@ -822,19 +825,33 @@ void DrawerDP::Proc(QString fname)
         getMark(&nSecVector, &this->simple_data->md_n, startPos, marksScale, &mapping);
         getMark(&tSecVector, &this->simple_data->md_t, startPos, marksScale, &mapping);
 
-        this->pSecData = createMglData(pSecVector, this->pSecData, true);
-        this->nSecData = createMglData(nSecVector, this->nSecData, true);
-        this->tSecData = createMglData(tSecVector, this->tSecData, true);
+        vector pSecVectorCutted = vector_cut_by_mask(pSecVector, pitch_log_cutted);
+        vector nSecVectorCutted = vector_cut_by_mask(nSecVector, pitch_log_cutted);
+        vector tSecVectorCutted = vector_cut_by_mask(tSecVector, pitch_log_cutted);
 
         freev(pSecVector);
         freev(nSecVector);
         freev(tSecVector);
 
+        this->pSecData = createMglData(pSecVectorCutted, this->pSecData, true);
+        this->nSecData = createMglData(nSecVectorCutted, this->nSecData, true);
+        this->tSecData = createMglData(tSecVectorCutted, this->tSecData, true);
+
+        freev(pSecVectorCutted);
+        freev(nSecVectorCutted);
+        freev(tSecVectorCutted);
+
         vector pitch_cutted = cutv(dataSec->d_pitch_originl, startPos, endPos);
         applyMapping(&pitch_cutted, &mapping);
-        MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_mask);
+
+        vector mask_cutted = vector_cut_by_mask(this->simple_data->d_mask, pitch_log_cutted);
+
+        MinMax mm = applyMask(&pitch_cutted, &mask_cutted);
         this->userf0max = mm.max;
         this->userf0min = mm.min;
+
+        freev(pitch_log_cutted);
+        freev(mask_cutted);
 
         this->secOctavData = new mglData(2);
         this->secOctavData->a[1] = (1.0 * this->userf0max / this->userf0min) - 1;
