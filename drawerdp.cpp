@@ -3,6 +3,8 @@
 #include <QFile>
 #include <QDebug>
 
+#include <math.h>
+
 #include "settingsdialog.h"
 #include <QApplication>
 #include "DP/continuousdp.h"
@@ -51,9 +53,9 @@ DrawerDP::DrawerDP() :
     this->umpMask = NULL;
     this->errorMax = 0;
     this->errorMin = 0;
-    this->ps = 0.0;
-    this->ps_ump = 0.0;
-    this->pr = 0.0;
+    this->proximity_shape = 0.0;
+    this->proximity_curve_shape = 0.0;
+    this->proximity_range = 0.0;
     this->f0max = 0;
     this->f0min = 0;
     this->userf0max = 0;
@@ -159,8 +161,9 @@ int DrawerDP::Draw(mglGraph *gr)
         gr->Grid("y", "W", "");
         gr->SetTicks('x', sptk_settings->dp->portLen);
         gr->Grid("x", "W", "");
-        gr->Plot(*this->umpData, "-r3");
-        gr->Plot(*this->umpMask, "-k3");
+
+        gr->Area(*this->umpMask, "gwwww!");
+        gr->Plot(*this->umpData, "-r4");
     }
 
     if(isCompare){
@@ -178,7 +181,10 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->MultiPlot(1, 15, 4, 1, 1, "#");
             gr->Puts(
                 mglPoint(0,0),
-                QString("Proximity to curve shape: \\big{Ps = %1%} \t Proximity to the range: \\big{Pr = %2%}").arg(this->ps).arg(this->pr).toLocal8Bit().data(),
+                QString("Proximity to curve shape: \\big{Ps = %1%} \t Proximity to the range: \\big{Pr = %2%}")
+                        .arg(this->proximity_shape)
+                        .arg(this->proximity_range)
+                        .toLocal8Bit().data(),
                 ":C",
                 24
             );
@@ -212,7 +218,10 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->MultiPlot(1, 12, 1, 1, 1, "#");
             gr->Puts(
                 mglPoint(0,0),
-                QString("Proximity to curve shape: \\big{Ps = %1%} \t Proximity to the range: \\big{Pr = %2%}").arg(this->ps_ump).arg(this->pr).toLocal8Bit().data(),
+                QString("Proximity to curve shape: \\big{Ps = %1%} \t Proximity to the range: \\big{Pr = %2%}")
+                        .arg(this->proximity_curve_shape)
+                        .arg(this->proximity_range)
+                        .toLocal8Bit().data(),
                 ":C",
                 24
             );
@@ -234,9 +243,10 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->Grid("y", "W", "");
             gr->SetTicks('x', sptk_settings->dp->portLen);
             gr->Grid("x", "W", "");
-            gr->Plot(*this->secUmpData, "-R4");
-            gr->Plot(*this->umpData, "-r3");
-            gr->Plot(*this->umpMask, "-k3");
+
+            gr->Area(*this->umpMask, "gwwww!");
+            gr->Plot(*this->secUmpData, "-R5");
+            gr->Plot(*this->umpData, "-r4");
         }
     }
 
@@ -447,10 +457,10 @@ vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
         {
             ii++;
             clone_details[ii] = merged_details[i];
-            clone_details[ii].len = clone_details[ii].len / 2;
+            clone_details[ii].len = merged_details[i].len / 2;
             ii++;
             clone_details[ii] = merged_details[i];
-            clone_details[ii].len = clone_details[ii-1].len;
+            clone_details[ii].len = merged_details[i].len / 2;
         } else {
             ii++;
             clone_details[ii] = merged_details[i];
@@ -468,6 +478,8 @@ vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
 
     delete merged_details;
 
+    qDebug() << "data " << data->x;
+    qDebug() << "mask " << mask->x;
     vector strip_data = vector_strip_by_mask(*data, *mask);
     qDebug() << "strip_data " << strip_data.x;
 
@@ -497,6 +509,9 @@ vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
     freev(*data);
     data->v = resized_data.v;
     data->x = resized_data.x;
+
+//    data->v = strip_data.v;
+//    data->x = strip_data.x;
 
     delete clone_details;
 
@@ -617,6 +632,11 @@ double calculateResultD(vector x, vector y)
     }
     result = sqrt(result) / sqrt(x.x);
     return round((1-result)*100);
+}
+
+double flog(double x)
+{
+    return log10(x/10)*500;
 }
 
 void DrawerDP::Proc(QString fname)
@@ -831,17 +851,20 @@ void DrawerDP::Proc(QString fname)
         double template_min = 1.0*this->f0min;
         if (user_min == 0) user_min = 1;
         if (template_min == 0) template_min = 1;
-        this->pr = round( ((user_max/user_min-1)*100)/((template_max/template_min-1)) );
+        this->proximity_range = round( ((flog(user_max)/flog(user_min-1))*100)/((flog(template_max)/flog(template_min-1))) );
+        if (this->proximity_range > 100) {
+            this->proximity_range = 200 - this->proximity_range;
+        }
 
         qDebug() << "sptk_settings->dp->errorType " << sptk_settings->dp->errorType;
         vector o_pitch_cutted = copyv(this->simple_data->d_pitch_originl);
         applyMask(&o_pitch_cutted, &this->simple_data->d_mask);
         switch (sptk_settings->dp->errorType) {
         case 0:
-            this->ps = calculateResultR(o_pitch_cutted, pitch_cutted);
+            this->proximity_shape = calculateResultR(o_pitch_cutted, pitch_cutted);
             break;
         case 1:
-            this->ps = calculateResultD(o_pitch_cutted, pitch_cutted);
+            this->proximity_shape = calculateResultD(o_pitch_cutted, pitch_cutted);
             break;
         }
 
@@ -867,10 +890,10 @@ void DrawerDP::Proc(QString fname)
 
         switch (sptk_settings->dp->errorType) {
         case 0:
-            this->ps_ump = calculateResultR(ump, sec_ump);
+            this->proximity_curve_shape = calculateResultR(ump, sec_ump);
             break;
         case 1:
-            this->ps_ump = calculateResultD(ump, sec_ump);
+            this->proximity_curve_shape = calculateResultD(ump, sec_ump);
             break;
         }
 

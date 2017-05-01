@@ -18,7 +18,7 @@ protected:
     mglData *dpData, *secWaveData, *errorData, *timeData, *secPitchData, *secIntensiveData, *umpData, *secUmpData, *umpMask, *octavData, *secOctavData;
     mglData *pSecData, *nSecData, *tSecData;
     int errorMax, errorMin;
-    double ps, pr, ps_ump;
+    double proximity_shape, proximity_range, proximity_curve_shape;
     int f0min, f0max;
     int userf0min, userf0max;
 
