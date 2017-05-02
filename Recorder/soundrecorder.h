@@ -7,7 +7,7 @@ extern "C" {
     #include "./OpenAL/openal_wrapper.h"
 }
 
-const int INIT_BUFFER_SIZE = 8192;// 4096//8192//16384
+const int INIT_BUFFER_SIZE = 6188;// 4096//8192//16384
 
 struct buffer;
 
@@ -31,7 +31,7 @@ public:
     long int getVolumeLevel();
     long int getMaxVolumeLevel();
     bool isRecording();
-    virtual int getData(void **);
+    int getData(void **);
 signals:
     void resultReady(SoundRecorder *);
 public slots:

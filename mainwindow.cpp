@@ -166,7 +166,7 @@ void MainWindow::autoRecording()
     {
         oal_device * currentDevice = this->settingsDialog->getInputDevice();
         qDebug() << "new SoundRecorder: " << currentDevice->name;
-        this->autoRecorder = new AutoSoundRecorder(currentDevice, sizeof(short int), this);
+        this->autoRecorder = new AutoSoundRecorder(currentDevice, sizeof(short int));
         qDebug() << "is recording: " << this->autoRecorder->isRecording();
         connect(this->autoRecorder, SIGNAL(resultReady(SoundRecorder *)), this, SLOT(recordFinished(SoundRecorder *)));
         this->autoRecordingAct->setIconText(tr("&Auto Recording..."));

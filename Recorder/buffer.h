@@ -3,7 +3,7 @@
 
 typedef struct buffer{
     buffer * next, * prev;
-    void * buffer;
+    void * buffer_data;
     unsigned int size;
 } buffer;
 

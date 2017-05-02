@@ -124,6 +124,8 @@ Drawer * GraphsWindow::createNewDrawer(QString path)
 
 void GraphsWindow::startAutoRecord()
 {
+    SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
+
     qDebug() << "GraphsWindow::startAutoRecord";
     this->ui->setRecordBtn->setEnabled(false);
     this->ui->startAutoRecordBtn->setEnabled(false);
@@ -132,7 +134,7 @@ void GraphsWindow::startAutoRecord()
     if (this->recorder) {
         this->recorder->deleteLater();
     }
-    this->recorder = new AutoSoundRecorder(currentDevice, sizeof(short int), this);
+    this->recorder = new AutoSoundRecorder(currentDevice, sizeof(short int));
     connect(this->recorder, SIGNAL(resultReady(SoundRecorder *)), this, SLOT(stopRecord(SoundRecorder *)));
     this->recorder->startRecording();
 }
@@ -144,7 +146,8 @@ void GraphsWindow::startRecord()
     this->ui->startAutoRecordBtn->setEnabled(false);
     this->ui->stopRecordBtn->setEnabled(true);
     oal_device * currentDevice = SettingsDialog::getInstance()->getInputDevice();
-    this->recorder = new SoundRecorder(currentDevice, sizeof(short int), this);
+//    this->recorder = new SoundRecorder(currentDevice, sizeof(short int), this);
+    this->recorder = new AutoSoundRecorder(currentDevice, sizeof(short int));
     connect(this->recorder, SIGNAL(resultReady(SoundRecorder *)), this, SLOT(stopRecord(SoundRecorder *)));
     this->recorder->startRecording();
 }

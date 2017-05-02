@@ -100,6 +100,7 @@ int DPSoundRecorder::getData(void ** resBuffer)
 
 void DPSoundRecorder::allocateNewBuffer()
 {
+    /*
     if(!recording) return;
     if(this->currentBuffer)
     {
@@ -127,7 +128,6 @@ void DPSoundRecorder::allocateNewBuffer()
             stopRecording();
         }
     }
+    */
     SoundRecorder::allocateNewBuffer();
-//    qDebug() << "DPSoundRecorder::allocateNewBuffer";
 }
-

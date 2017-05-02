@@ -69,7 +69,6 @@ int getValue(void* data, int size)
 
 void SoundRecorder::allocateNewBuffer()
 {
-//    qDebug() << "allocate new buffer";
     if(currentBuffer){
         buffer * current = this->currentBuffer;
         this->currentBuffer = makeBuffer(INIT_BUFFER_SIZE);
@@ -89,13 +88,13 @@ void SoundRecorder::run()
     int currentPos = 0;
     while(recording)
     {
-//        qDebug() << "recording step " << this->allocatedSize << " ( " << currentPos << " : " << INIT_BUFFER_SIZE << " )";
+        qDebug() << "recording step " << this->allocatedSize << " ( " << currentPos << " : " << INIT_BUFFER_SIZE << " )";
         if( currentPos >= INIT_BUFFER_SIZE || this->allocatedSize < INIT_BUFFER_SIZE )
         {
             allocateNewBuffer();
             currentPos = 0;
         }
-        void * pointToWrite = this->currentBuffer->buffer + currentPos;
+        void * pointToWrite = (char*)this->currentBuffer->buffer_data + currentPos;
         int maxToWrite = INIT_BUFFER_SIZE - currentPos;
         int size = getSample(this->device, pointToWrite, this->sampleByteSize, maxToWrite);
         currentPos += size;
