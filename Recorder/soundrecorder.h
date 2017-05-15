@@ -25,6 +25,7 @@ protected:
     int allocatedSize;
     long int avgVolumeLevel;
     bool recording;
+    int currentPos;
 public:
     explicit SoundRecorder(oal_device *device, int sampleByteSize, QObject *parent = 0);
     ~SoundRecorder();

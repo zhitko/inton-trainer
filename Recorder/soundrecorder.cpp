@@ -85,7 +85,7 @@ void SoundRecorder::allocateNewBuffer()
 void SoundRecorder::run()
 {
     this->allocatedSize = 0;
-    int currentPos = 0;
+    currentPos = 0;
     while(recording)
     {
         qDebug() << "recording step " << this->allocatedSize << " ( " << currentPos << " : " << INIT_BUFFER_SIZE << " )";

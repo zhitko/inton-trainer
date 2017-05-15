@@ -146,8 +146,7 @@ void GraphsWindow::startRecord()
     this->ui->startAutoRecordBtn->setEnabled(false);
     this->ui->stopRecordBtn->setEnabled(true);
     oal_device * currentDevice = SettingsDialog::getInstance()->getInputDevice();
-//    this->recorder = new SoundRecorder(currentDevice, sizeof(short int), this);
-    this->recorder = new AutoSoundRecorder(currentDevice, sizeof(short int));
+    this->recorder = new AutoSoundRecorder(currentDevice, sizeof(short int), -1, 2);
     connect(this->recorder, SIGNAL(resultReady(SoundRecorder *)), this, SLOT(stopRecord(SoundRecorder *)));
     this->recorder->startRecording();
 }

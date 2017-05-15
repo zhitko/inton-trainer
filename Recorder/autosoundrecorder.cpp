@@ -10,7 +10,7 @@ extern "C" {
 
 #include <QDebug>
 
-AutoSoundRecorder::AutoSoundRecorder(oal_device *device, int sampleByteSize, int maxTime, QObject *parent) :
+AutoSoundRecorder::AutoSoundRecorder(oal_device *device, int sampleByteSize, int maxTime, int maxIdleTime, QObject *parent) :
     SoundRecorder(device, sampleByteSize, parent),
     lastActiveBuffer(NULL),
     buffersCounter(0),
@@ -18,6 +18,9 @@ AutoSoundRecorder::AutoSoundRecorder(oal_device *device, int sampleByteSize, int
     isSpeechDetected(false)
 {
     maxRecordSize = maxTime * 8000 * this->sampleByteSize;
+    maxIdleSize = maxIdleTime * 8000 * this->sampleByteSize;
+    if (maxIdleSize > (MAX_EMPTY_BUFFERS_BEFORE*INIT_BUFFER_SIZE))
+        maxIdleSize = MAX_EMPTY_BUFFERS_BEFORE*INIT_BUFFER_SIZE-1;
     qDebug() << "AutoSoundRecorder " << maxRecordSize;
 }
 
@@ -37,10 +40,14 @@ void AutoSoundRecorder::allocateNewBuffer()
         stopRecording();
         return;
     }
+    if(!this->isSpeechDetected && this->maxIdleSize > 0 && (this->buffersCounter*INIT_BUFFER_SIZE+this->currentPos) > this->maxIdleSize) {
+        stopRecording();
+        return;
+    }
     if(this->currentBuffer)
     {
         buffersCounter++;
-        if(!this->isSpeechDetected && buffersCounter >= MAX_EMPTY_BUFFERS && this->initBuffer->next)
+        if(!this->isSpeechDetected && buffersCounter >= MAX_EMPTY_BUFFERS_BEFORE && this->initBuffer->next)
         {
             buffersCounter--;
             buffer * tmp = this->initBuffer;
@@ -61,7 +68,7 @@ void AutoSoundRecorder::allocateNewBuffer()
             this->emptyBuffersCounter = 0;
             this->lastActiveBuffer = NULL;
             SoundRecorder::allocateNewBuffer();
-        } else if(this->isSpeechDetected && this->emptyBuffersCounter >= MAX_EMPTY_BUFFERS)
+        } else if(this->isSpeechDetected && this->emptyBuffersCounter >= MAX_EMPTY_BUFFERS_AFTER)
         {
             if(this->lastActiveBuffer && this->lastActiveBuffer->prev)
             {

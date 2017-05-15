@@ -139,27 +139,6 @@
              </property>
             </widget>
            </item>
-           <item>
-            <widget class="QToolButton" name="stopRecordBtn">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-             <property name="icon">
-              <iconset resource="icons.qrc">
-               <normaloff>:/icons/icons/pause.png</normaloff>
-               <disabledoff>:/icons/icons/pause-off.png</disabledoff>:/icons/icons/pause.png</iconset>
-             </property>
-             <property name="iconSize">
-              <size>
-               <width>100</width>
-               <height>100</height>
-              </size>
-             </property>
-            </widget>
-           </item>
           </layout>
          </item>
          <item>
@@ -228,204 +207,60 @@
             <property name="spacing">
              <number>3</number>
             </property>
-            <item row="2" column="0" colspan="3">
-             <widget class="QPushButton" name="fitBtn">
-              <property name="text">
-               <string>to window size</string>
-              </property>
-              <property name="icon">
-               <iconset resource="icons.qrc">
-                <normaloff>:/icons/icons/expand-26.png</normaloff>:/icons/icons/expand-26.png</iconset>
-              </property>
-             </widget>
+            <item row="7" column="2">
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <item>
+               <widget class="QLabel" name="label_8">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>MAX</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="pitchMaxSpin">
+                <property name="maximum">
+                 <number>99999</number>
+                </property>
+                <property name="singleStep">
+                 <number>10</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
-            <item row="0" column="2">
-             <widget class="QPushButton" name="autoRecordBtn">
+            <item row="14" column="2">
+             <widget class="QToolButton" name="openImage">
               <property name="text">
-               <string>Auto Record</string>
+               <string>open image</string>
               </property>
               <property name="icon">
                <iconset resource="icons.qrc">
-                <normaloff>:/icons/icons/voice_recognition_scan-26.png</normaloff>:/icons/icons/voice_recognition_scan-26.png</iconset>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QToolButton" name="specAutoBtn">
-              <property name="text">
-               <string>Spect Auto</string>
-              </property>
-              <property name="icon">
-               <iconset resource="icons.qrc">
-                <normaloff>:/icons/icons/audio_wave-26.png</normaloff>:/icons/icons/audio_wave-26.png</iconset>
+                <normaloff>:/icons/icons/image_file-26.png</normaloff>:/icons/icons/image_file-26.png</iconset>
               </property>
               <property name="toolButtonStyle">
                <enum>Qt::ToolButtonTextBesideIcon</enum>
               </property>
              </widget>
             </item>
-            <item row="0" column="0">
-             <widget class="QToolButton" name="startAutoRecordBtn">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="layoutDirection">
-               <enum>Qt::LeftToRight</enum>
-              </property>
-              <property name="text">
-               <string>Start autorecording</string>
-              </property>
-              <property name="icon">
-               <iconset resource="icons.qrc">
-                <normaloff>:/icons/icons/voice_recognition_scan-26.png</normaloff>
-                <disabledoff>:/icons/icons/voice_recognition_scan-64-off.png</disabledoff>
-                <disabledon>:/icons/icons/voice_recognition_scan-64-off.png</disabledon>:/icons/icons/voice_recognition_scan-26.png</iconset>
-              </property>
-              <property name="toolButtonStyle">
-               <enum>Qt::ToolButtonTextBesideIcon</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="2">
-             <widget class="QToolButton" name="pitchAutoBtn">
-              <property name="text">
-               <string>Pitch Auto</string>
-              </property>
-              <property name="icon">
-               <iconset resource="icons.qrc">
-                <normaloff>:/icons/icons/audio_wave-26.png</normaloff>:/icons/icons/audio_wave-26.png</iconset>
-              </property>
-              <property name="toolButtonStyle">
-               <enum>Qt::ToolButtonTextBesideIcon</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="0">
-             <widget class="QLabel" name="label_5">
-              <property name="font">
-               <font>
-                <weight>75</weight>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>Spect:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="15" column="0">
-             <widget class="QLabel" name="recordLabel">
-              <property name="font">
-               <font>
-                <weight>75</weight>
-                <bold>true</bold>
-               </font>
-              </property>
+            <item row="16" column="0" colspan="3">
+             <widget class="QPushButton" name="recordBtn">
               <property name="text">
                <string>Record</string>
               </property>
-             </widget>
-            </item>
-            <item row="8" column="2">
-             <widget class="QToolButton" name="applyBtn">
-              <property name="text">
-               <string>Apply</string>
-              </property>
               <property name="icon">
                <iconset resource="icons.qrc">
-                <normaloff>:/icons/icons/ok-26.png</normaloff>:/icons/icons/ok-26.png</iconset>
-              </property>
-              <property name="toolButtonStyle">
-               <enum>Qt::ToolButtonTextBesideIcon</enum>
+                <normaloff>:/icons/icons/record-26.png</normaloff>:/icons/icons/record-26.png</iconset>
               </property>
              </widget>
             </item>
-            <item row="12" column="0">
-             <widget class="QSpinBox" name="scaleStepSpin">
-              <property name="minimum">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <number>1000</number>
-              </property>
-              <property name="singleStep">
-               <number>10</number>
-              </property>
-              <property name="value">
-               <number>10</number>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="2">
-             <layout class="QHBoxLayout" name="horizontalLayout_5">
-              <item>
-               <widget class="QLabel" name="label_10">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string> MAX</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QSpinBox" name="specMaxSpin">
-                <property name="maximum">
-                 <number>100</number>
-                </property>
-                <property name="value">
-                 <number>100</number>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item row="14" column="0">
-             <widget class="QToolButton" name="saveImage">
-              <property name="text">
-               <string>save to image</string>
-              </property>
-              <property name="icon">
-               <iconset resource="icons.qrc">
-                <normaloff>:/icons/icons/screenshot-26.png</normaloff>:/icons/icons/screenshot-26.png</iconset>
-              </property>
-              <property name="toolButtonStyle">
-               <enum>Qt::ToolButtonTextBesideIcon</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="0">
-             <layout class="QHBoxLayout" name="horizontalLayout_4">
-              <item>
-               <widget class="QLabel" name="label_9">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string>MIN</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QSpinBox" name="specMinSpin">
-                <property name="maximum">
-                 <number>100</number>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item row="9" column="0">
-             <widget class="QLabel" name="sizeLabel">
+            <item row="13" column="0">
+             <widget class="QLabel" name="label_4">
               <property name="font">
                <font>
                 <weight>75</weight>
@@ -433,36 +268,14 @@
                </font>
               </property>
               <property name="text">
-               <string>Size:</string>
+               <string>Export</string>
+              </property>
+              <property name="openExternalLinks">
+               <bool>false</bool>
               </property>
              </widget>
             </item>
-            <item row="10" column="2">
-             <widget class="QPushButton" name="moreBtn">
-              <property name="text">
-               <string>increese by</string>
-              </property>
-              <property name="icon">
-               <iconset resource="icons.qrc">
-                <normaloff>:/icons/icons/zoom_in-26.png</normaloff>:/icons/icons/zoom_in-26.png</iconset>
-              </property>
-             </widget>
-            </item>
-            <item row="8" column="0">
-             <widget class="QToolButton" name="to3DBtn">
-              <property name="text">
-               <string>to 3D</string>
-              </property>
-              <property name="icon">
-               <iconset resource="icons.qrc">
-                <normaloff>:/icons/icons/fantasy-26.png</normaloff>:/icons/icons/fantasy-26.png</iconset>
-              </property>
-              <property name="toolButtonStyle">
-               <enum>Qt::ToolButtonTextBesideIcon</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="17" column="0">
+            <item row="18" column="0">
              <spacer name="verticalSpacer">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -474,6 +287,19 @@
                </size>
               </property>
              </spacer>
+            </item>
+            <item row="6" column="0">
+             <widget class="QLabel" name="label_6">
+              <property name="font">
+               <font>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Pitch:</string>
+              </property>
+             </widget>
             </item>
             <item row="10" column="0">
              <widget class="QPushButton" name="lessBtn">
@@ -519,53 +345,92 @@
               </item>
              </layout>
             </item>
-            <item row="13" column="0">
-             <widget class="QLabel" name="label_4">
-              <property name="font">
-               <font>
-                <weight>75</weight>
-                <bold>true</bold>
-               </font>
-              </property>
+            <item row="8" column="0">
+             <widget class="QToolButton" name="to3DBtn">
               <property name="text">
-               <string>Export</string>
-              </property>
-              <property name="openExternalLinks">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="0">
-             <widget class="QLabel" name="label_6">
-              <property name="font">
-               <font>
-                <weight>75</weight>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>Pitch:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="14" column="2">
-             <widget class="QToolButton" name="openImage">
-              <property name="text">
-               <string>open image</string>
+               <string>to 3D</string>
               </property>
               <property name="icon">
                <iconset resource="icons.qrc">
-                <normaloff>:/icons/icons/image_file-26.png</normaloff>:/icons/icons/image_file-26.png</iconset>
+                <normaloff>:/icons/icons/fantasy-26.png</normaloff>:/icons/icons/fantasy-26.png</iconset>
               </property>
               <property name="toolButtonStyle">
                <enum>Qt::ToolButtonTextBesideIcon</enum>
               </property>
              </widget>
             </item>
-            <item row="7" column="2">
-             <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item row="9" column="0">
+             <widget class="QLabel" name="sizeLabel">
+              <property name="font">
+               <font>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Size:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="14" column="0">
+             <widget class="QToolButton" name="saveImage">
+              <property name="text">
+               <string>save to image</string>
+              </property>
+              <property name="icon">
+               <iconset resource="icons.qrc">
+                <normaloff>:/icons/icons/screenshot-26.png</normaloff>:/icons/icons/screenshot-26.png</iconset>
+              </property>
+              <property name="toolButtonStyle">
+               <enum>Qt::ToolButtonTextBesideIcon</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="label_5">
+              <property name="font">
+               <font>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Spect:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="2">
+             <widget class="QToolButton" name="pitchAutoBtn">
+              <property name="text">
+               <string>Pitch Auto</string>
+              </property>
+              <property name="icon">
+               <iconset resource="icons.qrc">
+                <normaloff>:/icons/icons/audio_wave-26.png</normaloff>:/icons/icons/audio_wave-26.png</iconset>
+              </property>
+              <property name="toolButtonStyle">
+               <enum>Qt::ToolButtonTextBesideIcon</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="2">
+             <widget class="QToolButton" name="applyBtn">
+              <property name="text">
+               <string>Apply</string>
+              </property>
+              <property name="icon">
+               <iconset resource="icons.qrc">
+                <normaloff>:/icons/icons/ok-26.png</normaloff>:/icons/icons/ok-26.png</iconset>
+              </property>
+              <property name="toolButtonStyle">
+               <enum>Qt::ToolButtonTextBesideIcon</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <layout class="QHBoxLayout" name="horizontalLayout_4">
               <item>
-               <widget class="QLabel" name="label_8">
+               <widget class="QLabel" name="label_9">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -573,30 +438,165 @@
                  </sizepolicy>
                 </property>
                 <property name="text">
-                 <string>MAX</string>
+                 <string>MIN</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QSpinBox" name="pitchMaxSpin">
+               <widget class="QSpinBox" name="specMinSpin">
                 <property name="maximum">
-                 <number>99999</number>
-                </property>
-                <property name="singleStep">
-                 <number>10</number>
+                 <number>100</number>
                 </property>
                </widget>
               </item>
              </layout>
             </item>
-            <item row="16" column="0" colspan="3">
-             <widget class="QPushButton" name="recordBtn">
+            <item row="15" column="0">
+             <widget class="QLabel" name="recordLabel">
+              <property name="font">
+               <font>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
               <property name="text">
                <string>Record</string>
               </property>
+             </widget>
+            </item>
+            <item row="10" column="2">
+             <widget class="QPushButton" name="moreBtn">
+              <property name="text">
+               <string>increese by</string>
+              </property>
               <property name="icon">
                <iconset resource="icons.qrc">
-                <normaloff>:/icons/icons/record-26.png</normaloff>:/icons/icons/record-26.png</iconset>
+                <normaloff>:/icons/icons/zoom_in-26.png</normaloff>:/icons/icons/zoom_in-26.png</iconset>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="2">
+             <layout class="QHBoxLayout" name="horizontalLayout_5">
+              <item>
+               <widget class="QLabel" name="label_10">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string> MAX</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="specMaxSpin">
+                <property name="maximum">
+                 <number>100</number>
+                </property>
+                <property name="value">
+                 <number>100</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item row="0" column="0">
+             <widget class="QToolButton" name="startAutoRecordBtn">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="layoutDirection">
+               <enum>Qt::LeftToRight</enum>
+              </property>
+              <property name="text">
+               <string>Start autorecording</string>
+              </property>
+              <property name="icon">
+               <iconset resource="icons.qrc">
+                <normaloff>:/icons/icons/voice_recognition_scan-26.png</normaloff>
+                <disabledoff>:/icons/icons/voice_recognition_scan-64-off.png</disabledoff>
+                <disabledon>:/icons/icons/voice_recognition_scan-64-off.png</disabledon>:/icons/icons/voice_recognition_scan-26.png</iconset>
+              </property>
+              <property name="toolButtonStyle">
+               <enum>Qt::ToolButtonTextBesideIcon</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="12" column="0">
+             <widget class="QSpinBox" name="scaleStepSpin">
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>1000</number>
+              </property>
+              <property name="singleStep">
+               <number>10</number>
+              </property>
+              <property name="value">
+               <number>10</number>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0" colspan="3">
+             <widget class="QPushButton" name="fitBtn">
+              <property name="text">
+               <string>to window size</string>
+              </property>
+              <property name="icon">
+               <iconset resource="icons.qrc">
+                <normaloff>:/icons/icons/expand-26.png</normaloff>:/icons/icons/expand-26.png</iconset>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QPushButton" name="autoRecordBtn">
+              <property name="text">
+               <string>Auto Record</string>
+              </property>
+              <property name="icon">
+               <iconset resource="icons.qrc">
+                <normaloff>:/icons/icons/voice_recognition_scan-26.png</normaloff>:/icons/icons/voice_recognition_scan-26.png</iconset>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QToolButton" name="specAutoBtn">
+              <property name="text">
+               <string>Spect Auto</string>
+              </property>
+              <property name="icon">
+               <iconset resource="icons.qrc">
+                <normaloff>:/icons/icons/audio_wave-26.png</normaloff>:/icons/icons/audio_wave-26.png</iconset>
+              </property>
+              <property name="toolButtonStyle">
+               <enum>Qt::ToolButtonTextBesideIcon</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="17" column="0">
+             <widget class="QToolButton" name="stopRecordBtn">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="icons.qrc">
+                <normaloff>:/icons/icons/pause.png</normaloff>
+                <disabledoff>:/icons/icons/pause-off.png</disabledoff>:/icons/icons/pause.png</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
+               </size>
               </property>
              </widget>
             </item>
