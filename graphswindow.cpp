@@ -10,6 +10,7 @@
 #include "drawer.h"
 #include "soundplayer.h"
 #include "Recorder/autosoundrecorder.h"
+#include "Recorder/timesoundrecorder.h"
 
 #include <QDebug>
 
@@ -141,14 +142,34 @@ void GraphsWindow::startAutoRecord()
 
 void GraphsWindow::startRecord()
 {
-    qDebug() << "GraphsWindow::setRecord";
-    this->ui->setRecordBtn->setEnabled(false);
-    this->ui->startAutoRecordBtn->setEnabled(false);
-    this->ui->stopRecordBtn->setEnabled(true);
-    oal_device * currentDevice = SettingsDialog::getInstance()->getInputDevice();
-    this->recorder = new AutoSoundRecorder(currentDevice, sizeof(short int), -1, 2);
-    connect(this->recorder, SIGNAL(resultReady(SoundRecorder *)), this, SLOT(stopRecord(SoundRecorder *)));
-    this->recorder->startRecording();
+    if (this->recorder && this->recorder->isRecording())
+    {
+        this->recorder->stopRecording();
+    } else {
+        SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
+        qDebug() << "GraphsWindow::setRecord";
+        this->ui->setRecordBtn->setEnabled(false);
+        this->ui->startAutoRecordBtn->setEnabled(false);
+        this->ui->stopRecordBtn->setEnabled(true);
+        oal_device * currentDevice = SettingsDialog::getInstance()->getInputDevice();
+
+        if (sptk_settings->dp->recordingType == 0)
+        {
+            this->recorder = new TimeSoundRecorder(currentDevice, sizeof(short int), sptk_settings->dp->recordingSeconds);
+        } else if (sptk_settings->dp->recordingType == 1)
+        {
+            this->ui->setRecordBtn->setEnabled(true);
+            this->recorder = new SoundRecorder(currentDevice, sizeof(short int));
+        } else if (sptk_settings->dp->recordingType == 2)
+        {
+            this->recorder = new AutoSoundRecorder(currentDevice, sizeof(short int), -1, 2);
+        } else { // TODO: change to energy detect recording
+            this->recorder = new AutoSoundRecorder(currentDevice, sizeof(short int), -1, 2);
+        }
+
+        connect(this->recorder, SIGNAL(resultReady(SoundRecorder *)), this, SLOT(stopRecord(SoundRecorder *)));
+        this->recorder->startRecording();
+    }
 }
 
 void GraphsWindow::stopRecord()

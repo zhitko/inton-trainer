@@ -191,6 +191,9 @@ typedef struct _DP_SETTINGS {
     int errorType; // 0 - r; 1 - d
 
     int useForDP; // 0 - Spectr; 1 - Cepstrum
+
+    int recordingType;
+    int recordingSeconds;
 } DP_SETTINGS;
 
 typedef struct _SPEC_SETTINGS {

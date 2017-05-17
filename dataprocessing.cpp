@@ -335,7 +335,7 @@ GraphData * ProcWave2Data(QString fname)
     data->d_p_wave = p_wave;
     data->d_n_wave = n_wave;
     data->d_t_wave = t_wave;
-    data->d_pitch_originl = pitch;
+    data->d_pitch_original = pitch;
     data->d_pitch = pitch_mid;
     data->pitch_max = pitch_max;
     data->pitch_min = pitch_min;
@@ -451,7 +451,7 @@ SimpleGraphData * SimpleProcWave2Data(QString fname)
     SimpleGraphData * data = new SimpleGraphData();
 
     data->d_full_wave = norm_wave;
-    data->d_pitch_originl = pitch;
+    data->d_pitch_original = pitch;
     data->d_pitch = pitch_mid;
     data->d_pitch_log = pitch_log;
     data->d_intensive_original = intensive;
@@ -473,7 +473,7 @@ void freeGraphData(GraphData * data)
     freev(data->d_intensive_original);
     freev(data->d_intensive);
     freev(data->d_avg_intensive);
-    freev(data->d_pitch_originl);
+    freev(data->d_pitch_original);
     freev(data->d_pitch);
     freev(data->d_pitch_log);
     freev(data->d_spec);
@@ -493,7 +493,7 @@ void freeGraphData(GraphData * data)
 void freeSimpleGraphData(SimpleGraphData * data)
 {
     freev(data->d_full_wave);
-    freev(data->d_pitch_originl);
+    freev(data->d_pitch_original);
     freev(data->d_pitch);
     freev(data->d_pitch_log);
     freev(data->d_intensive_original);

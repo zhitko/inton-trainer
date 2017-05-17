@@ -180,7 +180,7 @@ void Drawer::Proc(QString fname)
     midIntensiveData->Norm();
     qDebug() << "midIntensiveData Filled";
 
-    pitchDataOriginal = createMglData(data->d_pitch_originl, pitchDataOriginal, true);
+    pitchDataOriginal = createMglData(data->d_pitch_original, pitchDataOriginal, true);
     pitchDataOriginal->Norm();
     pitchData = createMglData(data->d_pitch, pitchData);
     pitchData->Norm();

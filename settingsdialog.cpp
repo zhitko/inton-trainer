@@ -152,6 +152,9 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->dp->errorType = instance->ui->errorTypeBox->currentIndex();
     sptk_settings->dp->useForDP = instance->ui->useForDP->currentIndex();
 
+    sptk_settings->dp->recordingType = instance->ui->recordingType->currentIndex();
+    sptk_settings->dp->recordingSeconds = instance->ui->recordingSeconds->value();
+
     return sptk_settings;
 }
 
@@ -255,6 +258,10 @@ void SettingsDialog::loadSettings()
         this->ui->errorTypeBox->setCurrentIndex(settings.value("error/type").toInt());
     if(settings.contains("dp/use"))
         this->ui->useForDP->setCurrentIndex(settings.value("dp/use").toInt());
+    if(settings.contains("dp/recordingSeconds"))
+        this->ui->recordingSeconds->setValue(settings.value("dp/recordingSeconds").toInt());
+    if(settings.contains("dp/recordingType"))
+        this->ui->recordingType->setCurrentIndex(settings.value("dp/recordingType").toInt());
 
 
     if(settings.contains("frame/leng"))
@@ -345,6 +352,8 @@ void SettingsDialog::saveSettings()
     settings.setValue("dp/showTime", this->ui->showTime->isChecked());
     settings.setValue("error/type", this->ui->errorTypeBox->currentIndex());
     settings.setValue("dp/use", this->ui->useForDP->currentIndex());
+    settings.setValue("dp/recordingType", this->ui->recordingType->currentIndex());
+    settings.setValue("dp/recordingSeconds", this->ui->recordingSeconds->value());
 
     settings.setValue("mathGL/quality", this->ui->mathGLQualitySpin->value());
     settings.setValue("mathGL/autoOpen", this->ui->isAutoOpen->isChecked());

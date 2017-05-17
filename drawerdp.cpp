@@ -668,7 +668,7 @@ void DrawerDP::Proc(QString fname)
         freev(nVector);
         freev(tVector);
 
-        vector pitch_cutted = copyv(this->simple_data->d_pitch_originl);
+        vector pitch_cutted = copyv(this->simple_data->d_pitch_original);
         MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_mask);
         qDebug() << "MinMax " << mm.min << ":" << mm.max;
         this->pitchData = createMglData(pitch_cutted, this->pitchData, true);
@@ -712,7 +712,7 @@ void DrawerDP::Proc(QString fname)
 
         if(sptk_settings->dp->showOriginalF0)
         {
-            this->pitchDataOriginal = createMglData(this->simple_data->d_pitch_originl, this->pitchDataOriginal, true);
+            this->pitchDataOriginal = createMglData(this->simple_data->d_pitch_original, this->pitchDataOriginal, true);
             this->pitchDataOriginal->Norm();
         }
 
@@ -827,7 +827,7 @@ void DrawerDP::Proc(QString fname)
         freev(nSecVector);
         freev(tSecVector);
 
-        vector pitch_cutted = cutv(dataSec->d_pitch_originl, startPos, endPos);
+        vector pitch_cutted = cutv(dataSec->d_pitch_original, startPos, endPos);
         applyMapping(&pitch_cutted, &mapping);
 
         MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_mask);
@@ -855,7 +855,7 @@ void DrawerDP::Proc(QString fname)
         }
 
         qDebug() << "sptk_settings->dp->errorType " << sptk_settings->dp->errorType;
-        vector o_pitch_cutted = copyv(this->simple_data->d_pitch_originl);
+        vector o_pitch_cutted = copyv(this->simple_data->d_pitch_original);
         applyMask(&o_pitch_cutted, &this->simple_data->d_mask);
         switch (sptk_settings->dp->errorType) {
         case 0:

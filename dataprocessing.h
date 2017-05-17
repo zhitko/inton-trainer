@@ -15,7 +15,7 @@ struct MaskData{
 
 struct SimpleGraphData{
     vector d_full_wave;
-    vector d_pitch_originl;
+    vector d_pitch_original;
     vector d_pitch;
     vector d_pitch_log;
     vector d_intensive_original;

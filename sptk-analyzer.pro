@@ -40,6 +40,7 @@ SOURCES += \
     graphswindow.cpp \
     settingsdialog.cpp \
     Recorder/autosoundrecorder.cpp \
+    Recorder/timesoundrecorder.cpp \
     Recorder/buffer.cpp \
     drawer.cpp \
     soundplayer.cpp \
@@ -63,6 +64,7 @@ HEADERS  += \
     graphswindow.h \
     settingsdialog.h \
     Recorder/autosoundrecorder.h \
+    Recorder/timesoundrecorder.h \
     Recorder/buffer.h \
     drawer.h \
     soundplayer.h \
