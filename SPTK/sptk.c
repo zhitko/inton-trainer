@@ -98,6 +98,7 @@ DP_SETTINGS *initDpSettings()
     dp->useForDP = 0;
     dp->showPortr = 1;
     dp->portLen = 5;
+    dp->useStripUmp = 0;
     dp->recordingSeconds = 3;
     dp->recordingType = 0;
     return dp;

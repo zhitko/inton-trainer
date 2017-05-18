@@ -181,6 +181,7 @@ typedef struct _DP_SETTINGS {
     double continiusKT;
 
     int portLen;
+    int useStripUmp;
     int showA0;
     int showF0;
     int showOriginalF0;

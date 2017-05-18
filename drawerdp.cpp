@@ -389,7 +389,7 @@ int compare_mask_details (const void * a, const void * b)
   return ( ((MaskDetails*)a)->from - ((MaskDetails*)b)->from );
 }
 
-vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, MaskData mask_t, double mask_scale, int part_len)
+vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, MaskData mask_t, double mask_scale, int part_len, int useStripUmp)
 {
     const int TYPE_P = 1;
     const int TYPE_N = 2;
@@ -413,7 +413,7 @@ vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
 
     int merge = 0;
     for(int i=0; i<(len-1); i++)
-        if(details[i].type == details[i+1].type)
+        if(details[i].type == details[i+1].type && (details[i].type == TYPE_P || details[i].type == TYPE_T))
             merge ++;
 
     int merge_len = len - merge;
@@ -424,9 +424,12 @@ vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
 
     for(int i=1; i<len; i++)
     {
-        if(details[i-1].type == details[i].type)
+        if(details[i-1].type == details[i].type && (details[i].type == TYPE_P || details[i].type == TYPE_T))
         {
-            merged_details[ii].len += details[i].len;
+            if (useStripUmp)
+                merged_details[ii].len += details[i].len;
+            else
+                merged_details[ii].len = details[i].from + details[i].len - merged_details[ii].from;
         } else {
             ii++;
             merged_details[ii] = details[i];
@@ -435,10 +438,46 @@ vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
 
     delete details;
 
+    if(!useStripUmp)
+    {
+        if(merge_len>0)
+        {
+            merged_details[0].len += merged_details[0].from;
+            merged_details[0].from = 0;
+        }
+
+        for(int i=1; i<merge_len; i++)
+        {
+            int t1 = merged_details[i-1].type;
+            int t2 = merged_details[i].type;
+
+            if((t1 == TYPE_P || t1 == TYPE_T) && t2 == TYPE_N)
+            {
+                merged_details[i-1].len = merged_details[i].from - merged_details[i-1].from;
+            } else if(t1 == TYPE_N && (t2 == TYPE_P || t2 == TYPE_T))
+            {
+                int d = merged_details[i].from - (merged_details[i-1].from + merged_details[i-1].len);
+                merged_details[i].from -= d;
+                merged_details[i].len += d;
+            } else if(t1 == TYPE_N && t2 == TYPE_N)
+            {
+                int d = (merged_details[i].from - (merged_details[i-1].from + merged_details[i-1].len))/2;
+                merged_details[i-1].len += d;
+                merged_details[i].from -= d;
+                merged_details[i].len += d;
+            }
+        }
+    }
+
     int clone = 0;
     for(int i=1; i<(merge_len-1); i++)
-        if(details[i-1].type == TYPE_N && details[i+1].type == TYPE_N)
+    {
+        int t1 = merged_details[i-1].type;
+        int t2 = merged_details[i].type;
+        int t3 = merged_details[i+1].type;
+        if(t1 == TYPE_N && t3 == TYPE_N && (t2 == TYPE_P || t2 == TYPE_T))
             clone++;
+    }
 
     int clone_len = merge_len + clone;
     MaskDetails * clone_details = new MaskDetails[clone_len];
@@ -456,16 +495,20 @@ vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
         ump_mask.v[UMP_MASK_LEN] = 0.01;
     }
 
-    for(int i=1; i<merge_len; i++)
+    for(int i=1; i<(merge_len-1); i++)
     {
-        if(details[i-1].type == TYPE_N && details[i+1].type == TYPE_N)
+        int t1 = merged_details[i-1].type;
+        int t2 = merged_details[i].type;
+        int t3 = merged_details[i+1].type;
+        if(t1 == TYPE_N && t3 == TYPE_N && (t2 == TYPE_P || t2 == TYPE_T))
         {
             ii++;
             clone_details[ii] = merged_details[i];
             clone_details[ii].len = merged_details[i].len / 2;
             ii++;
             clone_details[ii] = merged_details[i];
-            clone_details[ii].len = merged_details[i].len / 2;
+            clone_details[ii].from = clone_details[ii-1].from + clone_details[ii-1].len;
+            clone_details[ii].len = clone_details[ii-1].len;
         } else {
             ii++;
             clone_details[ii] = merged_details[i];
@@ -480,12 +523,20 @@ vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
     }
 
     clone_details[clone_len-1] = merged_details[merge_len-1];
+    if(clone_details[clone_len-1].type == TYPE_N)
+    {
+        ii++;
+        ump_mask.v[ii*UMP_MASK_LEN] = 0.01;
+        for(int i=1; i<UMP_MASK_LEN; i++) ump_mask.v[ii*UMP_MASK_LEN+i] = 1;
+        ump_mask.v[(ii+1)*UMP_MASK_LEN] = 0.01;
+    }
 
     delete merged_details;
 
     qDebug() << "data " << data->x;
     qDebug() << "mask " << mask->x;
-    vector strip_data = vector_strip_by_mask(*data, *mask);
+    vector strip_data;
+    strip_data = copyv(*data);
     qDebug() << "strip_data " << strip_data.x;
 
     vector resized_data = zerov(part_len*clone_len);
@@ -494,8 +545,8 @@ vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
     for(int i=0; i<clone_len; i++)
     {
         vector in = zerov(clone_details[i].len);
-        for(int jj=0; jj<clone_details[i].len && (jj+ii) < strip_data.x; jj++)
-            in.v[jj] = strip_data.v[jj+ii];
+        for(int j=0; j<clone_details[i].len; j++)
+            in.v[j] = strip_data.v[clone_details[i].from + j];
         qDebug() << "len " << in.x;
 
         vector out = vector_resize(in, part_len);
@@ -668,10 +719,11 @@ void DrawerDP::Proc(QString fname)
         freev(nVector);
         freev(tVector);
 
-        vector pitch_cutted = copyv(this->simple_data->d_pitch_original);
+        vector pitch_cutted = copyv(this->simple_data->d_pitch);
         MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_mask);
         qDebug() << "MinMax " << mm.min << ":" << mm.max;
-        this->pitchData = createMglData(pitch_cutted, this->pitchData, true);
+        vector pitch_smooth = vector_mid(pitch_cutted, sptk_settings->plotF0->midFrame);
+        this->pitchData = createMglData(pitch_smooth, this->pitchData, true);
         this->pitchData->Norm();
         qDebug() << "pitchData createMglData";
 
@@ -686,7 +738,7 @@ void DrawerDP::Proc(QString fname)
         if(this->octavData->a[0] > OCTAVE_MAX) this->octavData->a[0] = OCTAVE_MAX;
         qDebug() << "octavData createMglData";
 
-        vector origin_ump = copyv(pitch_cutted);
+        vector origin_ump = copyv(pitch_smooth);
 
         double mask_scale = 1.0 * this->simple_data->d_full_wave.x / this->simple_data->d_mask.x;
         qDebug() << "mask_scale " << mask_scale;
@@ -697,7 +749,8 @@ void DrawerDP::Proc(QString fname)
             this->simple_data->md_n,
             this->simple_data->md_t,
             mask_scale,
-            sptk_settings->dp->portLen
+            sptk_settings->dp->portLen,
+            sptk_settings->dp->useStripUmp
         );
 
         this->umpData = createMglData(origin_ump, this->umpData);
@@ -708,6 +761,7 @@ void DrawerDP::Proc(QString fname)
         freev(origin_ump);
 
         freev(pitch_cutted);
+        freev(pitch_smooth);
         qDebug() << "pitchData Filled";
 
         if(sptk_settings->dp->showOriginalF0)
@@ -827,12 +881,14 @@ void DrawerDP::Proc(QString fname)
         freev(nSecVector);
         freev(tSecVector);
 
-        vector pitch_cutted = cutv(dataSec->d_pitch_original, startPos, endPos);
+        vector pitch_cutted = cutv(dataSec->d_pitch, startPos, endPos);
         applyMapping(&pitch_cutted, &mapping);
 
         MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_mask);
         this->userf0max = mm.max;
         this->userf0min = mm.min;
+
+        vector pitch_smooth = vector_mid(pitch_cutted, sptk_settings->plotF0->midFrame);
 
         this->secOctavData = new mglData(2);
         this->secOctavData->a[1] = (1.0 * this->userf0max / this->userf0min) - 1;
@@ -840,7 +896,7 @@ void DrawerDP::Proc(QString fname)
 
         if(sptk_settings->dp->showF0)
         {
-            this->secPitchData = createMglData(pitch_cutted, this->secPitchData, true);
+            this->secPitchData = createMglData(pitch_smooth, this->secPitchData, true);
         }
 
         double user_max = 1.0*this->userf0max;
@@ -859,14 +915,14 @@ void DrawerDP::Proc(QString fname)
         applyMask(&o_pitch_cutted, &this->simple_data->d_mask);
         switch (sptk_settings->dp->errorType) {
         case 0:
-            this->proximity_shape = calculateResultR(o_pitch_cutted, pitch_cutted);
+            this->proximity_shape = calculateResultR(o_pitch_cutted, pitch_smooth);
             break;
         case 1:
-            this->proximity_shape = calculateResultD(o_pitch_cutted, pitch_cutted);
+            this->proximity_shape = calculateResultD(o_pitch_cutted, pitch_smooth);
             break;
         }
 
-        vector sec_ump = copyv(pitch_cutted);
+        vector sec_ump = copyv(pitch_smooth);
 
         double mask_scale = 1.0 * this->simple_data->d_full_wave.x / this->simple_data->d_mask.x;
         makeUmp(
@@ -876,7 +932,8 @@ void DrawerDP::Proc(QString fname)
             this->simple_data->md_n,
             this->simple_data->md_t,
             mask_scale,
-            sptk_settings->dp->portLen
+            sptk_settings->dp->portLen,
+            sptk_settings->dp->useStripUmp
         );
 
         this->secUmpData = createMglData(sec_ump, this->secUmpData);
@@ -899,6 +956,7 @@ void DrawerDP::Proc(QString fname)
 
         freev(o_pitch_cutted);
         freev(pitch_cutted);
+        freev(pitch_smooth);
 
         if(sptk_settings->dp->showA0)
         {
