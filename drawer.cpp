@@ -102,7 +102,6 @@ Drawer::Drawer() : mglDraw(),
     scaledMaskData = NULL;
     intensiveData = NULL;
     intensiveDataOriginal = NULL;
-    midIntensiveData = NULL;
     pWaveData = NULL;
     nWaveData = NULL;
     tWaveData = NULL;
@@ -118,7 +117,6 @@ Drawer::~Drawer()
     if (this->scaledMaskData) delete this->scaledMaskData;
     if (this->intensiveData) delete this->intensiveData;
     if (this->intensiveDataOriginal) delete this->intensiveDataOriginal;
-    if (this->midIntensiveData) delete this->midIntensiveData;
     if (this->pWaveData) delete this->pWaveData;
     if (this->nWaveData) delete this->nWaveData;
     if (this->tWaveData) delete this->tWaveData;
@@ -175,10 +173,6 @@ void Drawer::Proc(QString fname)
     intensiveData = createMglData(data->d_intensive, intensiveData);
     intensiveData->Norm();
     qDebug() << "intensiveData Filled";
-
-    midIntensiveData = createMglData(data->d_avg_intensive, midIntensiveData);
-    midIntensiveData->Norm();
-    qDebug() << "midIntensiveData Filled";
 
     pitchDataOriginal = createMglData(data->d_pitch_original, pitchDataOriginal, true);
     pitchDataOriginal->Norm();

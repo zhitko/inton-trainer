@@ -216,9 +216,6 @@ GraphData * ProcWave2Data(QString fname)
     vector intensive = vector_intensive(frame, sptk_settings->frame);
     qDebug() << "intensive";
 
-    vector intensive_avg = vector_avg_intensive(intensive, sptk_settings->energyFrame);
-    qDebug() << "intensive_avg";
-
     vector window = sptk_window(frame, sptk_settings->window);
     qDebug() << "window";
 
@@ -341,7 +338,6 @@ GraphData * ProcWave2Data(QString fname)
     data->pitch_min = pitch_min;
     data->d_intensive_original = intensive;
     data->d_intensive = intensive_mid;
-    data->d_avg_intensive = intensive_avg;
     data->d_spec_proc = spec_proc;
     data->d_spec = spec;
     data->d_mask = mask;
@@ -472,7 +468,6 @@ void freeGraphData(GraphData * data)
 {
     freev(data->d_intensive_original);
     freev(data->d_intensive);
-    freev(data->d_avg_intensive);
     freev(data->d_pitch_original);
     freev(data->d_pitch);
     freev(data->d_pitch_log);

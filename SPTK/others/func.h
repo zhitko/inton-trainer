@@ -7,7 +7,6 @@
 #define MASK_LIMIT 0.9
 
 vector vector_intensive(vector, FRAME_SETTINGS*);
-vector vector_avg_intensive(vector, ENERGY_SETTINGS*);
 vector vector_mid(vector, int);
 vector vector_fill_empty(vector);
 vector vector_pow_exp(vector, int, double);

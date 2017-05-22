@@ -104,10 +104,6 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->pitch->THRESH_RAPT = instance->ui->pitchThreshRaptSpin->value();
     sptk_settings->pitch->THRESH_SWIPE = instance->ui->pitchThreshSwipeSpin->value();
 
-    sptk_settings->energyFrame->leng = instance->ui->energyMidFrame->value();
-    sptk_settings->energyFrame->threshold_start = instance->ui->energyMidThresholdStart->value();
-    sptk_settings->energyFrame->threshold_end = instance->ui->energyMidThresholdEnd->value();
-
     sptk_settings->plotF0->midFrame = instance->ui->plotMidFrameF0Spin->value();
 //    sptk_settings->plotF0->interpolation_edges = instance->ui->plotInterpolationEdgesF0Spin->value();
     sptk_settings->plotF0->interpolation_type = instance->ui->plotInterpolationTypeF0Box->currentIndex();
@@ -207,13 +203,6 @@ void SettingsDialog::loadSettings()
         this->ui->plotInterpolationTypeEnergyBox->setCurrentIndex(settings.value("plot_energy/interpolation_type").toInt());
     if(settings.contains("plot_energy/interpolation_edges"))
         this->ui->plotInterpolationEdgesEnergySpin->setValue(settings.value("plot_energy/interpolation_edges").toInt());
-
-    if(settings.contains("energyFrame/leng"))
-        this->ui->energyMidFrame->setValue(settings.value("energyFrame/leng").toInt());
-    if(settings.contains("energyFrame/threshold_start"))
-        this->ui->energyMidThresholdStart->setValue(settings.value("energyFrame/threshold_start").toDouble());
-    if(settings.contains("energyFrame/threshold_end"))
-        this->ui->energyMidThresholdEnd->setValue(settings.value("energyFrame/threshold_end").toDouble());
 
     if(settings.contains("spec/factor"))
         this->ui->specFactorSpin->setValue(settings.value("spec/factor").toInt());
@@ -316,10 +305,6 @@ void SettingsDialog::saveSettings()
     settings.setValue("plot_energy/mid_frame", this->ui->plotMidFrameEnergySpin->value());
     settings.setValue("plot_energy/interpolation_edges", this->ui->plotInterpolationEdgesEnergySpin->value());
     settings.setValue("plot_energy/interpolation_type", this->ui->plotInterpolationTypeEnergyBox->currentIndex());
-
-    settings.setValue("energyFrame/leng", this->ui->energyMidFrame->value());
-    settings.setValue("energyFrame/threshold_start", this->ui->energyMidThresholdStart->value());
-    settings.setValue("energyFrame/threshold_end", this->ui->energyMidThresholdEnd->value());
 
     settings.setValue("frame/leng", this->ui->frameSizeBox->currentText().toInt());
     settings.setValue("frame/shift", this->ui->frameShiftSpin->value());

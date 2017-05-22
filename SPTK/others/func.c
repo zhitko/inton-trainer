@@ -30,30 +30,6 @@ int compare (const void * a, const void * b)
   return ( *(double*)a - *(double*)b );
 }
 
-vector vector_avg_intensive(vector data, ENERGY_SETTINGS * settings)
-{
-    int frameLength = settings->leng,
-        resultLength = data.x;
-    vector result = makev(resultLength);
-
-    double* middle = malloc(frameLength * sizeof(double));
-    for(int i=0;i<resultLength;i++)
-    {
-        for(int j=0; j < frameLength; j++)
-        {
-            int position = i+j-frameLength/2;
-            if( position < 0 || position > resultLength )
-                middle[j] = 0.0;
-            else
-                middle[j] = fabs(data.v[position]);
-        }
-        qsort (middle, frameLength, sizeof(double), compare);
-        result.v[i] = middle[frameLength/2];
-    }
-
-    return result;
-}
-
 vector vector_mid(vector data, int frame)
 {
     int resultLength = data.x;

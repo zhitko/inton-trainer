@@ -34,7 +34,6 @@ struct GraphData: SimpleGraphData{
     vector d_wave;
     double pitch_min;
     double pitch_max;
-    vector d_avg_intensive;
     vector d_p_wave;
     vector d_n_wave;
     vector d_t_wave;

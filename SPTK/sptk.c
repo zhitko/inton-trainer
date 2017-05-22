@@ -25,16 +25,6 @@ FRAME_SETTINGS *initFrameSettings()
     return frame;
 }
 
-ENERGY_SETTINGS *initEnergyFrameSettings()
-{
-    ENERGY_SETTINGS * frame = malloc(sizeof(ENERGY_SETTINGS));
-    frame->leng = 5;
-    frame->shift = 1;
-    frame->threshold_start = 0.4;
-    frame->threshold_end = 0.05;
-    return frame;
-}
-
 WINDOW_SETTINGS *initWindowSettings()
 {
     WINDOW_SETTINGS * window = malloc(sizeof(WINDOW_SETTINGS));
@@ -110,7 +100,6 @@ SPTK_SETTINGS *initSptkSettings()
 
     settings->pitch = initPitchSettings();
     settings->frame = initFrameSettings();
-    settings->energyFrame = initEnergyFrameSettings();
     settings->window = initWindowSettings();
     settings->lpc = initLpcSettings();
     settings->spec = initSpecSettings();
