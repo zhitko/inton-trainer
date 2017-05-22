@@ -61,12 +61,7 @@ private:
     SettingsDialog *settingsDialog;
 
 private slots:
-    void evaluationF0();
-    void evaluationF0_Spec();
     void evaluationDP();
-    void evaluationSpec();
-    void evaluationI();
-    void evaluationI_Spec();
     void evaluation(Drawer*);
     void remove();
     void rename();

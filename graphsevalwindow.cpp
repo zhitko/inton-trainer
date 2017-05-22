@@ -6,7 +6,7 @@
 
 #include "graphswindow.h"
 
-#include "drawerevalpitch.h"
+#include "drawerdp.h"
 #include "soundplayer.h"
 #include "settingsdialog.h"
 

@@ -10,7 +10,7 @@ based on https://gist.github.com/jimmcgowan/4268832
 SoundRecorder::SoundRecorder(oal_device *device, int sampleByteSize, QObject *parent) :
     QThread(parent), device(device), sampleByteSize(sampleByteSize),
     length(0), allocatedSize(0), avgVolumeLevel(0), recording(false),
-    initBuffer(NULL), currentBuffer(NULL)
+    initBuffer(NULL), currentBuffer(NULL), currentPos(0)
 {
     initAudioInputDevice(this->device);
 }
@@ -92,6 +92,8 @@ void SoundRecorder::run()
         if( currentPos >= INIT_BUFFER_SIZE || this->allocatedSize < INIT_BUFFER_SIZE )
         {
             allocateNewBuffer();
+            if (!recording)
+                break;
             currentPos = 0;
         }
         void * pointToWrite = (char*)this->currentBuffer->buffer_data + currentPos;

@@ -5,11 +5,6 @@
 
 #include "drawer.h"
 #include "drawerdp.h"
-#include "drawerevalpitch.h"
-#include "drawerevalpitchbyspectr.h"
-#include "drawerevalenergy.h"
-#include "drawerevalenergybyspectr.h"
-#include "drawerevalspectr.h"
 #include "settingsdialog.h"
 
 #include <QDir>
@@ -182,14 +177,8 @@ void WebWindow::linkClickedWebView(QUrl url) {
     qDebug() << url.path();
     qDebug() << url.fileName();
     qDebug() << url.toString();
-    if (url.toString().endsWith(".wav#pitch")) {
-        this->mainWindow->evaluation(url.path(), new DrawerEvalPitchBySpectr());
-    }else if (url.toString().endsWith(".wav#spectr")) {
-        this->mainWindow->evaluation(url.path(), new Drawer());
-    }else if (url.toString().endsWith(".wav#dp")) {
+    if (url.toString().endsWith(".wav#dp")) {
         this->mainWindow->evaluation(url.path(), new DrawerDP());
-    }else if (url.toString().endsWith(".wav#energy")) {
-        this->mainWindow->evaluation(url.path(), new DrawerEvalEnergyBySpectr());
     }else if (url.toString().endsWith(".wav#play")) {
         this->mainWindow->playRecord(url.path());
     }else if(url.fileName() == "settings.window"){

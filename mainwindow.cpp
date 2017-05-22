@@ -30,12 +30,7 @@
 #include "settingsdialog.h"
 
 #include "drawer.h"
-#include "drawerevalpitch.h"
-#include "drawerevalpitchbyspectr.h"
 #include "drawerdp.h"
-#include "drawerevalenergy.h"
-#include "drawerevalenergybyspectr.h"
-#include "drawerevalspectr.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -61,36 +56,13 @@ MainWindow::~MainWindow()
 
 void MainWindow::initUI()
 {
-    QToolButton * ratingButton = new QToolButton(this);
-    ratingButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    ratingButton->setText(tr("&Evaluation"));
-    ratingButton->setIcon(QIcon(":/icons/icons/trophy-26.png"));
-    ratingButton->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_E));
-    ratingButton->setStatusTip(tr("Start manual training"));
-    QMenu * menu = new QMenu(this);
-    QAction * ratingF0Act = new QAction(tr("Show F0"), this);
-    connect(ratingF0Act, SIGNAL(triggered()), this, SLOT(evaluationF0()));
-    QAction * ratingIAct = new QAction(tr("Show Energy"), this);
-    connect(ratingIAct, SIGNAL(triggered()), this, SLOT(evaluationI()));
-    QAction * ratingF0SpectrAct = new QAction(tr("Show F0 By Spectr"), this);
-    connect(ratingF0SpectrAct, SIGNAL(triggered()), this, SLOT(evaluationF0_Spec()));
-    QAction * ratingISpectrAct = new QAction(tr("Show Energy By Spectr"), this);
-    connect(ratingISpectrAct, SIGNAL(triggered()), this, SLOT(evaluationI_Spec()));
-    QAction * ratingSpecAct = new QAction(tr("Show Spectr"), this);
-    connect(ratingSpecAct, SIGNAL(triggered()), this, SLOT(evaluationSpec()));
-    QAction * ratingDpAct = new QAction(tr("Show DP"), this);
-    connect(ratingDpAct, SIGNAL(triggered()), this, SLOT(evaluationDP()));
-    menu->addAction(ratingF0SpectrAct);
-    menu->addAction(ratingISpectrAct);
-    menu->addAction(ratingSpecAct);
-    menu->addAction(ratingDpAct);
-    ratingButton->setMenu(menu);
-    ratingButton->setPopupMode(QToolButton::InstantPopup);
-
     QToolBar * trainingToolBar = addToolBar(tr("Training"));
     trainingToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     trainingToolBar->setIconSize(QSize(16,16));
-    trainingToolBar->addWidget(ratingButton);
+
+    QAction * ratingDpAct = new QAction(tr("Show DP"), this);
+    connect(ratingDpAct, SIGNAL(triggered()), this, SLOT(evaluationDP()));
+    trainingToolBar->addAction(ratingDpAct);
 
     // sound actions
     QAction * playAct = new QAction(tr("&Play"), this);
@@ -333,35 +305,9 @@ void MainWindow::compare()
         second->fullFit();
     }
 }
-
-void MainWindow::evaluationF0()
-{
-    evaluation(new DrawerEvalPitch());
-}
-
-void MainWindow::evaluationF0_Spec()
-{
-    evaluation(new DrawerEvalPitchBySpectr());
-}
-
 void MainWindow::evaluationDP()
 {
     evaluation(new DrawerDP());
-}
-
-void MainWindow::evaluationI_Spec()
-{
-    evaluation(new DrawerEvalEnergyBySpectr());
-}
-
-void MainWindow::evaluationSpec()
-{
-    evaluation(new DrawerEvalSpectr());
-}
-
-void MainWindow::evaluationI()
-{
-    evaluation(new DrawerEvalEnergy());
 }
 
 void MainWindow::evaluation(Drawer * drawer)

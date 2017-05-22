@@ -46,12 +46,7 @@ SOURCES += \
     soundplayer.cpp \
     graphsevalwindow.cpp \
     DP/vectordp.cpp \
-    drawerevalpitch.cpp \
-    drawerevalenergy.cpp \
-    drawerevalpitchbyspectr.cpp \
-    drawerevalenergybyspectr.cpp \
     DP/spectrdp.cpp \
-    drawerevalspectr.cpp \
     webwindow.cpp \
     Recorder/dpsoundrecorder.cpp \
     DP/continuousdp.cpp \
@@ -71,13 +66,8 @@ HEADERS  += \
     graphsevalwindow.h \
     abstractdrawer.h \
     DP/dp.h \
-    drawerevalpitch.h \
-    drawerevalenergy.h \
-    drawerevalpitchbyspectr.h \
-    drawerevalenergybyspectr.h \
     DP/vectordp.h \
     DP/spectrdp.h \
-    drawerevalspectr.h \
     webwindow.h \
     Recorder/dpsoundrecorder.h \
     DP/continuousdp.h \
