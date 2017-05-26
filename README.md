@@ -1,2 +1,3 @@
-sptk-analyzer
+Inton Trainer
 =============
+The software system under OS Windows 7, 8, 10 (also can be compiled under Linux) is designed for learning the intonation of oral speech. The learning is based on comparing the melodic portraits of a pattern phrase and a phrase pronounced by a learner. The acoustic data base includes large set of pattern phrases which cover most intonation samples of the language. The system is based on interactive auditory and visual contacts with a learner and also provides quantitative evaluation of intonation fidelity. Currently the system is ready for intonation learning of Russian and English. The localization for other languages could be easily realized by creation of proper acoustic data bases. The system could be useful for persons who would like to improve their intonation abilities in native language and also the languages of other countries.
