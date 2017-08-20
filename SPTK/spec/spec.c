@@ -197,25 +197,25 @@ vector sptk_spec(vector data, SPEC_SETTINGS * settings)
           case 1:
              for (i = 0; i < no; i++)
                 x[i] = 0.5 * log(mag[i]);
-             for(i=0;i<no;i++) res.v[i+posR] = x[i];
+             for(i=0;i<no;i++) setv(res, i+posR, x[i]);
              posR += i;
              break;
           case 2:
              for (i = 0; i < no; i++)
                 x[i] = sqrt(mag[i]);
-             for(i=0;i<no;i++) res.v[i+posR] = x[i];
+             for(i=0;i<no;i++) setv(res, i+posR, x[i]);
              posR += i;
              break;
           case 3:
              for (i = 0; i < no; i++)
                 x[i] = mag[i];
-             for(i=0;i<no;i++) res.v[i+posR] = x[i];
+             for(i=0;i<no;i++) setv(res, i+posR, x[i]);
              posR += i;
              break;
           default:
              for (i = 0; i < no; i++)
                 x[i] = 10 * log10(mag[i]);
-             for(i=0;i<no;i++) res.v[i+posR] = x[i];
+             for(i=0;i<no;i++) setv(res, i+posR, x[i]);
              posR += i;
              break;
           }

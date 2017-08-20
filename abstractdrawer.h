@@ -1,6 +1,8 @@
 #ifndef ABSTRACTDRAWER_H
 #define ABSTRACTDRAWER_H
 
+#include "defines.h"
+
 #include <mgl2/qmathgl.h>
 
 class IDrawer : public mglDraw

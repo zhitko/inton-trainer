@@ -114,14 +114,15 @@ vector sptk_lpc2c(vector data, LPC_SETTINGS * settings)
    //while (freadf(a, sizeof(*a), m + 1, fp) == m + 1) {
    while(1) {
 
-      for(i=0;i<(m + 1)&&(i+dPos)<data.x;i++) a[i] = data.v[i+dPos];
+      for(i=0;i<(m + 1)&&(i+dPos)<data.x;i++) a[i] = getv(data, i+dPos);
       if(i != (m + 1)) break;
       dPos += i;
 
       lpc2c(a, m, c, n);
 //      fwritef(c, sizeof(*c), n + 1, stdout);
 
-      for(i=0;i<(n + 1);i++) res.v[i+rPos] = c[i];
+      for(i=0;i<(n + 1);i++)
+          setv(res, i+rPos, c[i]);
       rPos += i;
    }
 

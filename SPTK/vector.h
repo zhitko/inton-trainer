@@ -81,6 +81,7 @@ vector                            subv(vector, int);
 vector                            cutv(vector, int, int);
 
 double                            getv(vector, int);
+double                            setv(vector, int, double);
 
 int                               maxv(vector);
 int                               minv(vector);
@@ -108,6 +109,9 @@ intvector                         zeroiv(int);
 intvector                         onesiv(int);
 intvector                         copyiv(intvector);
 intvector                         cutiv(intvector, int, int);
+
+int                               getiv(intvector, int);
+int                               setiv(intvector, int, int);
 
 vector                            iv2v(intvector);
 

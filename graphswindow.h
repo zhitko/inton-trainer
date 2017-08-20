@@ -1,6 +1,8 @@
 #ifndef GRAPHSWINDOW_H
 #define GRAPHSWINDOW_H
 
+#include "defines.h"
+
 #include <QWidget>
 
 #include <mgl2/qmathgl.h>

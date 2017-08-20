@@ -1,6 +1,8 @@
 #ifndef SPECTRDP_H
 #define SPECTRDP_H
 
+#include "defines.h"
+
 #include "dp.h"
 
 extern "C" {

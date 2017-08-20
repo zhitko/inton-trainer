@@ -1,6 +1,8 @@
 #ifndef SETTINGSDIALOG_H
 #define SETTINGSDIALOG_H
 
+#include "defines.h"
+
 #include <QDialog>
 
 #define SETTINGS_FILE "settings.conf"

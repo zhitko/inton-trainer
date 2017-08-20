@@ -40,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent)
       dpRecorder(NULL),
       settingsDialog(NULL)
 {
+    qDebug() << "MainWindow" << SETTINGS_FILE << LOG_DATA;
     ui->setupUi(this);
     this->initUI();
     this->updateFileList();
@@ -48,6 +49,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    qDebug() << "~MainWindow" << SETTINGS_FILE << LOG_DATA;
     if(this->recorder) this->recorder->deleteLater();
     if(this->autoRecorder) this->autoRecorder->deleteLater();
     if(this->dpRecorder) this->dpRecorder->deleteLater();
@@ -56,6 +58,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::initUI()
 {
+    qDebug() << "" << SETTINGS_FILE << LOG_DATA;
     QToolBar * trainingToolBar = addToolBar(tr("Training"));
     trainingToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     trainingToolBar->setIconSize(QSize(16,16));
@@ -137,9 +140,9 @@ void MainWindow::autoRecording()
     if(this->autoRecorder == NULL)
     {
         oal_device * currentDevice = this->settingsDialog->getInputDevice();
-        qDebug() << "new SoundRecorder: " << currentDevice->name;
+        qDebug() << "new SoundRecorder: " << currentDevice->name << LOG_DATA;
         this->autoRecorder = new AutoSoundRecorder(currentDevice, sizeof(short int));
-        qDebug() << "is recording: " << this->autoRecorder->isRecording();
+        qDebug() << "is recording: " << this->autoRecorder->isRecording() << LOG_DATA;
         connect(this->autoRecorder, SIGNAL(resultReady(SoundRecorder *)), this, SLOT(recordFinished(SoundRecorder *)));
         this->autoRecordingAct->setIconText(tr("&Auto Recording..."));
         this->recordingAct->setEnabled(false);
@@ -167,11 +170,11 @@ void MainWindow::dpRecording()
         }
 
         if (ok && !path.isEmpty()){
-            qDebug() << "Start DP Recorder for " << path;
+            qDebug() << "Start DP Recorder for " << path << LOG_DATA;
             oal_device * currentDevice = this->settingsDialog->getInputDevice();
-            qDebug() << "new SoundRecorder: " << currentDevice->name;
+            qDebug() << "new SoundRecorder: " << currentDevice->name << LOG_DATA;
             this->dpRecorder = new DPSoundRecorder(path, currentDevice, sizeof(short int), this);
-            qDebug() << "is recording: " << this->dpRecorder->isRecording();
+            qDebug() << "is recording: " << this->dpRecorder->isRecording() << LOG_DATA;
             connect(this->dpRecorder, SIGNAL(resultReady(SoundRecorder *)), this, SLOT(recordFinished(SoundRecorder *)));
             this->dpRecordingAct->setIconText(tr("&DP Recording..."));
             this->recordingAct->setEnabled(false);
@@ -186,9 +189,9 @@ void MainWindow::manualRecording()
     if(this->recorder == NULL)
     {
         oal_device * currentDevice = this->settingsDialog->getInputDevice();
-        qDebug() << "new SoundRecorder: " << currentDevice->name;
+        qDebug() << "new SoundRecorder: " << currentDevice->name << LOG_DATA;
         this->recorder = new SoundRecorder(currentDevice, sizeof(short int), this);
-        qDebug() << "is recording: " << this->recorder->isRecording();
+        qDebug() << "is recording: " << this->recorder->isRecording() << LOG_DATA;
         connect(this->recorder, SIGNAL(resultReady(SoundRecorder *)), this, SLOT(recordFinished(SoundRecorder *)));
         this->recordingAct->setIconText(tr("&Recording..."));
         this->autoRecordingAct->setEnabled(false);
@@ -200,17 +203,17 @@ void MainWindow::recording(SoundRecorder * recorder)
 {
     if(recorder->isRecording())
     {
-        qDebug() << "stop recording";
+        qDebug() << "stop recording" << LOG_DATA;
         recorder->stopRecording();
     }else{
-        qDebug() << "start recording";
+        qDebug() << "start recording" << LOG_DATA;
         recorder->startRecording();
     }
 }
 
 void MainWindow::recordFinished(SoundRecorder * recorder)
 {
-    qDebug() << "recordFinished";
+    qDebug() << "recordFinished" << LOG_DATA;
 
     this->recordingAct->setIconText(tr("&Record"));
     this->recordingAct->setEnabled(true);
@@ -221,13 +224,13 @@ void MainWindow::recordFinished(SoundRecorder * recorder)
 
     char *data;
     int size = recorder->getData((void**) &data);
-    qDebug() << "result size " << size;
+    qDebug() << "result size " << size << LOG_DATA;
 
     QDateTime dateTime = QDateTime::currentDateTime();
     QString path = USER_DATA_PATH + dateTime.toString("dd.MM.yyyy hh.mm.ss.zzz");
 
     path = QApplication::applicationDirPath() + DATA_PATH + path + WAVE_TYPE;
-    qDebug() << "write wave to: " << path;
+    qDebug() << "write wave to: " << path << LOG_DATA;
 
     WaveFile *waveFile = makeWaveFileFromData((char *)data, size, 1, 8000, 16);
     saveWaveFile(waveFile, path.toLocal8Bit().data());
@@ -251,7 +254,7 @@ QStringList scanDirIter(QDir dir)
 {
     QStringList files;
     QString path = dir.absolutePath();
-    qDebug() << "Search in " << path;
+    qDebug() << "Search in " << path << LOG_DATA;
     QDirIterator iterator(path, QDirIterator::Subdirectories);
     while (iterator.hasNext()) {
         iterator.next();
@@ -289,7 +292,7 @@ void MainWindow::compare()
     bool ok;
     QString path2 = path + QInputDialog::getItem(this, tr("Compare with"), tr("Record"), items, 0, false, &ok);
     if (ok && !path2.isEmpty()){
-        qDebug() << "Draw graphs for " << path1 << " and " << path2;
+        qDebug() << "Draw graphs for " << path1 << " and " << path2 << LOG_DATA;
         QWidget * window = new QWidget();
         QVBoxLayout *layout = new QVBoxLayout(window);
         GraphsWindow * first = this->showGraph(path1);
@@ -334,7 +337,7 @@ GraphsEvalWindow * MainWindow::evaluation(QString filePath, Drawer * drawer)
     QString path = QApplication::applicationDirPath() + DATA_PATH;
 
     QString file = path + filePath;
-    qDebug() << "Draw graphs for evaluation " << file;
+    qDebug() << "Draw graphs for evaluation " << file << LOG_DATA;
     GraphsEvalWindow * window = new GraphsEvalWindow(file, drawer);
 
     connect(window, SIGNAL(autoRec()), this, SLOT(autoRecording()));
@@ -354,7 +357,7 @@ void MainWindow::plotting()
     if(items.size() > 0)
     {
         QString file = path + items.at(0)->text();
-        qDebug() << "Draw graphs for " << path;
+        qDebug() << "Draw graphs for " << path << LOG_DATA;
         GraphsWindow * graph = this->showGraph(file);
         graph->show();
         graph->fullFit();
@@ -393,12 +396,12 @@ void MainWindow::remove()
                                    QMessageBox::No);
     if(ret == QMessageBox::Yes)
     {
-        qDebug() << "removing files";
+        qDebug() << "removing files" << LOG_DATA;
         QString path = QApplication::applicationDirPath() + DATA_PATH;
         QList<QListWidgetItem*> items = ui->filesList->selectedItems();
         for(int i=0; i<items.size(); i++)
         {
-            qDebug() << "delete file " << items.at(i)->text();
+            qDebug() << "delete file " << items.at(i)->text() << LOG_DATA;
             QString file = path + items.at(i)->text();
             QFile(file).remove();
         }
@@ -440,7 +443,7 @@ void MainWindow::playRecord()
     QList<QListWidgetItem*> items = ui->filesList->selectedItems();
     for(int i=0; i<items.size(); i++)
     {
-        qDebug() << "play file " << items.at(i)->text();
+        qDebug() << "play file " << items.at(i)->text() << LOG_DATA;
         this->playRecord(items.at(i)->text());
     }
 }

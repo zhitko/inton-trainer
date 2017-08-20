@@ -42,7 +42,7 @@ QStringList scanDirItems()
     QStringList files;
     QString fullPath = fullDir.absolutePath();
     QString path = dir.absolutePath();
-    qDebug() << "Search in " << path;
+    qDebug() << "Search in " << path << LOG_DATA;
     QDirIterator iterator(fullPath, QDirIterator::Subdirectories);
     while (iterator.hasNext()) {
         iterator.next();
@@ -85,7 +85,7 @@ void WebWindow::setShowA0(QVariant value)
     QSettings settings(SETTINGS_FILE, QSettings::IniFormat);
     settings.setPath(QSettings::IniFormat, QSettings::UserScope, QApplication::applicationDirPath());
     settings.setValue("dp/showA0", value.toBool());
-    qDebug() << "setShowA0 " << value.toBool();
+    qDebug() << "setShowA0 " << value.toBool() << LOG_DATA;
 }
 
 void WebWindow::setShowF0(QVariant value)
@@ -93,7 +93,7 @@ void WebWindow::setShowF0(QVariant value)
     QSettings settings(SETTINGS_FILE, QSettings::IniFormat);
     settings.setPath(QSettings::IniFormat, QSettings::UserScope, QApplication::applicationDirPath());
     settings.setValue("dp/showF0", value.toBool());
-    qDebug() << "setShowF0 " << value.toBool();
+    qDebug() << "setShowF0 " << value.toBool() << LOG_DATA;
 }
 
 void WebWindow::setShowError(QVariant value)
@@ -101,7 +101,7 @@ void WebWindow::setShowError(QVariant value)
     QSettings settings(SETTINGS_FILE, QSettings::IniFormat);
     settings.setPath(QSettings::IniFormat, QSettings::UserScope, QApplication::applicationDirPath());
     settings.setValue("dp/showError", value.toBool());
-    qDebug() << "setShowError " << value.toBool();
+    qDebug() << "setShowError " << value.toBool() << LOG_DATA;
 }
 
 void WebWindow::setShowTime(QVariant value)
@@ -109,7 +109,7 @@ void WebWindow::setShowTime(QVariant value)
     QSettings settings(SETTINGS_FILE, QSettings::IniFormat);
     settings.setPath(QSettings::IniFormat, QSettings::UserScope, QApplication::applicationDirPath());
     settings.setValue("dp/showTime", value.toBool());
-    qDebug() << "setShowTime " << value.toBool();
+    qDebug() << "setShowTime " << value.toBool() << LOG_DATA;
 }
 
 QString WebWindow::getFiles()
@@ -166,7 +166,7 @@ void WebWindow::initWeb()
     attachObject();
     connect(frame , SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(attachObject()) );
 
-    qDebug() << (QApplication::applicationDirPath() + "/html/index.html");
+    qDebug() << (QApplication::applicationDirPath() + "/html/index.html") << LOG_DATA;
     this->ui->webView->load(QUrl::fromLocalFile(QApplication::applicationDirPath() + "/html/index.html"));
 
     ui->webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
@@ -174,9 +174,9 @@ void WebWindow::initWeb()
 }
 
 void WebWindow::linkClickedWebView(QUrl url) {
-    qDebug() << url.path();
-    qDebug() << url.fileName();
-    qDebug() << url.toString();
+    qDebug() << url.path() << LOG_DATA;
+    qDebug() << url.fileName() << LOG_DATA;
+    qDebug() << url.toString() << LOG_DATA;
     if (url.toString().endsWith(".wav#dp")) {
         this->mainWindow->evaluation(url.path(), new DrawerDP());
     }else if (url.toString().endsWith(".wav#play")) {

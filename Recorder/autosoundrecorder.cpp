@@ -21,12 +21,12 @@ AutoSoundRecorder::AutoSoundRecorder(oal_device *device, int sampleByteSize, int
     maxIdleSize = maxIdleTime * 8000 * this->sampleByteSize;
     if (maxIdleSize > (MAX_EMPTY_BUFFERS_BEFORE*INIT_BUFFER_SIZE))
         maxIdleSize = MAX_EMPTY_BUFFERS_BEFORE*INIT_BUFFER_SIZE-1;
-    qDebug() << "AutoSoundRecorder " << maxRecordSize;
+    qDebug() << "AutoSoundRecorder " << maxRecordSize << LOG_DATA;
 }
 
 AutoSoundRecorder::~AutoSoundRecorder()
 {
-    qDebug() << "~AutoSoundRecorder";
+    qDebug() << "~AutoSoundRecorder" << LOG_DATA;
     if(lastActiveBuffer)
         freeBuffer(this->lastActiveBuffer, true);
     else
@@ -61,7 +61,7 @@ void AutoSoundRecorder::allocateNewBuffer()
         vector pitch = sptk_pitch(wave, initPitchSettings());
 
         double val = 0.0;
-        for(int i=0; i<pitch.x; i++) val += pitch.v[i];
+        for(int i=0; i<pitch.x; i++) val += getv(pitch, i);
         if( val > 0)
         {
             this->isSpeechDetected = true;

@@ -17,7 +17,7 @@ SoundRecorder::SoundRecorder(oal_device *device, int sampleByteSize, QObject *pa
 
 SoundRecorder::~SoundRecorder()
 {
-    qDebug() << "~SoundRecorder";
+    qDebug() << "~SoundRecorder" << LOG_DATA;
     freeAudioInputDevice(this->device);
     freeBuffer(this->initBuffer, true);
 }
@@ -88,7 +88,7 @@ void SoundRecorder::run()
     currentPos = 0;
     while(recording)
     {
-        qDebug() << "recording step " << this->allocatedSize << " ( " << currentPos << " : " << INIT_BUFFER_SIZE << " )";
+        qDebug() << "recording step " << this->allocatedSize << " ( " << currentPos << " : " << INIT_BUFFER_SIZE << " )" << LOG_DATA;
         if( currentPos >= INIT_BUFFER_SIZE || this->allocatedSize < INIT_BUFFER_SIZE )
         {
             allocateNewBuffer();
@@ -102,7 +102,7 @@ void SoundRecorder::run()
         currentPos += size;
         msleep(200);
     }
-    qDebug() << "stopCapture";
+    qDebug() << "stopCapture" << LOG_DATA;
     stopCapture(this->device);
     emit resultReady(this);
 }

@@ -1,6 +1,8 @@
 #ifndef DP_H
 #define DP_H
 
+#include "defines.h"
+
 #include <climits>
 #include <math.h>
 #include <limits>
@@ -72,7 +74,7 @@ protected:
 
     virtual DPStateStack * calcNextIter(const int signalPos, const int patternPos)
     {
-//        qDebug() << "DPStateStack::calcNextIter " << signalPos << " " << patternPos;
+//        qDebug() << "DPStateStack::calcNextIter " << signalPos << " " << patternPos << LOG_DATA;
         DPStateStack * currentBranch = this->getStateCache(signalPos, patternPos);
         // Check state cache for value
         if(currentBranch->value.operation != opNone)
@@ -210,13 +212,13 @@ public:
 
     void applySettings(double kh, double kv, double kd, double kt)
     {
-        qDebug() << this->kH << " to " << kh;
+        qDebug() << this->kH << " to " << kh << LOG_DATA;
         this->kH = kh;
-        qDebug() << this->kD << " to " << kd;
+        qDebug() << this->kD << " to " << kd << LOG_DATA;
         this->kD = kd;
-        qDebug() << this->kT << " to " << kt;
+        qDebug() << this->kT << " to " << kt << LOG_DATA;
         this->kT = kt;
-        qDebug() << this->kV << " to " << kv;
+        qDebug() << this->kV << " to " << kv << LOG_DATA;
         this->kV = kv;
     }
 
@@ -242,9 +244,9 @@ public:
     {
         if(!this->mask)
         {
-            qDebug() << "DP Init " << this->signalSize << " : " << this->patternSize << " iterations->" << this->signalSize*this->patternSize;
+            qDebug() << "DP Init " << this->signalSize << " : " << this->patternSize << " iterations->" << this->signalSize*this->patternSize << LOG_DATA;
             this->mask = this->calcNextIter(this->signalSize - 1, this->patternSize - 1);
-            qDebug() << "DP Finish " << this->stateCache[this->signalSize - 1][this->patternSize - 1].value.globalError;
+            qDebug() << "DP Finish " << this->stateCache[this->signalSize - 1][this->patternSize - 1].value.globalError << LOG_DATA;
         }
         return this->mask;
     }
@@ -284,7 +286,7 @@ public:
             getSignalMask();
         }
         if(signal->size() != array->size()){
-            qDebug() << QString("Array has different size (%1 - %2)").arg(signal->size()).arg(array->size());
+            qDebug() << QString("Array has different size (%1 - %2)").arg(signal->size()).arg(array->size()) << LOG_DATA;
             return array;
         }
 

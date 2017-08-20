@@ -73,11 +73,11 @@ segments add_new_segment(segments segs, int start_index, int end_index, int edge
     {
         int x = i + start_data;
         segs.seg[segs.n].x[i] = x;
-        segs.seg[segs.n].y[i] = data.v[x];
+        segs.seg[segs.n].y[i] = getv(data, x);
 
         x = edges + i + end_data;
         segs.seg[segs.n].x[i+edges] = x;
-        segs.seg[segs.n].y[i+edges] = data.v[x];
+        segs.seg[segs.n].y[i+edges] = getv(data, x);
     }
 
     segs.n = new_size;
@@ -88,18 +88,19 @@ segments vector_split_by_mask(vector data, vector mask, int edges, int cut)
 {
     segments segs;
     segs.n = 0;
+    segs.seg = calloc(1, sizeof(segment));
 
     int start_index = -1;
     int end_index = -1;
 
     for(int i=0; i<data.x; i++)
     {
-        if(start_index == -1 && mask.v[i] == 1.0)
+        if(start_index == -1 && getv(mask, i) == 1.0)
         {
             start_index = i;
             continue;
         }
-        if(start_index != -1 && mask.v[i] != 1.0)
+        if(start_index != -1 && getv(mask, i) != 1.0)
         {
             end_index = i;
             segs = add_new_segment(segs, start_index, end_index, edges, cut, data);
@@ -134,7 +135,7 @@ vector vector_interpolate(vector data, vector mask, int cut, const gsl_interp_ty
 
         for(int j=segs.seg[i].start_index; j<segs.seg[i].end_index; j++)
         {
-            result.v[j] = gsl_spline_eval (liner, j, acc);
+            setv(result, j, gsl_spline_eval (liner, j, acc));
         }
 
         gsl_spline_free (liner);
@@ -191,19 +192,19 @@ void interpolate_part(vector * data, int start, int end, const gsl_interp_type *
 
     for(int i=start_index; i<=start; i++)
     {
-        printf("i %i\n", i);
-        fprintf(stdout, "val %f\n", data->v[i]);
-        y.v[index] = data->v[i];
-        x.v[index] = i;
+//        printf("i %i\n", i);
+//        fprintf(stdout, "val %f\n", data->v[i]);
+        setv(y, index, data->v[i]);
+        setv(x, index, i);
         index++;
     }
 
     for(int i=end; i<end_index; i++)
     {
-        printf("i %i\n", i);
-        fprintf(stdout, "val %f\n", data->v[i]);
-        y.v[index] = data->v[i];
-        x.v[index] = i;
+//        printf("i %i\n", i);
+//        fprintf(stdout, "val %f\n", data->v[i]);
+        setv(y, index, getv(*data, i));
+        setv(x, index, i);
         index++;
     }
 
@@ -211,8 +212,8 @@ void interpolate_part(vector * data, int start, int end, const gsl_interp_type *
 //    {
 //        if((i<=start_index || i>=end_index)&&(index<n)&&(data->v[i]!=0||i==start_index||i==end_index))
 //        {
-//            y.v[index] = data->v[i];
-//            x.v[index] = i;
+//            setv(y, index, getv(data, i));
+//            setv(x, index, i);
 //            index++;
 //        }
 //    }

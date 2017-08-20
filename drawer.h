@@ -1,6 +1,8 @@
 #ifndef DRAWER_H
 #define DRAWER_H
 
+#include "defines.h"
+
 #include <mgl2/qmathgl.h>
 
 #define GRAPH_Y_VAL_MAX 10000

@@ -25,7 +25,7 @@ MaskData getLabelsFromFile(WaveFile* waveFile, char marker)
     data.pointsFrom.v = NULL;
     data.pointsLength.v = NULL;
 
-    qDebug() << "Use file data for mask";
+    qDebug() << "Use file data for mask" << LOG_DATA;
 
     if (!((waveFile->cueChunk != NULL)
             && (littleEndianBytesToUInt16(waveFile->cueChunk->cuePointsCount) > 0)
@@ -42,7 +42,7 @@ MaskData getLabelsFromFile(WaveFile* waveFile, char marker)
     int *pointsLength = (int*) malloc(sizeof(int)*cuePointsCount);
 
 
-    qDebug() << "cueChunks";
+    qDebug() << "cueChunks" << LOG_DATA;
     for(int i=0; i<cuePointsCount; i++)
     {
         CuePoint point = waveFile->cueChunk->cuePoints[i];
@@ -50,20 +50,20 @@ MaskData getLabelsFromFile(WaveFile* waveFile, char marker)
         int pos = littleEndianBytesToUInt16(point.frameOffset);
         pointsFrom[id-1]=pos;
         pointsLength[id-1]=0;
-        qDebug() << "cueChunk cuePointID " << id << " frameOffset " << pos;
+        qDebug() << "cueChunk cuePointID " << id << " frameOffset " << pos << LOG_DATA;
     }
 
-    qDebug() << "ltxtCount";
+    qDebug() << "ltxtCount" << LOG_DATA;
     for(int i=0; i<waveFile->listChunk->ltxtCount; i++)
     {
         LtxtChunk ltxt = waveFile->listChunk->ltxtChunks[i];
         int id = littleEndianBytesToUInt16(ltxt.cuePointID);
         int length = littleEndianBytesToUInt32(ltxt.sampleLength);
         pointsLength[id-1] = length;
-        qDebug() << "ltxtChunk cuePointID " << id << " sampleLength " << length;
+        qDebug() << "ltxtChunk cuePointID " << id << " sampleLength " << length << LOG_DATA;
     }
 
-    qDebug() << "lablChunks";
+    qDebug() << "lablChunks" << LOG_DATA;
     if (marker != NULL)
     {
         int *markedPointsFrom = NULL;
@@ -82,7 +82,7 @@ MaskData getLabelsFromFile(WaveFile* waveFile, char marker)
                 markedPointsFrom[count-1] = pointsFrom[id-1];
                 markedPointsLength[count-1] = pointsLength[id-1];
             }
-            qDebug() << "lablChunk cuePointID " << id << " text " << text[0];
+            qDebug() << "lablChunk cuePointID " << id << " text " << text[0] << LOG_DATA;
         }
         free(pointsFrom);
         free(pointsLength);
@@ -106,7 +106,7 @@ vector readMaskFromFile(WaveFile* waveFile, int length, char marker)
     MaskData data = getLabelsFromFile(waveFile, marker);
 
     mask_from_file = make_mask(length, data.pointsFrom.x, data.pointsFrom.v, data.pointsLength.v);
-    qDebug() << "make_mask";
+    qDebug() << "make_mask" << LOG_DATA;
 
     freeiv(data.pointsFrom);
     freeiv(data.pointsLength);
@@ -119,7 +119,7 @@ bool validateMask(vector mask)
     bool valid = false;
     for (int i=0; i<mask.x; i++)
     {
-        if (mask.v[i] == 1)
+        if (getv(mask, i) == 1)
         {
             valid = true;
         }
@@ -138,22 +138,22 @@ vector getFileMask(WaveFile* waveFile, vector wave, int len, char marker = NULL)
             && (waveFile->listChunk->lablChunks != NULL)
             && (waveFile->listChunk->lablCount > 0);
 
-//    qDebug() << "waveFile->cueChunk " << (waveFile->cueChunk != NULL);
-//    qDebug() << "waveFile->listChunk " << (waveFile->listChunk != NULL);
-//    qDebug() << "waveFile->listChunk->ltxtCount " << (waveFile->listChunk->ltxtCount);
-//    qDebug() << "waveFile->listChunk->lablCount " << (waveFile->listChunk->lablCount);
+//    qDebug() << "waveFile->cueChunk " << (waveFile->cueChunk != NULL) << LOG_DATA;
+//    qDebug() << "waveFile->listChunk " << (waveFile->listChunk != NULL) << LOG_DATA;
+//    qDebug() << "waveFile->listChunk->ltxtCount " << (waveFile->listChunk->ltxtCount) << LOG_DATA;
+//    qDebug() << "waveFile->listChunk->lablCount " << (waveFile->listChunk->lablCount) << LOG_DATA;
 
     if (tryFileData)
     {
-        qDebug() << "tryFileData";
+        qDebug() << "tryFileData" << LOG_DATA;
         vector mask_from_file = readMaskFromFile(waveFile, wave.x, marker);
         mask = vector_resize(mask_from_file, len);
         freev(mask_from_file);
-        qDebug() << "vector_resize";
+        qDebug() << "vector_resize" << LOG_DATA;
     }
 
     if (!tryFileData || !validateMask(mask)) {
-        qDebug() << "!tryFileData";
+        qDebug() << "!tryFileData" << LOG_DATA;
         mask = onesv(len);
     }
 
@@ -168,15 +168,15 @@ vector processZeros(vector data)
     for (int i=0; i<data.x; i++)
     {
         end = i - 1;
-        if (data.v[i] != 0 && needProcess)
+        if (getv(data, i) != 0 && needProcess)
         {
             needProcess = false;
             for (int j=end; j>=start; j--)
             {
-                data.v[j] = data.v[i];
+                setv(data, j, getv(data, i));
             }
         }
-        else if (data.v[i] == 0 && !needProcess)
+        else if (getv(data, i) == 0 && !needProcess)
         {
             start = i;
             needProcess = true;
@@ -187,7 +187,7 @@ vector processZeros(vector data)
         end++;
         for (int i=start; i<=end; i++)
         {
-            data.v[i] = data.v[start-1];
+            setv(data, i, getv(data, start-1));
         }
     }
     return data;
@@ -200,57 +200,57 @@ GraphData * ProcWave2Data(QString fname)
     QFile file(fname);
     file.open(QIODevice::ReadOnly);
     WaveFile * waveFile = waveOpenHFile(file.handle());
-    qDebug() << "waveOpenFile";
+    qDebug() << "waveOpenFile" << LOG_DATA;
 
     int size = littleEndianBytesToUInt32(waveFile->dataChunk->chunkDataSize);
-    qDebug() << "chunkDataSize";
+    qDebug() << "chunkDataSize" << LOG_DATA;
     short int bits = littleEndianBytesToUInt16(waveFile->formatChunk->significantBitsPerSample);
-    qDebug() << "significantBitsPerSample";
+    qDebug() << "significantBitsPerSample" << LOG_DATA;
 
     vector wave = sptk_v2v(waveFile->dataChunk->waveformData, size, bits);
-    qDebug() << "wave";
+    qDebug() << "wave" << LOG_DATA;
 
     vector frame = sptk_frame(wave, sptk_settings->frame);
-    qDebug() << "frame";
+    qDebug() << "frame" << LOG_DATA;
 
     vector intensive = vector_intensive(frame, sptk_settings->frame);
-    qDebug() << "intensive";
+    qDebug() << "intensive" << LOG_DATA;
 
     vector window = sptk_window(frame, sptk_settings->window);
-    qDebug() << "window";
+    qDebug() << "window" << LOG_DATA;
 
     vector lpc = sptk_lpc(frame, sptk_settings->lpc);
-    qDebug() << "lpc";
+    qDebug() << "lpc" << LOG_DATA;
 
     vector spec = sptk_spec(lpc, sptk_settings->spec);
-    qDebug() << "spec " << maxv(spec);
+    qDebug() << "spec " << maxv(spec) << LOG_DATA;
 
     vector spec_proc;
     if (sptk_settings->spec->proc == 0){
         spec_proc = vector_pow_log(spec, sptk_settings->spec->factor, sptk_settings->spec->min);
-        qDebug() << "spec_log";
+        qDebug() << "spec_log" << LOG_DATA;
     } else if (sptk_settings->spec->proc == 1){
         spec_proc = vector_pow_exp(spec, sptk_settings->spec->factor, sptk_settings->spec->min);
-        qDebug() << "spec_exp";
+        qDebug() << "spec_exp" << LOG_DATA;
     }
-    qDebug() << "spec_proc " << maxv(spec_proc);
+    qDebug() << "spec_proc " << maxv(spec_proc) << LOG_DATA;
 
     vector pitch = processZeros(sptk_pitch_spec(wave, sptk_settings->pitch, intensive.x));
-    qDebug() << "pitch";
+    qDebug() << "pitch" << LOG_DATA;
 
     vector mask = getFileMask(waveFile, wave, pitch.x);
-    qDebug() << "mask";
+    qDebug() << "mask" << LOG_DATA;
 
     vector pitch_cutted = processZeros(vector_cut_by_mask(pitch, mask));
-    qDebug() << "pitch_cutted";
-    double pitch_min = pitch_cutted.v[minv(pitch_cutted)];
-    double pitch_max = pitch_cutted.v[maxv(pitch_cutted)];
+    qDebug() << "pitch_cutted" << LOG_DATA;
+    double pitch_min = getv(pitch_cutted, minv(pitch_cutted));
+    double pitch_max = getv(pitch_cutted, maxv(pitch_cutted));
 
     vector intensive_cutted = vector_cut_by_mask(intensive, mask);
-    qDebug() << "intensive_cutted";
+    qDebug() << "intensive_cutted" << LOG_DATA;
 
     vector inverted_mask = vector_invert_mask(mask);
-    qDebug() << "inverted_mask";
+    qDebug() << "inverted_mask" << LOG_DATA;
 
     vector pitch_interpolate = vector_interpolate_by_mask(
                 pitch_cutted,
@@ -258,7 +258,7 @@ GraphData * ProcWave2Data(QString fname)
                 sptk_settings->plotF0->interpolation_edges,
                 sptk_settings->plotF0->interpolation_type
                 );
-    qDebug() << "pitch_interpolate";
+    qDebug() << "pitch_interpolate" << LOG_DATA;
 
     vector intensive_interpolate = vector_interpolate_by_mask(
                 intensive_cutted,
@@ -266,13 +266,13 @@ GraphData * ProcWave2Data(QString fname)
                 sptk_settings->plotEnergy->interpolation_edges,
                 sptk_settings->plotEnergy->interpolation_type
                 );
-    qDebug() << "intensive_interpolate";
+    qDebug() << "intensive_interpolate" << LOG_DATA;
 
     vector pitch_mid = vector_mid(pitch_interpolate, sptk_settings->plotF0->midFrame);
-    qDebug() << "pitch_mid";
+    qDebug() << "pitch_mid" << LOG_DATA;
 
     vector intensive_mid = vector_mid(intensive_interpolate, sptk_settings->plotEnergy->midFrame);
-    qDebug() << "intensive_mid";
+    qDebug() << "intensive_mid" << LOG_DATA;
 
     vector norm_wave = normalizev(wave, 0.0, 1.0);
 
@@ -281,30 +281,30 @@ GraphData * ProcWave2Data(QString fname)
     MaskData md_t = getLabelsFromFile(waveFile, 'T');
 
     vector p_mask = readMaskFromFile(waveFile, wave.x, 'P');
-    qDebug() << "p_mask";
+    qDebug() << "p_mask" << LOG_DATA;
 
     vector n_mask = readMaskFromFile(waveFile, wave.x, 'N');
-    qDebug() << "n_mask";
+    qDebug() << "n_mask" << LOG_DATA;
 
     vector t_mask = readMaskFromFile(waveFile, wave.x, 'T');
-    qDebug() << "t_mask";
+    qDebug() << "t_mask" << LOG_DATA;
 
     vector p_wave = zero_to_nan(vector_cut_by_mask(norm_wave, p_mask));
-    qDebug() << "p_mask";
+    qDebug() << "p_mask" << LOG_DATA;
 
     vector n_wave = zero_to_nan(vector_cut_by_mask(norm_wave, n_mask));
-    qDebug() << "n_mask";
+    qDebug() << "n_mask" << LOG_DATA;
 
     vector t_wave = zero_to_nan(vector_cut_by_mask(norm_wave, t_mask));
-    qDebug() << "t_mask";
+    qDebug() << "t_mask" << LOG_DATA;
 
     vector pnt_mask = onesv(norm_wave.x);
     for (int i=0; i<p_mask.x && i<n_mask.x && i<t_mask.x && i<norm_wave.x; i++) {
-        if (p_mask.v[i] == 1 || n_mask.v[i] == 1 || t_mask.v[i] == 1)
+        if (getv(p_mask, i) == 1 || getv(n_mask, i) == 1 || getv(t_mask, i) == 1)
         {
-            pnt_mask.v[i] = 0;
+            setv(pnt_mask, i, 0);
         } else {
-            pnt_mask.v[i] = 1;
+            setv(pnt_mask, i, 1);
         }
     }
 
@@ -319,11 +319,11 @@ GraphData * ProcWave2Data(QString fname)
     freev(pitch_interpolate);
     freev(intensive_interpolate);
     freev(wave);
-    qDebug() << "freev";
+    qDebug() << "freev" << LOG_DATA;
 
     file.close();
     waveCloseFile(waveFile);
-    qDebug() << "waveCloseFile";
+    qDebug() << "waveCloseFile" << LOG_DATA;
 
     GraphData * data = new GraphData();
 
@@ -360,59 +360,59 @@ SimpleGraphData * SimpleProcWave2Data(QString fname)
     QFile file(fname);
     file.open(QIODevice::ReadOnly);
     WaveFile * waveFile = waveOpenHFile(file.handle());
-    qDebug() << "waveOpenFile";
+    qDebug() << "waveOpenFile" << LOG_DATA;
 
     int size = littleEndianBytesToUInt32(waveFile->dataChunk->chunkDataSize);
-    qDebug() << "chunkDataSize";
+    qDebug() << "chunkDataSize" << LOG_DATA;
     short int bits = littleEndianBytesToUInt16(waveFile->formatChunk->significantBitsPerSample);
-    qDebug() << "significantBitsPerSample";
+    qDebug() << "significantBitsPerSample" << LOG_DATA;
 
     vector wave = sptk_v2v(waveFile->dataChunk->waveformData, size, bits);
-    qDebug() << "wave";
+    qDebug() << "wave" << LOG_DATA;
 
     vector norm_wave = normalizev(wave, 0.0, 1.0);
-    qDebug() << "norm_wave";
+    qDebug() << "norm_wave" << LOG_DATA;
 
     vector frame = sptk_frame(wave, sptk_settings->frame);
-    qDebug() << "frame";
+    qDebug() << "frame" << LOG_DATA;
 
     vector intensive = vector_intensive(frame, sptk_settings->frame);
-    qDebug() << "intensive";
+    qDebug() << "intensive" << LOG_DATA;
 
     vector window = sptk_window(frame, sptk_settings->window);
-    qDebug() << "window";
+    qDebug() << "window" << LOG_DATA;
 
     vector lpc = sptk_lpc(frame, sptk_settings->lpc);
-    qDebug() << "lpc " << lpc.x;
+    qDebug() << "lpc " << lpc.x << LOG_DATA;
 
     vector lpc2c = sptk_lpc2c(lpc, sptk_settings->lpc);
     qDebug() << "lpc2c " << lpc2c.x;
 
     vector spec = sptk_spec(lpc, sptk_settings->spec);
-    qDebug() << "spec " << maxv(spec);
+    qDebug() << "spec " << maxv(spec) << LOG_DATA;
 
     vector spec_proc;
     if (sptk_settings->spec->proc == 0){
         spec_proc = vector_pow_log(spec, sptk_settings->spec->factor, sptk_settings->spec->min);
-        qDebug() << "spec_log";
+        qDebug() << "spec_log" << LOG_DATA;
     } else if (sptk_settings->spec->proc == 1){
         spec_proc = vector_pow_exp(spec, sptk_settings->spec->factor, sptk_settings->spec->min);
-        qDebug() << "spec_exp";
+        qDebug() << "spec_exp" << LOG_DATA;
     }
-    qDebug() << "spec_proc " << maxv(spec_proc);
+    qDebug() << "spec_proc " << maxv(spec_proc) << LOG_DATA;
 
     vector pitch = processZeros(sptk_pitch_spec(wave, sptk_settings->pitch, intensive.x));
-    qDebug() << "pitch";
+    qDebug() << "pitch" << LOG_DATA;
 
     sptk_settings->pitch->OTYPE = 2;
     vector pitch_log = sptk_pitch_spec(wave, sptk_settings->pitch, intensive.x);
-    qDebug() << "pitch_log";
+    qDebug() << "pitch_log" << LOG_DATA;
 
     vector mask = getFileMask(waveFile, wave, pitch.x);
-    qDebug() << "mask";
+    qDebug() << "mask" << LOG_DATA;
 
     vector inverted_mask = vector_invert_mask(mask);
-    qDebug() << "inverted_mask";
+    qDebug() << "inverted_mask" << LOG_DATA;
 
     vector pitch_interpolate = vector_interpolate_by_mask(
                 pitch,
@@ -420,13 +420,13 @@ SimpleGraphData * SimpleProcWave2Data(QString fname)
                 sptk_settings->plotF0->interpolation_edges,
                 sptk_settings->plotF0->interpolation_type
                 );
-    qDebug() << "pitch_interpolate";
+    qDebug() << "pitch_interpolate" << LOG_DATA;
 
     vector pitch_mid = vector_mid(pitch_interpolate, sptk_settings->plotF0->midFrame);
-    qDebug() << "pitch_mid";
+    qDebug() << "pitch_mid" << LOG_DATA;
 
     vector intensive_mid = vector_mid(intensive, sptk_settings->plotEnergy->midFrame);
-    qDebug() << "intensive_mid";
+    qDebug() << "intensive_mid" << LOG_DATA;
 
     MaskData md_p = getLabelsFromFile(waveFile, 'P');
     MaskData md_n = getLabelsFromFile(waveFile, 'N');
@@ -438,11 +438,11 @@ SimpleGraphData * SimpleProcWave2Data(QString fname)
     freev(wave);
     freev(pitch_interpolate);
     freev(inverted_mask);
-    qDebug() << "freev";
+    qDebug() << "freev" << LOG_DATA;
 
     file.close();
     waveCloseFile(waveFile);
-    qDebug() << "waveCloseFile";
+    qDebug() << "waveCloseFile" << LOG_DATA;
 
     SimpleGraphData * data = new SimpleGraphData();
 

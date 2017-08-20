@@ -29,20 +29,20 @@ DPSoundRecorder::DPSoundRecorder(QString fname, oal_device *device, int sampleBy
     buffersCounter(0),
     dp(NULL)
 {
-    qDebug() << "DPSoundRecorder";
+    qDebug() << "DPSoundRecorder" << LOG_DATA;
 
     QFile file(fname);
     file.open(QIODevice::ReadOnly);
     WaveFile * waveFile = waveOpenHFile(file.handle());
-    qDebug() << "waveOpenFile";
+    qDebug() << "waveOpenFile" << LOG_DATA;
 
     int size = littleEndianBytesToUInt32(waveFile->dataChunk->chunkDataSize);
-    qDebug() << "chunkDataSize";
+    qDebug() << "chunkDataSize" << LOG_DATA;
     short int bits = littleEndianBytesToUInt16(waveFile->formatChunk->significantBitsPerSample);
-    qDebug() << "significantBitsPerSample";
+    qDebug() << "significantBitsPerSample" << LOG_DATA;
 
     vector wave = sptk_v2v(waveFile->dataChunk->waveformData, size, bits);
-    qDebug() << "wave";
+    qDebug() << "wave" << LOG_DATA;
 
     this->buffersBeforeMaxCount = ceil(DP_SIGNALE_SCALE * wave.x / INIT_BUFFER_SIZE);
 
@@ -56,7 +56,7 @@ DPSoundRecorder::~DPSoundRecorder()
     {
         delete dp;
     }
-    qDebug() << "~DPSoundRecorder";
+    qDebug() << "~DPSoundRecorder" << LOG_DATA;
 }
 
 vector DPSoundRecorder::proc(vector wave)

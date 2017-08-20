@@ -202,17 +202,17 @@ void La(matrix L, vector f, vector fERBs,
     a = makev(w2);
 #endif
     for (j = 0; j < w2; j++) { // This iterates over only the first half
-        a.v[j] = sqrt(fo[j][0] * fo[j][0] + fo[j][1] * fo[j][1]);
+        setv(a, j, sqrt(fo[j][0] * fo[j][0] + fo[j][1] * fo[j][1]));
     }
 #if 0
     vector a2 = spline(f, a); // a2 is now the result of the cubic spline
 #else
     a2 = spline(f, a);
 #endif
-    L.m[i][0] = fixnan(sqrt(splinv(f, a, a2, fERBs.v[0], hi)));
+    L.m[i][0] = fixnan(sqrt(splinv(f, a, a2, getv(fERBs, 0), hi)));
     for (j = 1; j < L.y; j++) { // Perform a bisection query at ERB intervals
-        hi = bilookv(f, fERBs.v[j], hi); 
-        L.m[i][j] = fixnan(sqrt(splinv(f, a, a2, fERBs.v[j], hi)));
+        hi = bilookv(f, getv(fERBs, j), hi);
+        L.m[i][j] = fixnan(sqrt(splinv(f, a, a2, getv(fERBs, j), hi)));
     }
     freev(a); 
     freev(a2);
@@ -239,25 +239,25 @@ matrix loudness(vector x, vector fERBs, double nyquist, int w, int w2) { // L
 #endif
     vector hann = makev(w); // This defines the Hann[ing] window
     for (i = 0; i < w; i++) {
-        hann.v[i] = .5 - (.5 * cos(2. * M_PI * ((double) i / w)));
+        setv(hann, i, .5 - (.5 * cos(2. * M_PI * ((double) i / w))));
     }
 #if 0
     vector f = makev(w2);
 #else
     f = makev(w2);
 #endif
-    for (i = 0; i < w2; i++) f.v[i] = i * td;
-    hi = bisectv(f, fERBs.v[0]); // All calls to La() will begin here
+    for (i = 0; i < w2; i++) setv(f, i, i * td);
+    hi = bisectv(f, getv(fERBs, 0)); // All calls to La() will begin here
 #if 0
     matrix L = makem(ceil((double) x.x / w2) + 1, fERBs.x); 
 #else
     L = makem(ceil((double) x.x / w2) + 1, fERBs.x); 
 #endif
     for (j = 0; j < w2; j++) { // Left boundary case
-        fi[j] = 0.; // More explicitly, 0. * hann.v[j]
+        fi[j] = 0.; // More explicitly, 0. * getv(hann, j)
     }
     for (/* j = w2 */; j < w; j++) {
-        fi[j] = x.v[j - w2] * hann.v[j];
+        fi[j] = getv(x, j - w2) * getv(hann, j);
     }
 #if 0
     La(L, f, fERBs, plan, fo, w2, hi, 0); 
@@ -265,7 +265,7 @@ matrix loudness(vector x, vector fERBs, double nyquist, int w, int w2) { // L
     La(L, f, fERBs, fo, w2, hi, 0, fi); 
 #endif
     for (i = 1; i < L.x - 2; i++) { // Middle case 
-        for (j = 0; j < w; j++) fi[j] = x.v[j + offset] * hann.v[j];
+        for (j = 0; j < w; j++) fi[j] = getv(x, j + offset) * getv(hann, j);
 #if 0
         La(L, f, fERBs, plan, fo, w2, hi, i); 
 #else 
@@ -275,10 +275,10 @@ matrix loudness(vector x, vector fERBs, double nyquist, int w, int w2) { // L
     }
     for (/* i = L.x - 2; */; i < L.x; i++) { // Right two boundary cases
         for (j = 0; j < x.x - offset; j++) { // This dies at x.x + w2
-            fi[j] = x.v[j + offset] * hann.v[j];
+            fi[j] = getv(x, j + offset) * getv(hann, j);
         }
         for (/* j = x.x - offset */; j < w; j++) {
-            fi[j] = 0.; // Once again, 0. * hann.v[j] 
+            fi[j] = 0.; // Once again, 0. * getv(hann, j)
         }
 #if 0
         La(L, f, fERBs, plan, fo, w2, hi, i);
@@ -333,21 +333,22 @@ void Sadd(matrix S, matrix L, vector fERBs, vector pci, vector mu,
 #else
         q = makev(fERBs.x);
 #endif
-        for (j = 0; j < q.x; j++) q.v[j] = fERBs.v[j] / pci.v[i];
+        for (j = 0; j < q.x; j++)
+            setv(q, j, getv(fERBs, j) / getv(pci, i));
 #if 0
         vector kernel = zerov(fERBs.x); // A zero-filled kernel vector
 #else
         kernel = zerov(fERBs.x); // A zero-filled kernel vector
 #endif
         for (j = 0; j < ps.x; j++) {
-            if PRIME(ps.v[j]) {
+            if PRIME(getiv(ps, j)) {
                 for (k = 0; k < kernel.x; k++) {
-                    td = fabs(q.v[k] - j - 1.); 
+                    td = fabs(getv(q, k) - j - 1.);
                     if (td < .25) { // Peaks
-                        kernel.v[k] = cos(2. * M_PI * q.v[k]);
+                        setv(kernel, k, cos(2. * M_PI * getv(q, k)));
                     }
                     else if (td < .75) { // Valleys
-                        kernel.v[k] += cos(2. * M_PI * q.v[k]) / 2.;
+                        setv(kernel, k, ( getv(kernel, k) + cos(2. * M_PI * getv(q, k)) )/ 2.0);
                     }
                 }
             }
@@ -355,8 +356,8 @@ void Sadd(matrix S, matrix L, vector fERBs, vector pci, vector mu,
         freev(q);
         td = 0.; 
         for (j = 0; j < kernel.x; j++) {
-            kernel.v[j] *= sqrt(1. / fERBs.v[j]); // Applying the envelope
-            if (kernel.v[j] > 0.) td += kernel.v[j] * kernel.v[j];
+            kernel.v[j] *= sqrt(1. / getv(fERBs, j)); // Applying the envelope
+            if (getv(kernel, j) > 0.) td += getv(kernel, j) * getv(kernel, j);
         }
         td = sqrt(td); // Now, td is the p=2 norm factor
         for (j = 0; j < kernel.x; j++) { // Normalize the kernel
@@ -364,7 +365,7 @@ void Sadd(matrix S, matrix L, vector fERBs, vector pci, vector mu,
         }
         for (j = 0; j < L.x; j++) { 
             for (k = 0; k < L.y; k++) {
-                Slocal.m[i][j] += kernel.v[k] * L.m[j][k]; // i.e, kernel' * L
+                Slocal.m[i][j] += getv(kernel, k) * L.m[j][k]; // i.e, kernel' * L
             } 
         }
         freev(kernel);
@@ -379,7 +380,7 @@ void Sadd(matrix S, matrix L, vector fERBs, vector pci, vector mu,
         } // td now equals the time difference
         for (i = 0; i < psz; i++) {
             S.m[lo + i][j] += (Slocal.m[i][k] + (td * (Slocal.m[i][k] -
-                                    Slocal.m[i][k - 1])) / dtp) * mu.v[i];
+                                    Slocal.m[i][k - 1])) / dtp) * getv(mu, i);
         }
         t += dt;
     }
@@ -392,15 +393,15 @@ void Sfirst(matrix S, vector x, vector pc, vector fERBs, vector d,
                                                double nyquist, double nyquist2,
                                                   double dt, int n) {
     int i; 
-    int w2 = ws.v[n] / 2;
-    matrix L = loudness(x, fERBs, nyquist, ws.v[n], w2);
+    int w2 = getiv(ws, n) / 2;
+    matrix L = loudness(x, fERBs, nyquist, getiv(ws, n), w2);
     int lo = 0; // The start of Sfirst-specific code
     int hi = bisectv(d, 2.);
     int psz = hi - lo;
     vector mu = makev(psz);
     vector pci = makev(psz);
     for (i = 0; i < hi; i++) {
-        pci.v[i] = pc.v[i];
+        setv(pci, i, getv(pc, i));
         mu.v[i] = 1. - fabs(d.v[i] - 1.);
     } // End of Sfirst-specific code
     Sadd(S, L, fERBs, pci, mu, ps, dt, nyquist2, lo, hi, psz, w2); 

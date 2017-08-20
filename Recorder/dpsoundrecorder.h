@@ -1,6 +1,8 @@
 #ifndef DPSOUNDRECORDER
 #define DPSOUNDRECORDER
 
+#include "defines.h"
+
 #include "soundrecorder.h"
 
 const int DP_SIGNALE_SCALE = 3;

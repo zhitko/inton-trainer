@@ -1,6 +1,8 @@
 #ifndef SOUNDRECORDER_H
 #define SOUNDRECORDER_H
 
+#include "defines.h"
+
 #include <QThread>
 
 extern "C" {

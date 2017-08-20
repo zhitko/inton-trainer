@@ -135,7 +135,7 @@ vector sptk_pitch_spec(vector data, PITCH_SETTINGS * settings, int count)
    prev->next = NULL;
    for(i=0;i<data.x;i++){
        cur = (float_list *) malloc(sizeof(float_list));
-       cur->f = (float) data.v[i];
+       cur->f = (float) getv(data, i);
        length++;
        prev->next = cur;
        cur->next = NULL;

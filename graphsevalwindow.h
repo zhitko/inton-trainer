@@ -1,6 +1,8 @@
 #ifndef GRAPHSEVALWINDOW_H
 #define GRAPHSEVALWINDOW_H
 
+#include "defines.h"
+
 #include <QWidget>
 
 #include "graphswindow.h"

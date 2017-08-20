@@ -110,17 +110,18 @@ vector sptk_frame(vector data, FRAME_SETTINGS * settings)
    if (!noctr) {
       i = (int) ((len + 1) / 2);
 //      rnum = freadf(&x[(int) (len / 2)], sizeof(*x), i, fp);
-      for(j=0;j<i&&j<data.x;j++) x[((int) (len / 2)) + j ] = data.v[j];
+      for(j=0;j<i&&j<data.x;j++) x[((int) (len / 2)) + j ] = getv(data, j);
       dpos = rnum = j;
    } else {
 //      rnum = freadf(x, sizeof(*x), len, fp);
-      for(j=0;j<len&&j<data.x;j++) x[j] = data.v[j];
+      for(j=0;j<len&&j<data.x;j++) x[j] = getv(data, j);
       dpos = rnum = j;
    }
    if (rnum == 0) return res;
    cs = rnum;
 //   fwritef(x, sizeof(*x), len, stdout);
-   for(j=0;j<len;j++) res.v[j] = x[j];
+   for(j=0;j<len;j++)
+       setv(res, j, x[j]);
    rpos = j;
 
    if ((ns = (len - fprd)) > 0) {
@@ -133,7 +134,8 @@ vector sptk_frame(vector data, FRAME_SETTINGS * settings)
             *p1++ = *p2++;
          }
 //         rnum = freadf(p1, sizeof(*p1), fprd, fp);
-         for(j=0;j<fprd&&(fprd+dpos)<data.x;j++) p1[j] = data.v[j+dpos];
+         for(j=0;j<fprd&&(fprd+dpos)<data.x;j++)
+             p1[j] = getv(data, j+dpos);
          dpos += j;
          rnum = j;
 //         fprintf(stderr, "data %i - %i \n", dpos, data.x);
@@ -148,8 +150,9 @@ vector sptk_frame(vector data, FRAME_SETTINGS * settings)
          if (cs <= 0)
             break;
 //         fwritef(x, sizeof(*x), len, stdout);
-         for(j=0;j<len&&(j+rpos)<rLen;j++) res.v[j+rpos] = x[j];
-//         for(j=0;j<len;j++) res.v[j+rpos] = x[j];
+         for(j=0;j<len&&(j+rpos)<rLen;j++)
+             setv(res, j+rpos, x[j]);
+//         for(j=0;j<len;j++) setv(res, j+rpos, x[j]);
          rpos += j;
 //         fprintf(stderr, "res %i - %i \n", rpos, rLen);
       }
@@ -158,13 +161,13 @@ vector sptk_frame(vector data, FRAME_SETTINGS * settings)
       xx = dgetmem(i);
       for (;;) {
 //         if (freadf(xx, sizeof(*xx), i, fp) != i)
-         for(j=0;j<i&&(j+dpos)<data.x;j++) xx[j] = data.v[j+dpos];
+         for(j=0;j<i&&(j+dpos)<data.x;j++) xx[j] = getv(data, j+dpos);
          rnum = j;
          dpos += j;
          if(rnum != i)
             break;
 //         rnum = freadf(x, sizeof(*x), len, fp);
-         for(j=0;j<len&&(j+dpos)<data.x;j++) x[j] = data.v[j+dpos];
+         for(j=0;j<len&&(j+dpos)<data.x;j++) x[j] = getv(data, j+dpos);
          rnum = j;
          dpos += j;
          if (rnum < len) {
@@ -178,7 +181,8 @@ vector sptk_frame(vector data, FRAME_SETTINGS * settings)
                *p1++ = 0.0;
          }
 //         fwritef(x, sizeof(*x), len, stdout);
-         for(j=0;j<len;j++) res.v[j+rpos] = x[j];
+         for(j=0;j<len;j++)
+             setv(res, j+rpos, x[j]);
          rpos += j;
       }
    }

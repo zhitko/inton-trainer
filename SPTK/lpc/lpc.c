@@ -102,7 +102,8 @@ vector sptk_lpc(vector data, LPC_SETTINGS * settings)
    vector res = zerov(rLen);
 
    while(1){
-      for(i=0;i<len&&(i+dPos)<data.x;i++) x[i] = data.v[i+dPos];
+      for(i=0;i<len&&(i+dPos)<data.x;i++)
+          x[i] = getv(data, i+dPos);
       if(i != len) break;
       dPos += i;
 
@@ -116,7 +117,8 @@ vector sptk_lpc(vector data, LPC_SETTINGS * settings)
              break;
       }
 
-      for(i=0;i<(m+1);i++) res.v[i+rPos] = a[i];
+      for(i=0;i<(m+1);i++)
+          setv(res, i+rPos, a[i]);
       rPos += i;
       t++;
    }

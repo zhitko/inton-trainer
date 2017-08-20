@@ -127,7 +127,7 @@ void GraphsWindow::startAutoRecord()
 {
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
 
-    qDebug() << "GraphsWindow::startAutoRecord";
+    qDebug() << "GraphsWindow::startAutoRecord" << LOG_DATA;
     this->ui->setRecordBtn->setEnabled(false);
     this->ui->startAutoRecordBtn->setEnabled(false);
     this->ui->stopRecordBtn->setEnabled(true);
@@ -147,7 +147,7 @@ void GraphsWindow::startRecord()
         this->recorder->stopRecording();
     } else {
         SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
-        qDebug() << "GraphsWindow::setRecord";
+        qDebug() << "GraphsWindow::setRecord" << LOG_DATA;
         this->ui->setRecordBtn->setEnabled(false);
         this->ui->startAutoRecordBtn->setEnabled(false);
         this->ui->stopRecordBtn->setEnabled(true);
@@ -179,7 +179,7 @@ void GraphsWindow::stopRecord()
 
 void GraphsWindow::stopRecord(SoundRecorder * recorder)
 {
-    qDebug() << "GraphsWindow::stopRecord";
+    qDebug() << "GraphsWindow::stopRecord" << LOG_DATA;
     this->ui->setRecordBtn->setEnabled(true);
     this->ui->startAutoRecordBtn->setEnabled(true);
     this->ui->stopRecordBtn->setEnabled(false);

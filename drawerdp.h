@@ -1,6 +1,8 @@
 #ifndef DRAWERDP_H
 #define DRAWERDP_H
 
+#include "defines.h"
+
 #include "drawer.h"
 
 class DrawerDP : public Drawer

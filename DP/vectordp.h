@@ -1,6 +1,8 @@
 #ifndef VECTORDP_H
 #define VECTORDP_H
 
+#include "defines.h"
+
 #include "dp.h"
 
 extern "C" {

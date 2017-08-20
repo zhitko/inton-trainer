@@ -12,6 +12,10 @@
 
 #define OCTAVE_MAX 2.5
 
+#define MASK_LEN 100
+#define MASK_MIN 0.0001
+#define MASK_MAX 1.0
+
 extern "C" {
     #include "./OpenAL/wavFile.h"
 
@@ -65,43 +69,43 @@ DrawerDP::DrawerDP() :
 
 DrawerDP::~DrawerDP()
 {
-    qDebug() << "DrawerDP removed";
+    qDebug() << "DrawerDP removed" << LOG_DATA;
     if (this->dpData) delete this->dpData;
-    qDebug() << "DrawerDP removed dpData";
+    qDebug() << "DrawerDP removed dpData" << LOG_DATA;
     if (this->secWaveData) delete this->secWaveData;
-    qDebug() << "DrawerDP removed secWaveData";
+    qDebug() << "DrawerDP removed secWaveData" << LOG_DATA;
     if (this->errorData) delete this->errorData;
-    qDebug() << "DrawerDP removed errorData";
+    qDebug() << "DrawerDP removed errorData" << LOG_DATA;
     if (this->timeData) delete this->timeData;
-    qDebug() << "DrawerDP removed timeData";
+    qDebug() << "DrawerDP removed timeData" << LOG_DATA;
     if (this->pSecData) delete this->pSecData;
-    qDebug() << "DrawerDP removed pSecData";
+    qDebug() << "DrawerDP removed pSecData" << LOG_DATA;
     if (this->nSecData) delete this->nSecData;
-    qDebug() << "DrawerDP removed nSecData";
+    qDebug() << "DrawerDP removed nSecData" << LOG_DATA;
     if (this->tSecData) delete this->tSecData;
-    qDebug() << "DrawerDP removed tSecData";
+    qDebug() << "DrawerDP removed tSecData" << LOG_DATA;
     if (this->secPitchData) delete this->secPitchData;
-    qDebug() << "DrawerDP removed secPitchData";
+    qDebug() << "DrawerDP removed secPitchData" << LOG_DATA;
     if (this->secIntensiveData) delete this->secIntensiveData;
-    qDebug() << "DrawerDP removed secIntensiveData";
+    qDebug() << "DrawerDP removed secIntensiveData" << LOG_DATA;
     if (this->simple_data) freeSimpleGraphData(this->simple_data);
-    qDebug() << "DrawerDP removed simple_data";
+    qDebug() << "DrawerDP removed simple_data" << LOG_DATA;
     if (this->umpData) delete this->umpData;
-    qDebug() << "DrawerDP removed umpData";
+    qDebug() << "DrawerDP removed umpData" << LOG_DATA;
     if (this->secUmpData) delete this->secUmpData;
-    qDebug() << "DrawerDP removed secUmpData";
+    qDebug() << "DrawerDP removed secUmpData" << LOG_DATA;
     if (this->octavData) delete this->octavData;
-    qDebug() << "DrawerDP removed octavData";
+    qDebug() << "DrawerDP removed octavData" << LOG_DATA;
     if (this->secOctavData) delete this->secOctavData;
-    qDebug() << "DrawerDP removed secOctavData";
+    qDebug() << "DrawerDP removed secOctavData" << LOG_DATA;
     if (this->umpMask) delete this->umpMask;
-    qDebug() << "DrawerDP removed umpMask";
+    qDebug() << "DrawerDP removed umpMask" << LOG_DATA;
 }
 
 int DrawerDP::Draw(mglGraph *gr)
 {
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
-    qDebug() << "start drawing";
+    qDebug() << "start drawing" << LOG_DATA;
 
     bool isCompare = !this->secFileName.isEmpty();
 
@@ -110,7 +114,7 @@ int DrawerDP::Draw(mglGraph *gr)
 
     if(!this->showUMP)
     {
-        qDebug() << "waveData";
+        qDebug() << "waveData" << LOG_DATA;
         gr->MultiPlot(1, 15, 1, 1, 1, "#");
         gr->SetRange('y', 0, 1);
         gr->Plot(*waveData, "B");
@@ -169,7 +173,7 @@ int DrawerDP::Draw(mglGraph *gr)
     if(isCompare){
         if(!this->showUMP)
         {
-            qDebug() << "secWaveData";
+            qDebug() << "secWaveData" << LOG_DATA;
             gr->MultiPlot(1, 15, 3, 1, 1, "#");
             gr->SetRange('y', 0, 1);
             gr->Plot(*pSecData, "q9");
@@ -189,7 +193,7 @@ int DrawerDP::Draw(mglGraph *gr)
                 24
             );
 
-            qDebug() << "errorData";
+            qDebug() << "errorData" << LOG_DATA;
             gr->MultiPlot(1, 15, 6, 1, 6, "#");
             gr->SetRange('y', 0, 1);
             if(this->errorData) gr->Plot(*this->errorData, "-B3");
@@ -250,7 +254,7 @@ int DrawerDP::Draw(mglGraph *gr)
         }
     }
 
-    qDebug() << "finish drawing";
+    qDebug() << "finish drawing" << LOG_DATA;
     return 0;
 }
 
@@ -263,19 +267,19 @@ void setMark(vector * vec, int pos)
 {
     if (vec->x > pos)
     {
-        vec->v[pos] = 1.0;
+        setv(*vec, 0, MASK_MAX);
         if (pos != 0)
         {
-            vec->v[pos-1] = 0.0001;
+            setv(*vec, pos-1, MASK_MIN);
         }
         if (vec->x != pos + 1)
         {
-            vec->v[pos+1] = 0.0001;
+            setv(*vec, pos+1, MASK_MIN);
         }
     } else {
-        qDebug() << "WARNING setMark ? " << (vec->x > pos) ;
-        qDebug() << "WARNING setMark x " << vec->x ;
-        qDebug() << "WARNING setMark pos " << pos ;
+        qDebug() << "WARNING setMark ? " << (vec->x > pos) << LOG_DATA;
+        qDebug() << "WARNING setMark x " << vec->x << LOG_DATA;
+        qDebug() << "WARNING setMark pos " << pos << LOG_DATA;
     }
 }
 
@@ -284,35 +288,24 @@ void setMark(vector * vec, int from, int to)
     int i=from;
     for (i=from; i<to; i++)
     {
-        vec->v[i] = 1.0;
+        setv(*vec, i, MASK_MAX);
     }
-    vec->v[from] = 0.0001;
-    vec->v[i] = 0.0001;
-}
-
-int getMappingValue(intvector* mapping, int index)
-{
-    if (index > mapping->x)
-    {
-        return mapping->v[mapping->x - 1];
-    } else {
-        return mapping->v[index];
-    }
+    setv(*vec, from, MASK_MIN);
+    setv(*vec, i, MASK_MIN);
 }
 
 void applyMapping(vector * data, intvector * mapping)
 {
-    qDebug() << "data " << data->x;
-    qDebug() << "mapping " << mapping->x;
+    qDebug() << "data " << data->x << LOG_DATA;
+    qDebug() << "mapping " << mapping->x << LOG_DATA;
     double scale = 1.0 * data->x / mapping->x;
-    qDebug() << "scale " << scale;
+    qDebug() << "scale " << scale << LOG_DATA;
     vector newData = zerov(data->x);
     for (int i=0; i<newData.x; i++)
     {
         int j = 1.0 * i / scale;
-        int index = getMappingValue(mapping, j);
-//        qDebug() << "index " << i << " " << j << " " << index;
-        newData.v[i] = getv(*data, index);
+        int index = getiv(*mapping, j);
+        setv(newData, i, getv(*data, index));
     }
     freev(*data);
     data->v = newData.v;
@@ -323,13 +316,13 @@ vector norm(vector data, double targetMin, double targetMax, bool procZeros = tr
     vector result = makev(data.x);
     double sourceMin = 0.0;
     if (procZeros){
-        sourceMin = data.v[minv(data)];
+        sourceMin = getv(data, minv(data));
     } else {
-        sourceMin = data.v[min_greaterv(data, 0.0)];
+        sourceMin = getv(data, min_greaterv(data, 0.0));
     }
-    double sourceMax = data.v[maxv(data)];
-    qDebug() << "sourceMin " << sourceMin;
-    qDebug() << "sourceMax " << sourceMax;
+    double sourceMax = getv(data, maxv(data));
+    qDebug() << "sourceMin " << sourceMin << LOG_DATA;
+    qDebug() << "sourceMax " << sourceMax << LOG_DATA;
 
     double sourceScale = sourceMax - sourceMin;
     double targetScale = targetMax - targetMin;
@@ -337,11 +330,11 @@ vector norm(vector data, double targetMin, double targetMax, bool procZeros = tr
     double zsrc, scaled;
 
     for(int i=0;i<data.x;i++)
-        if (procZeros || data.v[i] != 0)
+        if (procZeros || getv(data, i) != 0)
         {
-            zsrc = data.v[i] - sourceMin;
+            zsrc =  getv(data, i) - sourceMin;
             scaled = zsrc * targetScale / sourceScale;
-            result.v[i] = scaled + targetMin;
+            setv(result, i, scaled + targetMin);
         }
     return result;
 }
@@ -363,12 +356,13 @@ vector mid(vector data, int frame, bool procZeros = true)
         for(int j=0; j < frame; j++)
         {
             int position = i+j-frame/2;
-            if (procZeros || data.v[i] != 0)
+            if (procZeros || getv(data, i) != 0)
                 {
                 if( position < 0 || position > resultLength )
-                    middle.v[frameIndex] = 0.0;
-                else {
-                    middle.v[frameIndex] = fabs(data.v[position]);
+                {
+                    setv(middle, frameIndex, 0.0);
+                } else {
+                    setv(middle, frameIndex, fabs(getv(data, position)));
                     frameIndex++;
                 }
             }
@@ -376,7 +370,7 @@ vector mid(vector data, int frame, bool procZeros = true)
         if (frameIndex > frame/3)
         {
             qsort (middle.v, frameIndex-1, sizeof(double), compare);
-            result.v[i] = middle.v[frameIndex/2];
+            setv(result, i, getv(middle, frameIndex/2));
         }
     }
     freev(middle);
@@ -401,13 +395,25 @@ vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
     MaskDetails * details = new MaskDetails[len];
 
     for(int i=0; i<len_p; i++)
-        details[i] = MaskDetails{mask_p.pointsFrom.v[i]/mask_scale, mask_p.pointsLength.v[i]/mask_scale, TYPE_P};
+        details[i] = MaskDetails{
+                getiv(mask_p.pointsFrom, i)/mask_scale,
+                getiv(mask_p.pointsLength, i)/mask_scale,
+                TYPE_P
+        };
 
     for(int i=0; i<len_n; i++)
-        details[len_p + i] = MaskDetails{mask_n.pointsFrom.v[i]/mask_scale, mask_n.pointsLength.v[i]/mask_scale, TYPE_N};
+        details[len_p + i] = MaskDetails{
+                getiv(mask_n.pointsFrom, i)/mask_scale,
+                getiv(mask_n.pointsLength, i)/mask_scale,
+                TYPE_N
+        };
 
     for(int i=0; i<len_t; i++)
-        details[len_p + len_n + i] = MaskDetails{mask_t.pointsFrom.v[i]/mask_scale, mask_t.pointsLength.v[i]/mask_scale, TYPE_T};
+        details[len_p + len_n + i] = MaskDetails{
+                getiv(mask_t.pointsFrom, i)/mask_scale,
+                getiv(mask_t.pointsLength, i)/mask_scale,
+                TYPE_T
+        };
 
     qsort(details, len, sizeof(MaskDetails), compare_mask_details);
 
@@ -485,14 +491,16 @@ vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
     ii = 0;
     clone_details[0] = merged_details[0];
 
-    const int UMP_MASK_LEN = 100;
-    vector ump_mask = zerov(clone_len*UMP_MASK_LEN);
+    vector ump_mask = zerov(clone_len*MASK_LEN);
 
     if(merged_details[0].type == TYPE_N)
     {
-        ump_mask.v[0] = 0.01;
-        for(int i=1; i<UMP_MASK_LEN; i++) ump_mask.v[i] = 1;
-        ump_mask.v[UMP_MASK_LEN] = 0.01;
+        setv(ump_mask, 0, MASK_MIN);
+        for(int i=1; i<MASK_LEN; i++)
+        {
+            setv(ump_mask, i,MASK_MAX);
+        }
+        setv(ump_mask, MASK_LEN, MASK_MIN);
     }
 
     for(int i=1; i<(merge_len-1); i++)
@@ -515,9 +523,12 @@ vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
 
             if(clone_details[ii].type == TYPE_N)
             {
-                ump_mask.v[ii*UMP_MASK_LEN] = 0.01;
-                for(int i=1; i<UMP_MASK_LEN; i++) ump_mask.v[ii*UMP_MASK_LEN+i] = 1;
-                ump_mask.v[(ii+1)*UMP_MASK_LEN] = 0.01;
+                setv(ump_mask, ii*MASK_LEN, MASK_MIN);
+                for(int i=1; i<MASK_LEN; i++)
+                {
+                    setv(ump_mask, ii*MASK_LEN+i, MASK_MAX);
+                }
+                setv(ump_mask, (ii+1)*MASK_LEN, MASK_MIN);
             }
         }
     }
@@ -526,33 +537,45 @@ vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
     if(clone_details[clone_len-1].type == TYPE_N)
     {
         ii++;
-        ump_mask.v[ii*UMP_MASK_LEN] = 0.01;
-        for(int i=1; i<UMP_MASK_LEN; i++) ump_mask.v[ii*UMP_MASK_LEN+i] = 1;
-        ump_mask.v[(ii+1)*UMP_MASK_LEN] = 0.01;
+        setv(ump_mask, ii*MASK_LEN, MASK_MIN);
+        for(int i=1; i<MASK_LEN; i++)
+        {
+            setv(ump_mask, ii*MASK_LEN+i, MASK_MAX);
+        }
+        setv(ump_mask, (ii+1)*MASK_LEN, MASK_MIN);
     }
 
     delete merged_details;
 
-    qDebug() << "data " << data->x;
-    qDebug() << "mask " << mask->x;
+    qDebug() << "data " << data->x << LOG_DATA;
+    qDebug() << "mask " << mask->x << LOG_DATA;
     vector strip_data;
     strip_data = copyv(*data);
-    qDebug() << "strip_data " << strip_data.x;
+    qDebug() << "strip_data " << strip_data.x << LOG_DATA;
+
+    qDebug() << "clone_len " << clone_len << LOG_DATA;
 
     vector resized_data = zerov(part_len*clone_len);
 
+    double scale = 1.0 * mask->x / data->x;
+
     ii = 0;
+    int p = 0;
     for(int i=0; i<clone_len; i++)
     {
         vector in = zerov(clone_details[i].len);
         for(int j=0; j<clone_details[i].len; j++)
-            in.v[j] = strip_data.v[clone_details[i].from + j];
-        qDebug() << "len " << in.x;
+        {
+            p = clone_details[i].from/scale + j;
+            setv(in, j, getv(strip_data, p));
+        }
+        qDebug() << "len " << in.x << " - " << clone_details[i].from << LOG_DATA;
 
         vector out = vector_resize(in, part_len);
-        for (int j=0; j<part_len; j++)
+        for (int j=0; j<out.x; j++)
         {
-            resized_data.v[j + i*part_len] = out.v[j];
+            p = j + i*part_len;
+            setv(resized_data, p, getv(out, j));
         }
         freev(in);
         freev(out);
@@ -577,24 +600,24 @@ MinMax applyMask(vector * data, vector * mask)
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
 
     vector scaledMask = vector_resize(*mask, data->x);
-    qDebug() << "scaledMask";
+    qDebug() << "scaledMask" << LOG_DATA;
     vector cuttedData = vector_cut_by_mask(*data, scaledMask);
-    qDebug() << "newData";
+    qDebug() << "newData" << LOG_DATA;
     vector dataMid = mid(cuttedData, sptk_settings->plotF0->midFrame);
-    min = dataMid.v[min_greaterv(dataMid, 0.0)];
-    max = dataMid.v[maxv(dataMid)];
-    qDebug() << "pitch_mid";
+    min = getv(dataMid, min_greaterv(dataMid, 0.0));
+    max = getv(dataMid, maxv(dataMid));
+    qDebug() << "pitch_mid" << LOG_DATA;
     vector newDataNorm = norm(dataMid, 0.0, 1.0, !sptk_settings->plotF0->normF0MinMax);
-    qDebug() << "newDataNorm";    
+    qDebug() << "newDataNorm" << LOG_DATA;
     vector dataInterpolate = copyv(newDataNorm);
-    qDebug() << "dataInterpolate " << dataInterpolate.x;
+    qDebug() << "dataInterpolate " << dataInterpolate.x << LOG_DATA;
 
     int start = first_fromv(dataInterpolate, 0, 0.0);
     int end = first_greater_fromv(dataInterpolate, start, 0.0);
 
     if (start == 0)
     {
-        qDebug() << "vector_interpolate_part(" << &dataInterpolate << ", " << start << ", " << end << ", " << sptk_settings->plotF0->interpolation_type << ")";
+        qDebug() << "vector_interpolate_part(" << &dataInterpolate << ", " << start << ", " << end << ", " << sptk_settings->plotF0->interpolation_type << ")" << LOG_DATA;
         vector_interpolate_part(
                     &dataInterpolate,
                     start,
@@ -608,7 +631,7 @@ MinMax applyMask(vector * data, vector * mask)
 
     do
     {
-        qDebug() << "vector_interpolate_part(" << &dataInterpolate << ", " << start-1 << ", " << end << ", " << sptk_settings->plotF0->interpolation_type << ")";
+        qDebug() << "vector_interpolate_part(" << &dataInterpolate << ", " << start-1 << ", " << end << ", " << sptk_settings->plotF0->interpolation_type << ")" << LOG_DATA;
         vector_interpolate_part(
                     &dataInterpolate,
                     start-1,
@@ -619,7 +642,7 @@ MinMax applyMask(vector * data, vector * mask)
         end = first_greater_fromv(dataInterpolate, start, 0.0);
     } while (end != start && end != dataInterpolate.x);
 
-    qDebug() << "vector_interpolate_part(" << &dataInterpolate << ", " << start-1 << ", " << dataInterpolate.x - 1 << ", " << sptk_settings->plotF0->interpolation_type << ")";
+    qDebug() << "vector_interpolate_part(" << &dataInterpolate << ", " << start-1 << ", " << dataInterpolate.x - 1 << ", " << sptk_settings->plotF0->interpolation_type << ")" << LOG_DATA;
     vector_interpolate_part(
                 &dataInterpolate,
                 start-1,
@@ -634,7 +657,7 @@ MinMax applyMask(vector * data, vector * mask)
     freev(*data);
     data->v = newDataNorm.v;
     data->v = dataInterpolate.v;
-    qDebug() << "finish applyMask";
+    qDebug() << "finish applyMask" << LOG_DATA;
     return MinMax{min, max};
 }
 
@@ -642,10 +665,10 @@ void getMark(vector * vec, MaskData * points, int startPos, double marksScale, i
 {
     for (int i=0; i<points->pointsFrom.x; i++)
     {
-        int from = getMappingValue(mapping, 1.0*(points->pointsFrom.v[i])/marksScale) + startPos;
-        int to = getMappingValue(mapping, 1.0*(points->pointsFrom.v[i] + points->pointsLength.v[i])/marksScale) + startPos;
+        int from = getiv(*mapping, 1.0*getiv(points->pointsFrom, i)/marksScale) + startPos;
+        int to = getiv(*mapping, 1.0*(getiv(points->pointsFrom, i) + getiv(points->pointsLength, i))/marksScale) + startPos;
         setMark(vec, from, to);
-        qDebug() << "setMark pSecVector " << from << " - " << to;
+        qDebug() << "setMark pSecVector " << from << " - " << to << LOG_DATA;
     }
 }
 
@@ -653,8 +676,8 @@ void getMark(vector * vec, MaskData * points)
 {
     for (int i=0; i<points->pointsFrom.x; i++)
     {
-        int from = points->pointsFrom.v[i];
-        int to = points->pointsFrom.v[i] + points->pointsLength.v[i];
+        int from = getiv(points->pointsFrom, i);
+        int to = getiv(points->pointsFrom, i) + getiv(points->pointsLength, i);
         setMark(vec, from, to);
     }
 }
@@ -668,9 +691,9 @@ double calculateResultR(vector x, vector y)
     double yy = 0.0;
     for(int i=0; i<x.x && i<y.x; i++)
     {
-        result += (x.v[i]-mx)*(y.v[i]-my);
-        xx += (x.v[i]-mx)*(x.v[i]-mx);
-        yy += (y.v[i]-my)*(y.v[i]-my);
+        result += (getv(x, i)-mx)*(getv(y, i)-my);
+        xx += (getv(x, i)-mx)*(getv(x, i)-mx);
+        yy += (getv(y, i)-my)*(getv(y, i)-my);
     }
     result = result / sqrt(xx*yy);
     return round(fabs(result)*100);
@@ -681,7 +704,7 @@ double calculateResultD(vector x, vector y)
     double result = 0;
     for(int i=0; i<x.x && i<y.x; i++)
     {
-        result += (x.v[i]-y.v[i])*(x.v[i]-y.v[i]);
+        result += (getv(x, i)-getv(y, i))*(getv(x, i)-getv(y, i));
     }
     result = sqrt(result) / sqrt(x.x);
     return round((1-result)*100);
@@ -693,7 +716,7 @@ void DrawerDP::Proc(QString fname)
 
     if(first)
     {
-        qDebug() << "Drawer::Proc";
+        qDebug() << "Drawer::Proc" << LOG_DATA;
         first = false;
 
         this->fileName = fname;
@@ -701,7 +724,7 @@ void DrawerDP::Proc(QString fname)
         this->simple_data = SimpleProcWave2Data(this->fileName);
 
         this->waveData = createMglData(this->simple_data->d_full_wave, this->waveData);
-        qDebug() << "waveData Filled";
+        qDebug() << "waveData Filled" << LOG_DATA;
 
         vector pVector = zerov(this->simple_data->d_full_wave.x);
         vector nVector = zerov(this->simple_data->d_full_wave.x);
@@ -721,27 +744,27 @@ void DrawerDP::Proc(QString fname)
 
         vector pitch_cutted = copyv(this->simple_data->d_pitch);
         MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_mask);
-        qDebug() << "MinMax " << mm.min << ":" << mm.max;
+        qDebug() << "MinMax " << mm.min << ":" << mm.max << LOG_DATA;
         vector pitch_smooth = vector_mid(pitch_cutted, sptk_settings->plotF0->midFrame);
         this->pitchData = createMglData(pitch_smooth, this->pitchData, true);
         this->pitchData->Norm();
-        qDebug() << "pitchData createMglData";
+        qDebug() << "pitchData createMglData" << LOG_DATA;
 
         this->f0max = mm.max;
         this->f0min = mm.min;
 
         this->octavData = new mglData(2);
-        qDebug() << "this->f0max " << this->f0max;
-        qDebug() << "this->f0min " << this->f0min;
+        qDebug() << "this->f0max " << this->f0max << LOG_DATA;
+        qDebug() << "this->f0min " << this->f0min << LOG_DATA;
         this->octavData->a[0] = (1.0 * this->f0max / this->f0min) - 1;
-        qDebug() << "this->octavData->a[0] " << this->octavData->a[0];
+        qDebug() << "this->octavData->a[0] " << this->octavData->a[0] << LOG_DATA;
         if(this->octavData->a[0] > OCTAVE_MAX) this->octavData->a[0] = OCTAVE_MAX;
-        qDebug() << "octavData createMglData";
+        qDebug() << "octavData createMglData" << LOG_DATA;
 
         vector origin_ump = copyv(pitch_smooth);
 
         double mask_scale = 1.0 * this->simple_data->d_full_wave.x / this->simple_data->d_mask.x;
-        qDebug() << "mask_scale " << mask_scale;
+        qDebug() << "mask_scale " << mask_scale << LOG_DATA;
         vector ump_mask = makeUmp(
             &origin_ump,
             &this->simple_data->d_mask,
@@ -762,7 +785,7 @@ void DrawerDP::Proc(QString fname)
 
         freev(pitch_cutted);
         freev(pitch_smooth);
-        qDebug() << "pitchData Filled";
+        qDebug() << "pitchData Filled" << LOG_DATA;
 
         if(sptk_settings->dp->showOriginalF0)
         {
@@ -776,34 +799,34 @@ void DrawerDP::Proc(QString fname)
             this->intensiveData->Norm();
         }
 
-        qDebug() << "intensiveData Filled";
+        qDebug() << "intensiveData Filled" << LOG_DATA;
     }
     else
     {
-        qDebug() << "DrawerDP::Proc";
+        qDebug() << "DrawerDP::Proc" << LOG_DATA;
         this->secFileName = fname;
 
         SimpleGraphData * dataSec = SimpleProcWave2Data(this->secFileName);
 
         this->secWaveData = createMglData(dataSec->d_full_wave, this->secWaveData);
-        qDebug() << "waveData New Filled";
+        qDebug() << "waveData New Filled" << LOG_DATA;
 
-        qDebug() << "Start DP";
+        qDebug() << "Start DP" << LOG_DATA;
         SpectrSignal * firstSignal;
         SpectrSignal * secondSignal;
         if (sptk_settings->dp->useForDP == 0)
         {
             int speksize = sptk_settings->spec->leng / 2 + 1;
-            qDebug() << "data->d_spec " << this->simple_data->d_spec.x;
-            qDebug() << "dataSec->d_spec " << dataSec->d_spec.x;
+            qDebug() << "data->d_spec " << this->simple_data->d_spec.x << LOG_DATA;
+            qDebug() << "dataSec->d_spec " << dataSec->d_spec.x << LOG_DATA;
             firstSignal = new SpectrSignal(copyv(this->simple_data->d_spec_proc), speksize);
             secondSignal = new SpectrSignal(copyv(dataSec->d_spec_proc), speksize);
         }
         if (sptk_settings->dp->useForDP == 1)
         {
             int speksize = sptk_settings->lpc->cepstrum_order + 1;
-            qDebug() << "data->d_cepstrum " << this->simple_data->d_cepstrum.x;
-            qDebug() << "dataSec->d_cepstrum " << dataSec->d_cepstrum.x;
+            qDebug() << "data->d_cepstrum " << this->simple_data->d_cepstrum.x << LOG_DATA;
+            qDebug() << "dataSec->d_cepstrum " << dataSec->d_cepstrum.x << LOG_DATA;
             firstSignal = new SpectrSignal(copyv(this->simple_data->d_cepstrum), speksize);
             secondSignal = new SpectrSignal(copyv(dataSec->d_cepstrum), speksize);
         }
@@ -821,15 +844,15 @@ void DrawerDP::Proc(QString fname)
             sptk_settings->dp->continiusKT
         );
         dp.calculate();
-        qDebug() << "Stop DP";
+        qDebug() << "Stop DP" << LOG_DATA;
         vector errorVector = dp.getErrorVector();
         int endPos = minv(errorVector);
-        this->errorMax = errorVector.v[maxv(errorVector)];
-        this->errorMin = errorVector.v[endPos];
-        qDebug() << "errorVector " << errorVector.x;
+        this->errorMax = getv(errorVector, maxv(errorVector));
+        this->errorMin = getv(errorVector, endPos);
+        qDebug() << "errorVector " << errorVector.x << LOG_DATA;
 
         vector timeVector = dp.getTimeVector();
-        qDebug() << "timeVector " << timeVector.x;
+        qDebug() << "timeVector " << timeVector.x << LOG_DATA;
 
         if (sptk_settings->dp->showError)
         {
@@ -843,7 +866,7 @@ void DrawerDP::Proc(QString fname)
             this->timeData->Norm();
         }
 
-        int startPos = endPos - timeVector.v[endPos];
+        int startPos = endPos - getv(timeVector, endPos);
         vector dpVector = zerov(errorVector.x);
         setMark(&dpVector, startPos);
         setMark(&dpVector, endPos);
@@ -855,9 +878,9 @@ void DrawerDP::Proc(QString fname)
         intvector mapping = dp.getMapping(endPos);
 
         double marksScale = 1.0 * this->simple_data->d_full_wave.x / mapping.x;
-        qDebug() << "data->d_wave.x " << this->simple_data->d_full_wave.x;
-        qDebug() << "mapping " << mapping.x;
-        qDebug() << "marksScale " << marksScale;
+        qDebug() << "data->d_wave.x " << this->simple_data->d_full_wave.x << LOG_DATA;
+        qDebug() << "mapping " << mapping.x << LOG_DATA;
+        qDebug() << "marksScale " << marksScale << LOG_DATA;
 
         vector pSecVector = zerov(timeVector.x);
         vector nSecVector = zerov(timeVector.x);
@@ -865,9 +888,9 @@ void DrawerDP::Proc(QString fname)
 
         freev(timeVector);
 
-        qDebug() << "len " << endPos - startPos ;
-        qDebug() << "startPos " << startPos;
-        qDebug() << "endPos " << endPos;
+        qDebug() << "len " << endPos - startPos << LOG_DATA;
+        qDebug() << "startPos " << startPos << LOG_DATA;
+        qDebug() << "endPos " << endPos << LOG_DATA;
 
         getMark(&pSecVector, &this->simple_data->md_p, startPos, marksScale, &mapping);
         getMark(&nSecVector, &this->simple_data->md_n, startPos, marksScale, &mapping);
@@ -910,7 +933,7 @@ void DrawerDP::Proc(QString fname)
             this->proximity_range = 200 - this->proximity_range;
         }
 
-        qDebug() << "sptk_settings->dp->errorType " << sptk_settings->dp->errorType;
+        qDebug() << "sptk_settings->dp->errorType " << sptk_settings->dp->errorType << LOG_DATA;
         vector o_pitch_cutted = copyv(this->simple_data->d_pitch_original);
         applyMask(&o_pitch_cutted, &this->simple_data->d_mask);
         switch (sptk_settings->dp->errorType) {
@@ -966,13 +989,13 @@ void DrawerDP::Proc(QString fname)
             this->secIntensiveData->Norm();
             freev(intensive_cutted);
 
-            qDebug() << "intensiveData Filled " << this->secIntensiveData->nx;
+            qDebug() << "intensiveData Filled " << this->secIntensiveData->nx << LOG_DATA;
         }
 
         freeiv(mapping);
 
         freeSimpleGraphData(dataSec);
-        qDebug() << "New Data Processed";
+        qDebug() << "New Data Processed" << LOG_DATA;
     }
 }
 

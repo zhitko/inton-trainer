@@ -24,7 +24,7 @@ extern "C" {
 vector calculateMask(vector wave, vector pitch)
 {
     vector mask;
-    qDebug() << "Use pitch log for mask";
+    qDebug() << "Use pitch log for mask" << LOG_DATA;
 
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
     PITCH_SETTINGS log_settings;
@@ -32,10 +32,10 @@ vector calculateMask(vector wave, vector pitch)
     log_settings.OTYPE = 2;
 
     vector logf0 = sptk_pitch_spec(wave, &log_settings, pitch.x);
-    qDebug() << "logf0";
+    qDebug() << "logf0" << LOG_DATA;
 
     mask = normalizev(logf0, 0.0, 1.0);
-    qDebug() << "mask";
+    qDebug() << "mask" << LOG_DATA;
 
     return mask;
 }
@@ -79,15 +79,15 @@ void vectorToData(vector vec, mglData * data)
 {
     data->Create(vec.x);
     for(long i=0;i<vec.x;i++)
-        data->a[i] = vec.v[i];
+        data->a[i] = getv(vec, i);
 }
 
 void vectorToDataWithNan(vector vec, mglData * data)
 {
     data->Create(vec.x);
     for(long i=0;i<vec.x;i++)
-        if (vec.v[i] != 0)
-            data->a[i] = vec.v[i];
+        if (getv(vec, i) != 0)
+            data->a[i] = getv(vec, i);
         else data->a[i] = std::numeric_limits<double>::quiet_NaN();
 }
 
@@ -122,20 +122,20 @@ Drawer::~Drawer()
     if (this->tWaveData) delete this->tWaveData;
     if (data) freeGraphData(data);
     if (data) free(data);
-    qDebug() << "Drawer removed";
+    qDebug() << "Drawer removed" << LOG_DATA;
 }
 
 double Drawer::calcResultMark(vector v1, vector v2)
 {
     vector v1norm = normalizev(v1, 0.0, 1.0);
     vector v2norm = normalizev(v2, 0.0, 1.0);
-    qDebug() << "v1norm" << v1norm.x;
-    qDebug() << "v2norm" << v2norm.x;
+    qDebug() << "v1norm" << v1norm.x << LOG_DATA;
+    qDebug() << "v2norm" << v2norm.x << LOG_DATA;
     double diff = 0;
     for(int i=0; i<v1norm.x && i<v1norm.x; i++)
     {
-        double a = v1norm.v[i];
-        double b = v2norm.v[i];
+        double a = getv(v1norm, i);
+        double b = getv(v2norm, i);
         diff += std::abs(a - b);
     }
     diff /= v1norm.x;
@@ -157,28 +157,28 @@ void Drawer::Proc(QString fname)
 
     waveData = createMglData(data->d_wave, waveData);
     waveDataLen = waveData->GetNx();
-    qDebug() << "waveData Filled";
+    qDebug() << "waveData Filled" << LOG_DATA;
 
     nWaveData = createMglData(data->d_n_wave, nWaveData);
     tWaveData = createMglData(data->d_t_wave, tWaveData);
     pWaveData = createMglData(data->d_p_wave, pWaveData);
 
     maskData = createMglData(data->d_mask, maskData);
-    qDebug() << "maskData Filled";
+    qDebug() << "maskData Filled" << LOG_DATA;
 
     intensiveDataOriginal = createMglData(data->d_intensive_original, intensiveDataOriginal, true);
     intensiveDataOriginal->Norm();
-    qDebug() << "intensiveData Filled";
+    qDebug() << "intensiveData Filled" << LOG_DATA;
 
     intensiveData = createMglData(data->d_intensive, intensiveData);
     intensiveData->Norm();
-    qDebug() << "intensiveData Filled";
+    qDebug() << "intensiveData Filled" << LOG_DATA;
 
     pitchDataOriginal = createMglData(data->d_pitch_original, pitchDataOriginal, true);
     pitchDataOriginal->Norm();
     pitchData = createMglData(data->d_pitch, pitchData);
     pitchData->Norm();
-    qDebug() << "pitchData Filled";
+    qDebug() << "pitchData Filled" << LOG_DATA;
 
     int speksize = sptk_settings->spec->leng / 2 + 1;
     int specX = data->d_spec_proc.x/speksize;
@@ -191,12 +191,12 @@ void Drawer::Proc(QString fname)
         {
             long i0 = i+specX*j;
             long i1 = j+specY*i;
-            specData->a[i0] = data->d_spec_proc.v[i1];
+            specData->a[i0] = getv(data->d_spec_proc, i1);
         }
     specData->Squeeze(mathgl_settings->quality, 1);
-    qDebug() << "specData Filled " << specX << " " << specY;
+    qDebug() << "specData Filled " << specX << " " << specY << LOG_DATA;
 
-    qDebug() << "Data Processed";
+    qDebug() << "Data Processed" << LOG_DATA;
 }
 
 int Drawer::getDataLenght()
@@ -206,12 +206,12 @@ int Drawer::getDataLenght()
 
 int Drawer::Draw(mglGraph *gr)
 {
-    qDebug() << "start drawing";
+    qDebug() << "start drawing" << LOG_DATA;
 
     gr->DefaultPlotParam();
     gr->Clf();
 
-    qDebug() << "waveData";
+    qDebug() << "waveData" << LOG_DATA;
     gr->MultiPlot(1, 16, 0, 1, 2, "#");
     gr->SetRange('y', 0, 1);
     gr->Plot(*waveData);
@@ -219,7 +219,7 @@ int Drawer::Draw(mglGraph *gr)
     gr->Plot(*nWaveData, "q1");
     gr->Plot(*tWaveData, "c1");
 
-    qDebug() << "pitchData " << data->pitch_min << " " << data->pitch_max;
+    qDebug() << "pitchData " << data->pitch_min << " " << data->pitch_max << LOG_DATA;
     gr->MultiPlot(1, 16, 3, 1, 6, "#");
     gr->Puts(mglPoint(-0.9,1),QString("%1").arg(data->pitch_max).toLocal8Bit().data());
     gr->SetRange('y', 0, 1);
@@ -228,19 +228,19 @@ int Drawer::Draw(mglGraph *gr)
     gr->Grid("y", "W", "");
     gr->Puts(mglPoint(-0.9,-1),QString("%1").arg(data->pitch_min).toLocal8Bit().data());
 
-    qDebug() << "scaledMaskData";
+    qDebug() << "scaledMaskData" << LOG_DATA;
     gr->SetRange('y', 0, 1);
     gr->Plot(*maskData, "-G1");
 
-    qDebug() << "specData";
+    qDebug() << "specData" << LOG_DATA;
     gr->MultiPlot(1, 16, 10, 1, 6, "#");
     if(stereo) gr->Rotate(50,60);
     QString colors = QString("w{w,%1}k").arg(QString::number(0));
-    qDebug() << colors;
+    qDebug() << colors << LOG_DATA;
     gr->SetDefScheme(colors.toStdString().c_str());
     gr->Surf(*specData);
 
-    qDebug() << "finish drawing";
+    qDebug() << "finish drawing" << LOG_DATA;
     return 0;
 }
 

@@ -106,9 +106,11 @@ vector sptk_window(vector data, WINDOW_SETTINGS * settings)
    x = dgetmem(fleng > outl ? fleng : outl);
 
    for(i=0;i<data.x;i+=fleng){
-      for(j=0;j<fleng;j++) x[j] = data.v[j+i];
+      for(j=0;j<fleng;j++)
+          x[j] = getv(data, j+i);
       window(wintype, x, fleng, normflg);
-      for(j=0;j<fleng;j++) res.v[j+i] = x[j];
+      for(j=0;j<fleng;j++)
+          setv(res, j+i, x[j]);
    }
 
    return res;

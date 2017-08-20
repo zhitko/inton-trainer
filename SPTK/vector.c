@@ -112,7 +112,8 @@ vector makev(int xSz) {
 vector zerov(int xSz) { 
     int i;
     vector nw_vector = makev(xSz);
-    for (i = 0; i < nw_vector.x; i++) nw_vector.v[i] = 0.;
+    for (i = 0; i < nw_vector.x; i++)
+        setv(nw_vector, i, 0.0);
     return(nw_vector); 
 }
 
@@ -120,7 +121,8 @@ vector zerov(int xSz) {
 vector onesv(int xSz) { 
     int i;
     vector nw_vector = makev(xSz);
-    for (i = 0; i < nw_vector.x; i++) nw_vector.v[i] = 1.;
+    for (i = 0; i < nw_vector.x; i++)
+        setv(nw_vector, i, 1.0);
     return(nw_vector); 
 }
 
@@ -128,7 +130,8 @@ vector onesv(int xSz) {
 vector nansv(int xSz) { 
     int i;
     vector nw_vector = makev(xSz);
-    for (i = 0; i < nw_vector.x; i++) nw_vector.v[i] = NAN;
+    for (i = 0; i < nw_vector.x; i++)
+        setv(nw_vector, i, NAN);
     return(nw_vector); 
 }
 
@@ -158,6 +161,17 @@ double getv(vector yr_vector, int index)
     }
 }
 
+double setv(vector yr_vector, int index, double value)
+{
+    if (index < 0) {
+        return yr_vector.v[0] = value;
+    } else if (index >= yr_vector.x) {
+        return yr_vector.v[yr_vector.x - 1] = value;
+    } else {
+        return yr_vector.v[index] = value;
+    }
+}
+
 // cut vector and make a deep copy of a cutted
 vector cutv(vector yr_vector, int start_index, int end_index)
 {
@@ -176,15 +190,15 @@ void freev(vector yr_vector) {
 // print the vector
 void printv(vector yr_vector) { 
     int i;
-    for (i = 0; i < yr_vector.x; i++) printf("%f\n", yr_vector.v[i]);
+    for (i = 0; i < yr_vector.x; i++) printf("%f\n", getv(yr_vector, i));
 }
 
 // normalize vector by targetMin and targetMax values
 vector normalizev(vector data, double targetMin, double targetMax)
 {
     vector result = makev(data.x);
-    double sourceMin = data.v[minv(data)];
-    double sourceMax = data.v[maxv(data)];
+    double sourceMin = getv(data, minv(data));
+    double sourceMax = getv(data, maxv(data));
 
     double sourceScale = sourceMax - sourceMin;
     double targetScale = targetMax - targetMin;
@@ -193,9 +207,9 @@ vector normalizev(vector data, double targetMin, double targetMax)
 
     for(int i=0;i<data.x;i++)
     {
-        zsrc = data.v[i] - sourceMin;
+        zsrc = getv(data, i) - sourceMin;
         scaled = zsrc * targetScale / sourceScale;
-        result.v[i] = scaled + targetMin;
+        setv(result, i, scaled + targetMin);
     }
     return result;
 }
@@ -204,11 +218,11 @@ vector normalizev(vector data, double targetMin, double targetMax)
 int min_greaterv(vector data, double value)
 {
     int index = 0;
-    double min_value = data.v[maxv(data)];
+    double min_value = getv(data, maxv(data));
     for(int i = 0; i < data.x; i++)
-        if(data.v[i] > value && data.v[i] < min_value)
+        if(getv(data, i) > value && getv(data, i) < min_value)
         {
-            min_value = data.v[i];
+            min_value = getv(data, i);
             index = i;
         }
     return index;
@@ -219,7 +233,7 @@ int first_greaterv(vector data, double value)
 {
     int index;
     for(index = 0; index < data.x; index++)
-        if(data.v[index] > value)
+        if(getv(data, index) > value)
             break;
     return index;
 }
@@ -228,7 +242,7 @@ int first_greater_fromv(vector data, int from, double value)
 {
     int index;
     for(index = from; index < data.x; index++)
-        if(data.v[index] > value)
+        if(getv(data, index) > value)
             break;
     if(index == data.x) index--;
     return index;
@@ -238,7 +252,7 @@ int first_fromv(vector data, int from, double value)
 {
     int index;
     for(index = from; index < data.x; index++)
-        if(data.v[index] == value)
+        if(getv(data, index) == value)
             break;
     if(index == data.x) index--;
     return index;
@@ -249,7 +263,7 @@ int last_greaterv(vector data, double value)
 {
     int index;
     for(index = data.x; index >= 0; index--)
-        if(data.v[index] > value)
+        if(getv(data, index) > value)
             break;
     return index;
 }
@@ -260,8 +274,8 @@ int maxv(vector yr_vector) {
     int index = -1;
     double val = SHRT_MIN;
     for (i = 0; i < yr_vector.x; i++) {
-        if (yr_vector.v[i] > val) {
-            val = yr_vector.v[i];
+        if (getv(yr_vector, i) > val) {
+            val = getv(yr_vector, i);
             index = i;
         }
     }
@@ -274,8 +288,8 @@ int minv(vector yr_vector) {
     int index = -1;
     double val = SHRT_MAX;
     for (i = 0; i < yr_vector.x; i++) {
-        if (yr_vector.v[i] < val) {
-            val = yr_vector.v[i];
+        if (getv(yr_vector, i) < val) {
+            val = getv(yr_vector, i);
             index = i;
         }
     }
@@ -287,7 +301,7 @@ double midv(vector yr_vector) {
     int i;
     double val = 0.0;
     for (i = 0; i < yr_vector.x; i++) {
-        val += yr_vector.v[i] / yr_vector.x;
+        val += getv(yr_vector, i) / yr_vector.x;
     }
     return(val);
 }
@@ -296,7 +310,7 @@ double sumv(vector yr_vector) {
     int i;
     double val = 0.0;
     for (i = 0; i < yr_vector.x; i++) {
-        val += yr_vector.v[i];
+        val += getv(yr_vector, i);
     }
     return(val);
 }
@@ -308,7 +322,7 @@ int bisectv(vector yr_vector, double key) {
     int hi = yr_vector.x;                   
     while (hi - lo > 1) {
         md = (hi + lo) >> 1;
-        if (yr_vector.v[md] > key) hi = md;
+        if (getv(yr_vector, md) > key) hi = md;
         else lo = md;
     }
     return(hi);
@@ -325,7 +339,7 @@ int bilookv(vector yr_vector, double key, int lo) {
     lo--;                                         
     while (hi - lo > 1) {                         
         md = (hi + lo) >> 1;                      
-        if (yr_vector.v[md] > key) hi = md; 
+        if (getv(yr_vector, md) > key) hi = md;
         else lo = md;
     }
     return(hi);
@@ -343,14 +357,16 @@ intvector makeiv(int xSz) {
 intvector zeroiv(int xSz) {
     int i;
     intvector nw_vector = makeiv(xSz);
-    for (i = 0; i < nw_vector.x; i++) nw_vector.v[i] = 0;
+    for (i = 0; i < nw_vector.x; i++)
+        setiv(nw_vector, i, 0);
     return(nw_vector);
 }
 
 intvector onesiv(int xSz) {
     int i;
     intvector nw_vector = makeiv(xSz);
-    for (i = 0; i < nw_vector.x; i++) nw_vector.v[i] = 1;
+    for (i = 0; i < nw_vector.x; i++)
+        setiv(nw_vector, i, 1);
     return(nw_vector);
 }
 
@@ -367,6 +383,28 @@ intvector cutiv(intvector yr_vector, int start_index, int end_index)
     intvector nw_vector = makeiv(nw_size);
     memcpy(nw_vector.v, &yr_vector.v[start_index], sizeof(double) * nw_size);
     return(nw_vector);
+}
+
+int getiv(intvector yr_vector, int index)
+{
+    if (index < 0) {
+        return yr_vector.v[0];
+    } else if (index >= yr_vector.x) {
+        return yr_vector.v[yr_vector.x - 1];
+    } else {
+        return yr_vector.v[index];
+    }
+}
+
+int setiv(intvector yr_vector, int index, int value)
+{
+    if (index < 0) {
+        return yr_vector.v[0] = value;
+    } else if (index >= yr_vector.x) {
+        return yr_vector.v[yr_vector.x - 1] = value;
+    } else {
+        return yr_vector.v[index] = value;
+    }
 }
 
 // convert an intvector into a vector using implicit casts to double

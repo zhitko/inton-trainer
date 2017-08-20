@@ -21,7 +21,7 @@ int SpectrSignal::sizeSpectr()
 void SpectrSignal::setValueAt(double* value, int index)
 {
     for(int i=0; i<this->spectrSize; i++)
-        array.v[index * this->spectrSize + i] = value[i];
+        setv(array, index * this->spectrSize + i, value[i]);
 }
 
 Signal<double*> * SpectrSignal::makeSignal(int size)

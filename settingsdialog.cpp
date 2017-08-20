@@ -35,8 +35,8 @@ void SettingsDialog::initAudio()
 
     if(inputDevices) currentInputDevice = inputDevices->device;
     if(outputDevices) currentOutputDevice = outputDevices->device;
-    qDebug() << "currentInputDevice " << this->currentInputDevice->name;
-    qDebug() << "currentOutputDevice " << this->currentOutputDevice->name;
+    qDebug() << "currentInputDevice " << this->currentInputDevice->name << LOG_DATA;
+    qDebug() << "currentOutputDevice " << this->currentOutputDevice->name << LOG_DATA;
 }
 
 void SettingsDialog::inputDeviceChanged(int index)
@@ -44,7 +44,7 @@ void SettingsDialog::inputDeviceChanged(int index)
     oal_devices_list *list = this->inputDevices;
     for(int i=0;i<index;i++) list = list->next;
     this->currentInputDevice = list->device;
-    qDebug() << "inputDeviceChanged " << this->currentInputDevice->name;
+    qDebug() << "inputDeviceChanged " << this->currentInputDevice->name << LOG_DATA;
 }
 
 void SettingsDialog::outputDeviceChanged(int index)
@@ -52,7 +52,7 @@ void SettingsDialog::outputDeviceChanged(int index)
     oal_devices_list *list = this->outputDevices;
     for(int i=0;i<index;i++) list = list->next;
     this->currentOutputDevice = list->device;
-    qDebug() << "outputDeviceChanged " << this->currentOutputDevice->name;
+    qDebug() << "outputDeviceChanged " << this->currentOutputDevice->name << LOG_DATA;
 }
 
 void SettingsDialog::initUI()
@@ -166,7 +166,7 @@ MathGLSettings * SettingsDialog::getMathGLSettings()
 
 void SettingsDialog::loadSettings()
 {
-    qDebug() << "loadSettings from " << SETTINGS_FILE;
+    qDebug() << "loadSettings from " << SETTINGS_FILE << LOG_DATA;
     QSettings settings(SETTINGS_FILE, QSettings::IniFormat);
     settings.setPath(QSettings::IniFormat, QSettings::UserScope, QApplication::applicationDirPath());
 
@@ -283,7 +283,7 @@ void SettingsDialog::loadSettings()
 
 void SettingsDialog::saveSettings()
 {
-    qDebug() << "saveSettings to " << SETTINGS_FILE;
+    qDebug() << "saveSettings to " << SETTINGS_FILE << LOG_DATA;
     QSettings settings(SETTINGS_FILE, QSettings::IniFormat);
     settings.setPath(QSettings::IniFormat, QSettings::UserScope, QApplication::applicationDirPath());
 

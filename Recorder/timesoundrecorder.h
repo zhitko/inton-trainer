@@ -1,6 +1,8 @@
 #ifndef TIMESOUNDRECORDER_H
 #define TIMESOUNDRECORDER_H
 
+#include "defines.h"
+
 #include "soundrecorder.h"
 
 struct buffer;

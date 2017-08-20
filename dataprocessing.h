@@ -1,6 +1,8 @@
 #ifndef DATAPROCESSING_H
 #define DATAPROCESSING_H
 
+#include "defines.h"
+
 #include <QString>
 
 extern "C" {

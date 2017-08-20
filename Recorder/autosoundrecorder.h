@@ -1,6 +1,8 @@
 #ifndef AUTOSOUNDRECORDER_H
 #define AUTOSOUNDRECORDER_H
 
+#include "defines.h"
+
 #include "soundrecorder.h"
 
 const int MAX_EMPTY_BUFFERS_BEFORE = 3;

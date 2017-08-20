@@ -143,7 +143,7 @@ vector sptk_x2x(const char *fname)
     i = 0;
     while (freadx(&x1, size1, 1, fp) == 1) {
        x2x(&x1, &x2, c1, c2, clip);
-       res.v[i] = x2;
+       setv(res, i, x2);
 //       printf(" %d %d \n", x1, x2);
        i++;
     }
@@ -170,7 +170,7 @@ vector sptk_v2v(void *data, int byteSize, short int bitDepth)
     i = 0;
     while (len > i) {
        x2x(vals, &x2, c1, c2, clip);
-       res.v[i] = x2;
+       setv(res, i, x2);
 //       printf(" %d %d \n", x1, x2);
        i++;
        vals++;

@@ -1,6 +1,8 @@
 #ifndef CONTINUOUSDP_H
 #define CONTINUOUSDP_H
 
+#include "defines.h"
+
 #include "spectrdp.h"
 
 class ContinuousDP : public SpectrDP

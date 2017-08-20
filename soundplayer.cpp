@@ -10,15 +10,15 @@ SoundPlayer::SoundPlayer(QString path, QObject *parent) :
     QThread(parent),
     path(path)
 {
-    qDebug() << "SoundPlayer: init";
+    qDebug() << "SoundPlayer: init" << LOG_DATA;
     this->device = SettingsDialog::getInstance()->getOutputDevice();
-    qDebug() << "SoundPlayer: init output device " << QString::fromLocal8Bit(this->device->name);
+    qDebug() << "SoundPlayer: init output device " << QString::fromLocal8Bit(this->device->name) << LOG_DATA;
     initAudioOutputDevice(this->device);
     if(!isAudioOk){
-        qDebug() << "SoundPlayer: FAIL init output device " << QString::fromLocal8Bit(this->device->name);
+        qDebug() << "SoundPlayer: FAIL init output device " << QString::fromLocal8Bit(this->device->name) << LOG_DATA;
         return;
     }
-    qDebug() << "SoundPlayer: open wav file " << path;
+    qDebug() << "SoundPlayer: open wav file " << path << LOG_DATA;
 
     QFile file(path);
     file.open(QIODevice::ReadOnly);
@@ -27,14 +27,14 @@ SoundPlayer::SoundPlayer(QString path, QObject *parent) :
 
 SoundPlayer::~SoundPlayer()
 {
-    qDebug() << "~SoundPlayer";
+    qDebug() << "~SoundPlayer" << LOG_DATA;
     freeAudioOutputDevice(this->device);
     waveCloseFile(waveFile);
 }
 
 void SoundPlayer::run()
 {
-    qDebug() << "SoundPlayer: run";
+    qDebug() << "SoundPlayer: run" << LOG_DATA;
     playSound(
                 this->device,
                 this->waveFile->dataChunk->waveformData,

@@ -1,6 +1,8 @@
 #ifndef WEBWINDOW_H
 #define WEBWINDOW_H
 
+#include "defines.h"
+
 #include <QMainWindow>
 #include <QUrl>
 #include <QWebFrame>

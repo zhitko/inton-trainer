@@ -4,7 +4,7 @@
 
 double VectorSignal::valueAt(int index)
 {
-    return array.v[index];
+    return getv(array, index);
 }
 
 int VectorSignal::size()
@@ -14,7 +14,7 @@ int VectorSignal::size()
 
 void VectorSignal::setValueAt(double value, int index)
 {
-    array.v[index] = value;
+    setv(array, index, value);
 }
 
 Signal<double> * VectorSignal::makeSignal(int size)
