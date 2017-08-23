@@ -56,24 +56,14 @@ PLOT_SETTINGS *initPlotSettings()
 {
     PLOT_SETTINGS * plot = malloc(sizeof(PLOT_SETTINGS));
     plot->midFrame = 10;
-    plot->interpolation_edges = 0;
     plot->interpolation_type = 1;
     plot->normF0MinMax = 1;
     return plot;
 }
 
-MOVE_SETTINGS *initMoveSettings()
-{
-    MOVE_SETTINGS * move = malloc(sizeof(MOVE_SETTINGS));
-    move->type = 0;
-    return move;
-}
-
 DP_SETTINGS *initDpSettings()
 {
     DP_SETTINGS * dp = malloc(sizeof(DP_SETTINGS));
-    dp->globalLimit = -1;
-    dp->localLimit = 1;
     dp->continiusLimit = 100;
     dp->continiusKD = 0.5;
     dp->continiusKV = 1.0;
@@ -106,7 +96,6 @@ SPTK_SETTINGS *initSptkSettings()
     settings->spec = initSpecSettings();
     settings->plotEnergy = initPlotSettings();
     settings->plotF0 = initPlotSettings();
-    settings->move = initMoveSettings();
     settings->dp = initDpSettings();
     return settings;
 }

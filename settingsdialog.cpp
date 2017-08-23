@@ -95,7 +95,6 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     SettingsDialog * instance = getInstance();
     instance->loadSettings();
 
-//    sptk_settings->pitch->SAMPLE_FREQ = instance->ui->pitchSampleFreqSpin->value();
     sptk_settings->pitch->MAX_FREQ = instance->ui->pitchMaxFreqSpin->value();
     sptk_settings->pitch->MIN_FREQ = instance->ui->pitchMinFreqSpin->value();
     sptk_settings->pitch->FRAME_SHIFT = instance->ui->pitchFrameShoftSpin->value();
@@ -105,12 +104,10 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->pitch->THRESH_SWIPE = instance->ui->pitchThreshSwipeSpin->value();
 
     sptk_settings->plotF0->midFrame = instance->ui->plotMidFrameF0Spin->value();
-//    sptk_settings->plotF0->interpolation_edges = instance->ui->plotInterpolationEdgesF0Spin->value();
     sptk_settings->plotF0->interpolation_type = instance->ui->plotInterpolationTypeF0Box->currentIndex();
     sptk_settings->plotF0->normF0MinMax = instance->ui->normF0MinMax->isChecked();
 
     sptk_settings->plotEnergy->midFrame = instance->ui->plotMidFrameEnergySpin->value();
-    sptk_settings->plotEnergy->interpolation_edges = instance->ui->plotInterpolationEdgesEnergySpin->value();
     sptk_settings->plotEnergy->interpolation_type = instance->ui->plotInterpolationTypeEnergyBox->currentIndex();
 
     sptk_settings->frame->leng = instance->ui->frameSizeBox->currentText().toInt();
@@ -127,10 +124,6 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->spec->min = instance->ui->specMinSpin->value();
     sptk_settings->spec->proc = instance->ui->specProcBox->currentIndex();
 
-    sptk_settings->move->type = instance->ui->moveTypeBox->currentIndex();
-
-    sptk_settings->dp->globalLimit = instance->ui->dpGlobalLimit->value();
-    sptk_settings->dp->localLimit = instance->ui->dpLocalLimit->value();
     sptk_settings->dp->continiusLimit = instance->ui->continiusDpLimit->value();
 
     sptk_settings->dp->continiusKD = instance->ui->continiusDpKD->value();
@@ -176,8 +169,6 @@ void SettingsDialog::loadSettings()
     if(settings.contains("pitch/min_freq"))
         this->ui->pitchMinFreqSpin->setValue(settings.value("pitch/min_freq").toInt());
 
-//    if(settings.contains("pitch/SAMPLE_FREQ"))
-//        this->ui->pitchSampleFreqSpin->setValue(settings.value("pitch/SAMPLE_FREQ").toDouble());
     if(settings.contains("pitch/FRAME_SHIFT"))
         this->ui->pitchFrameShoftSpin->setValue(settings.value("pitch/FRAME_SHIFT").toInt());
     if(settings.contains("pitch/ATYPE"))
@@ -193,8 +184,6 @@ void SettingsDialog::loadSettings()
         this->ui->plotMidFrameF0Spin->setValue(settings.value("plot_f0/mid_frame").toInt());
     if(settings.contains("plot_f0/interpolation_type"))
         this->ui->plotInterpolationTypeF0Box->setCurrentIndex(settings.value("plot_f0/interpolation_type").toInt());
-//    if(settings.contains("plot_f0/interpolation_edges"))
-//        this->ui->plotInterpolationEdgesF0Spin->setValue(settings.value("plot_f0/interpolation_edges").toInt());
     if(settings.contains("plot_f0/normF0MinMax"))
         this->ui->normF0MinMax->setChecked(settings.value("plot_f0/normF0MinMax").toBool());
 
@@ -202,8 +191,6 @@ void SettingsDialog::loadSettings()
         this->ui->plotMidFrameEnergySpin->setValue(settings.value("plot_energy/mid_frame").toInt());
     if(settings.contains("plot_energy/interpolation_type"))
         this->ui->plotInterpolationTypeEnergyBox->setCurrentIndex(settings.value("plot_energy/interpolation_type").toInt());
-    if(settings.contains("plot_energy/interpolation_edges"))
-        this->ui->plotInterpolationEdgesEnergySpin->setValue(settings.value("plot_energy/interpolation_edges").toInt());
 
     if(settings.contains("spec/factor"))
         this->ui->specFactorSpin->setValue(settings.value("spec/factor").toInt());
@@ -212,13 +199,6 @@ void SettingsDialog::loadSettings()
     if(settings.contains("spec/proc"))
         this->ui->specProcBox->setCurrentText(settings.value("spec/proc").toString());
 
-    if(settings.contains("move/type"))
-        this->ui->moveTypeBox->setCurrentText(settings.value("move/type").toString());
-
-    if(settings.contains("dp/global"))
-        this->ui->dpGlobalLimit->setValue(settings.value("dp/global").toInt());
-    if(settings.contains("dp/local"))
-        this->ui->dpLocalLimit->setValue(settings.value("dp/local").toDouble());
     if(settings.contains("dp/continiusLimit"))
         this->ui->continiusDpLimit->setValue(settings.value("dp/continiusLimit").toDouble());
 
@@ -263,20 +243,12 @@ void SettingsDialog::loadSettings()
         this->ui->frameSizeBox->setCurrentText(QString::number(settings.value("frame/leng").toInt()));
     if(settings.contains("frame/shift"))
         this->ui->frameShiftSpin->setValue(settings.value("frame/shift").toInt());
-//    if(settings.contains("window/leng"))
-//        this->ui->frameSizeBox->setCurrentText(QString::number(settings.value("window/leng").toInt()));
     if(settings.contains("window/window_type"))
         this->ui->windoTypeBox->setCurrentText(settings.value("window/window_type").toString());
-//    if(settings.contains("lpc/leng"))
-//        this->ui->frameSizeBox->setCurrentText(QString::number(settings.value("lpc/leng").toInt()));
     if(settings.contains("lpc/order"))
         this->ui->lpcOrderSpin->setValue(settings.value("lpc/order").toInt());
     if(settings.contains("lpc/cepstrum_order"))
         this->ui->lpcCepstrumOrderSpin->setValue(settings.value("lpc/cepstrum_order").toInt());
-//    if(settings.contains("spec/leng"))
-//        this->ui->frameSizeBox->setCurrentText(QString::number(settings.value("spec/leng").toInt()));
-//    if(settings.contains("spec/order"))
-//        this->ui->lpcOrderSpin->setValue(settings.value("spec/order").toInt());
     if(settings.contains("mathGL/quality"))
         this->ui->mathGLQualitySpin->setValue(settings.value("mathGL/quality").toInt());
     if(settings.contains("mathGL/autoOpen"))
@@ -293,7 +265,6 @@ void SettingsDialog::saveSettings()
     settings.setValue("pitch/max_freq", this->ui->pitchMaxFreqSpin->value());
     settings.setValue("pitch/min_freq", this->ui->pitchMinFreqSpin->value());
 
-//    settings.setValue("pitch/SAMPLE_FREQ", this->ui->pitchSampleFreqSpin->value());
     settings.setValue("pitch/FRAME_SHIFT", this->ui->pitchFrameShoftSpin->value());
     settings.setValue("pitch/ATYPE", this->ui->pitchATypeSpin->value());
     settings.setValue("pitch/OTYPE", this->ui->pitchOTypeSpin->value());
@@ -301,12 +272,10 @@ void SettingsDialog::saveSettings()
     settings.setValue("pitch/THRESH_SWIPE", this->ui->pitchThreshSwipeSpin->value());
 
     settings.setValue("plot_f0/mid_frame", this->ui->plotMidFrameF0Spin->value());
-//    settings.setValue("plot_f0/interpolation_edges", this->ui->plotInterpolationEdgesF0Spin->value());
     settings.setValue("plot_f0/interpolation_type", this->ui->plotInterpolationTypeF0Box->currentIndex());
     settings.setValue("plot_f0/normF0MinMax", this->ui->normF0MinMax->isChecked());
 
     settings.setValue("plot_energy/mid_frame", this->ui->plotMidFrameEnergySpin->value());
-    settings.setValue("plot_energy/interpolation_edges", this->ui->plotInterpolationEdgesEnergySpin->value());
     settings.setValue("plot_energy/interpolation_type", this->ui->plotInterpolationTypeEnergyBox->currentIndex());
 
     settings.setValue("frame/leng", this->ui->frameSizeBox->currentText().toInt());
@@ -323,10 +292,6 @@ void SettingsDialog::saveSettings()
     settings.setValue("spec/min", this->ui->specMinSpin->value());
     settings.setValue("spec/proc", this->ui->specProcBox->currentText());
 
-    settings.setValue("move/type", this->ui->moveTypeBox->currentText());
-
-    settings.setValue("dp/global", this->ui->dpGlobalLimit->value());
-    settings.setValue("dp/local", this->ui->dpLocalLimit->value());
     settings.setValue("dp/continiusLimit", this->ui->continiusDpLimit->value());
 
     settings.setValue("dp/continiusDpKD", this->ui->continiusDpKD->value());

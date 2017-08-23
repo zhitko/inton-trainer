@@ -255,7 +255,7 @@ GraphData * ProcWave2Data(QString fname)
     vector pitch_interpolate = vector_interpolate_by_mask(
                 pitch_cutted,
                 inverted_mask,
-                sptk_settings->plotF0->interpolation_edges,
+                0,
                 sptk_settings->plotF0->interpolation_type
                 );
     qDebug() << "pitch_interpolate" << LOG_DATA;
@@ -263,7 +263,7 @@ GraphData * ProcWave2Data(QString fname)
     vector intensive_interpolate = vector_interpolate_by_mask(
                 intensive_cutted,
                 inverted_mask,
-                sptk_settings->plotEnergy->interpolation_edges,
+                0,
                 sptk_settings->plotEnergy->interpolation_type
                 );
     qDebug() << "intensive_interpolate" << LOG_DATA;
@@ -417,7 +417,7 @@ SimpleGraphData * SimpleProcWave2Data(QString fname)
     vector pitch_interpolate = vector_interpolate_by_mask(
                 pitch,
                 inverted_mask,
-                sptk_settings->plotF0->interpolation_edges,
+                0,
                 sptk_settings->plotF0->interpolation_type
                 );
     qDebug() << "pitch_interpolate" << LOG_DATA;

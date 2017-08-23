@@ -160,13 +160,7 @@ typedef struct _LPC_SETTINGS {
     int cepstrum_order;
 } LPC_SETTINGS;
 
-typedef struct _MOVE_SETTINGS {
-    int type;
-} MOVE_SETTINGS;
-
 typedef struct _DP_SETTINGS {
-    int globalLimit;
-    double localLimit;
     int continiusLimit;
     double continiusKD;
     double continiusKV;
@@ -202,7 +196,6 @@ typedef struct _SPEC_SETTINGS {
 typedef struct _PLOT_SETTINGS {
     int midFrame;
     int interpolation_type;
-    int interpolation_edges;
     int normF0MinMax;
 } PLOT_SETTINGS;
 
@@ -214,7 +207,6 @@ typedef struct _SPTK_SETTINGS {
     SPEC_SETTINGS * spec;
     PLOT_SETTINGS * plotEnergy;
     PLOT_SETTINGS * plotF0;
-    MOVE_SETTINGS * move;
     DP_SETTINGS * dp;
 } SPTK_SETTINGS;
 
@@ -225,7 +217,6 @@ FRAME_SETTINGS *initFrameSettings();
 WINDOW_SETTINGS *initWindowSettings();
 LPC_SETTINGS *initLpcSettings();
 SPEC_SETTINGS *initSpecSettings();
-MOVE_SETTINGS *initMoveSettings();
 DP_SETTINGS *initDpSettings();
 
 /* library routines */

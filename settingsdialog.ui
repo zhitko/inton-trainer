@@ -43,9 +43,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
-            <width>528</width>
-            <height>859</height>
+            <y>-343</y>
+            <width>526</width>
+            <height>833</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -383,16 +383,6 @@
                      </item>
                     </widget>
                    </item>
-                   <item row="2" column="0">
-                    <widget class="QLabel" name="label_24">
-                     <property name="text">
-                      <string>Смещение краев интерполяции</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="1">
-                    <widget class="QSpinBox" name="plotInterpolationEdgesEnergySpin"/>
-                   </item>
                   </layout>
                  </widget>
                 </item>
@@ -617,9 +607,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-81</y>
             <width>505</width>
-            <height>715</height>
+            <height>571</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -900,78 +890,6 @@
                   <property name="checked">
                    <bool>true</bool>
                   </property>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-             </item>
-             <item>
-              <widget class="QGroupBox" name="groupBox_8">
-               <property name="title">
-                <string>Перенос меток</string>
-               </property>
-               <layout class="QFormLayout" name="formLayout_8">
-                <item row="0" column="0" colspan="2">
-                 <widget class="QComboBox" name="moveTypeBox">
-                  <item>
-                   <property name="text">
-                    <string>Линейный перенос</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>ДП</string>
-                   </property>
-                  </item>
-                 </widget>
-                </item>
-                <item row="1" column="0" colspan="2">
-                 <widget class="QGroupBox" name="groupBox_9">
-                  <property name="title">
-                   <string>Настройка ДП</string>
-                  </property>
-                  <layout class="QFormLayout" name="formLayout_9">
-                   <item row="0" column="0">
-                    <widget class="QLabel" name="label_26">
-                     <property name="text">
-                      <string>Глобальное ограничение ('-1' - отключен)</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="0">
-                    <widget class="QLabel" name="label_28">
-                     <property name="text">
-                      <string>Локальное ограничение</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="1">
-                    <widget class="QSpinBox" name="dpGlobalLimit">
-                     <property name="minimum">
-                      <number>-1</number>
-                     </property>
-                     <property name="maximum">
-                      <number>99999</number>
-                     </property>
-                     <property name="value">
-                      <number>-1</number>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="1">
-                    <widget class="QDoubleSpinBox" name="dpLocalLimit">
-                     <property name="maximum">
-                      <double>10.000000000000000</double>
-                     </property>
-                     <property name="singleStep">
-                      <double>0.100000000000000</double>
-                     </property>
-                     <property name="value">
-                      <double>1.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
                  </widget>
                 </item>
                </layout>
