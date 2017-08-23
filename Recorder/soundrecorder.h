@@ -38,6 +38,7 @@ public:
 signals:
     void resultReady(SoundRecorder *);
 public slots:
+    void stopBeep();
     void startRecording();
     void stopRecording();
 };

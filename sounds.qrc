@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/signals">
+        <file>sounds/end.wav</file>
+        <file>sounds/start.wav</file>
+    </qresource>
+</RCC>

@@ -3,6 +3,7 @@ based on https://gist.github.com/jimmcgowan/4268832
 */
 
 #include <QDebug>
+#include <QSound>
 
 #include "buffer.h"
 #include "soundrecorder.h"
@@ -13,6 +14,7 @@ SoundRecorder::SoundRecorder(oal_device *device, int sampleByteSize, QObject *pa
     initBuffer(NULL), currentBuffer(NULL), currentPos(0)
 {
     initAudioInputDevice(this->device);
+    connect(this, SIGNAL(resultReady(SoundRecorder*)), this, SLOT(stopBeep()));
 }
 
 SoundRecorder::~SoundRecorder()
@@ -109,9 +111,15 @@ void SoundRecorder::run()
 
 void SoundRecorder::startRecording()
 {
+    QSound::play(":/signals/sounds/start.wav");
     this->recording = true;
     startCapture(this->device);
     this->start(LowPriority);
+}
+
+void SoundRecorder::stopBeep()
+{
+    QSound::play(":/signals/sounds/end.wav");
 }
 
 void SoundRecorder::stopRecording()

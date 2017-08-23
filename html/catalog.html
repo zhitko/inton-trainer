@@ -130,28 +130,6 @@
 
     <div class="container">
       <div class="header clearfix">
-        <span>Отображать: </span>
-        <label><input type='checkbox' id='showA0' onclick='handleClick(this);'/>A0</label>
-        <label><input type='checkbox' id='showF0' onclick='handleClick(this);'/>F0</label>
-        <label><input type='checkbox' id='showError'/>Спектр</label>
-        <script type="text/javascript">
-          function handleClick(cb) {
-            if (cb.id === 'showA0') {
-              api.setShowA0(cb.checked);
-            } else if (cb.id === 'showF0') {
-              api.setShowF0(cb.checked);
-            } else if (cb.id === 'showError') {
-              api.setShowError(cb.checked);
-            } else if (cb.id === 'showTime') {
-              api.setShowTime(cb.checked);
-            }
-          }
-
-          document.getElementById('showA0').checked = api.isShowA0();
-          document.getElementById('showF0').checked = api.isShowF0();
-          document.getElementById('showError').checked = api.isShowError();
-          document.getElementById('showTime').checked = api.isShowTime();          
-        </script>
         <nav>
           <ul class="nav nav-pills pull-right">
             <li role="presentation" class="active"><a href="index.html">Начало</a></li>
