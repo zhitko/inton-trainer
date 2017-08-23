@@ -32,6 +32,10 @@
 #include "drawer.h"
 #include "drawerdp.h"
 
+extern "C" {
+    #include "./SPTK/SPTK.h"
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
       ui(new Ui::MainWindow),
@@ -240,6 +244,7 @@ void MainWindow::recordFinished(SoundRecorder * recorder)
     this->recorder = NULL;
     this->autoRecorder = NULL;
     this->dpRecorder = NULL;
+    MainWindow::cleanRecordFiles();
     this->updateFileList();
 
     if(SettingsDialog::getInstance()->getMathGLSettings()->autoOpen)
@@ -275,6 +280,23 @@ void MainWindow::updateFileList()
     for(int i=0; i<files.size();i++)
     {
         ui->filesList->addItem(files.at(i));
+    }
+}
+
+void MainWindow::cleanRecordFiles()
+{
+    SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
+
+    QString path = QApplication::applicationDirPath() + DATA_PATH + USER_DATA_PATH;
+    QDir directory(path);
+    QStringList files = scanDirIter(directory);
+    files.sort();
+    qDebug() << "Files list" << files;
+    int count = files.size() - sptk_settings->dp->recordingMaxFiles;
+    for(int i=0;i<count;i++)
+    {
+        QFile(path + files.at(i)).remove();
+        qDebug() << "delete" << files.at(i);
     }
 }
 

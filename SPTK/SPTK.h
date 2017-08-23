@@ -188,6 +188,7 @@ typedef struct _DP_SETTINGS {
 
     int recordingType;
     int recordingSeconds;
+    int recordingMaxFiles;
 } DP_SETTINGS;
 
 typedef struct _SPEC_SETTINGS {

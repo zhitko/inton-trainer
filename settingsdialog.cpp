@@ -151,6 +151,7 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
 
     sptk_settings->dp->recordingType = instance->ui->recordingType->currentIndex();
     sptk_settings->dp->recordingSeconds = instance->ui->recordingSeconds->value();
+    sptk_settings->dp->recordingMaxFiles = instance->ui->recordingMaxFiles->value();
 
     return sptk_settings;
 }
@@ -252,6 +253,8 @@ void SettingsDialog::loadSettings()
         this->ui->useForDP->setCurrentIndex(settings.value("dp/use").toInt());
     if(settings.contains("dp/recordingSeconds"))
         this->ui->recordingSeconds->setValue(settings.value("dp/recordingSeconds").toInt());
+    if(settings.contains("dp/recordingMaxFiles"))
+        this->ui->recordingMaxFiles->setValue(settings.value("dp/recordingMaxFiles").toInt());
     if(settings.contains("dp/recordingType"))
         this->ui->recordingType->setCurrentIndex(settings.value("dp/recordingType").toInt());
 
@@ -343,6 +346,7 @@ void SettingsDialog::saveSettings()
     settings.setValue("dp/use", this->ui->useForDP->currentIndex());
     settings.setValue("dp/recordingType", this->ui->recordingType->currentIndex());
     settings.setValue("dp/recordingSeconds", this->ui->recordingSeconds->value());
+    settings.setValue("dp/recordingMaxFiles", this->ui->recordingMaxFiles->value());
 
     settings.setValue("mathGL/quality", this->ui->mathGLQualitySpin->value());
     settings.setValue("mathGL/autoOpen", this->ui->isAutoOpen->isChecked());

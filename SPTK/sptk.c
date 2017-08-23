@@ -90,6 +90,7 @@ DP_SETTINGS *initDpSettings()
     dp->portLen = 5;
     dp->useStripUmp = 0;
     dp->recordingSeconds = 3;
+    dp->recordingMaxFiles = 10;
     dp->recordingType = 0;
     return dp;
 }

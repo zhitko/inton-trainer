@@ -619,7 +619,7 @@
             <x>0</x>
             <y>0</y>
             <width>505</width>
-            <height>689</height>
+            <height>715</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -676,6 +676,23 @@
                   </property>
                   <property name="value">
                    <number>3</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="label_16">
+                  <property name="text">
+                   <string>Кол-во файлов истории</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QSpinBox" name="recordingMaxFiles">
+                  <property name="minimum">
+                   <number>1</number>
+                  </property>
+                  <property name="value">
+                   <number>10</number>
                   </property>
                  </widget>
                 </item>

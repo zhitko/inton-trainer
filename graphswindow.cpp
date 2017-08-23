@@ -197,6 +197,8 @@ void GraphsWindow::stopRecord(SoundRecorder * recorder)
     this->drawFile(path);
     emit this->changeSig(this->k_graph);
     emit this->recFinish();
+
+    MainWindow::cleanRecordFiles();
 }
 
 void GraphsWindow::_autoRec()
