@@ -10,7 +10,8 @@
 #include "DP/continuousdp.h"
 #define DATA_PATH_TRAINING "/data/training/"
 
-#define OCTAVE_MAX 2.5
+#define OCTAVE_MAX_1 2.5
+#define OCTAVE_MAX_2 5.0
 
 #define MASK_LEN 100
 #define MASK_MIN 0.0001
@@ -159,7 +160,12 @@ int DrawerDP::Draw(mglGraph *gr)
         if(!isCompare)
         {
             gr->MultiPlot(20, 12, 41, 4, 8, "#");
-            gr->SetRange('y', 0, OCTAVE_MAX);
+            if (this->octavData->a[0] > OCTAVE_MAX_1)
+            {
+                gr->SetRange('y', 0, OCTAVE_MAX_2);
+            } else {
+                gr->SetRange('y', 0, OCTAVE_MAX_1);
+            }
             gr->Axis("Y", "");
             gr->Grid("y", "W", "");
             gr->Bars(*this->octavData, "r");
@@ -241,7 +247,12 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->Puts(mglPoint(0,0),phrase.toLocal8Bit().data(), ":C", 24);
 
             gr->MultiPlot(20, 12, 41, 4, 8, "#");
-            gr->SetRange('y', 0, OCTAVE_MAX);
+            if (this->octavData->a[0] > OCTAVE_MAX_1 || this->secOctavData->a[1] > OCTAVE_MAX_1)
+            {
+                gr->SetRange('y', 0, OCTAVE_MAX_2);
+            } else {
+                gr->SetRange('y', 0, OCTAVE_MAX_1);
+            }
             gr->Axis("Y", "");
             gr->Grid("y", "W", "");
             gr->Bars(*this->secOctavData, "R");
@@ -764,7 +775,7 @@ void DrawerDP::Proc(QString fname)
         qDebug() << "this->f0min " << this->f0min << LOG_DATA;
         this->octavData->a[0] = (1.0 * this->f0max / this->f0min) - 1;
         qDebug() << "this->octavData->a[0] " << this->octavData->a[0] << LOG_DATA;
-        if(this->octavData->a[0] > OCTAVE_MAX) this->octavData->a[0] = OCTAVE_MAX;
+        if(this->octavData->a[0] > OCTAVE_MAX_2) this->octavData->a[0] = OCTAVE_MAX_2;
         qDebug() << "octavData createMglData" << LOG_DATA;
 
         vector origin_ump = copyv(pitch_smooth);
@@ -921,7 +932,7 @@ void DrawerDP::Proc(QString fname)
 
         this->secOctavData = new mglData(2);
         this->secOctavData->a[1] = (1.0 * this->userf0max / this->userf0min) - 1;
-        if(this->secOctavData->a[1] > OCTAVE_MAX) this->secOctavData->a[1] = OCTAVE_MAX;
+        if(this->secOctavData->a[1] > OCTAVE_MAX_2) this->secOctavData->a[1] = OCTAVE_MAX_2;
 
         if(sptk_settings->dp->showF0)
         {
