@@ -112,6 +112,14 @@ int DrawerDP::Draw(mglGraph *gr)
     gr->DefaultPlotParam();
     gr->Clf();
 
+    QString path = QApplication::applicationDirPath() + DATA_PATH_TRAINING;
+    QString phrase = fileName
+            .replace(path, "")
+            .replace(".wav", "")
+            .replace("/", " - ");
+    phrase = "@{" + phrase.replace(phrase.lastIndexOf(" - "), 3, "} \\b\\big{") + "}";
+    qDebug() << "Phrase" << phrase;
+
     if(!this->showUMP)
     {
         qDebug() << "waveData" << LOG_DATA;
@@ -134,8 +142,7 @@ int DrawerDP::Draw(mglGraph *gr)
         gr->Plot(*tWaveData, "c2");
 
         gr->MultiPlot(1, 15, 12, 1, 1, "#");
-        QString path = QApplication::applicationDirPath() + DATA_PATH_TRAINING;
-        gr->Puts(mglPoint(0,0),fileName.replace(path,"").replace(".wav","").replace("/"," - ").toLocal8Bit().data(), ":C", 24);
+        gr->Puts(mglPoint(0,0),phrase.toLocal8Bit().data(), ":C", 24);
 
         gr->MultiPlot(1, 15, 13, 1, 1, "#");
         gr->Puts(
@@ -147,8 +154,7 @@ int DrawerDP::Draw(mglGraph *gr)
     } else {
         gr->DefaultPlotParam();
         gr->MultiPlot(1, 12, 11, 1, 1, "#");
-        QString path = QApplication::applicationDirPath() + DATA_PATH_TRAINING;
-        gr->Puts(mglPoint(0,0),fileName.replace(path,"").replace(".wav","").replace("/"," - ").toLocal8Bit().data(), ":C", 24);
+        gr->Puts(mglPoint(0,0),phrase.toLocal8Bit().data(), ":C", 24);
 
         if(!isCompare)
         {
@@ -231,8 +237,8 @@ int DrawerDP::Draw(mglGraph *gr)
             );
 
             gr->MultiPlot(1, 12, 11, 1, 1, "#");
-            QString path = QApplication::applicationDirPath() + DATA_PATH_TRAINING;
-            gr->Puts(mglPoint(0,0),fileName.replace(path,"").replace(".wav","").replace("/"," - ").toLocal8Bit().data(), ":C", 24);
+
+            gr->Puts(mglPoint(0,0),phrase.toLocal8Bit().data(), ":C", 24);
 
             gr->MultiPlot(20, 12, 41, 4, 8, "#");
             gr->SetRange('y', 0, OCTAVE_MAX);
