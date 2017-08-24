@@ -19,7 +19,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 SettingsDialog::~SettingsDialog()
 {
     delete ui;
-    if(currentOutputDevice) freeAudioOutputDevice(currentOutputDevice);
+//    if(currentOutputDevice) freeAudioOutputDevice(currentOutputDevice);
 }
 
 SettingsDialog * SettingsDialog::getInstance(QWidget *parent)
@@ -30,17 +30,19 @@ SettingsDialog * SettingsDialog::getInstance(QWidget *parent)
 
 void SettingsDialog::initAudio()
 {
-    inputDevices = getInputDevices();
-    outputDevices = getOutputDevices();
+    this->inputDevices = getInputDevices();
+    this->outputDevices = getOutputDevices();
 
-    if(inputDevices) currentInputDevice = inputDevices->device;
-    if(outputDevices) currentOutputDevice = outputDevices->device;
-    qDebug() << "currentInputDevice " << this->currentInputDevice->name << LOG_DATA;
-    qDebug() << "currentOutputDevice " << this->currentOutputDevice->name << LOG_DATA;
+    if(this->inputDevices) this->currentInputDevice = this->inputDevices->device;
+    if(this->outputDevices) this->currentOutputDevice = this->outputDevices->device;
+    if(this->currentInputDevice) qDebug() << "currentInputDevice " << this->currentInputDevice->name << LOG_DATA;
+    if(this->currentOutputDevice) qDebug() << "currentOutputDevice " << this->currentOutputDevice->name << LOG_DATA;
 }
 
 void SettingsDialog::inputDeviceChanged(int index)
 {
+    if (!this->inputDevices) return;
+
     oal_devices_list *list = this->inputDevices;
     for(int i=0;i<index;i++) list = list->next;
     this->currentInputDevice = list->device;
@@ -49,6 +51,8 @@ void SettingsDialog::inputDeviceChanged(int index)
 
 void SettingsDialog::outputDeviceChanged(int index)
 {
+    if (!this->outputDevices) return;
+
     oal_devices_list *list = this->outputDevices;
     for(int i=0;i<index;i++) list = list->next;
     this->currentOutputDevice = list->device;
@@ -57,23 +61,29 @@ void SettingsDialog::outputDeviceChanged(int index)
 
 void SettingsDialog::initUI()
 {
-    oal_devices_list *list = this->inputDevices;
-    while(list)
+    if (this->inputDevices)
     {
-        QString name = list->device->name;
-        this->ui->audioInputDeviceBox->addItem(name);
-        list = list->next;
+        oal_devices_list *list = this->inputDevices;
+        while(list)
+        {
+            QString name = list->device->name;
+            this->ui->audioInputDeviceBox->addItem(name);
+            list = list->next;
+        }
+        connect(this->ui->audioInputDeviceBox, SIGNAL(currentIndexChanged(int)), this, SLOT(inputDeviceChanged(int)));
     }
-    connect(this->ui->audioInputDeviceBox, SIGNAL(currentIndexChanged(int)), this, SLOT(inputDeviceChanged(int)));
 
-    list = this->outputDevices;
-    while(list)
+    if (this->outputDevices)
     {
-        QString name = list->device->name;
-        this->ui->audioOutputDeviceBox->addItem(name);
-        list = list->next;
+        oal_devices_list *list = this->outputDevices;
+        while(list)
+        {
+            QString name = list->device->name;
+            this->ui->audioOutputDeviceBox->addItem(name);
+            list = list->next;
+        }
+        connect(this->ui->audioOutputDeviceBox, SIGNAL(currentIndexChanged(int)), this, SLOT(outputDeviceChanged(int)));
     }
-    connect(this->ui->audioOutputDeviceBox, SIGNAL(currentIndexChanged(int)), this, SLOT(outputDeviceChanged(int)));
 
     connect(this->ui->buttonBox, SIGNAL(accepted()), this, SLOT(saveSettings()));
 }

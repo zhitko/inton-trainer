@@ -125,13 +125,14 @@ Drawer * GraphsWindow::createNewDrawer(QString path)
 
 void GraphsWindow::startAutoRecord()
 {
-    SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
+    oal_device * currentDevice = SettingsDialog::getInstance()->getInputDevice();
+    if (!currentDevice) return;
 
     qDebug() << "GraphsWindow::startAutoRecord" << LOG_DATA;
     this->ui->setRecordBtn->setEnabled(false);
     this->ui->startAutoRecordBtn->setEnabled(false);
     this->ui->stopRecordBtn->setEnabled(true);
-    oal_device * currentDevice = SettingsDialog::getInstance()->getInputDevice();
+
     if (this->recorder) {
         this->recorder->deleteLater();
     }
@@ -142,6 +143,9 @@ void GraphsWindow::startAutoRecord()
 
 void GraphsWindow::startRecord()
 {
+    oal_device * currentDevice = SettingsDialog::getInstance()->getInputDevice();
+    if (!currentDevice) return;
+
     if (this->recorder && this->recorder->isRecording())
     {
         this->recorder->stopRecording();
@@ -151,7 +155,6 @@ void GraphsWindow::startRecord()
         this->ui->setRecordBtn->setEnabled(false);
         this->ui->startAutoRecordBtn->setEnabled(false);
         this->ui->stopRecordBtn->setEnabled(true);
-        oal_device * currentDevice = SettingsDialog::getInstance()->getInputDevice();
 
         if (sptk_settings->dp->recordingType == 0)
         {
@@ -180,12 +183,15 @@ void GraphsWindow::stopRecord()
 void GraphsWindow::stopRecord(SoundRecorder * recorder)
 {
     qDebug() << "GraphsWindow::stopRecord" << LOG_DATA;
+
+    MainWindow::cleanRecordFiles();
+    qDebug() << "GraphsWindow::stopRecord files cleaned" << LOG_DATA;
+
     this->ui->setRecordBtn->setEnabled(true);
     this->ui->startAutoRecordBtn->setEnabled(true);
     this->ui->stopRecordBtn->setEnabled(false);
     char *data;
     int size = recorder->getData((void**) &data);
-    recorder->deleteLater();
     QDateTime dateTime = QDateTime::currentDateTime();
     QString path = USER_DATA_PATH + dateTime.toString("dd.MM.yyyy hh.mm.ss.zzz");
 
@@ -193,12 +199,13 @@ void GraphsWindow::stopRecord(SoundRecorder * recorder)
     WaveFile *waveFile = makeWaveFileFromData((char *)data, size, 1, 8000, 16);
     saveWaveFile(waveFile, path.toLocal8Bit().data());
     waveCloseFile(waveFile);
+    qDebug() << "GraphsWindow::stopRecord file saved" << LOG_DATA;
 
     this->drawFile(path);
     emit this->changeSig(this->k_graph);
     emit this->recFinish();
 
-    MainWindow::cleanRecordFiles();
+    recorder->deleteLater();
 }
 
 void GraphsWindow::_autoRec()

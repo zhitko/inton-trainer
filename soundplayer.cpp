@@ -12,6 +12,8 @@ SoundPlayer::SoundPlayer(QString path, QObject *parent) :
 {
     qDebug() << "SoundPlayer: init" << LOG_DATA;
     this->device = SettingsDialog::getInstance()->getOutputDevice();
+    if (!this->device) return;
+
     qDebug() << "SoundPlayer: init output device " << QString::fromLocal8Bit(this->device->name) << LOG_DATA;
     initAudioOutputDevice(this->device);
     if(!isAudioOk){

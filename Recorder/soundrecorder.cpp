@@ -111,7 +111,7 @@ void SoundRecorder::run()
 
 void SoundRecorder::startRecording()
 {
-    QSound::play(":/signals/sounds/start.wav");
+    QSound::play("://signals/sounds/start.wav");
     this->recording = true;
     startCapture(this->device);
     this->start(LowPriority);
@@ -119,7 +119,7 @@ void SoundRecorder::startRecording()
 
 void SoundRecorder::stopBeep()
 {
-    QSound::play(":/signals/sounds/end.wav");
+    QSound::play("://signals/sounds/end.wav");
 }
 
 void SoundRecorder::stopRecording()

@@ -140,10 +140,12 @@ void MainWindow::initUI()
 
 void MainWindow::autoRecording()
 {
+    oal_device * currentDevice = this->settingsDialog->getInputDevice();
+    if (!currentDevice) return;
+
     this->raise();
     if(this->autoRecorder == NULL)
     {
-        oal_device * currentDevice = this->settingsDialog->getInputDevice();
         qDebug() << "new SoundRecorder: " << currentDevice->name << LOG_DATA;
         this->autoRecorder = new AutoSoundRecorder(currentDevice, sizeof(short int));
         qDebug() << "is recording: " << this->autoRecorder->isRecording() << LOG_DATA;
@@ -156,6 +158,9 @@ void MainWindow::autoRecording()
 
 void MainWindow::dpRecording()
 {
+    oal_device * currentDevice = this->settingsDialog->getInputDevice();
+    if (!currentDevice) return;
+
     this->raise();
     if(this->dpRecorder == NULL)
     {
@@ -175,7 +180,6 @@ void MainWindow::dpRecording()
 
         if (ok && !path.isEmpty()){
             qDebug() << "Start DP Recorder for " << path << LOG_DATA;
-            oal_device * currentDevice = this->settingsDialog->getInputDevice();
             qDebug() << "new SoundRecorder: " << currentDevice->name << LOG_DATA;
             this->dpRecorder = new DPSoundRecorder(path, currentDevice, sizeof(short int), this);
             qDebug() << "is recording: " << this->dpRecorder->isRecording() << LOG_DATA;
@@ -189,10 +193,12 @@ void MainWindow::dpRecording()
 
 void MainWindow::manualRecording()
 {
+    oal_device * currentDevice = this->settingsDialog->getInputDevice();
+    if (!currentDevice) return;
+
     this->setFocus();
     if(this->recorder == NULL)
     {
-        oal_device * currentDevice = this->settingsDialog->getInputDevice();
         qDebug() << "new SoundRecorder: " << currentDevice->name << LOG_DATA;
         this->recorder = new SoundRecorder(currentDevice, sizeof(short int), this);
         qDebug() << "is recording: " << this->recorder->isRecording() << LOG_DATA;
