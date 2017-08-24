@@ -171,8 +171,15 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->Bars(*this->octavData, "r");
         }
 
+        gr->MultiPlot(40, 12, 129, 12, 6, "#");
+        gr->Label('y', "_{low}", -1);
+        gr->Label('y', "_{medium}", 0);
+        gr->Label('y', "_{high}", 1);
+
         gr->MultiPlot(20, 12, 46, 13, 8, "#");
+
         gr->SetRange('y', 0, 1);
+        gr->SetTicks('y', 1./3.);
         gr->SetRange('x', 0, this->umpData->nx);
         gr->Grid("y", "W", "");
         gr->SetTicks('x', sptk_settings->dp->portLen);
@@ -258,8 +265,14 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->Bars(*this->secOctavData, "R");
             gr->Bars(*this->octavData, "r");
 
+            gr->MultiPlot(40, 12, 129, 12, 6, "#");
+            gr->Label('y', "_{low}", -1);
+            gr->Label('y', "_{medium}", 0);
+            gr->Label('y', "_{high}", 1);
+
             gr->MultiPlot(20, 12, 46, 13, 8, "#");
             gr->SetRange('y', 0, 1);
+            gr->SetTicks('y', 1./3.);
             gr->SetRange('x', 0, this->umpData->nx);
             gr->Grid("y", "W", "");
             gr->SetTicks('x', sptk_settings->dp->portLen);
