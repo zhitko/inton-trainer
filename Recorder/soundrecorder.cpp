@@ -14,7 +14,7 @@ SoundRecorder::SoundRecorder(oal_device *device, int sampleByteSize, QObject *pa
     initBuffer(NULL), currentBuffer(NULL), currentPos(0)
 {
     initAudioInputDevice(this->device);
-    connect(this, SIGNAL(resultReady(SoundRecorder*)), this, SLOT(stopBeep()));
+    connect(this, SIGNAL(beep()), this, SLOT(stopBeep()));
 }
 
 SoundRecorder::~SoundRecorder()
@@ -90,6 +90,7 @@ void SoundRecorder::run()
     currentPos = 0;
     while(recording)
     {
+        msleep(200);
         qDebug() << "recording step " << this->allocatedSize << " ( " << currentPos << " : " << INIT_BUFFER_SIZE << " )" << LOG_DATA;
         if( currentPos >= INIT_BUFFER_SIZE || this->allocatedSize < INIT_BUFFER_SIZE )
         {
@@ -102,19 +103,29 @@ void SoundRecorder::run()
         int maxToWrite = INIT_BUFFER_SIZE - currentPos;
         int size = getSample(this->device, pointToWrite, this->sampleByteSize, maxToWrite);
         currentPos += size;
-        msleep(200);
     }
     qDebug() << "stopCapture" << LOG_DATA;
     stopCapture(this->device);
+    emit beep();
+    msleep(200);
     emit resultReady(this);
 }
+
+#include <QTimer>
 
 void SoundRecorder::startRecording()
 {
     QSound::play("://signals/sounds/start.wav");
-    this->recording = true;
+
+    QTimer::singleShot(400, this, SLOT(_startCapture()));
+}
+
+void SoundRecorder::_startCapture()
+{
     startCapture(this->device);
+    this->recording = true;
     this->start(LowPriority);
+
 }
 
 void SoundRecorder::stopBeep()

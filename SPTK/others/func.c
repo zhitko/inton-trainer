@@ -25,12 +25,32 @@ vector vector_intensive(vector data, FRAME_SETTINGS * settings)
     return result;
 }
 
+vector vector_smooth_lin(vector data, int frame)
+{
+    int resultLength = data.x;
+    vector result = makev(resultLength);
+
+    double middle;
+    for(int i=0; i<resultLength; i++)
+    {
+        middle = 0.0;
+        for(int j=0; j < frame; j++)
+        {
+            middle += getv(data, j + i);
+        }
+        setv(result, i, middle/frame);
+    }
+
+    return result;
+
+}
+
 int compare (const void * a, const void * b)
 {
   return ( *(double*)a - *(double*)b );
 }
 
-vector vector_mid(vector data, int frame)
+vector vector_smooth_mid(vector data, int frame)
 {
     int resultLength = data.x;
     vector result = makev(resultLength);
@@ -40,11 +60,7 @@ vector vector_mid(vector data, int frame)
     {
         for(int j=0; j < frame; j++)
         {
-            int position = i+j-frame/2;
-            if( position < 0 || position > resultLength )
-                middle[j] = 0.0;
-            else
-                middle[j] = fabs(getv(data, position));
+            middle[j] = fabs(getv(data, i+j));
         }
         qsort (middle, frame, sizeof(double), compare);
         setv(result, i, middle[frame/2]);

@@ -268,10 +268,10 @@ GraphData * ProcWave2Data(QString fname)
                 );
     qDebug() << "intensive_interpolate" << LOG_DATA;
 
-    vector pitch_mid = vector_mid(pitch_interpolate, sptk_settings->plotF0->midFrame);
+    vector pitch_mid = vector_smooth_mid(pitch_interpolate, sptk_settings->plotF0->midFrame);
     qDebug() << "pitch_mid" << LOG_DATA;
 
-    vector intensive_mid = vector_mid(intensive_interpolate, sptk_settings->plotEnergy->midFrame);
+    vector intensive_mid = vector_smooth_mid(intensive_interpolate, sptk_settings->plotEnergy->midFrame);
     qDebug() << "intensive_mid" << LOG_DATA;
 
     vector norm_wave = normalizev(wave, 0.0, 1.0);
@@ -422,10 +422,10 @@ SimpleGraphData * SimpleProcWave2Data(QString fname)
                 );
     qDebug() << "pitch_interpolate" << LOG_DATA;
 
-    vector pitch_mid = vector_mid(pitch_interpolate, sptk_settings->plotF0->midFrame);
+    vector pitch_mid = vector_smooth_mid(pitch_interpolate, sptk_settings->plotF0->midFrame);
     qDebug() << "pitch_mid" << LOG_DATA;
 
-    vector intensive_mid = vector_mid(intensive, sptk_settings->plotEnergy->midFrame);
+    vector intensive_mid = vector_smooth_mid(intensive, sptk_settings->plotEnergy->midFrame);
     qDebug() << "intensive_mid" << LOG_DATA;
 
     MaskData md_p = getLabelsFromFile(waveFile, 'P');

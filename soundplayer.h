@@ -23,7 +23,7 @@ private:
     oal_device * device;
     WaveFile * waveFile;
 signals:
-
+    void finished();
 public slots:
 
 };

@@ -37,10 +37,12 @@ public:
     int getData(void **);
 signals:
     void resultReady(SoundRecorder *);
+    void beep();
 public slots:
     void stopBeep();
     void startRecording();
     void stopRecording();
+    void _startCapture();
 };
 
 #endif // SOUNDRECORDER_H

@@ -44,5 +44,6 @@ void SoundPlayer::run()
                 littleEndianBytesToUInt16(this->waveFile->formatChunk->numberOfChannels),
                 littleEndianBytesToUInt16(this->waveFile->formatChunk->significantBitsPerSample),
                 littleEndianBytesToUInt32(this->waveFile->formatChunk->sampleRate));
+    emit finished();
     this->deleteLater();
 }

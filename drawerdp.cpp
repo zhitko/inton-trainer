@@ -148,14 +148,32 @@ int DrawerDP::Draw(mglGraph *gr)
         gr->MultiPlot(1, 15, 13, 1, 1, "#");
         gr->Puts(
             mglPoint(0,0),
-            QString("Template F0 min = %1 max = %2").arg(this->f0min).arg(this->f0max).toLocal8Bit().data(),
+            QString("Template F0 min = %1, F0 max = %2").arg(this->f0min).arg(this->f0max).toLocal8Bit().data(),
             ":C",
             24
         );
     } else {
         gr->DefaultPlotParam();
+
+        gr->MultiPlot(1, 36, 1, 1, 3, "#");
+        gr->Puts(mglPoint(0,0), QString("INTONATION").toLocal8Bit().data(), ":C", 24);
+
+        gr->MultiPlot(10, 12, 11, 1, 1, "#");
+        gr->Puts(mglPoint(0,0), QString("Octaves Range").toLocal8Bit().data(), ":C", 20);
+
+        gr->MultiPlot(10, 12, 15, 1, 1, "#");
+        gr->Puts(mglPoint(0,0), QString("Tonal Portrait").toLocal8Bit().data(), ":C", 20);
+
         gr->MultiPlot(1, 12, 11, 1, 1, "#");
         gr->Puts(mglPoint(0,0),phrase.toLocal8Bit().data(), ":C", 24);
+
+        gr->MultiPlot(3, 12, 31, 1, 1, "#");
+        gr->Puts(
+            mglPoint(0,0),
+            QString("Template F0 min = %1, F0 max = %2").arg(this->f0min).arg(this->f0max).toLocal8Bit().data(),
+            ":C",
+            20
+        );
 
         if(!isCompare)
         {
@@ -204,7 +222,7 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->MultiPlot(1, 15, 4, 1, 1, "#");
             gr->Puts(
                 mglPoint(0,0),
-                QString("Proximity to curve shape: \\big{Ps = %1%} \t Proximity to the range: \\big{Pr = %2%}")
+                QString("Proximity to the range: \\big{Pr = %2%} \t Proximity to curve shape: \\big{Ps = %1%}")
                         .arg(this->proximity_shape)
                         .arg(this->proximity_range)
                         .toLocal8Bit().data(),
@@ -223,7 +241,7 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->MultiPlot(3, 15, 39, 1, 1, "#");
             gr->Puts(
                 mglPoint(0,0),
-                QString("Error min = %1 max = %2").arg(this->errorMin).arg(this->errorMax).toLocal8Bit().data(),
+                QString("Error min = %1, Error max = %2").arg(this->errorMin).arg(this->errorMax).toLocal8Bit().data(),
                 ":C",
                 24
             );
@@ -231,17 +249,17 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->MultiPlot(3, 15, 41, 1, 1, "#");
             gr->Puts(
                 mglPoint(0,0),
-                QString("User F0 min = %1 max = %2").arg(this->userf0min).arg(this->userf0max).toLocal8Bit().data(),
+                QString("User F0 min = %1, F0 max = %2").arg(this->userf0min).arg(this->userf0max).toLocal8Bit().data(),
                 ":C",
                 24
             );
         } else {
             gr->DefaultPlotParam();
 
-            gr->MultiPlot(1, 12, 1, 1, 1, "#");
+            gr->MultiPlot(1, 36, 1, 1, 3, "#");
             gr->Puts(
                 mglPoint(0,0),
-                QString("Proximity to curve shape: \\big{Ps = %1%} \t Proximity to the range: \\big{Pr = %2%}")
+                QString("Proximity to the range: \\big{Pr = %2%} \t Proximity to curve shape: \\big{Ps = %1%}")
                         .arg(this->proximity_curve_shape)
                         .arg(this->proximity_range)
                         .toLocal8Bit().data(),
@@ -249,9 +267,39 @@ int DrawerDP::Draw(mglGraph *gr)
                 24
             );
 
+            gr->MultiPlot(10, 12, 11, 1, 1, "#");
+            gr->Puts(mglPoint(0,0), QString("Octaves Range").toLocal8Bit().data(), ":C", 20);
+
+            gr->MultiPlot(10, 12, 15, 1, 1, "#");
+            gr->Puts(mglPoint(0,0), QString("Tonal Portrait").toLocal8Bit().data(), ":C", 20);
+
             gr->MultiPlot(1, 12, 11, 1, 1, "#");
 
             gr->Puts(mglPoint(0,0),phrase.toLocal8Bit().data(), ":C", 24);
+
+            gr->MultiPlot(3, 12, 30, 1, 1, "#");
+            gr->Puts(
+                mglPoint(0,0),
+                QString("Error min = %1, Error max = %2").arg(this->errorMin).arg(this->errorMax).toLocal8Bit().data(),
+                ":C",
+                20
+            );
+
+            gr->MultiPlot(3, 12, 31, 1, 1, "#");
+            gr->Puts(
+                mglPoint(0,0),
+                QString("Template F0 min = %1, F0 max = %2").arg(this->f0min).arg(this->f0max).toLocal8Bit().data(),
+                ":C",
+                20
+            );
+
+            gr->MultiPlot(3, 12, 32, 1, 1, "#");
+            gr->Puts(
+                mglPoint(0,0),
+                QString("User F0 min = %1, F0 max = %2").arg(this->userf0min).arg(this->userf0max).toLocal8Bit().data(),
+                ":C",
+                20
+            );
 
             gr->MultiPlot(20, 12, 41, 4, 8, "#");
             if (this->octavData->a[0] > OCTAVE_MAX_1 || this->secOctavData->a[1] > OCTAVE_MAX_1)
@@ -593,8 +641,9 @@ vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
     int p = 0;
     for(int i=0; i<clone_len; i++)
     {
-        vector in = zerov(clone_details[i].len);
-        for(int j=0; j<clone_details[i].len; j++)
+        int len = clone_details[i].len/scale;
+        vector in = zerov(len);
+        for(int j=0; j<len; j++)
         {
             p = clone_details[i].from/scale + j;
             setv(in, j, getv(strip_data, p));
@@ -610,7 +659,7 @@ vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
         freev(in);
         freev(out);
 
-        ii += clone_details[i].len;
+        ii += len;
     }
 
     freev(strip_data);
@@ -775,7 +824,17 @@ void DrawerDP::Proc(QString fname)
         vector pitch_cutted = copyv(this->simple_data->d_pitch);
         MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_mask);
         qDebug() << "MinMax " << mm.min << ":" << mm.max << LOG_DATA;
-        vector pitch_smooth = vector_mid(pitch_cutted, sptk_settings->plotF0->midFrame);
+
+        vector pitch_smooth;
+        if (sptk_settings->dp->umpSmoothType == 0)
+        {
+            pitch_smooth = vector_smooth_lin(pitch_cutted, sptk_settings->dp->umpSmoothValue);
+        } else if (sptk_settings->dp->umpSmoothType == 1) {
+            pitch_smooth = vector_smooth_mid(pitch_cutted, sptk_settings->dp->umpSmoothValue);
+        } else {
+            pitch_smooth = copyv(pitch_cutted);
+        }
+
         this->pitchData = createMglData(pitch_smooth, this->pitchData, true);
         this->pitchData->Norm();
         qDebug() << "pitchData createMglData" << LOG_DATA;
@@ -941,7 +1000,15 @@ void DrawerDP::Proc(QString fname)
         this->userf0max = mm.max;
         this->userf0min = mm.min;
 
-        vector pitch_smooth = vector_mid(pitch_cutted, sptk_settings->plotF0->midFrame);
+        vector pitch_smooth;
+        if (sptk_settings->dp->umpSmoothType == 0)
+        {
+            pitch_smooth = vector_smooth_lin(pitch_cutted, sptk_settings->dp->umpSmoothValue);
+        } else if (sptk_settings->dp->umpSmoothType == 1) {
+            pitch_smooth = vector_smooth_mid(pitch_cutted, sptk_settings->dp->umpSmoothValue);
+        } else {
+            pitch_smooth = copyv(pitch_cutted);
+        }
 
         this->secOctavData = new mglData(2);
         this->secOctavData->a[1] = (1.0 * this->userf0max / this->userf0min) - 1;
@@ -958,10 +1025,11 @@ void DrawerDP::Proc(QString fname)
         double template_min = 1.0*this->f0min;
         if (user_min == 0) user_min = 1;
         if (template_min == 0) template_min = 1;
-        this->proximity_range = round( ((range_log(user_max)/range_log(user_min)-1)*100)/((range_log(template_max)/range_log(template_min)-1)) );
-        if (this->proximity_range > 100) {
-            this->proximity_range = 200 - this->proximity_range;
-        }
+
+        double tmm = template_max/template_min;
+        double umm = user_max/user_min;
+
+        this->proximity_range = round(fabs(1.0 - (fabs((tmm - 1.0) - (umm - 1.0)) / (tmm - 1.0))) * 100.0);
 
         qDebug() << "sptk_settings->dp->errorType " << sptk_settings->dp->errorType << LOG_DATA;
         vector o_pitch_cutted = copyv(this->simple_data->d_pitch_original);

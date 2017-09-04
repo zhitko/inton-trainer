@@ -168,6 +168,8 @@ typedef struct _DP_SETTINGS {
     double continiusKT;
 
     int portLen;
+    int umpSmoothValue;
+    int umpSmoothType;
     int useStripUmp;
     int showA0;
     int showF0;

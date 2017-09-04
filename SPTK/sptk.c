@@ -78,6 +78,8 @@ DP_SETTINGS *initDpSettings()
     dp->useForDP = 0;
     dp->showPortr = 1;
     dp->portLen = 5;
+    dp->umpSmoothType = 0;
+    dp->umpSmoothValue = 5;
     dp->useStripUmp = 0;
     dp->recordingSeconds = 3;
     dp->recordingMaxFiles = 10;
