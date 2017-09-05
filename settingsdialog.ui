@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1000</width>
-    <height>600</height>
+    <width>1106</width>
+    <height>654</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,9 +23,133 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
+     <widget class="QWidget" name="tab_4">
+      <attribute name="title">
+       <string>Settings</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_6">
+       <item>
+        <widget class="QGroupBox" name="groupBox">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="title">
+          <string>Audio Devices</string>
+         </property>
+         <layout class="QFormLayout" name="formLayout">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>Input Audio Device</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>Output Audion Device</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QComboBox" name="audioInputDeviceBox"/>
+          </item>
+          <item row="1" column="1">
+           <widget class="QComboBox" name="audioOutputDeviceBox"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_13">
+         <property name="title">
+          <string>Signal Recording</string>
+         </property>
+         <layout class="QFormLayout" name="formLayout_12">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_37">
+            <property name="text">
+             <string>Recorder type</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QComboBox" name="recordingType">
+            <item>
+             <property name="text">
+              <string>#1 Recording N seconds</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>#2 Manual recording</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>#3 Auto recording using F0</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_38">
+            <property name="text">
+             <string>Record time in sec. (for mode #1)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QSpinBox" name="recordingSeconds">
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="value">
+             <number>3</number>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_16">
+            <property name="text">
+             <string>Number of files in history</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QSpinBox" name="recordingMaxFiles">
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="value">
+             <number>10</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="tab">
       <attribute name="title">
-       <string>Processing Settings</string>
+       <string>Advanced Settings</string>
       </attribute>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
@@ -43,9 +167,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-385</y>
-            <width>526</width>
-            <height>879</height>
+            <y>0</y>
+            <width>510</width>
+            <height>653</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -55,44 +179,9 @@
               <number>5</number>
              </property>
              <item>
-              <widget class="QGroupBox" name="groupBox">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="title">
-                <string>Audio Devices</string>
-               </property>
-               <layout class="QFormLayout" name="formLayout">
-                <item row="0" column="0">
-                 <widget class="QLabel" name="label">
-                  <property name="text">
-                   <string>Input Audio Device</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="0">
-                 <widget class="QLabel" name="label_2">
-                  <property name="text">
-                   <string>Output Audion Device</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="1">
-                 <widget class="QComboBox" name="audioInputDeviceBox"/>
-                </item>
-                <item row="1" column="1">
-                 <widget class="QComboBox" name="audioOutputDeviceBox"/>
-                </item>
-               </layout>
-              </widget>
-             </item>
-             <item>
               <widget class="QGroupBox" name="groupBox_2">
                <property name="title">
-                <string>Signal Processing Parameters</string>
+                <string>Base Signal Processing</string>
                </property>
                <layout class="QFormLayout" name="formLayout_2">
                 <item row="0" column="0">
@@ -281,7 +370,7 @@
              <item>
               <widget class="QGroupBox" name="groupBox_12">
                <property name="title">
-                <string>Расчет ошибки</string>
+                <string>Error Calculation</string>
                </property>
                <layout class="QFormLayout" name="formLayout_11">
                 <item row="0" column="0">
@@ -295,12 +384,12 @@
                  <widget class="QComboBox" name="errorTypeBox">
                   <item>
                    <property name="text">
-                    <string>П% = |r|*100</string>
+                    <string>Err% = |r|*100</string>
                    </property>
                   </item>
                   <item>
                    <property name="text">
-                    <string>П% = (1 - |d|)*100</string>
+                    <string>Err% = (1 - |d|)*100</string>
                    </property>
                   </item>
                  </widget>
@@ -309,320 +398,229 @@
               </widget>
              </item>
              <item>
-              <widget class="QGroupBox" name="groupBox_10">
+              <widget class="QGroupBox" name="groupBox_11">
                <property name="title">
-                <string>Детектор речи</string>
+                <string>Dynamic Programming</string>
                </property>
-               <layout class="QVBoxLayout" name="verticalLayout_5">
-                <item>
-                 <widget class="QGroupBox" name="groupBox_6">
-                  <property name="title">
-                   <string>Обработка графика энергии</string>
+               <layout class="QFormLayout" name="formLayout_10">
+                <item row="0" column="0">
+                 <widget class="QCheckBox" name="showPortr">
+                  <property name="text">
+                   <string>Show UMP</string>
                   </property>
-                  <layout class="QFormLayout" name="formLayout_7">
-                   <item row="0" column="0">
-                    <widget class="QLabel" name="label_22">
-                     <property name="text">
-                      <string>Окно медианного сглаживания</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="1">
-                    <widget class="QSpinBox" name="plotMidFrameEnergySpin">
-                     <property name="minimum">
-                      <number>1</number>
-                     </property>
-                     <property name="value">
-                      <number>10</number>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="0">
-                    <widget class="QLabel" name="label_23">
-                     <property name="text">
-                      <string>Тип интерполяции</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="1">
-                    <widget class="QComboBox" name="plotInterpolationTypeEnergyBox">
-                     <item>
-                      <property name="text">
-                       <string>None</string>
-                      </property>
-                     </item>
-                     <item>
-                      <property name="text">
-                       <string>Linear interpolation</string>
-                      </property>
-                     </item>
-                     <item>
-                      <property name="text">
-                       <string>Cubic spline (тatural boundary conditions)</string>
-                      </property>
-                     </item>
-                     <item>
-                      <property name="text">
-                       <string>Cubic spline (periodic boundary conditions)</string>
-                      </property>
-                     </item>
-                     <item>
-                      <property name="text">
-                       <string>Non-rounded Akima spline (natural boundary conditions)</string>
-                      </property>
-                     </item>
-                     <item>
-                      <property name="text">
-                       <string>Non-rounded Akima spline (periodic boundary conditions)</string>
-                      </property>
-                     </item>
-                     <item>
-                      <property name="text">
-                       <string>Steffen’s method</string>
-                      </property>
-                     </item>
-                    </widget>
-                   </item>
-                  </layout>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
                  </widget>
                 </item>
-                <item>
-                 <widget class="QGroupBox" name="groupBox_11">
-                  <property name="title">
-                   <string>Непрерывное ДП</string>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label_35">
+                  <property name="text">
+                   <string>Use for DP</string>
                   </property>
-                  <layout class="QFormLayout" name="formLayout_10">
-                   <item row="11" column="0">
-                    <widget class="QLabel" name="label_29">
-                     <property name="text">
-                      <string>Порог срабатывания</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="11" column="1">
-                    <widget class="QSpinBox" name="continiusDpLimit">
-                     <property name="maximum">
-                      <number>9999</number>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="13" column="0">
-                    <widget class="QLabel" name="label_30">
-                     <property name="text">
-                      <string>kH</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="13" column="1">
-                    <widget class="QDoubleSpinBox" name="continiusDpKH">
-                     <property name="singleStep">
-                      <double>0.100000000000000</double>
-                     </property>
-                     <property name="value">
-                      <double>0.100000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="14" column="0">
-                    <widget class="QLabel" name="label_31">
-                     <property name="text">
-                      <string>kV</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="14" column="1">
-                    <widget class="QDoubleSpinBox" name="continiusDpKV">
-                     <property name="singleStep">
-                      <double>0.100000000000000</double>
-                     </property>
-                     <property name="value">
-                      <double>1.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="15" column="0">
-                    <widget class="QLabel" name="label_32">
-                     <property name="text">
-                      <string>kD</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="15" column="1">
-                    <widget class="QDoubleSpinBox" name="continiusDpKD">
-                     <property name="singleStep">
-                      <double>0.100000000000000</double>
-                     </property>
-                     <property name="value">
-                      <double>0.500000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="16" column="0">
-                    <widget class="QLabel" name="label_33">
-                     <property name="text">
-                      <string>kT</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="16" column="1">
-                    <widget class="QDoubleSpinBox" name="continiusDpKT">
-                     <property name="value">
-                      <double>20.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="0" colspan="2">
-                    <widget class="QCheckBox" name="showA0">
-                     <property name="text">
-                      <string>Отображать А0</string>
-                     </property>
-                     <property name="checked">
-                      <bool>false</bool>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="0" colspan="2">
-                    <widget class="QCheckBox" name="showF0">
-                     <property name="text">
-                      <string>Отображать F0</string>
-                     </property>
-                     <property name="checked">
-                      <bool>true</bool>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="9" column="0" colspan="2">
-                    <widget class="QCheckBox" name="showTime">
-                     <property name="text">
-                      <string>Отображать ДП время</string>
-                     </property>
-                     <property name="checked">
-                      <bool>false</bool>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="10" column="0">
-                    <widget class="QCheckBox" name="showError">
-                     <property name="text">
-                      <string>Отображать ДП ошибку</string>
-                     </property>
-                     <property name="checked">
-                      <bool>false</bool>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="4" column="0">
-                    <widget class="QCheckBox" name="showOriginalF0">
-                     <property name="text">
-                      <string>Отображать исходную F0</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="0">
-                    <widget class="QLabel" name="label_35">
-                     <property name="text">
-                      <string>Использовать данные</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="1">
-                    <widget class="QComboBox" name="useForDP">
-                     <item>
-                      <property name="text">
-                       <string>Спектр</string>
-                      </property>
-                     </item>
-                     <item>
-                      <property name="text">
-                       <string>Кепстр</string>
-                      </property>
-                     </item>
-                    </widget>
-                   </item>
-                   <item row="7" column="0">
-                    <widget class="QLabel" name="label_36">
-                     <property name="text">
-                      <string>Длина части портрета</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="7" column="1">
-                    <widget class="QSpinBox" name="portLen">
-                     <property name="minimum">
-                      <number>1</number>
-                     </property>
-                     <property name="maximum">
-                      <number>300</number>
-                     </property>
-                     <property name="value">
-                      <number>5</number>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="0">
-                    <widget class="QCheckBox" name="showPortr">
-                     <property name="text">
-                      <string>По умолчанию отображать портрет</string>
-                     </property>
-                     <property name="checked">
-                      <bool>true</bool>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="8" column="0" colspan="2">
-                    <widget class="QCheckBox" name="useStripUmp">
-                     <property name="text">
-                      <string>Фильтровать данные портрета по меткам</string>
-                     </property>
-                     <property name="checked">
-                      <bool>true</bool>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="5" column="0">
-                    <widget class="QLabel" name="label_17">
-                     <property name="text">
-                      <string>Тип сглаживания</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="5" column="1">
-                    <widget class="QComboBox" name="umpSmoothType">
-                     <item>
-                      <property name="text">
-                       <string>Линейное сглаживание</string>
-                      </property>
-                     </item>
-                     <item>
-                      <property name="text">
-                       <string>Медианное сглаживание</string>
-                      </property>
-                     </item>
-                     <item>
-                      <property name="text">
-                       <string>None</string>
-                      </property>
-                     </item>
-                    </widget>
-                   </item>
-                   <item row="6" column="0">
-                    <widget class="QLabel" name="label_18">
-                     <property name="text">
-                      <string>Окно сглаживания</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="6" column="1">
-                    <widget class="QSpinBox" name="umpSmoothValue">
-                     <property name="minimum">
-                      <number>1</number>
-                     </property>
-                     <property name="value">
-                      <number>5</number>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QComboBox" name="useForDP">
+                  <item>
+                   <property name="text">
+                    <string>Spectrum</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Cepstrum</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item row="2" column="0" colspan="2">
+                 <widget class="QCheckBox" name="showA0">
+                  <property name="text">
+                   <string>Show А0</string>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="0" colspan="2">
+                 <widget class="QCheckBox" name="showF0">
+                  <property name="text">
+                   <string>Show F0</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="0">
+                 <widget class="QCheckBox" name="showOriginalF0">
+                  <property name="text">
+                   <string>Show original F0</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="0">
+                 <widget class="QLabel" name="label_17">
+                  <property name="text">
+                   <string>Smoothing Type</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="1">
+                 <widget class="QComboBox" name="umpSmoothType">
+                  <item>
+                   <property name="text">
+                    <string>Linear</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Median</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>None</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item row="6" column="0">
+                 <widget class="QLabel" name="label_18">
+                  <property name="text">
+                   <string>Smoothing frame</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="6" column="1">
+                 <widget class="QSpinBox" name="umpSmoothValue">
+                  <property name="minimum">
+                   <number>1</number>
+                  </property>
+                  <property name="value">
+                   <number>5</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="7" column="0">
+                 <widget class="QLabel" name="label_36">
+                  <property name="text">
+                   <string>UMP part points count</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="7" column="1">
+                 <widget class="QSpinBox" name="portLen">
+                  <property name="minimum">
+                   <number>1</number>
+                  </property>
+                  <property name="maximum">
+                   <number>300</number>
+                  </property>
+                  <property name="value">
+                   <number>5</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="8" column="0" colspan="2">
+                 <widget class="QCheckBox" name="showTime">
+                  <property name="text">
+                   <string>Show DP time</string>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="9" column="0">
+                 <widget class="QCheckBox" name="showError">
+                  <property name="text">
+                   <string>Show DP error</string>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="10" column="0">
+                 <widget class="QLabel" name="label_29">
+                  <property name="text">
+                   <string>Threshold</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="10" column="1">
+                 <widget class="QSpinBox" name="continiusDpLimit">
+                  <property name="maximum">
+                   <number>9999</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="12" column="0">
+                 <widget class="QLabel" name="label_30">
+                  <property name="text">
+                   <string>kH</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="12" column="1">
+                 <widget class="QDoubleSpinBox" name="continiusDpKH">
+                  <property name="singleStep">
+                   <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.100000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item row="13" column="0">
+                 <widget class="QLabel" name="label_31">
+                  <property name="text">
+                   <string>kV</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="13" column="1">
+                 <widget class="QDoubleSpinBox" name="continiusDpKV">
+                  <property name="singleStep">
+                   <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>1.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item row="14" column="0">
+                 <widget class="QLabel" name="label_32">
+                  <property name="text">
+                   <string>kD</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="14" column="1">
+                 <widget class="QDoubleSpinBox" name="continiusDpKD">
+                  <property name="singleStep">
+                   <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.500000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item row="15" column="0">
+                 <widget class="QLabel" name="label_33">
+                  <property name="text">
+                   <string>kT</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="15" column="1">
+                 <widget class="QDoubleSpinBox" name="continiusDpKT">
+                  <property name="value">
+                   <double>20.000000000000000</double>
+                  </property>
                  </widget>
                 </item>
                </layout>
@@ -657,91 +655,17 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>505</width>
-            <height>571</height>
+            <width>527</width>
+            <height>561</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_3">
            <item>
             <layout class="QVBoxLayout" name="verticalLayout_4">
              <item>
-              <widget class="QGroupBox" name="groupBox_13">
-               <property name="title">
-                <string>Запись сигнала</string>
-               </property>
-               <layout class="QFormLayout" name="formLayout_12">
-                <item row="0" column="0">
-                 <widget class="QLabel" name="label_37">
-                  <property name="text">
-                   <string>Тип записи</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="1">
-                 <widget class="QComboBox" name="recordingType">
-                  <item>
-                   <property name="text">
-                    <string>(1) Запись N секунд</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>(2) Ручная остановка записи</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>(3) Запись по F0</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>(4) Запись по энергии</string>
-                   </property>
-                  </item>
-                 </widget>
-                </item>
-                <item row="1" column="0">
-                 <widget class="QLabel" name="label_38">
-                  <property name="text">
-                   <string>Кол-во секунд (1)</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="1">
-                 <widget class="QSpinBox" name="recordingSeconds">
-                  <property name="minimum">
-                   <number>1</number>
-                  </property>
-                  <property name="value">
-                   <number>3</number>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="0">
-                 <widget class="QLabel" name="label_16">
-                  <property name="text">
-                   <string>Кол-во файлов истории</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="1">
-                 <widget class="QSpinBox" name="recordingMaxFiles">
-                  <property name="minimum">
-                   <number>1</number>
-                  </property>
-                  <property name="value">
-                   <number>10</number>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-             </item>
-             <item>
               <widget class="QGroupBox" name="groupBox_3">
                <property name="title">
-                <string>Настройки SPTK</string>
+                <string>SPTK</string>
                </property>
                <layout class="QFormLayout" name="formLayout_4">
                 <item row="1" column="0">
@@ -862,13 +786,13 @@
              <item>
               <widget class="QGroupBox" name="groupBox_5">
                <property name="title">
-                <string>Обработка графика F0</string>
+                <string>F0 Processing</string>
                </property>
                <layout class="QFormLayout" name="formLayout_6">
                 <item row="1" column="0">
                  <widget class="QLabel" name="label_19">
                   <property name="text">
-                   <string>Окно медианного сглаживания</string>
+                   <string>Median Smoothing Frame</string>
                   </property>
                  </widget>
                 </item>
@@ -885,7 +809,7 @@
                 <item row="2" column="0">
                  <widget class="QLabel" name="label_21">
                   <property name="text">
-                   <string>Тип интерполяции</string>
+                   <string>Interpolation Type</string>
                   </property>
                  </widget>
                 </item>
@@ -894,6 +818,88 @@
                   <property name="currentIndex">
                    <number>0</number>
                   </property>
+                  <item>
+                   <property name="text">
+                    <string>None</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Linear interpolation</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Cubic spline (natural boundary conditions)</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Cubic spline (periodic boundary conditions)</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Non-rounded Akima spline (natural boundary conditions)</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Non-rounded Akima spline (periodic boundary conditions)</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Steffen’s method</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QCheckBox" name="normF0MinMax">
+                  <property name="text">
+                   <string>Normalization of min and max</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupBox_6">
+               <property name="title">
+                <string>A0 Processing</string>
+               </property>
+               <layout class="QFormLayout" name="formLayout_7">
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_22">
+                  <property name="text">
+                   <string>Median Smoothing Frame</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QSpinBox" name="plotMidFrameEnergySpin">
+                  <property name="minimum">
+                   <number>1</number>
+                  </property>
+                  <property name="value">
+                   <number>10</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label_23">
+                  <property name="text">
+                   <string>Interpolation Type</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QComboBox" name="plotInterpolationTypeEnergyBox">
                   <item>
                    <property name="text">
                     <string>None</string>
@@ -931,23 +937,13 @@
                   </item>
                  </widget>
                 </item>
-                <item row="0" column="0">
-                 <widget class="QCheckBox" name="normF0MinMax">
-                  <property name="text">
-                   <string>Нормализация по min и max</string>
-                  </property>
-                  <property name="checked">
-                   <bool>true</bool>
-                  </property>
-                 </widget>
-                </item>
                </layout>
               </widget>
              </item>
              <item>
               <widget class="QGroupBox" name="groupBox_7">
                <property name="title">
-                <string>Настройка спектра</string>
+                <string>Spectrum Processing</string>
                </property>
                <layout class="QGridLayout" name="gridLayout">
                 <item row="1" column="1">
@@ -960,7 +956,7 @@
                 <item row="2" column="0">
                  <widget class="QLabel" name="label_27">
                   <property name="text">
-                   <string>Мин. порог</string>
+                   <string>Threshold</string>
                   </property>
                  </widget>
                 </item>
@@ -980,7 +976,7 @@
                 <item row="1" column="0">
                  <widget class="QLabel" name="label_25">
                   <property name="text">
-                   <string>Фактор</string>
+                   <string>Factor</string>
                   </property>
                  </widget>
                 </item>

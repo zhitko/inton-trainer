@@ -145,7 +145,7 @@ int DrawerDP::Draw(mglGraph *gr)
         gr->MultiPlot(1, 15, 12, 1, 1, "#");
         gr->Puts(mglPoint(0,0),phrase.toLocal8Bit().data(), ":C", 24);
 
-        gr->MultiPlot(1, 15, 13, 1, 1, "#");
+        gr->MultiPlot(2, 15, 26, 1, 1, "#");
         gr->Puts(
             mglPoint(0,0),
             QString("Template F0 min = %1, F0 max = %2").arg(this->f0min).arg(this->f0max).toLocal8Bit().data(),
@@ -167,7 +167,7 @@ int DrawerDP::Draw(mglGraph *gr)
         gr->MultiPlot(1, 12, 11, 1, 1, "#");
         gr->Puts(mglPoint(0,0),phrase.toLocal8Bit().data(), ":C", 24);
 
-        gr->MultiPlot(3, 12, 31, 1, 1, "#");
+        gr->MultiPlot(2, 12, 20, 1, 1, "#");
         gr->Puts(
             mglPoint(0,0),
             QString("Template F0 min = %1, F0 max = %2").arg(this->f0min).arg(this->f0max).toLocal8Bit().data(),
@@ -238,15 +238,7 @@ int DrawerDP::Draw(mglGraph *gr)
             if(sptk_settings->dp->showF0) gr->Plot(*this->secPitchData, "-R4");
             if(sptk_settings->dp->showA0) gr->Plot(*this->secIntensiveData, "-G4");
 
-            gr->MultiPlot(3, 15, 39, 1, 1, "#");
-            gr->Puts(
-                mglPoint(0,0),
-                QString("Error min = %1, Error max = %2").arg(this->errorMin).arg(this->errorMax).toLocal8Bit().data(),
-                ":C",
-                24
-            );
-
-            gr->MultiPlot(3, 15, 41, 1, 1, "#");
+            gr->MultiPlot(2, 15, 27, 1, 1, "#");
             gr->Puts(
                 mglPoint(0,0),
                 QString("User F0 min = %1, F0 max = %2").arg(this->userf0min).arg(this->userf0max).toLocal8Bit().data(),
@@ -277,15 +269,7 @@ int DrawerDP::Draw(mglGraph *gr)
 
             gr->Puts(mglPoint(0,0),phrase.toLocal8Bit().data(), ":C", 24);
 
-            gr->MultiPlot(3, 12, 30, 1, 1, "#");
-            gr->Puts(
-                mglPoint(0,0),
-                QString("Error min = %1, Error max = %2").arg(this->errorMin).arg(this->errorMax).toLocal8Bit().data(),
-                ":C",
-                20
-            );
-
-            gr->MultiPlot(3, 12, 31, 1, 1, "#");
+            gr->MultiPlot(2, 12, 20, 1, 1, "#");
             gr->Puts(
                 mglPoint(0,0),
                 QString("Template F0 min = %1, F0 max = %2").arg(this->f0min).arg(this->f0max).toLocal8Bit().data(),
@@ -293,7 +277,7 @@ int DrawerDP::Draw(mglGraph *gr)
                 20
             );
 
-            gr->MultiPlot(3, 12, 32, 1, 1, "#");
+            gr->MultiPlot(2, 12, 21, 1, 1, "#");
             gr->Puts(
                 mglPoint(0,0),
                 QString("User F0 min = %1, F0 max = %2").arg(this->userf0min).arg(this->userf0max).toLocal8Bit().data(),

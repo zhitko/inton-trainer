@@ -144,7 +144,6 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->dp->portLen = instance->ui->portLen->value();
     sptk_settings->dp->umpSmoothType = instance->ui->umpSmoothType->currentIndex();
     sptk_settings->dp->umpSmoothValue = instance->ui->umpSmoothValue->value();
-    sptk_settings->dp->useStripUmp = instance->ui->useStripUmp->isChecked();
     sptk_settings->dp->showA0 = instance->ui->showA0->isChecked();
     sptk_settings->dp->showPortr = instance->ui->showPortr->isChecked();
     sptk_settings->dp->showError = instance->ui->showError->isChecked();
@@ -229,8 +228,6 @@ void SettingsDialog::loadSettings()
         this->ui->umpSmoothValue->setValue(settings.value("dp/umpSmoothValue").toInt());
     if(settings.contains("dp/umpSmoothType"))
         this->ui->umpSmoothType->setCurrentIndex(settings.value("dp/umpSmoothType").toInt());
-    if(settings.contains("dp/useStripUmp"))
-        this->ui->useStripUmp->setChecked(settings.value("dp/useStripUmp").toBool());
     if(settings.contains("dp/showA0"))
         this->ui->showA0->setChecked(settings.value("dp/showA0").toBool());
     if(settings.contains("dp/showPortr"))
@@ -318,7 +315,6 @@ void SettingsDialog::saveSettings()
     settings.setValue("dp/portLen", this->ui->portLen->value());
     settings.setValue("dp/umpSmoothType", this->ui->umpSmoothType->currentIndex());
     settings.setValue("dp/umpSmoothValue", this->ui->umpSmoothValue->value());
-    settings.setValue("dp/useStripUmp", this->ui->useStripUmp->isChecked());
     settings.setValue("dp/showA0", this->ui->showA0->isChecked());
     settings.setValue("dp/showPortr", this->ui->showPortr->isChecked());
     settings.setValue("dp/showError", this->ui->showError->isChecked());
