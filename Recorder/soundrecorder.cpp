@@ -7,14 +7,17 @@ based on https://gist.github.com/jimmcgowan/4268832
 
 #include "buffer.h"
 #include "soundrecorder.h"
+#include "settingsdialog.h"
 
 SoundRecorder::SoundRecorder(oal_device *device, int sampleByteSize, QObject *parent) :
     QThread(parent), device(device), sampleByteSize(sampleByteSize),
     length(0), allocatedSize(0), avgVolumeLevel(0), recording(false),
     initBuffer(NULL), currentBuffer(NULL), currentPos(0)
 {
-    initAudioInputDevice(this->device);
+    initAudioInputDevice(this->device, RECORD_FREQ);
     connect(this, SIGNAL(beep()), this, SLOT(stopBeep()));
+    SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
+    this->initBufferSize = RECORD_FREQ * this->sampleByteSize * sptk_settings->dp->recordingFrameSeconds;
 }
 
 SoundRecorder::~SoundRecorder()
@@ -73,14 +76,14 @@ void SoundRecorder::allocateNewBuffer()
 {
     if(currentBuffer){
         buffer * current = this->currentBuffer;
-        this->currentBuffer = makeBuffer(INIT_BUFFER_SIZE);
+        this->currentBuffer = makeBuffer(this->initBufferSize);
         this->currentBuffer->prev = current;
         current->next = this->currentBuffer;
-        this->allocatedSize += INIT_BUFFER_SIZE;
+        this->allocatedSize += this->initBufferSize;
     }else{
-        this->initBuffer = makeBuffer(INIT_BUFFER_SIZE);
+        this->initBuffer = makeBuffer(this->initBufferSize);
         this->currentBuffer = this->initBuffer;
-        this->allocatedSize = INIT_BUFFER_SIZE;
+        this->allocatedSize = this->initBufferSize;
     }
 }
 
@@ -91,8 +94,8 @@ void SoundRecorder::run()
     while(recording)
     {
         msleep(200);
-        qDebug() << "recording step " << this->allocatedSize << " ( " << currentPos << " : " << INIT_BUFFER_SIZE << " )" << LOG_DATA;
-        if( currentPos >= INIT_BUFFER_SIZE || this->allocatedSize < INIT_BUFFER_SIZE )
+        qDebug() << "recording step " << this->allocatedSize << " ( " << currentPos << " : " << this->initBufferSize << " )" << LOG_DATA;
+        if( currentPos >= this->initBufferSize || this->allocatedSize < this->initBufferSize )
         {
             allocateNewBuffer();
             if (!recording)
@@ -100,7 +103,7 @@ void SoundRecorder::run()
             currentPos = 0;
         }
         void * pointToWrite = (char*)this->currentBuffer->buffer_data + currentPos;
-        int maxToWrite = INIT_BUFFER_SIZE - currentPos;
+        int maxToWrite = this->initBufferSize - currentPos;
         int size = getSample(this->device, pointToWrite, this->sampleByteSize, maxToWrite);
         currentPos += size;
     }

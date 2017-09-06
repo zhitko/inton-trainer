@@ -133,10 +133,10 @@ int freeAudioOutputDevice(oal_device * device)
     return 1;
 }
 
-int initAudioInputDevice(oal_device * device)
+int initAudioInputDevice(oal_device * device, int sampleRate)
 {
     if(device->name); else return 0;
-    if(device->device = alcCaptureOpenDevice(device->name, 8000, AL_FORMAT_MONO16, 4096)); else return 0;
+    if(device->device = alcCaptureOpenDevice(device->name, sampleRate, AL_FORMAT_MONO16, 4096)); else return 0;
     return 1;
 }
 

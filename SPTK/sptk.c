@@ -82,6 +82,9 @@ DP_SETTINGS *initDpSettings()
     dp->umpSmoothValue = 5;
     dp->useStripUmp = 0;
     dp->recordingSeconds = 3;
+    dp->recordingFrameSeconds = 0.2;
+    dp->recordingFrameAfter = 1;
+    dp->recordingFrameBefore = 5;
     dp->recordingMaxFiles = 10;
     dp->recordingType = 0;
     return dp;

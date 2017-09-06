@@ -196,7 +196,7 @@ void GraphsWindow::stopRecord(SoundRecorder * recorder)
     QString path = USER_DATA_PATH + dateTime.toString("dd.MM.yyyy hh.mm.ss.zzz");
 
     path = QApplication::applicationDirPath() + DATA_PATH + path + WAVE_TYPE;
-    WaveFile *waveFile = makeWaveFileFromData((char *)data, size, 1, 8000, 16);
+    WaveFile *waveFile = makeWaveFileFromData((char *)data, size, 1, RECORD_FREQ, 16);
     saveWaveFile(waveFile, path.toLocal8Bit().data());
     waveCloseFile(waveFile);
     qDebug() << "GraphsWindow::stopRecord file saved" << LOG_DATA;

@@ -34,7 +34,7 @@ int freeAudioOutputDevice(oal_device*);
 int playSound(oal_device * device, void * data, int size, short channels, short samples, int sampleRate);
 
 // Input audio device functions
-int initAudioInputDevice(oal_device*);
+int initAudioInputDevice(oal_device*, int sampleRate);
 int startCapture(oal_device*);
 int getSample(oal_device*, void*, int, int);
 int stopCapture(oal_device*);

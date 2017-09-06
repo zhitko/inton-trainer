@@ -5,9 +5,6 @@
 
 #include "soundrecorder.h"
 
-const int MAX_EMPTY_BUFFERS_BEFORE = 3;
-const int MAX_EMPTY_BUFFERS_AFTER = 3;
-
 struct buffer;
 
 class AutoSoundRecorder : public SoundRecorder

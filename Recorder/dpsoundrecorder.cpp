@@ -44,7 +44,7 @@ DPSoundRecorder::DPSoundRecorder(QString fname, oal_device *device, int sampleBy
     vector wave = sptk_v2v(waveFile->dataChunk->waveformData, size, bits);
     qDebug() << "wave" << LOG_DATA;
 
-    this->buffersBeforeMaxCount = ceil(DP_SIGNALE_SCALE * wave.x / INIT_BUFFER_SIZE);
+    this->buffersBeforeMaxCount = ceil(DP_SIGNALE_SCALE * wave.x / this->initBufferSize);
 
     this->pattern = this->proc(wave);
     freev(wave);

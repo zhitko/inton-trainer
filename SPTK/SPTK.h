@@ -184,6 +184,9 @@ typedef struct _DP_SETTINGS {
 
     int recordingType;
     int recordingSeconds;
+    double recordingFrameSeconds;
+    int recordingFrameBefore;
+    int recordingFrameAfter;
     int recordingMaxFiles;
 } DP_SETTINGS;
 

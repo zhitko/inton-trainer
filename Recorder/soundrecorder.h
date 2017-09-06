@@ -9,7 +9,7 @@ extern "C" {
     #include "./OpenAL/openal_wrapper.h"
 }
 
-const int INIT_BUFFER_SIZE = 8000; //6188;// 4096//8192//16384
+const int RECORD_FREQ = 8000;
 
 struct buffer;
 
@@ -20,6 +20,7 @@ protected:
     void run();
     virtual void allocateNewBuffer();
 
+    int initBufferSize;
     int length;
     int sampleByteSize;
     buffer * initBuffer, * currentBuffer;
