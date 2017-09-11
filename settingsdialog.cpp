@@ -86,6 +86,13 @@ void SettingsDialog::initUI()
     }
 
     connect(this->ui->buttonBox, SIGNAL(accepted()), this, SLOT(saveSettings()));
+    connect(this->ui->buttonBox, SIGNAL(clicked(QAbstractButton*)), this, SLOT(buttons(QAbstractButton*)));
+}
+
+void SettingsDialog::buttons(QAbstractButton *button)
+{
+    if (this->ui->buttonBox->buttonRole(button) == QDialogButtonBox::ResetRole)
+        setDefaultSettings();
 }
 
 oal_device * SettingsDialog::getInputDevice()
@@ -172,10 +179,23 @@ MathGLSettings * SettingsDialog::getMathGLSettings()
     return settings;
 }
 
+void SettingsDialog::setDefaultSettings()
+{
+    qDebug() << "loadSettings " << LOG_DATA;
+    this->loadSettingsFrom(SETTINGS_DEFAULT_FILE);
+    this->saveSettings();
+}
+
 void SettingsDialog::loadSettings()
 {
-    qDebug() << "loadSettings from " << SETTINGS_FILE << LOG_DATA;
-    QSettings settings(SETTINGS_FILE, QSettings::IniFormat);
+    qDebug() << "loadSettings " << LOG_DATA;
+    this->loadSettingsFrom(SETTINGS_FILE);
+}
+
+void SettingsDialog::loadSettingsFrom(QString settings_path)
+{
+    qDebug() << "loadSettingsFrom " << settings_path << LOG_DATA;
+    QSettings settings(settings_path, QSettings::IniFormat);
     settings.setPath(QSettings::IniFormat, QSettings::UserScope, QApplication::applicationDirPath());
 
     if(settings.contains("pitch/max_freq"))

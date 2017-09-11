@@ -4,8 +4,10 @@
 #include "defines.h"
 
 #include <QDialog>
+#include <QAbstractButton>
 
 #define SETTINGS_FILE "settings.conf"
+#define SETTINGS_DEFAULT_FILE "settings.default"
 
 extern "C" {
     #include "./OpenAL/openal_wrapper.h"
@@ -31,6 +33,7 @@ public:
     static SettingsDialog * getInstance(QWidget *parent = 0);
 
 private:
+    void loadSettingsFrom(QString);
     explicit SettingsDialog(QWidget *parent = 0);
     Ui::SettingsDialog *ui;
 
@@ -48,9 +51,11 @@ public:
     static MathGLSettings * getMathGLSettings();
 
 private slots:
+    void buttons(QAbstractButton*);
     void inputDeviceChanged(int);
     void outputDeviceChanged(int);
     void saveSettings();
+    void setDefaultSettings();
 };
 
 #endif // SETTINGSDIALOG_H

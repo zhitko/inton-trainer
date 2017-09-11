@@ -168,7 +168,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>510</width>
+            <width>228</width>
             <height>764</height>
            </rect>
           </property>
@@ -724,8 +724,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>527</width>
-            <height>561</height>
+            <width>507</width>
+            <height>545</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -1197,7 +1197,7 @@ p, li { white-space: pre-wrap; }
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok|QDialogButtonBox::RestoreDefaults</set>
      </property>
     </widget>
    </item>
