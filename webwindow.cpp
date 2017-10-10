@@ -15,6 +15,15 @@
 #include <QJsonValue>
 #include <QSettings>
 
+void checkLogFile()
+{
+    QFileInfo info1(LOG_FILE_NAME);
+    if (info1.size() > LAG_FILE_MAX_SIZE)
+    {
+        QFile::remove(LOG_FILE_NAME);
+    }
+}
+
 WebWindow::WebWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::WebWindow)
@@ -22,6 +31,10 @@ WebWindow::WebWindow(QWidget *parent) :
     ui->setupUi(this);
     this->initWeb();
     this->mainWindow = new MainWindow(this);\
+
+    checkLogFile();
+
+    qDebug() << " Start application" << LOG_DATA;
 }
 
 WebWindow::~WebWindow()

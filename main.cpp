@@ -18,15 +18,6 @@
 
 static const QtMessageHandler QT_DEFAULT_MESSAGE_HANDLER = qInstallMessageHandler(0);
 
-void checkLogFile()
-{
-    QFileInfo info1(LOG_FILE_NAME);
-    if (info1.size() > LAG_FILE_MAX_SIZE)
-    {
-        QFile::remove(LOG_FILE_NAME);
-    }
-}
-
 void logToFile(const QString message)
 {
     QFile file(LOG_FILE_NAME);
@@ -56,11 +47,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationDomain("vladimir.zhitko.by");
     QCoreApplication::setApplicationName("IntonTrainer");
 
-    checkLogFile();
-
     qInstallMessageHandler(messageOutput);
-
-    qDebug() << " Start application" << LOG_DATA;
 
     QApplication a(argc, argv);
     WebWindow w;

@@ -5,6 +5,8 @@
 #-------------------------------------------------
 QMAKE_CFLAGS += -std=gnu++11 -std=c99
 
+QMAKE_CXXFLAGS += -O2 -fPIC -ltcg
+
 QT       += core gui webkitwidgets multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
