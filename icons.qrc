@@ -23,5 +23,6 @@
         <file>icons/pause.png</file>
         <file>icons/voice_recognition_scan-64-off.png</file>
         <file>icons/pause-off.png</file>
+        <file>icons/file.png</file>
     </qresource>
 </RCC>

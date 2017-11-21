@@ -92,6 +92,8 @@ void GraphsWindow::initUI()
     connect(this->ui->stopRecordBtn, SIGNAL(clicked()), this, SLOT(stopRecord()));
     connect(this->ui->startAutoRecordBtn, SIGNAL(clicked()), this, SLOT(startAutoRecord()));
 
+    connect(this->ui->openFileBtn, SIGNAL(clicked()), this, SLOT(openFile()));
+
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
     this->ui->pitchMinSpin->setValue(sptk_settings->pitch->MIN_FREQ);
     this->ui->pitchMaxSpin->setValue(sptk_settings->pitch->MAX_FREQ);
@@ -130,6 +132,7 @@ void GraphsWindow::startAutoRecord()
 
     qDebug() << "GraphsWindow::startAutoRecord" << LOG_DATA;
     this->ui->setRecordBtn->setEnabled(false);
+    this->ui->openFileBtn->setEnabled(false);
     this->ui->startAutoRecordBtn->setEnabled(false);
     this->ui->stopRecordBtn->setEnabled(true);
 
@@ -139,6 +142,21 @@ void GraphsWindow::startAutoRecord()
     this->recorder = new AutoSoundRecorder(currentDevice, sizeof(short int));
     connect(this->recorder, SIGNAL(resultReady(SoundRecorder *)), this, SLOT(stopRecord(SoundRecorder *)));
     this->recorder->startRecording();
+}
+
+void GraphsWindow::openFile()
+{
+    QString initPath = QApplication::applicationDirPath() + DATA_PATH_TEST;
+
+    QString path = QFileDialog::getOpenFileName(this, tr("Open Record"), initPath, tr("WAV Files (*.wav)"));
+
+    qDebug() << "GraphsWindow::openFile " << path << LOG_DATA;
+
+    if (!path.isEmpty())
+    {
+        this->drawFile(path);
+        qDebug() << "GraphsWindow::openFile length=" << w_graph << LOG_DATA;
+    }
 }
 
 void GraphsWindow::startRecord()
@@ -151,22 +169,29 @@ void GraphsWindow::startRecord()
         this->recorder->stopRecording();
     } else {
         SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
-        qDebug() << "GraphsWindow::setRecord" << LOG_DATA;
+        qDebug() << "GraphsWindow::startRecord" << LOG_DATA;
         this->ui->setRecordBtn->setEnabled(false);
+        this->ui->openFileBtn->setEnabled(false);
         this->ui->startAutoRecordBtn->setEnabled(false);
         this->ui->stopRecordBtn->setEnabled(true);
 
-        if (sptk_settings->dp->recordingType == 0)
+        if (sptk_settings->dp->recordingType == 0) // Recording N sec
         {
             this->recorder = new TimeSoundRecorder(currentDevice, sizeof(short int), sptk_settings->dp->recordingSeconds);
-        } else if (sptk_settings->dp->recordingType == 1)
+        } else if (sptk_settings->dp->recordingType == 1) // Manual recording
         {
             this->ui->setRecordBtn->setEnabled(true);
+            this->ui->openFileBtn->setEnabled(true);
             this->recorder = new SoundRecorder(currentDevice, sizeof(short int));
-        } else if (sptk_settings->dp->recordingType == 2)
+        } else if (sptk_settings->dp->recordingType == 2) // Recording by F0
         {
             this->recorder = new AutoSoundRecorder(currentDevice, sizeof(short int), -1, 2);
-        } else { // TODO: change to energy detect recording
+        } else if (sptk_settings->dp->recordingType == 3) // Recording N + template sec
+        {
+            int seconds = sptk_settings->dp->recordingSeconds + this->drawer->getDataSeconds();
+            qDebug() << "GraphsWindow::startRecord seconds " << seconds << LOG_DATA;
+            this->recorder = new TimeSoundRecorder(currentDevice, sizeof(short int), seconds);
+        } else {
             this->recorder = new AutoSoundRecorder(currentDevice, sizeof(short int), -1, 2);
         }
 
@@ -188,6 +213,7 @@ void GraphsWindow::stopRecord(SoundRecorder * recorder)
     qDebug() << "GraphsWindow::stopRecord files cleaned" << LOG_DATA;
 
     this->ui->setRecordBtn->setEnabled(true);
+    this->ui->openFileBtn->setEnabled(true);
     this->ui->startAutoRecordBtn->setEnabled(true);
     this->ui->stopRecordBtn->setEnabled(false);
     char *data;

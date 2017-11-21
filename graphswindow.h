@@ -57,6 +57,7 @@ public slots:
     void stopRecord(SoundRecorder *);
     void stopRecord();
     void startAutoRecord();
+    void openFile();
 
     void stereo();
     void increase();

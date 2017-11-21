@@ -17,7 +17,7 @@ SoundRecorder::SoundRecorder(oal_device *device, int sampleByteSize, QObject *pa
     initAudioInputDevice(this->device, RECORD_FREQ);
     connect(this, SIGNAL(beep()), this, SLOT(stopBeep()));
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
-    this->initBufferSize = RECORD_FREQ * this->sampleByteSize * sptk_settings->dp->recordingFrameSeconds;
+    this->initBufferSize = RECORD_FREQ * this->sampleByteSize * CHAR_BIT_RECORD * sptk_settings->dp->recordingFrameSeconds;
 }
 
 SoundRecorder::~SoundRecorder()

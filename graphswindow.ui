@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1175</width>
-    <height>501</height>
+    <height>571</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -120,7 +120,7 @@
               <enum>Qt::LeftToRight</enum>
              </property>
              <property name="text">
-              <string>...</string>
+              <string>REC</string>
              </property>
              <property name="icon">
               <iconset resource="icons.qrc">
@@ -131,8 +131,11 @@
              <property name="iconSize">
               <size>
                <width>100</width>
-               <height>100</height>
+               <height>66</height>
               </size>
+             </property>
+             <property name="toolButtonStyle">
+              <enum>Qt::ToolButtonTextUnderIcon</enum>
              </property>
              <property name="autoRaise">
               <bool>false</bool>
@@ -140,6 +143,20 @@
             </widget>
            </item>
           </layout>
+         </item>
+         <item>
+          <widget class="QToolButton" name="openFileBtn">
+           <property name="text">
+            <string>Open File</string>
+           </property>
+           <property name="icon">
+            <iconset resource="icons.qrc">
+             <normaloff>:/icons/icons/file.png</normaloff>:/icons/icons/file.png</iconset>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextBesideIcon</enum>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QPushButton" name="showUMP">

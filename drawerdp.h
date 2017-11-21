@@ -13,6 +13,7 @@ public:
 
     virtual int Draw(mglGraph *gr);
     void Proc(QString fname);
+    virtual int getDataSeconds();
 
 protected:
     bool first;

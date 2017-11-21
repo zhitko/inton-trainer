@@ -360,59 +360,62 @@ SimpleGraphData * SimpleProcWave2Data(QString fname)
     QFile file(fname);
     file.open(QIODevice::ReadOnly);
     WaveFile * waveFile = waveOpenHFile(file.handle());
-    qDebug() << "waveOpenFile" << LOG_DATA;
+    qDebug() << "::SimpleProcWave2Data waveOpenFile" << LOG_DATA;
 
     int size = littleEndianBytesToUInt32(waveFile->dataChunk->chunkDataSize);
-    qDebug() << "chunkDataSize" << LOG_DATA;
+    qDebug() << "::SimpleProcWave2Data chunkDataSize " << size << LOG_DATA;
     short int bits = littleEndianBytesToUInt16(waveFile->formatChunk->significantBitsPerSample);
-    qDebug() << "significantBitsPerSample" << LOG_DATA;
+    qDebug() << "::SimpleProcWave2Data significantBitsPerSample " << bits << LOG_DATA;
+
+    double seconds = 1.0 * size / RECORD_FREQ / bits * CHAR_BIT;
+    qDebug() << "::SimpleProcWave2Data seconds=" << seconds << LOG_DATA;
 
     vector wave = sptk_v2v(waveFile->dataChunk->waveformData, size, bits);
-    qDebug() << "wave" << LOG_DATA;
+    qDebug() << "::SimpleProcWave2Data wave" << LOG_DATA;
 
     vector norm_wave = normalizev(wave, 0.0, 1.0);
-    qDebug() << "norm_wave" << LOG_DATA;
+    qDebug() << "::SimpleProcWave2Data norm_wave" << LOG_DATA;
 
     vector frame = sptk_frame(wave, sptk_settings->frame);
-    qDebug() << "frame" << LOG_DATA;
+    qDebug() << "::SimpleProcWave2Data frame" << LOG_DATA;
 
     vector intensive = vector_intensive(frame, sptk_settings->frame);
-    qDebug() << "intensive" << LOG_DATA;
+    qDebug() << "::SimpleProcWave2Data intensive" << LOG_DATA;
 
     vector window = sptk_window(frame, sptk_settings->window);
-    qDebug() << "window" << LOG_DATA;
+    qDebug() << "::SimpleProcWave2Data window" << LOG_DATA;
 
     vector lpc = sptk_lpc(frame, sptk_settings->lpc);
-    qDebug() << "lpc " << lpc.x << LOG_DATA;
+    qDebug() << "::SimpleProcWave2Data lpc " << lpc.x << LOG_DATA;
 
     vector lpc2c = sptk_lpc2c(lpc, sptk_settings->lpc);
-    qDebug() << "lpc2c " << lpc2c.x;
+    qDebug() << "::SimpleProcWave2Data lpc2c " << lpc2c.x;
 
     vector spec = sptk_spec(lpc, sptk_settings->spec);
-    qDebug() << "spec " << maxv(spec) << LOG_DATA;
+    qDebug() << "::SimpleProcWave2Data spec " << maxv(spec) << LOG_DATA;
 
     vector spec_proc;
     if (sptk_settings->spec->proc == 0){
         spec_proc = vector_pow_log(spec, sptk_settings->spec->factor, sptk_settings->spec->min);
-        qDebug() << "spec_log" << LOG_DATA;
+        qDebug() << "::SimpleProcWave2Data spec_log" << LOG_DATA;
     } else if (sptk_settings->spec->proc == 1){
         spec_proc = vector_pow_exp(spec, sptk_settings->spec->factor, sptk_settings->spec->min);
-        qDebug() << "spec_exp" << LOG_DATA;
+        qDebug() << "::SimpleProcWave2Data spec_exp" << LOG_DATA;
     }
-    qDebug() << "spec_proc " << maxv(spec_proc) << LOG_DATA;
+    qDebug() << "::SimpleProcWave2Data spec_proc " << maxv(spec_proc) << LOG_DATA;
 
     vector pitch = processZeros(sptk_pitch_spec(wave, sptk_settings->pitch, intensive.x));
-    qDebug() << "pitch" << LOG_DATA;
+    qDebug() << "::SimpleProcWave2Data pitch" << LOG_DATA;
 
     sptk_settings->pitch->OTYPE = 2;
     vector pitch_log = sptk_pitch_spec(wave, sptk_settings->pitch, intensive.x);
-    qDebug() << "pitch_log" << LOG_DATA;
+    qDebug() << "::SimpleProcWave2Data pitch_log" << LOG_DATA;
 
     vector mask = getFileMask(waveFile, wave, pitch.x);
-    qDebug() << "mask" << LOG_DATA;
+    qDebug() << "::SimpleProcWave2Data mask" << LOG_DATA;
 
     vector inverted_mask = vector_invert_mask(mask);
-    qDebug() << "inverted_mask" << LOG_DATA;
+    qDebug() << "::SimpleProcWave2Data inverted_mask" << LOG_DATA;
 
     vector pitch_interpolate = vector_interpolate_by_mask(
                 pitch,
@@ -420,13 +423,13 @@ SimpleGraphData * SimpleProcWave2Data(QString fname)
                 0,
                 sptk_settings->plotF0->interpolation_type
                 );
-    qDebug() << "pitch_interpolate" << LOG_DATA;
+    qDebug() << "::SimpleProcWave2Data pitch_interpolate" << LOG_DATA;
 
     vector pitch_mid = vector_smooth_mid(pitch_interpolate, sptk_settings->plotF0->midFrame);
-    qDebug() << "pitch_mid" << LOG_DATA;
+    qDebug() << "::SimpleProcWave2Data pitch_mid" << LOG_DATA;
 
     vector intensive_mid = vector_smooth_mid(intensive, sptk_settings->plotEnergy->midFrame);
-    qDebug() << "intensive_mid" << LOG_DATA;
+    qDebug() << "::SimpleProcWave2Data intensive_mid" << LOG_DATA;
 
     MaskData md_p = getLabelsFromFile(waveFile, 'P');
     MaskData md_n = getLabelsFromFile(waveFile, 'N');
@@ -438,14 +441,15 @@ SimpleGraphData * SimpleProcWave2Data(QString fname)
     freev(wave);
     freev(pitch_interpolate);
     freev(inverted_mask);
-    qDebug() << "freev" << LOG_DATA;
+    qDebug() << "::SimpleProcWave2Data freev" << LOG_DATA;
 
     file.close();
     waveCloseFile(waveFile);
-    qDebug() << "waveCloseFile" << LOG_DATA;
+    qDebug() << "::SimpleProcWave2Data waveCloseFile" << LOG_DATA;
 
     SimpleGraphData * data = new SimpleGraphData();
 
+    data->seconds = seconds;
     data->d_full_wave = norm_wave;
     data->d_pitch_original = pitch;
     data->d_pitch = pitch_mid;

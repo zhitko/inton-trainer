@@ -20,8 +20,8 @@ AutoSoundRecorder::AutoSoundRecorder(oal_device *device, int sampleByteSize, int
 {
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
 
-    maxRecordSize = maxTime * RECORD_FREQ * this->sampleByteSize;
-    maxIdleSize = maxIdleTime * RECORD_FREQ * this->sampleByteSize;
+    maxRecordSize = maxTime * RECORD_FREQ * this->sampleByteSize * CHAR_BIT_RECORD;
+    maxIdleSize = maxIdleTime * RECORD_FREQ * this->sampleByteSize * CHAR_BIT_RECORD;
     if (maxIdleSize > (sptk_settings->dp->recordingFrameBefore*this->initBufferSize))
         maxIdleSize = sptk_settings->dp->recordingFrameBefore*this->initBufferSize-1;
     qDebug() << "AutoSoundRecorder " << maxRecordSize << LOG_DATA;

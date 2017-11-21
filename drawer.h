@@ -32,7 +32,8 @@ public:
     bool stereo;
     bool showUMP;
 
-    int getDataLenght();
+    virtual int getDataLenght();
+    virtual int getDataSeconds();
 
     virtual int Draw(mglGraph *gr);
     virtual void Proc(QString fname);

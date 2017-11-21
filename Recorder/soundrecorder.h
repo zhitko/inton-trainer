@@ -9,8 +9,6 @@ extern "C" {
     #include "./OpenAL/openal_wrapper.h"
 }
 
-const int RECORD_FREQ = 8000;
-
 struct buffer;
 
 class SoundRecorder : public QThread

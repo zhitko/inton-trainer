@@ -10,11 +10,7 @@ extern "C" {
     #include "./OpenAL/wavFile.h"
 }
 
-#define DATA_PATH "/data"
-#define DATA_PATH_TRAINING "/data/training"
-#define USER_DATA_PATH "/RECORDS/"
-#define WAVE_TYPE ".wav"
-#define TEXT_TYPE ".txt"
+#include "defines.h"
 
 namespace Ui {
     class MainWindow;

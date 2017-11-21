@@ -12,7 +12,7 @@ TimeSoundRecorder::TimeSoundRecorder(oal_device *device, int sampleByteSize, int
     SoundRecorder(device, sampleByteSize, parent),
     buffersCounter(0)
 {
-    maxBuffersCount = (time * RECORD_FREQ) / this->initBufferSize;
+    maxBuffersCount = (time * RECORD_FREQ * CHAR_BIT_RECORD) / this->initBufferSize;
     qDebug() << "TimeSoundRecorder " << maxBuffersCount << LOG_DATA;
 }
 

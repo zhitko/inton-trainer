@@ -8,14 +8,8 @@
 #include "settingsdialog.h"
 #include <QApplication>
 #include "DP/continuousdp.h"
-#define DATA_PATH_TRAINING "/data/training/"
 
-#define OCTAVE_MAX_1 2.5
-#define OCTAVE_MAX_2 5.0
-
-#define MASK_LEN 100
-#define MASK_MIN 0.0001
-#define MASK_MAX 1.0
+#include "defines.h"
 
 extern "C" {
     #include "./OpenAL/wavFile.h"
@@ -745,6 +739,9 @@ void getMark(vector * vec, MaskData * points)
     }
 }
 
+/*
+R_{ AB }=\left| \left[ \frac { \sum _{ len }^{ i=0 }{ { ({ A }_{ i }-{ M }_{ A }) } } { ({ B }_{ i }-{ M }_{ A }) } }{ \sqrt { \sum _{ len }^{ i=0 }{ { ({ A }_{ i }-{ M }_{ A }) }^{ 2 } } *\sum _{ len }^{ i=0 }{ { ({ B }_{ i }-{ M }_{ A }) }^{ 2 } }  }  } *100% \right]  \right| 
+*/
 double calculateResultR(vector x, vector y)
 {
     double result = 0;
@@ -762,6 +759,9 @@ double calculateResultR(vector x, vector y)
     return round(fabs(result)*100);
 }
 
+/*
+D_{ AB }=\left[ \left( 1-\frac { \sqrt { \sum _{ len }^{ i=0 }{ { ({ A }_{ i }-{ B }_{ i }) }^{ 2 } }  }  }{ \sqrt { len }  }  \right) *100% \right] 
+*/
 double calculateResultD(vector x, vector y)
 {
     double result = 0;
@@ -771,6 +771,17 @@ double calculateResultD(vector x, vector y)
     }
     result = sqrt(result) / sqrt(x.x);
     return round((1-result)*100);
+}
+
+int DrawerDP::getDataSeconds()
+{
+    if (this->simple_data)
+    {
+        return this->simple_data->seconds;
+    } else {
+        return 0;
+    }
+
 }
 
 void DrawerDP::Proc(QString fname)

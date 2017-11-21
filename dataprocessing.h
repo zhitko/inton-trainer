@@ -16,6 +16,7 @@ struct MaskData{
 };
 
 struct SimpleGraphData{
+    double seconds;
     vector d_full_wave;
     vector d_pitch_original;
     vector d_pitch;

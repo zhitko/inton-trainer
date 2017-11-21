@@ -204,6 +204,11 @@ int Drawer::getDataLenght()
     return waveDataLen;
 }
 
+int Drawer::getDataSeconds()
+{
+    return 1.0 * waveDataLen / RECORD_FREQ;
+}
+
 int Drawer::Draw(mglGraph *gr)
 {
     qDebug() << "start drawing" << LOG_DATA;
