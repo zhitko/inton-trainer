@@ -43,6 +43,12 @@ Drawer * GraphsEvalWindow::createNewDrawer(QString path)
 {
     this->ui->playTemplateBtn->show();
     this->drawer->Proc(path);
+
+    this->ui->totalC->setText(QString::number(this->drawer->proximity_curve_correlation));
+    this->ui->totalI->setText(QString::number(this->drawer->proximity_curve_integral));
+    this->ui->totalL->setText(QString::number(this->drawer->proximity_curve_local));
+    this->ui->totalS->setText(QString::number(this->drawer->proximity_curve_similarity));
+
     return this->drawer;
 }
 

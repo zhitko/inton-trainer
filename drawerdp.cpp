@@ -740,6 +740,7 @@ void getMark(vector * vec, MaskData * points)
 }
 
 /*
+ * Correlation of F0-curves
 R_{ AB }=\left| \left[ \frac { \sum _{ len }^{ i=0 }{ { ({ A }_{ i }-{ M }_{ A }) } } { ({ B }_{ i }-{ M }_{ A }) } }{ \sqrt { \sum _{ len }^{ i=0 }{ { ({ A }_{ i }-{ M }_{ A }) }^{ 2 } } *\sum _{ len }^{ i=0 }{ { ({ B }_{ i }-{ M }_{ A }) }^{ 2 } }  }  } *100% \right]  \right| 
 */
 double calculateResultR(vector x, vector y)
@@ -760,6 +761,7 @@ double calculateResultR(vector x, vector y)
 }
 
 /*
+ * Integral proximity of F0-curves
 D_{ AB }=\left[ \left( 1-\frac { \sqrt { \sum _{ len }^{ i=0 }{ { ({ A }_{ i }-{ B }_{ i }) }^{ 2 } }  }  }{ \sqrt { len }  }  \right) *100% \right] 
 */
 double calculateResultD(vector x, vector y)
@@ -770,6 +772,46 @@ double calculateResultD(vector x, vector y)
         result += (getv(x, i)-getv(y, i))*(getv(x, i)-getv(y, i));
     }
     result = sqrt(result) / sqrt(x.x);
+    return round((1-result)*100);
+}
+
+/*
+ * Similarity of F0-curves
+*/
+double calculateResultS(vector x, vector y)
+{
+    double result = 0;
+
+    double ab = 0;
+    double a2 = 0;
+    double b2 = 0;
+
+    for(int i=0; i<x.x && i<y.x; i++)
+    {
+        ab += getv(x, i) * getv(y, i);
+        a2 += getv(x, i) * getv(x, i);
+        b2 += getv(y, i) * getv(y, i);
+    }
+
+    result = ab / (sqrt(a2) * sqrt(b2));
+
+    return round(result*100);
+}
+
+/*
+ * Local proximity of F0-curves
+*/
+double calculateResultL(vector x, vector y)
+{
+    double result = 0;
+    for(int i=0; i<x.x && i<y.x; i++)
+    {
+        double r = fabs(getv(x, i)-getv(y, i));
+        if (r > result)
+        {
+            result = r;
+        }
+    }
     return round((1-result)*100);
 }
 
@@ -884,6 +926,11 @@ void DrawerDP::Proc(QString fname)
         }
 
         qDebug() << "intensiveData Filled" << LOG_DATA;
+
+        this->proximity_curve_correlation = 0;
+        this->proximity_curve_integral = 0;
+        this->proximity_curve_similarity = 0;
+        this->proximity_curve_local = 0;
     }
     else
     {
@@ -1059,12 +1106,17 @@ void DrawerDP::Proc(QString fname)
         ump.x = this->umpData->nx;
         ump.v = this->umpData->a;
 
+        this->proximity_curve_correlation = calculateResultR(ump, sec_ump);
+        this->proximity_curve_integral = calculateResultD(ump, sec_ump);
+        this->proximity_curve_similarity = calculateResultS(ump, sec_ump);
+        this->proximity_curve_local = calculateResultL(ump, sec_ump);
+
         switch (sptk_settings->dp->errorType) {
         case 0:
-            this->proximity_curve_shape = calculateResultR(ump, sec_ump);
+            this->proximity_curve_shape = proximity_curve_correlation;
             break;
         case 1:
-            this->proximity_curve_shape = calculateResultD(ump, sec_ump);
+            this->proximity_curve_shape = proximity_curve_integral;
             break;
         }
 
