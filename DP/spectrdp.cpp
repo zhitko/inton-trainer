@@ -37,13 +37,27 @@ void SpectrSignal::freeSignal()
 double SpectrDP::calculateError(double* value1, double* value2)
 {
     double result = 0.0;
-    double v = 0.0;
     for(int i=0; i<this->spectrSize; i++)
     {
-        v = value1[i] - value2[i];
-        result += v*v;
+        double y = 0.0;
+        double x = 0.0;
+        if (isfinite(value1[i]))
+        {
+            x = value1[i];
+        }
+        if (isfinite(value2[i]))
+        {
+            y = value2[i];
+        }
+//        qDebug() << "SpectrDP::calculateError " << x << " " << y << LOG_DATA;
+        result += pow(x - y, 2.0);
     }
-    return sqrt(result);
+    if (result > 0)
+    {
+        return sqrt(result);
+    } else {
+        return result;
+    }
 }
 
 

@@ -76,6 +76,7 @@ protected:
     {
 //        qDebug() << "DPStateStack::calcNextIter " << signalPos << " " << patternPos << LOG_DATA;
         DPStateStack * currentBranch = this->getStateCache(signalPos, patternPos);
+//        qDebug() << "DPStateStack::currentBranch " << currentBranch->value.operation << LOG_DATA;
         // Check state cache for value
         if(currentBranch->value.operation != opNone)
             return currentBranch;
@@ -88,6 +89,7 @@ protected:
                     this->signal->valueAt(signalPos),
                     this->pattern->valueAt(patternPos)
                 );
+//        qDebug() << "DPStateStack::localError " << localError << LOG_DATA;
 
         DPState currentState = {localLimit * localError, localError, opFirst, signalPos, patternPos, 0};
         currentBranch->value = currentState;

@@ -12,6 +12,8 @@
 #include <QTextStream>
 #include <QDateTime>
 #include <QFileInfo>
+#include <QPixmap>
+#include <QSplashScreen>
 
 #include <QDebug>
 #include "defines.h"
@@ -49,9 +51,17 @@ int main(int argc, char *argv[])
 
     qInstallMessageHandler(messageOutput);
 
-    QApplication a(argc, argv);
-    WebWindow w;
-    w.show();
+    QApplication app(argc, argv);
 
-    return a.exec();
+    QPixmap pixmap(":/splash/icons/wave.png");
+    QSplashScreen splash(pixmap, Qt::WindowStaysOnTopHint);
+    splash.show();
+    app.processEvents();
+
+    splash.showMessage("Loaded modules");
+
+    WebWindow window;
+    window.show();
+    splash.finish(&window);
+    return app.exec();
 }

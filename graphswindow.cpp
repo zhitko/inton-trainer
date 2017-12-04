@@ -111,6 +111,7 @@ void GraphsWindow::initUI()
 
 void GraphsWindow::drawFile(QString path)
 {
+    qDebug() << "GraphsWindow::drawFile" << LOG_DATA;
     this->path = path;
     this->drawer = this->createNewDrawer(path);
     this->w_graph = this->drawer->getDataLenght();
@@ -209,25 +210,31 @@ void GraphsWindow::stopRecord(SoundRecorder * recorder)
 {
     qDebug() << "GraphsWindow::stopRecord" << LOG_DATA;
 
-    MainWindow::cleanRecordFiles();
-    qDebug() << "GraphsWindow::stopRecord files cleaned" << LOG_DATA;
-
     this->ui->setRecordBtn->setEnabled(true);
     this->ui->openFileBtn->setEnabled(true);
     this->ui->startAutoRecordBtn->setEnabled(true);
     this->ui->stopRecordBtn->setEnabled(false);
-    char *data;
+    qDebug() << "GraphsWindow::stopRecord UI changes" << LOG_DATA;
+
+    char *data = NULL;
     int size = recorder->getData((void**) &data);
+    qDebug() << "GraphsWindow::stopRecord get data" << LOG_DATA;
     QDateTime dateTime = QDateTime::currentDateTime();
     QString path = USER_DATA_PATH + dateTime.toString("dd.MM.yyyy hh.mm.ss.zzz");
 
+    MainWindow::cleanRecordFiles();
+    qDebug() << "GraphsWindow::stopRecord files cleaned" << LOG_DATA;
+
     path = QApplication::applicationDirPath() + DATA_PATH + path + WAVE_TYPE;
     WaveFile *waveFile = makeWaveFileFromData((char *)data, size, 1, RECORD_FREQ, 16);
+    qDebug() << "GraphsWindow::stopRecord makeWaveFileFromData" << LOG_DATA;
     saveWaveFile(waveFile, path.toLocal8Bit().data());
+    qDebug() << "GraphsWindow::stopRecord saveWaveFile" << LOG_DATA;
     waveCloseFile(waveFile);
-    qDebug() << "GraphsWindow::stopRecord file saved" << LOG_DATA;
+    qDebug() << "GraphsWindow::stopRecord waveCloseFile" << LOG_DATA;
 
     this->drawFile(path);
+    qDebug() << "GraphsWindow::stopRecord drawFile" << LOG_DATA;
     emit this->changeSig(this->k_graph);
     emit this->recFinish();
 

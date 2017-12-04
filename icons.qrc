@@ -25,4 +25,7 @@
         <file>icons/pause-off.png</file>
         <file>icons/file.png</file>
     </qresource>
+    <qresource prefix="/splash">
+        <file>icons/wave.png</file>
+    </qresource>
 </RCC>
