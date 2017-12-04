@@ -359,8 +359,15 @@ WaveFile * processFile(WaveFile * waveFile)
                 return 0;
             }
 
-            lablChunk->text = (char *) malloc(lablChunkDataSize-3);
-            fread(lablChunk->text, lablChunkDataSize-3, 1, waveFile->file);
+            fprintf(stderr, "LABL chunkDataSize %d\n", lablChunkDataSize - 4);
+
+            if (lablChunkDataSize % 2 == 1)
+                lablChunkDataSize += 1;
+
+            lablChunk->text = (char *) malloc(lablChunkDataSize - 4);
+            fread(lablChunk->text, sizeof(char), lablChunkDataSize - 4, waveFile->file);
+
+            fprintf(stderr, "LABL chunkDataSize %s\n", lablChunk->text);
         }
         else if (strncmp(&nextChunkID[0], "ltxt", 4) == 0)
         {
