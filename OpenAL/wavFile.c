@@ -502,7 +502,10 @@ void waveCloseFile(WaveFile *waveFile)
     if(waveFile->waveHeader != NULL) free(waveFile->waveHeader);
     if(waveFile->dataChunk != NULL)
     {
-        free(waveFile->dataChunk->waveformData);
+        if (waveFile->dataChunk->isWaveformDataOwned)
+        {
+            free(waveFile->dataChunk->waveformData);
+        }
         free(waveFile->dataChunk);
     }
     if(waveFile->cueChunk != NULL) free(waveFile->cueChunk);
@@ -566,6 +569,7 @@ DataChunk * makeDataChunk(uint32_t chunkDataSize, char *waveformData)
     data->chunkID[3] = 'a';
     uint32ToLittleEndianBytes(chunkDataSize, data->chunkDataSize);
     data->waveformData = waveformData;
+    data->isWaveformDataOwned = 1;
     return data;
 }
 
@@ -649,6 +653,7 @@ WaveFile * makeWaveFileFromData(char *waveformData, uint32_t chunkDataSize, uint
     WaveHeader *headerChunk = makeWaveHeader();
     FormatChunk *formatChunk = makeFormatChunk(numberOfChannels, sampleRate, significantBitsPerSample);
     DataChunk *dataChunk = makeDataChunk(chunkDataSize, waveformData);
+    dataChunk->isWaveformDataOwned = 0;
     return makeWaveFile(headerChunk, formatChunk, dataChunk);
 }
 

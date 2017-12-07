@@ -28,6 +28,7 @@ typedef struct {
     char chunkID[4];              // String: must be "data"
     char chunkDataSize[4];        // Unsigned 4-byte little endian int
     char *waveformData;
+    char isWaveformDataOwned;     // Is wave form data owned by this structure
 } DataChunk;
 
 // CuePoint: each individual 'marker' in a wave file is represented by a cue point.
@@ -114,7 +115,7 @@ WaveHeader * makeWaveHeader();
 FormatChunk * makeFormatChunk(uint16_t numberOfChannels, uint32_t sampleRate, uint16_t significantBitsPerSample);
 DataChunk * makeDataChunk(uint32_t chunkDataSize, char *waveformData);
 WaveFile * makeWaveFile(WaveHeader *waveHeader, FormatChunk *formatChunk, DataChunk *dataChunk);
- WaveFile * makeWaveFileFromData(char *waveformData, uint32_t chunkDataSize, uint16_t numberOfChannels, uint32_t sampleRate, uint16_t significantBitsPerSample);
+WaveFile * makeWaveFileFromData(char *waveformData, uint32_t chunkDataSize, uint16_t numberOfChannels, uint32_t sampleRate, uint16_t significantBitsPerSample);
 void saveWaveFile(WaveFile *waveFile, const char *filePath);
 
 // All data in a Wave file must be little endian.
