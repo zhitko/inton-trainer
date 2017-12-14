@@ -108,17 +108,8 @@ int DrawerDP::Draw(mglGraph *gr)
     gr->DefaultPlotParam();
     gr->Clf();
 
-    QString path = QApplication::applicationDirPath() + DATA_PATH_TRAINING;
-//    qDebug() << "fileName" << this->fileName << LOG_DATA;
-//    QFileInfo fileInfo(this->fileName);
-//    QString phrase = QString(fileInfo.baseName());
-//            .replace(path, "")
-//            .replace(".wav", "")
-//            .replace("/", " - ");
-    QString phrase = fileName
-            .replace(path, "")
-            .replace(".wav", "")
-            .replace("/", " - ");
+    QFileInfo fileInfo(this->fileName);
+    QString phrase = QString(fileInfo.baseName());
     phrase = "@{" + phrase.replace(phrase.lastIndexOf(" - "), 3, "} \\b\\big{") + "}";
     qDebug() << "Phrase" << phrase;
 
