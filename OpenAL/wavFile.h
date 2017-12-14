@@ -28,7 +28,7 @@ typedef struct {
     char chunkID[4];              // String: must be "data"
     char chunkDataSize[4];        // Unsigned 4-byte little endian int
     char *waveformData;
-    char isWaveformDataOwned;     // Is wave form data owned by this structure
+    int isWaveformDataOwned;     // Is wave form data owned by this structure
 } DataChunk;
 
 // CuePoint: each individual 'marker' in a wave file is represented by a cue point.

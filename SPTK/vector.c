@@ -350,7 +350,12 @@ int bilookv(vector yr_vector, double key, int lo) {
 intvector makeiv(int xSz) {
     intvector nw_vector;
     nw_vector.x = xSz;
-    nw_vector.v = malloc(sizeof(int) * xSz);
+    if (xSz != 0)
+    {
+        nw_vector.v = malloc(sizeof(int) * xSz);
+    } else {
+        nw_vector.v = NULL;
+    }
     return(nw_vector);
 }
 

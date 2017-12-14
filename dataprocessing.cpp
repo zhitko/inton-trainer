@@ -355,10 +355,13 @@ GraphData * ProcWave2Data(QString fname)
 
 SimpleGraphData * SimpleProcWave2Data(QString fname)
 {
+    qDebug() << "::SimpleProcWave2Data" << LOG_DATA;
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
 
     QFile file(fname);
+    qDebug() << "::SimpleProcWave2Data QFile" << fname << LOG_DATA;
     file.open(QIODevice::ReadOnly);
+    qDebug() << "::SimpleProcWave2Data file.open " << file.isOpen() << LOG_DATA;
     WaveFile * waveFile = waveOpenHFile(file.handle());
     qDebug() << "::SimpleProcWave2Data waveOpenFile" << LOG_DATA;
 

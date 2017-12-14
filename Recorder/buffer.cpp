@@ -18,7 +18,7 @@ buffer * makeBuffer(unsigned int size)
 
 void freeBuffer(buffer * buff, bool recursive)
 {
-    if(!buff)
+    if(buff != NULL)
     {
         free(buff->buffer_data);
         if(recursive) freeBuffer(buff->next, recursive);

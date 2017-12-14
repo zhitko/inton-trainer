@@ -95,9 +95,10 @@ WaveFile * processFile(WaveFile * waveFile)
         return 0;
     }
 
-    uint32_t remainingFileSize = littleEndianBytesToUInt32(waveFile->waveHeader->dataSize) - sizeof(waveFile->waveHeader->riffType); // dataSize does not counf the chunkID or the dataSize, so remove the riffType size to get the length of the rest of the file.
+    uint32_t remainingFileSize = littleEndianBytesToUInt32(waveFile->waveHeader->dataSize);
+    int size = remainingFileSize - sizeof(waveFile->waveHeader->riffType); // dataSize does not counf the chunkID or the dataSize, so remove the riffType size to get the length of the rest of the file.
 
-    if (remainingFileSize <= 0)
+    if (size <= 0)
     {
         fprintf(stderr, "Input file is an empty WAVE file\n");
         waveCloseFile(waveFile);
@@ -252,6 +253,7 @@ WaveFile * processFile(WaveFile * waveFile)
                 {
                     fprintf(stderr, "Error reading input file %s\n", waveFile->filePath);
                     waveCloseFile(waveFile);
+                    free(existingCuePoints);
                     return 0;
                 }
             }
@@ -262,6 +264,7 @@ WaveFile * processFile(WaveFile * waveFile)
             {
                 fprintf(stderr, "Memory Allocation Error: Could not allocate memory for Wave File Cue Chunk\n");
                 waveCloseFile(waveFile);
+                free(existingCuePoints);
                 return 0;
             }
             waveFile->cueChunk->chunkID[0] = 'c';
@@ -502,7 +505,7 @@ void waveCloseFile(WaveFile *waveFile)
     if(waveFile->waveHeader != NULL) free(waveFile->waveHeader);
     if(waveFile->dataChunk != NULL)
     {
-        if (waveFile->dataChunk->isWaveformDataOwned)
+        if (waveFile->dataChunk->isWaveformDataOwned == 1)
         {
             free(waveFile->dataChunk->waveformData);
         }

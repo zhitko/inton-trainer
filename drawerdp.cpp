@@ -2,6 +2,7 @@
 
 #include <QFile>
 #include <QDebug>
+#include <QFileInfo>
 
 #include <math.h>
 
@@ -108,6 +109,12 @@ int DrawerDP::Draw(mglGraph *gr)
     gr->Clf();
 
     QString path = QApplication::applicationDirPath() + DATA_PATH_TRAINING;
+//    qDebug() << "fileName" << this->fileName << LOG_DATA;
+//    QFileInfo fileInfo(this->fileName);
+//    QString phrase = QString(fileInfo.baseName());
+//            .replace(path, "")
+//            .replace(".wav", "")
+//            .replace("/", " - ");
     QString phrase = fileName
             .replace(path, "")
             .replace(".wav", "")
