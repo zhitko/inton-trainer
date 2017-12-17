@@ -48,8 +48,11 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("Zhitko Vladimir");
     QCoreApplication::setOrganizationDomain("vladimir.zhitko.by");
     QCoreApplication::setApplicationName("IntonTrainer");
+    QCoreApplication::setApplicationVersion(QString(__DATE__));
 
     qInstallMessageHandler(messageOutput);
+
+    qDebug() << "App version: " << __DATE__;
 
     QApplication app(argc, argv);
 
@@ -62,6 +65,8 @@ int main(int argc, char *argv[])
 
     WebWindow window;
     window.show();
+    window.setWindowTitle("IntonTrainer (ver. " + QString(__DATE__) + ")");
+    window.setWindowIcon(QIcon(":/icons/icons/inton-50.png"));
     splash.finish(&window);
     return app.exec();
 }

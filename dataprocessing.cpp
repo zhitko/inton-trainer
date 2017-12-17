@@ -74,7 +74,7 @@ MaskData getLabelsFromFile(WaveFile* waveFile, char marker)
             LablChunk labl = waveFile->listChunk->lablChunks[i];
             int id = littleEndianBytesToUInt16(labl.cuePointID);
             char * text = waveFile->listChunk->lablChunks[i].text;
-            if (text[0] == marker)
+            if (toupper(text[0]) == toupper(marker))
             {
                 count++;
                 markedPointsFrom = (int*) realloc(markedPointsFrom, sizeof(int)*count);

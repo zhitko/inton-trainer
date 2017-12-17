@@ -230,7 +230,7 @@ void GraphsWindow::stopRecord(SoundRecorder * recorder)
     qDebug() << "GraphsWindow::stopRecord makeWaveFileFromData" << LOG_DATA;
     saveWaveFile(waveFile, path.toLocal8Bit().data());
     qDebug() << "GraphsWindow::stopRecord saveWaveFile" << LOG_DATA;
-    waveCloseFile(waveFile);
+//    waveCloseFile(waveFile);
     qDebug() << "GraphsWindow::stopRecord waveCloseFile" << LOG_DATA;
 
     this->drawFile(path);

@@ -110,7 +110,7 @@ int DrawerDP::Draw(mglGraph *gr)
 
     QFileInfo fileInfo(this->fileName);
     QString phrase = QString(fileInfo.baseName());
-    phrase = "@{" + phrase.replace(phrase.lastIndexOf(" - "), 3, "} \\b\\big{") + "}";
+    phrase = "\\b\\big{" + phrase + "}";
     qDebug() << "Phrase" << phrase;
 
     if(!this->showUMP)

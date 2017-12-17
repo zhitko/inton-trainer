@@ -173,9 +173,8 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
 MathGLSettings * SettingsDialog::getMathGLSettings()
 {
     MathGLSettings * settings = new MathGLSettings();
-    SettingsDialog * instance = getInstance();
-    settings->quality = instance->ui->mathGLQualitySpin->value();
-    settings->autoOpen = instance->ui->isAutoOpen->isChecked();
+    settings->quality = 5;
+    settings->autoOpen = true;
     return settings;
 }
 
@@ -291,10 +290,6 @@ void SettingsDialog::loadSettingsFrom(QString settings_path)
         this->ui->lpcOrderSpin->setValue(settings.value("lpc/order").toInt());
     if(settings.contains("lpc/cepstrum_order"))
         this->ui->lpcCepstrumOrderSpin->setValue(settings.value("lpc/cepstrum_order").toInt());
-    if(settings.contains("mathGL/quality"))
-        this->ui->mathGLQualitySpin->setValue(settings.value("mathGL/quality").toInt());
-    if(settings.contains("mathGL/autoOpen"))
-        this->ui->isAutoOpen->setChecked(settings.value("mathGL/autoOpen").toBool());
 
 }
 
@@ -358,7 +353,4 @@ void SettingsDialog::saveSettings()
     settings.setValue("dp/recordingFrameBefore", this->ui->recordingFrameBefore->value());
     settings.setValue("dp/recordingFrameAfter", this->ui->recordingFrameAfter->value());
     settings.setValue("dp/recordingMaxFiles", this->ui->recordingMaxFiles->value());
-
-    settings.setValue("mathGL/quality", this->ui->mathGLQualitySpin->value());
-    settings.setValue("mathGL/autoOpen", this->ui->isAutoOpen->isChecked());
 }

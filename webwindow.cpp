@@ -30,7 +30,7 @@ WebWindow::WebWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->initWeb();
-    this->mainWindow = new MainWindow(this);\
+    this->mainWindow = new MainWindow(this);
 
     checkLogFile();
 
