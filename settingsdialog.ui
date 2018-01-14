@@ -113,16 +113,6 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
-           <widget class="QSpinBox" name="recordingSeconds">
-            <property name="minimum">
-             <number>1</number>
-            </property>
-            <property name="value">
-             <number>3</number>
-            </property>
-           </widget>
-          </item>
           <item row="2" column="0">
            <widget class="QLabel" name="label_16">
             <property name="text">
@@ -139,6 +129,9 @@
              <number>10</number>
             </property>
            </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QDoubleSpinBox" name="recordingSeconds"/>
           </item>
          </layout>
         </widget>
@@ -179,8 +172,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>510</width>
-            <height>764</height>
+            <width>514</width>
+            <height>962</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -474,6 +467,72 @@
                   </item>
                  </widget>
                 </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="label_9">
+                  <property name="text">
+                   <string>Mark limit</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="0">
+                 <widget class="QLabel" name="label_10">
+                  <property name="text">
+                   <string>Mark delimeter</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0" colspan="2">
+                 <widget class="QLabel" name="label_39">
+                  <property name="font">
+                   <font>
+                    <italic>true</italic>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Mark = | limit - Err | / delimeter</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="1">
+                 <widget class="QDoubleSpinBox" name="markDelimeter">
+                  <property name="decimals">
+                   <number>1</number>
+                  </property>
+                  <property name="value">
+                   <double>10.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QDoubleSpinBox" name="markLimit">
+                  <property name="decimals">
+                   <number>1</number>
+                  </property>
+                  <property name="maximum">
+                   <double>500.000000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>50.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="0">
+                 <widget class="QLabel" name="label_40">
+                  <property name="text">
+                   <string>Mark labels</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="1">
+                 <widget class="QLineEdit" name="markLabels">
+                  <property name="text">
+                   <string>F (Failure), D (Insufficient), C (Mediocre), B (Satisfactory), A (Excellent)</string>
+                  </property>
+                  <property name="maxLength">
+                   <number>200</number>
+                  </property>
+                 </widget>
+                </item>
                </layout>
               </widget>
              </item>
@@ -735,8 +794,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>527</width>
-            <height>561</height>
+            <width>516</width>
+            <height>618</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_3">

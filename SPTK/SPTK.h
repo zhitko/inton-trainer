@@ -188,6 +188,10 @@ typedef struct _DP_SETTINGS {
     int recordingFrameBefore;
     int recordingFrameAfter;
     int recordingMaxFiles;
+
+    double mark_level;
+    double mark_delimeter;
+    char * mark_labels;
 } DP_SETTINGS;
 
 typedef struct _SPEC_SETTINGS {

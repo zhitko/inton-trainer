@@ -167,6 +167,10 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->dp->recordingFrameAfter = instance->ui->recordingFrameAfter->value();
     sptk_settings->dp->recordingMaxFiles = instance->ui->recordingMaxFiles->value();
 
+    sptk_settings->dp->mark_delimeter = instance->ui->markDelimeter->value();
+    sptk_settings->dp->mark_level = instance->ui->markLimit->value();
+    sptk_settings->dp->mark_labels = strdup(instance->ui->markLabels->text().toStdString().c_str());
+
     return sptk_settings;
 }
 
@@ -267,7 +271,7 @@ void SettingsDialog::loadSettingsFrom(QString settings_path)
     if(settings.contains("dp/use"))
         this->ui->useForDP->setCurrentIndex(settings.value("dp/use").toInt());
     if(settings.contains("dp/recordingSeconds"))
-        this->ui->recordingSeconds->setValue(settings.value("dp/recordingSeconds").toInt());
+        this->ui->recordingSeconds->setValue(settings.value("dp/recordingSeconds").toDouble());
     if(settings.contains("dp/recordingFrameSeconds"))
         this->ui->recordingFrameSeconds->setValue(settings.value("dp/recordingFrameSeconds").toDouble());
     if(settings.contains("dp/recordingFrameAfter"))
@@ -290,6 +294,13 @@ void SettingsDialog::loadSettingsFrom(QString settings_path)
         this->ui->lpcOrderSpin->setValue(settings.value("lpc/order").toInt());
     if(settings.contains("lpc/cepstrum_order"))
         this->ui->lpcCepstrumOrderSpin->setValue(settings.value("lpc/cepstrum_order").toInt());
+
+    if(settings.contains("dp/markDelimeter"))
+        this->ui->markDelimeter->setValue(settings.value("dp/markDelimeter").toDouble());
+    if(settings.contains("dp/markLimit"))
+        this->ui->markLimit->setValue(settings.value("dp/markLimit").toDouble());
+    if(settings.contains("dp/markLabels"))
+        this->ui->markLabels->setText(settings.value("dp/markLabels").toString());
 
 }
 
@@ -353,4 +364,8 @@ void SettingsDialog::saveSettings()
     settings.setValue("dp/recordingFrameBefore", this->ui->recordingFrameBefore->value());
     settings.setValue("dp/recordingFrameAfter", this->ui->recordingFrameAfter->value());
     settings.setValue("dp/recordingMaxFiles", this->ui->recordingMaxFiles->value());
+
+    settings.setValue("dp/markDelimeter", this->ui->markDelimeter->value());
+    settings.setValue("dp/markLimit", this->ui->markLimit->value());
+    settings.setValue("dp/markLabels", this->ui->markLabels->text());
 }

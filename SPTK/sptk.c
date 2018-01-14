@@ -87,6 +87,9 @@ DP_SETTINGS *initDpSettings()
     dp->recordingFrameBefore = 5;
     dp->recordingMaxFiles = 10;
     dp->recordingType = 0;
+    dp->mark_delimeter = 10.0;
+    dp->mark_level = 50.0;
+    dp->mark_labels = "F (Failure), D (Insufficient), C (Mediocre), B (Satisfactory), A (Excellent)";
     return dp;
 }
 

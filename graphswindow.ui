@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1175</width>
-    <height>571</height>
+    <height>594</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -178,56 +178,108 @@
            </property>
            <layout class="QFormLayout" name="formLayout">
             <item row="0" column="0">
+             <widget class="QLabel" name="label_12">
+              <property name="font">
+               <font>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Proximity to the range</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_13">
+              <property name="font">
+               <font>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Proximity to curve shape</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
              <widget class="QLabel" name="label">
               <property name="text">
                <string>Correlation of F0-curves</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_2">
-              <property name="text">
-               <string>Integral proximity of F0-curves</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_3">
-              <property name="text">
-               <string>Similarity of F0-curves</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="label_11">
-              <property name="text">
-               <string>Local proximity of F0-curves</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
+            <item row="2" column="1">
              <widget class="QLabel" name="totalC">
               <property name="text">
                <string>0</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="1">
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>Integral proximity of F0-curves</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
              <widget class="QLabel" name="totalI">
               <property name="text">
                <string>0</string>
               </property>
              </widget>
             </item>
-            <item row="2" column="1">
+            <item row="4" column="0">
+             <widget class="QLabel" name="label_3">
+              <property name="text">
+               <string>Similarity of F0-curves</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
              <widget class="QLabel" name="totalS">
               <property name="text">
                <string>0</string>
               </property>
              </widget>
             </item>
-            <item row="3" column="1">
+            <item row="5" column="0">
+             <widget class="QLabel" name="label_11">
+              <property name="text">
+               <string>Local proximity of F0-curves</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
              <widget class="QLabel" name="totalL">
+              <property name="text">
+               <string>0</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLabel" name="totalPr">
+              <property name="font">
+               <font>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>0</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLabel" name="totalPs">
+              <property name="font">
+               <font>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
               <property name="text">
                <string>0</string>
               </property>

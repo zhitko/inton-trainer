@@ -5,6 +5,7 @@
 #include <QFileInfo>
 
 #include <math.h>
+#include <cmath>
 
 #include "settingsdialog.h"
 #include <QApplication>
@@ -32,6 +33,8 @@ typedef struct { int from; int len; int type; } MaskDetails;
 
 typedef struct { double min; double max; } MinMax;
 
+QString getMarkLabel(int value, char * labels);
+
 DrawerDP::DrawerDP() :
     Drawer(),
     secFileName(""),
@@ -56,6 +59,9 @@ DrawerDP::DrawerDP() :
     this->proximity_shape = 0.0;
     this->proximity_curve_shape = 0.0;
     this->proximity_range = 0.0;
+    this->proximity_shape_mark = 0.0;
+    this->proximity_range_mark = 0.0;
+    this->proximity_mark = 0.0;
     this->f0max = 0;
     this->f0min = 0;
     this->userf0max = 0;
@@ -214,9 +220,10 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->MultiPlot(1, 15, 4, 1, 1, "#");
             gr->Puts(
                 mglPoint(0,0),
-                QString("Proximity to the range: \\big{Pr = %2%} \t Proximity to curve shape: \\big{Ps = %1%}")
-                        .arg(this->proximity_shape)
-                        .arg(this->proximity_range)
+                QString("Range: \\big{%1} \t Shape: \\big{%2} \t Average: \\big{%3}")
+                        .arg(getMarkLabel(this->proximity_range_mark, sptk_settings->dp->mark_labels))
+                        .arg(getMarkLabel(this->proximity_shape_mark, sptk_settings->dp->mark_labels))
+                        .arg(getMarkLabel(this->proximity_mark, sptk_settings->dp->mark_labels))
                         .toLocal8Bit().data(),
                 ":C",
                 24
@@ -243,9 +250,10 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->MultiPlot(1, 36, 1, 1, 3, "#");
             gr->Puts(
                 mglPoint(0,0),
-                QString("Proximity to the range: \\big{Pr = %2%} \t Proximity to curve shape: \\big{Ps = %1%}")
-                        .arg(this->proximity_curve_shape)
-                        .arg(this->proximity_range)
+                QString("Range: \\big{%1} \t Shape: \\big{%2} \t Average: \\big{%3}")
+                        .arg(getMarkLabel(this->proximity_range_mark, sptk_settings->dp->mark_labels))
+                        .arg(getMarkLabel(this->proximity_shape_mark, sptk_settings->dp->mark_labels))
+                        .arg(getMarkLabel(this->proximity_mark, sptk_settings->dp->mark_labels))
                         .toLocal8Bit().data(),
                 ":C",
                 24
@@ -737,6 +745,28 @@ void getMark(vector * vec, MaskData * points)
     }
 }
 
+QString getMarkLabel(int value, char * labels)
+{
+    QStringList labelsList = QString(labels).split(",");
+
+    if (value > labelsList.size())
+    {
+        return QString::number(value);
+    } else {
+        return labelsList.at(value-1);
+    }
+}
+
+double calculateMark(double value, double level, double delimeter)
+{
+    double mark = 1.0;
+    if (value >= level)
+    {
+        mark = round( fabs(level - value) / delimeter );
+    }
+    return mark;
+}
+
 /*
  * Correlation of F0-curves
 R_{ AB }=\left| \left[ \frac { \sum _{ len }^{ i=0 }{ { ({ A }_{ i }-{ M }_{ A }) } } { ({ B }_{ i }-{ M }_{ A }) } }{ \sqrt { \sum _{ len }^{ i=0 }{ { ({ A }_{ i }-{ M }_{ A }) }^{ 2 } } *\sum _{ len }^{ i=0 }{ { ({ B }_{ i }-{ M }_{ A }) }^{ 2 } }  }  } *100% \right]  \right| 
@@ -1070,6 +1100,7 @@ void DrawerDP::Proc(QString fname)
         double umm = user_max/user_min;
 
         this->proximity_range = round(fabs(1.0 - (fabs((tmm - 1.0) - (umm - 1.0)) / (tmm - 1.0))) * 100.0);
+        this->proximity_range_mark = calculateMark(proximity_range, sptk_settings->dp->mark_level, sptk_settings->dp->mark_delimeter);
 
         qDebug() << "sptk_settings->dp->errorType " << sptk_settings->dp->errorType << LOG_DATA;
         vector o_pitch_cutted = copyv(this->simple_data->d_pitch_original);
@@ -1082,6 +1113,9 @@ void DrawerDP::Proc(QString fname)
             this->proximity_shape = calculateResultD(o_pitch_cutted, pitch_smooth);
             break;
         }
+        this->proximity_shape_mark = calculateMark(proximity_shape, sptk_settings->dp->mark_level, sptk_settings->dp->mark_delimeter);
+
+        this->proximity_mark = round( (this->proximity_range_mark + this->proximity_shape_mark) / 2);
 
         vector sec_ump = copyv(pitch_smooth);
 

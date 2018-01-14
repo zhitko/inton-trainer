@@ -52,7 +52,9 @@ int main(int argc, char *argv[])
 
     qInstallMessageHandler(messageOutput);
 
-    qDebug() << "App version: " << __DATE__;
+    QString appTitle = "IntonTrainer (ver. " + QString(APP_VER) + " - " + QString(__DATE__) + ")";
+
+    qDebug() << appTitle;
 
     QApplication app(argc, argv);
 
@@ -65,7 +67,7 @@ int main(int argc, char *argv[])
 
     WebWindow window;
     window.show();
-    window.setWindowTitle("IntonTrainer (ver. " + QString(__DATE__) + ")");
+    window.setWindowTitle(appTitle);
     window.setWindowIcon(QIcon(":/icons/icons/inton-50.png"));
     splash.finish(&window);
     return app.exec();
