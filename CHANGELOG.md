@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.1.1] - 2018-01-16
 ### Added
--
+- Add wave smoothing before F0 calculating
 
 ### Changed
 - Proximity to curve calculate by correlation

@@ -407,11 +407,13 @@ SimpleGraphData * SimpleProcWave2Data(QString fname)
     }
     qDebug() << "::SimpleProcWave2Data spec_proc " << maxv(spec_proc) << LOG_DATA;
 
-    vector pitch = processZeros(sptk_pitch_spec(wave, sptk_settings->pitch, intensive.x));
+    vector smooth_wave = vector_smooth_lin(wave, sptk_settings->dp->smooth_frame);
+
+    vector pitch = processZeros(sptk_pitch_spec(smooth_wave, sptk_settings->pitch, intensive.x));
     qDebug() << "::SimpleProcWave2Data pitch" << LOG_DATA;
 
     sptk_settings->pitch->OTYPE = 2;
-    vector pitch_log = sptk_pitch_spec(wave, sptk_settings->pitch, intensive.x);
+    vector pitch_log = sptk_pitch_spec(smooth_wave, sptk_settings->pitch, intensive.x);
     qDebug() << "::SimpleProcWave2Data pitch_log" << LOG_DATA;
 
     vector mask = getFileMask(waveFile, wave, pitch.x);
@@ -444,6 +446,7 @@ SimpleGraphData * SimpleProcWave2Data(QString fname)
     freev(wave);
     freev(pitch_interpolate);
     freev(inverted_mask);
+    freev(smooth_wave);
     qDebug() << "::SimpleProcWave2Data freev" << LOG_DATA;
 
     file.close();

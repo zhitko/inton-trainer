@@ -171,6 +171,8 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->dp->mark_level = instance->ui->markLimit->value();
     sptk_settings->dp->mark_labels = strdup(instance->ui->markLabels->text().toStdString().c_str());
 
+    sptk_settings->dp->smooth_frame = instance->ui->smoothFrame->value();
+
     return sptk_settings;
 }
 
@@ -302,6 +304,9 @@ void SettingsDialog::loadSettingsFrom(QString settings_path)
     if(settings.contains("dp/markLabels"))
         this->ui->markLabels->setText(settings.value("dp/markLabels").toString());
 
+    if(settings.contains("dp/smoothFrame"))
+        this->ui->smoothFrame->setValue(settings.value("dp/smoothFrame").toInt());
+
 }
 
 void SettingsDialog::saveSettings()
@@ -368,4 +373,6 @@ void SettingsDialog::saveSettings()
     settings.setValue("dp/markDelimeter", this->ui->markDelimeter->value());
     settings.setValue("dp/markLimit", this->ui->markLimit->value());
     settings.setValue("dp/markLabels", this->ui->markLabels->text());
+
+    settings.setValue("dp/smoothFrame", this->ui->smoothFrame->value());
 }
