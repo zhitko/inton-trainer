@@ -1113,9 +1113,6 @@ void DrawerDP::Proc(QString fname)
             this->proximity_shape = calculateResultD(o_pitch_cutted, pitch_smooth);
             break;
         }
-        this->proximity_shape_mark = calculateMark(proximity_shape, sptk_settings->dp->mark_level, sptk_settings->dp->mark_delimeter);
-
-        this->proximity_mark = round( (this->proximity_range_mark + this->proximity_shape_mark) / 2);
 
         vector sec_ump = copyv(pitch_smooth);
 
@@ -1151,6 +1148,10 @@ void DrawerDP::Proc(QString fname)
             this->proximity_curve_shape = proximity_curve_integral;
             break;
         }
+
+        this->proximity_shape_mark = calculateMark(proximity_curve_shape, sptk_settings->dp->mark_level, sptk_settings->dp->mark_delimeter);
+
+        this->proximity_mark = round( (this->proximity_range_mark + this->proximity_shape_mark) / 2);
 
         freev(sec_ump);
 
