@@ -61,7 +61,6 @@ DrawerDP::DrawerDP() :
     this->proximity_range = 0.0;
     this->proximity_shape_mark = 0.0;
     this->proximity_range_mark = 0.0;
-    this->proximity_mark = 0.0;
     this->f0max = 0;
     this->f0min = 0;
     this->userf0max = 0;
@@ -220,10 +219,11 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->MultiPlot(1, 15, 4, 1, 1, "#");
             gr->Puts(
                 mglPoint(0,0),
-                QString("Range: \\big{%1} \t Shape: \\big{%2} \t Average: \\big{%3}")
+                QString("Range (%3%): \\big{%1} \t Shape (%4%): \\big{%2}")
                         .arg(getMarkLabel(this->proximity_range_mark, sptk_settings->dp->mark_labels))
                         .arg(getMarkLabel(this->proximity_shape_mark, sptk_settings->dp->mark_labels))
-                        .arg(getMarkLabel(this->proximity_mark, sptk_settings->dp->mark_labels))
+                        .arg(this->proximity_range)
+                        .arg(this->proximity_curve_shape)
                         .toLocal8Bit().data(),
                 ":C",
                 24
@@ -250,10 +250,11 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->MultiPlot(1, 36, 1, 1, 3, "#");
             gr->Puts(
                 mglPoint(0,0),
-                QString("Range: \\big{%1} \t Shape: \\big{%2} \t Average: \\big{%3}")
+                QString("Range (%3%): \\big{%1} \t Shape (%4%): \\big{%2}")
                         .arg(getMarkLabel(this->proximity_range_mark, sptk_settings->dp->mark_labels))
                         .arg(getMarkLabel(this->proximity_shape_mark, sptk_settings->dp->mark_labels))
-                        .arg(getMarkLabel(this->proximity_mark, sptk_settings->dp->mark_labels))
+                        .arg(this->proximity_range)
+                        .arg(this->proximity_curve_shape)
                         .toLocal8Bit().data(),
                 ":C",
                 24
@@ -1150,8 +1151,6 @@ void DrawerDP::Proc(QString fname)
         }
 
         this->proximity_shape_mark = calculateMark(proximity_curve_shape, sptk_settings->dp->mark_level, sptk_settings->dp->mark_delimeter);
-
-        this->proximity_mark = round( (this->proximity_range_mark + this->proximity_shape_mark) / 2);
 
         freev(sec_ump);
 
