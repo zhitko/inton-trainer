@@ -750,11 +750,11 @@ QString getMarkLabel(int value, char * labels)
 {
     QStringList labelsList = QString(labels).split(",");
 
-    if (value > labelsList.size())
+    if (0 < value && value <= labelsList.size())
     {
-        return QString::number(value);
-    } else {
         return labelsList.at(value-1);
+    } else {
+        return QString::number(value);
     }
 }
 

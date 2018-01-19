@@ -457,12 +457,12 @@
                  <widget class="QComboBox" name="errorTypeBox">
                   <item>
                    <property name="text">
-                    <string>Err% = |r|*100</string>
+                    <string>Prox% = |r|*100</string>
                    </property>
                   </item>
                   <item>
                    <property name="text">
-                    <string>Err% = (1 - |d|)*100</string>
+                    <string>Prox% = (1 - |d|)*100</string>
                    </property>
                   </item>
                  </widget>
@@ -489,7 +489,7 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>Mark = | limit - Err | / delimeter</string>
+                   <string>Mark = | limit - Proximity | / delimeter</string>
                   </property>
                  </widget>
                 </item>
