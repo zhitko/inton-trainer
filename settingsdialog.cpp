@@ -1,5 +1,6 @@
 #include "settingsdialog.h"
 #include "ui_settingsdialog.h"
+#include "databasemanager.h"
 
 #include <QDebug>
 #include <QSettings>
@@ -14,6 +15,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     this->loadSettings();
     this->initAudio();
     this->initUI();
+    this->databaseManager = new DatabaseManager(ui->databaseView, this);
 }
 
 SettingsDialog::~SettingsDialog()
@@ -172,6 +174,7 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->dp->mark_labels = strdup(instance->ui->markLabels->text().toStdString().c_str());
 
     sptk_settings->dp->smooth_frame = instance->ui->smoothFrame->value();
+    sptk_settings->dp->show_marks = instance->ui->showMarks->isChecked();
 
     return sptk_settings;
 }
@@ -306,6 +309,8 @@ void SettingsDialog::loadSettingsFrom(QString settings_path)
 
     if(settings.contains("dp/smoothFrame"))
         this->ui->smoothFrame->setValue(settings.value("dp/smoothFrame").toInt());
+    if(settings.contains("dp/showMarks"))
+        this->ui->showMarks->setChecked(settings.value("dp/showMarks").toBool());
 
 }
 
@@ -375,4 +380,5 @@ void SettingsDialog::saveSettings()
     settings.setValue("dp/markLabels", this->ui->markLabels->text());
 
     settings.setValue("dp/smoothFrame", this->ui->smoothFrame->value());
+    settings.setValue("dp/showMarks", this->ui->showMarks->isChecked());
 }

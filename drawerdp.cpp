@@ -56,7 +56,6 @@ DrawerDP::DrawerDP() :
     this->umpMask = NULL;
     this->errorMax = 0;
     this->errorMin = 0;
-    this->proximity_shape = 0.0;
     this->proximity_curve_shape = 0.0;
     this->proximity_range = 0.0;
     this->proximity_shape_mark = 0.0;
@@ -101,6 +100,24 @@ DrawerDP::~DrawerDP()
     qDebug() << "DrawerDP removed secOctavData" << LOG_DATA;
     if (this->umpMask) delete this->umpMask;
     qDebug() << "DrawerDP removed umpMask" << LOG_DATA;
+}
+
+QString DrawerDP::getMarksTitle()
+{
+    SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
+
+    if (sptk_settings->dp->show_marks)
+    {
+        return QString("Range (%3%): \\big{%1} \t Shape (%4%): \\big{%2}")
+            .arg(getMarkLabel(this->proximity_range_mark, sptk_settings->dp->mark_labels))
+            .arg(getMarkLabel(this->proximity_shape_mark, sptk_settings->dp->mark_labels))
+            .arg(this->proximity_range)
+            .arg(this->proximity_curve_shape);
+    } else {
+        return QString("Range: \\big{%1%} \t Shape: \\big{%2%}")
+            .arg(this->proximity_range)
+            .arg(this->proximity_curve_shape);
+    }
 }
 
 int DrawerDP::Draw(mglGraph *gr)
@@ -219,12 +236,7 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->MultiPlot(1, 15, 4, 1, 1, "#");
             gr->Puts(
                 mglPoint(0,0),
-                QString("Range (%3%): \\big{%1} \t Shape (%4%): \\big{%2}")
-                        .arg(getMarkLabel(this->proximity_range_mark, sptk_settings->dp->mark_labels))
-                        .arg(getMarkLabel(this->proximity_shape_mark, sptk_settings->dp->mark_labels))
-                        .arg(this->proximity_range)
-                        .arg(this->proximity_curve_shape)
-                        .toLocal8Bit().data(),
+                this->getMarksTitle().toLocal8Bit().data(),
                 ":C",
                 24
             );
@@ -250,12 +262,7 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->MultiPlot(1, 36, 1, 1, 3, "#");
             gr->Puts(
                 mglPoint(0,0),
-                QString("Range (%3%): \\big{%1} \t Shape (%4%): \\big{%2}")
-                        .arg(getMarkLabel(this->proximity_range_mark, sptk_settings->dp->mark_labels))
-                        .arg(getMarkLabel(this->proximity_shape_mark, sptk_settings->dp->mark_labels))
-                        .arg(this->proximity_range)
-                        .arg(this->proximity_curve_shape)
-                        .toLocal8Bit().data(),
+                this->getMarksTitle().toLocal8Bit().data(),
                 ":C",
                 24
             );
@@ -805,29 +812,6 @@ double calculateResultD(vector x, vector y)
 }
 
 /*
- * Similarity of F0-curves
-*/
-double calculateResultS(vector x, vector y)
-{
-    double result = 0;
-
-    double ab = 0;
-    double a2 = 0;
-    double b2 = 0;
-
-    for(int i=0; i<x.x && i<y.x; i++)
-    {
-        ab += getv(x, i) * getv(y, i);
-        a2 += getv(x, i) * getv(x, i);
-        b2 += getv(y, i) * getv(y, i);
-    }
-
-    result = ab / (sqrt(a2) * sqrt(b2));
-
-    return round(result*100);
-}
-
-/*
  * Local proximity of F0-curves
 */
 double calculateResultL(vector x, vector y)
@@ -958,7 +942,6 @@ void DrawerDP::Proc(QString fname)
 
         this->proximity_curve_correlation = 0;
         this->proximity_curve_integral = 0;
-        this->proximity_curve_similarity = 0;
         this->proximity_curve_local = 0;
     }
     else
@@ -1106,14 +1089,6 @@ void DrawerDP::Proc(QString fname)
         qDebug() << "sptk_settings->dp->errorType " << sptk_settings->dp->errorType << LOG_DATA;
         vector o_pitch_cutted = copyv(this->simple_data->d_pitch_original);
         applyMask(&o_pitch_cutted, &this->simple_data->d_mask);
-        switch (sptk_settings->dp->errorType) {
-        case 0:
-            this->proximity_shape = calculateResultR(o_pitch_cutted, pitch_smooth);
-            break;
-        case 1:
-            this->proximity_shape = calculateResultD(o_pitch_cutted, pitch_smooth);
-            break;
-        }
 
         vector sec_ump = copyv(pitch_smooth);
 
@@ -1138,7 +1113,6 @@ void DrawerDP::Proc(QString fname)
 
         this->proximity_curve_correlation = calculateResultR(ump, sec_ump);
         this->proximity_curve_integral = calculateResultD(ump, sec_ump);
-        this->proximity_curve_similarity = calculateResultS(ump, sec_ump);
         this->proximity_curve_local = calculateResultL(ump, sec_ump);
 
         switch (sptk_settings->dp->errorType) {
@@ -1147,6 +1121,9 @@ void DrawerDP::Proc(QString fname)
             break;
         case 1:
             this->proximity_curve_shape = proximity_curve_integral;
+            break;
+        case 2:
+            this->proximity_curve_shape = proximity_curve_local;
             break;
         }
 

@@ -107,7 +107,6 @@ Drawer::Drawer() : mglDraw(),
     tWaveData = NULL;
     proximity_curve_correlation = 0;
     proximity_curve_integral = 0;
-    proximity_curve_similarity = 0;
     proximity_curve_local = 0;
 }
 

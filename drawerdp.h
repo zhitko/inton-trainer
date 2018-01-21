@@ -15,6 +15,9 @@ public:
     void Proc(QString fname);
     virtual int getDataSeconds();
 
+private:
+    QString getMarksTitle();
+
 protected:
     bool first;
     QString secFileName;

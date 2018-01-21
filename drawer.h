@@ -42,8 +42,8 @@ public:
     void Reload();
     void Click();
 
-    double proximity_curve_correlation, proximity_curve_integral, proximity_curve_similarity, proximity_curve_local;
-    double proximity_shape, proximity_range, proximity_curve_shape;
+    double proximity_curve_correlation, proximity_curve_integral, proximity_curve_local;
+    double proximity_range, proximity_curve_shape;
 protected:
     GraphData * data;
     QString fileName;

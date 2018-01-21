@@ -10,7 +10,9 @@
 #define DATA_PATH_TEST "/data/TEST"
 #define USER_DATA_PATH "/RECORDS/"
 #define WAVE_TYPE ".wav"
+#define WAVE_TYPE_FILTER "*.wav"
 #define TEXT_TYPE ".txt"
+#define TEXT_TYPE_FILTER "*.txt"
 
 #define RECORD_FREQ 8000
 #define CHAR_BIT_RECORD 2
@@ -22,7 +24,7 @@
 #define MASK_MIN 0.0001
 #define MASK_MAX 1.0
 
-#define APP_VER "0.1.3"
+#define APP_VER "0.1.4"
 
 #endif // DEFINES
 

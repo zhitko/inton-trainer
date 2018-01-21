@@ -24,6 +24,8 @@ typedef struct _MathGLSettings
     bool autoOpen;
 } MathGLSettings;
 
+class DatabaseManager;
+
 class SettingsDialog : public QDialog
 {
     Q_OBJECT
@@ -42,6 +44,8 @@ private:
 
     oal_devices_list *inputDevices, *outputDevices;
     oal_device *currentInputDevice, *currentOutputDevice;
+
+    DatabaseManager * databaseManager;
 
 public:
     void loadSettings();

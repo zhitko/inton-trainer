@@ -151,6 +151,23 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>Template Database</string>
+      </attribute>
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <item>
+        <widget class="QGroupBox" name="groupBox_9">
+         <property name="title">
+          <string>Operations</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTreeView" name="databaseView"/>
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="tab">
       <attribute name="title">
        <string>Advanced Settings</string>
@@ -173,7 +190,7 @@
             <x>0</x>
             <y>0</y>
             <width>514</width>
-            <height>962</height>
+            <height>987</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -443,7 +460,7 @@
              <item>
               <widget class="QGroupBox" name="groupBox_12">
                <property name="title">
-                <string>Error Calculation</string>
+                <string>Proximity Calculation</string>
                </property>
                <layout class="QFormLayout" name="formLayout_11">
                 <item row="0" column="0">
@@ -465,20 +482,11 @@
                     <string>Prox% = (1 - |d|)*100</string>
                    </property>
                   </item>
-                 </widget>
-                </item>
-                <item row="2" column="0">
-                 <widget class="QLabel" name="label_9">
-                  <property name="text">
-                   <string>Mark limit</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="0">
-                 <widget class="QLabel" name="label_10">
-                  <property name="text">
-                   <string>Mark delimeter</string>
-                  </property>
+                  <item>
+                   <property name="text">
+                    <string>Prox% = Local proximity of F0-curves</string>
+                   </property>
+                  </item>
                  </widget>
                 </item>
                 <item row="1" column="0" colspan="2">
@@ -493,13 +501,10 @@
                   </property>
                  </widget>
                 </item>
-                <item row="3" column="1">
-                 <widget class="QDoubleSpinBox" name="markDelimeter">
-                  <property name="decimals">
-                   <number>1</number>
-                  </property>
-                  <property name="value">
-                   <double>10.000000000000000</double>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="label_9">
+                  <property name="text">
+                   <string>Mark limit</string>
                   </property>
                  </widget>
                 </item>
@@ -516,20 +521,47 @@
                   </property>
                  </widget>
                 </item>
-                <item row="4" column="0">
+                <item row="3" column="0">
+                 <widget class="QLabel" name="label_10">
+                  <property name="text">
+                   <string>Mark delimeter</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="1">
+                 <widget class="QDoubleSpinBox" name="markDelimeter">
+                  <property name="decimals">
+                   <number>1</number>
+                  </property>
+                  <property name="value">
+                   <double>10.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="0">
                  <widget class="QLabel" name="label_40">
                   <property name="text">
                    <string>Mark labels</string>
                   </property>
                  </widget>
                 </item>
-                <item row="4" column="1">
+                <item row="5" column="1">
                  <widget class="QLineEdit" name="markLabels">
                   <property name="text">
                    <string>F (Failure), D (Insufficient), C (Mediocre), B (Satisfactory), A (Excellent)</string>
                   </property>
                   <property name="maxLength">
                    <number>200</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="0" colspan="2">
+                 <widget class="QCheckBox" name="showMarks">
+                  <property name="text">
+                   <string>Show school marks</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>

@@ -91,6 +91,7 @@ DP_SETTINGS *initDpSettings()
     dp->mark_level = 50.0;
     dp->mark_labels = "F (Failure), D (Insufficient), C (Mediocre), B (Satisfactory), A (Excellent)";
     dp->smooth_frame = 1;
+    dp->show_marks = 1;
     return dp;
 }
 

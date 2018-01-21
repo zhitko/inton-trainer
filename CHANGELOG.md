@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.1.4] - 2018-01-21
+
+### Added
+- Show school marks settings
+- Calculation of Local proximity F0 curve added to available fomulas in settings
+
+### Changed
+- Change settings title from error to proximity
+
+### Removed
+- remove calculation of Similarity of F0-curve
+
 ## [0.1.3] - 2018-01-19
 
 ### Changed

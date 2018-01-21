@@ -193,6 +193,7 @@ typedef struct _DP_SETTINGS {
     double mark_delimeter;
     char * mark_labels;
     int smooth_frame;
+    int show_marks;
 } DP_SETTINGS;
 
 typedef struct _SPEC_SETTINGS {

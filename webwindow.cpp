@@ -6,6 +6,7 @@
 #include "drawer.h"
 #include "drawerdp.h"
 #include "settingsdialog.h"
+#include "utils.h"
 
 #include <QDir>
 #include <QDirIterator>
@@ -47,27 +48,6 @@ void WebWindow::attachObject()
     QWebFrame * frame = this->ui->webView->page()->mainFrame();
     frame->addToJavaScriptWindowObject( QString("api"), this );
 }
-
-QStringList scanDirItems()
-{
-    QDir fullDir(QApplication::applicationDirPath() + DATA_PATH_TRAINING);
-    QDir dir(QApplication::applicationDirPath() + DATA_PATH);
-    QStringList files;
-    QString fullPath = fullDir.absolutePath();
-    QString path = dir.absolutePath();
-    qDebug() << "Search in " << path << LOG_DATA;
-    QDirIterator iterator(fullPath, QDirIterator::Subdirectories);
-    while (iterator.hasNext()) {
-        iterator.next();
-        if (!iterator.fileInfo().isDir()) {
-            QString filename = iterator.filePath();
-            if (filename.endsWith(WAVE_TYPE))
-                files.append(filename.remove(path));
-        }
-    }
-    return files;
-}
-
 
 bool WebWindow::isShowA0()
 {
@@ -127,7 +107,7 @@ void WebWindow::setShowTime(QVariant value)
 
 QString WebWindow::getFiles()
 {
-    QStringList files = scanDirItems();
+    QStringList files = scanDirItems(QApplication::applicationDirPath() + DATA_PATH_TRAINING, WAVE_TYPE, QApplication::applicationDirPath() + DATA_PATH);
     files.sort();
     QString lastPath = "";
 

@@ -51,7 +51,9 @@ SOURCES += \
     Recorder/dpsoundrecorder.cpp \
     DP/continuousdp.cpp \
     drawerdp.cpp \
-    dataprocessing.cpp
+    dataprocessing.cpp \
+    databasemanager.cpp \
+    utils.cpp
 
 HEADERS  += \
     mainwindow.h \
@@ -73,7 +75,9 @@ HEADERS  += \
     DP/continuousdp.h \
     drawerdp.h \
     dataprocessing.h \
-    defines.h
+    defines.h \
+    databasemanager.h \
+    utils.h
 
 # OpenAL
 SOURCES += \
