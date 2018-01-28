@@ -8,6 +8,7 @@
 #define DATA_PATH "/data"
 #define DATA_PATH_TRAINING "/data/PATTERNS"
 #define DATA_PATH_TEST "/data/TEST"
+#define DATA_PATH_USER "/data/RECORDS"
 #define USER_DATA_PATH "/RECORDS/"
 #define WAVE_TYPE ".wav"
 #define WAVE_TYPE_FILTER "*.wav"
@@ -24,7 +25,7 @@
 #define MASK_MIN 0.0001
 #define MASK_MAX 1.0
 
-#define APP_VER "0.1.4"
+#define APP_VER "0.2.0"
 
 #endif // DEFINES
 

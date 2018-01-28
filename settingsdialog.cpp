@@ -1,6 +1,6 @@
 #include "settingsdialog.h"
 #include "ui_settingsdialog.h"
-#include "databasemanager.h"
+#include "databaseeditor/databasemanager.h"
 
 #include <QDebug>
 #include <QSettings>
@@ -15,7 +15,9 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     this->loadSettings();
     this->initAudio();
     this->initUI();
+
     this->databaseManager = new DatabaseManager(ui->databaseView, this);
+    connect(this->databaseManager, SIGNAL(activeFileChanged(QString)), this->ui->activeFile, SLOT(setText(QString)));
 }
 
 SettingsDialog::~SettingsDialog()

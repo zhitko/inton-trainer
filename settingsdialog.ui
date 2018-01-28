@@ -155,16 +155,16 @@
       <attribute name="title">
        <string>Template Database</string>
       </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout_4">
-       <item>
-        <widget class="QGroupBox" name="groupBox_9">
-         <property name="title">
-          <string>Operations</string>
-         </property>
-        </widget>
-       </item>
+      <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
         <widget class="QTreeView" name="databaseView"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="activeFile">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

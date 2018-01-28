@@ -52,8 +52,9 @@ SOURCES += \
     DP/continuousdp.cpp \
     drawerdp.cpp \
     dataprocessing.cpp \
-    databasemanager.cpp \
-    utils.cpp
+    utils.cpp \
+    databaseeditor/databasemanager.cpp \
+    databaseeditor/sandboxitemmodel.cpp
 
 HEADERS  += \
     mainwindow.h \
@@ -76,8 +77,9 @@ HEADERS  += \
     drawerdp.h \
     dataprocessing.h \
     defines.h \
-    databasemanager.h \
-    utils.h
+    utils.h \
+    databaseeditor/databasemanager.h \
+    databaseeditor/sandboxitemmodel.h
 
 # OpenAL
 SOURCES += \

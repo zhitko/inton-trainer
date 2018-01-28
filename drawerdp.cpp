@@ -11,6 +11,7 @@
 #include <QApplication>
 #include "DP/continuousdp.h"
 
+#include "utils.h"
 #include "defines.h"
 
 extern "C" {
@@ -1083,7 +1084,7 @@ void DrawerDP::Proc(QString fname)
         double tmm = template_max/template_min;
         double umm = user_max/user_min;
 
-        this->proximity_range = round(fabs(1.0 - (fabs((tmm - 1.0) - (umm - 1.0)) / (tmm - 1.0))) * 100.0);
+        this->proximity_range = round( 100 * MIN(tmm, umm) / MAX(tmm, umm) );
         this->proximity_range_mark = calculateMark(proximity_range, sptk_settings->dp->mark_level, sptk_settings->dp->mark_delimeter);
 
         qDebug() << "sptk_settings->dp->errorType " << sptk_settings->dp->errorType << LOG_DATA;

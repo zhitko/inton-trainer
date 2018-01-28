@@ -48,7 +48,25 @@ Drawer * GraphsEvalWindow::createNewDrawer(QString path)
     this->ui->totalI->setText(QString::number(this->drawer->proximity_curve_integral));
     this->ui->totalL->setText(QString::number(this->drawer->proximity_curve_local));
     this->ui->totalPr->setText(QString::number(this->drawer->proximity_range));
-    this->ui->totalPs->setText(QString::number(this->drawer->proximity_curve_shape));
+
+    SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
+
+    switch (sptk_settings->dp->errorType) {
+    case 0:
+        this->ui->totalC->setStyleSheet("font-weight: bold");
+        this->ui->totalCtitle->setStyleSheet("font-weight: bold");
+        break;
+    case 1:
+        this->ui->totalI->setStyleSheet("font-weight: bold");
+        this->ui->totalItitle->setStyleSheet("font-weight: bold");
+        break;
+    case 2:
+        this->ui->totalL->setStyleSheet("font-weight: bold");
+        this->ui->totalLtitle->setStyleSheet("font-weight: bold");
+        break;
+    default:
+        break;
+    }
 
     return this->drawer;
 }
