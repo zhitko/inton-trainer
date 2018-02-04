@@ -242,7 +242,7 @@ void MainWindow::recordFinished(SoundRecorder * recorder)
     path = QApplication::applicationDirPath() + DATA_PATH + path + WAVE_TYPE;
     qDebug() << "write wave to: " << path << LOG_DATA;
 
-    WaveFile *waveFile = makeWaveFileFromData((char *)data, size, 1, RECORD_FREQ, 16);
+    WaveFile *waveFile = makeWaveFileFromData((char *)data, size, NUMBER_OF_CHANNELS, RECORD_FREQ, SIGNIFICANT_BITS_PER_SAMPLE);
     saveWaveFile(waveFile, path.toLocal8Bit().data());
     waveCloseFile(waveFile);
 

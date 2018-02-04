@@ -62,21 +62,36 @@ vector getSignalWithMask(vector mask, SpectrDP* dp, vector signal)
 
 mglData * createMglData(vector vec, mglData * data, bool nan)
 {
+    qDebug() << "createMglData " << vec.x << " " << LOG_DATA;
     if (data != NULL) {
         delete data;
+        qDebug() << "delete data" << LOG_DATA;
     }
-    data = new mglData();
+    if (vec.x > 0)
+    {
+        data = new mglData(vec.x, vec.v);
+        qDebug() << "new mglData" << LOG_DATA;
+    } else {
+        double * tmp = new double[1];
+        tmp[0] = 0.0;
+        data = new mglData(1, tmp);
+        qDebug() << "new mglData empty" << LOG_DATA;
+        return data;
+    }
     if (nan)
     {
         vectorToDataWithNan(vec, data);
+        qDebug() << "vectorToDataWithNan" << LOG_DATA;
     } else {
         vectorToData(vec, data);
+        qDebug() << "vectorToData" << LOG_DATA;
     }
     return data;
 }
 
 void vectorToData(vector vec, mglData * data)
 {
+    qDebug() << "vectorToData" << LOG_DATA;
     data->Create(vec.x);
     for(long i=0;i<vec.x;i++)
         data->a[i] = getv(vec, i);
@@ -84,6 +99,7 @@ void vectorToData(vector vec, mglData * data)
 
 void vectorToDataWithNan(vector vec, mglData * data)
 {
+    qDebug() << "vectorToDataWithNan " << vec.x << LOG_DATA;
     data->Create(vec.x);
     for(long i=0;i<vec.x;i++)
         if (getv(vec, i) != 0)

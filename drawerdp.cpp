@@ -557,12 +557,15 @@ vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
     }
 
     int clone_len = merge_len + clone;
+
+    vector ump_mask = zerov(clone_len*MASK_LEN);
+
+    if (clone_len < 1) return ump_mask;
+
     MaskDetails * clone_details = new MaskDetails[clone_len];
 
     ii = 0;
     clone_details[0] = merged_details[0];
-
-    vector ump_mask = zerov(clone_len*MASK_LEN);
 
     if(merged_details[0].type == TYPE_N)
     {
@@ -625,10 +628,13 @@ vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
     qDebug() << "strip_data " << strip_data.x << LOG_DATA;
 
     qDebug() << "clone_len " << clone_len << LOG_DATA;
+    qDebug() << "part_len " << clone_len << LOG_DATA;
 
     vector resized_data = zerov(part_len*clone_len);
 
     double scale = 1.0 * mask->x / data->x;
+
+    qDebug() << "scale " << scale << LOG_DATA;
 
     ii = 0;
     int p = 0;
@@ -656,12 +662,16 @@ vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
     }
 
     freev(strip_data);
+    qDebug() << "freev strip_data " << LOG_DATA;
 
     freev(*data);
+    qDebug() << "freev data " << LOG_DATA;
     data->v = resized_data.v;
     data->x = resized_data.x;
+    qDebug() << "data set " << LOG_DATA;
 
     delete clone_details;
+    qDebug() << "delete clone_details " << LOG_DATA;
 
     return ump_mask;
 }
@@ -916,15 +926,24 @@ void DrawerDP::Proc(QString fname)
             sptk_settings->dp->useStripUmp
         );
 
+        qDebug() << "ump_mask " << ump_mask.x << LOG_DATA;
+        qDebug() << "origin_ump " << origin_ump.x << LOG_DATA;
+
         this->umpData = createMglData(origin_ump, this->umpData);
         this->umpData->Norm();
+        qDebug() << "umpData createMglData" << LOG_DATA;
 
         this->umpMask = createMglData(ump_mask, this->umpMask, true);
+        qDebug() << "umpMask createMglData" << LOG_DATA;
 
         freev(origin_ump);
+        qDebug() << "freev origin_ump" << LOG_DATA;
 
         freev(pitch_cutted);
+        qDebug() << "freev pitch_cutted" << LOG_DATA;
         freev(pitch_smooth);
+        qDebug() << "freev pitch_smooth" << LOG_DATA;
+
         qDebug() << "pitchData Filled" << LOG_DATA;
 
         if(sptk_settings->dp->showOriginalF0)

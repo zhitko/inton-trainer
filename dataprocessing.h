@@ -31,6 +31,8 @@ struct SimpleGraphData{
     MaskData md_p;
     MaskData md_t;
     MaskData md_n;
+
+    WaveFile * file_data;
 };
 
 struct GraphData: SimpleGraphData{
@@ -47,7 +49,7 @@ struct GraphData: SimpleGraphData{
 };
 
 GraphData * ProcWave2Data(QString fname);
-SimpleGraphData * SimpleProcWave2Data(QString fname);
+SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData = false);
 void freeGraphData(GraphData * data);
 void freeSimpleGraphData(SimpleGraphData * data);
 

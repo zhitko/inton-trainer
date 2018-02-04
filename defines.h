@@ -16,6 +16,8 @@
 #define TEXT_TYPE_FILTER "*.txt"
 
 #define RECORD_FREQ 8000
+#define SIGNIFICANT_BITS_PER_SAMPLE 16
+#define NUMBER_OF_CHANNELS 1
 #define CHAR_BIT_RECORD 2
 
 #define OCTAVE_MAX_1 2.5
@@ -25,7 +27,7 @@
 #define MASK_MIN 0.0001
 #define MASK_MAX 1.0
 
-#define APP_VER "0.2.0"
+#define APP_VER "0.2.1"
 
 #endif // DEFINES
 

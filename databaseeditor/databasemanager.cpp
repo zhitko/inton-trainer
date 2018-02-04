@@ -73,14 +73,16 @@ void DatabaseManager::showContextMenu(const QPoint &pos)
 
     QAction actionRename(tr("Rename"), this->treeView);
     QAction actionDelete(tr("Detele"), this->treeView);
-    QAction actionAdd(tr("Add file"), this->treeView);
+    QAction actionAdd(tr("Add File"), this->treeView);
     QAction actionOpen(tr("Open"), this->treeView);
+    QAction actionFileDir(tr("Open File Dir"), this->treeView);
     QAction actionOpenWith(tr("Open with ..."), this->treeView);
     QAction actionEdit(tr("Edit"), this->treeView);
     QAction actionCopy(tr("Copy File"), this->treeView);
     QAction actionCut(tr("Cut File"), this->treeView);
     QAction actionPaste(tr("Paste File"), this->treeView);
     QAction actionMkdir(tr("Make Dir"), this->treeView);
+    QAction actionMarkOut(tr("Mark Out File"), this->treeView);
 
     if (this->isSelectedDir)
     {
@@ -102,14 +104,18 @@ void DatabaseManager::showContextMenu(const QPoint &pos)
         }
     } else {
         connect(&actionOpen, SIGNAL(triggered()), this, SLOT(actionOpen()));
+        connect(&actionFileDir, SIGNAL(triggered()), this, SLOT(actionFileDir()));
         connect(&actionOpenWith, SIGNAL(triggered()), this, SLOT(actionOpenWith()));
         connect(&actionEdit, SIGNAL(triggered()), this, SLOT(actionEdit()));
         connect(&actionCopy, SIGNAL(triggered()), this, SLOT(actionCopy()));
         connect(&actionCut, SIGNAL(triggered()), this, SLOT(actionCut()));
+        connect(&actionMarkOut, SIGNAL(triggered()), this, SLOT(actionMarkOut()));
 
         contextMenu.addAction(&actionOpen);
+        contextMenu.addAction(&actionFileDir);
 //        contextMenu.addAction(&actionOpenWith);
 //        contextMenu.addAction(&actionEdit);
+        contextMenu.addAction(&actionMarkOut);
         contextMenu.addSeparator();
         contextMenu.addAction(&actionCopy);
         contextMenu.addAction(&actionCut);
@@ -142,6 +148,15 @@ void DatabaseManager::actionOpen()
 {
     QModelIndex index = this->treeView->currentIndex();
     QDesktopServices::openUrl(QUrl::fromLocalFile(this->model->filePath(index)));
+}
+
+void DatabaseManager::actionFileDir()
+{
+    QModelIndex index = this->treeView->currentIndex().parent();
+    if (this->model->isDir(index))
+    {
+        QDesktopServices::openUrl(QUrl::fromLocalFile(this->model->filePath(index)));
+    }
 }
 
 void DatabaseManager::actionOpenWith()
@@ -272,3 +287,12 @@ void DatabaseManager::actionMkdir()
     }
 }
 
+void DatabaseManager::actionMarkOut()
+{
+    QModelIndex index = this->treeView->currentIndex();
+    if ( !index.isValid() ) {
+        return;
+    }
+
+    model->markOutFile(index);
+}

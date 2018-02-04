@@ -353,7 +353,7 @@ GraphData * ProcWave2Data(QString fname)
     return data;
 }
 
-SimpleGraphData * SimpleProcWave2Data(QString fname)
+SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
 {
     qDebug() << "::SimpleProcWave2Data" << LOG_DATA;
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
@@ -450,10 +450,19 @@ SimpleGraphData * SimpleProcWave2Data(QString fname)
     qDebug() << "::SimpleProcWave2Data freev" << LOG_DATA;
 
     file.close();
-    waveCloseFile(waveFile);
-    qDebug() << "::SimpleProcWave2Data waveCloseFile" << LOG_DATA;
+    qDebug() << "::SimpleProcWave2Data file.close" << LOG_DATA;
 
     SimpleGraphData * data = new SimpleGraphData();
+
+    if (keepWaveData)
+    {
+        waveFile->file = NULL;
+        data->file_data = waveFile;
+    } else {
+        data->file_data = NULL;
+        waveCloseFile(waveFile);
+        qDebug() << "::SimpleProcWave2Data waveCloseFile" << LOG_DATA;
+    }
 
     data->seconds = seconds;
     data->d_full_wave = norm_wave;
@@ -512,4 +521,9 @@ void freeSimpleGraphData(SimpleGraphData * data)
     freeiv(data->md_t.pointsLength);
     freeiv(data->md_n.pointsFrom);
     freeiv(data->md_n.pointsLength);
+
+    if (data->file_data)
+    {
+        waveCloseFile(data->file_data);
+    }
 }

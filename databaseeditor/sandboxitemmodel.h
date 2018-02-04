@@ -7,6 +7,7 @@
 #include <QStandardItem>
 
 class QFileInfo;
+class QDir;
 class QModelIndex;
 class QFileIconProvider;
 
@@ -37,12 +38,18 @@ public:
 
     void setEnabled(QModelIndex index, bool disable = true);
 
+    QModelIndex markOutFile(QModelIndex index);
+
 private:
     QStandardItem *rootItem;
     QIcon dirIcon;
     QFileIconProvider * iconProvider;
 
     QStringList filters;
+
+    QStandardItem * createFileItem(QFileInfo);
+    QStandardItem * createDirItem(QFileInfo);
+    QStandardItem * createDirItem(QDir);
 
 signals:
     void directoryLoaded(QString dirName);

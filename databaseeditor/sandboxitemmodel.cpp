@@ -8,9 +8,12 @@
 #include <QDirIterator>
 #include <QFileIconProvider>
 
+#include "dataprocessing.h"
+
 SandBoxItemModel::SandBoxItemModel(QObject *parent)
     :QStandardItemModel(parent)
 {
+    qDebug() << "SandBoxItemModel::SandBoxItemModel" << LOG_DATA;
     this->rootItem = this->invisibleRootItem();
     this->dirIcon = QApplication::style()->standardIcon(QStyle::SP_DirIcon);
     this->iconProvider = new QFileIconProvider();
@@ -18,11 +21,13 @@ SandBoxItemModel::SandBoxItemModel(QObject *parent)
 
 SandBoxItemModel::~SandBoxItemModel()
 {
+    qDebug() << "SandBoxItemModel::~SandBoxItemModel" << LOG_DATA;
     delete this->iconProvider;
 }
 
 void SandBoxItemModel::populateSandBoxes(const QStringList &names)
 {
+    qDebug() << "SandBoxItemModel::populateSandBoxes" << LOG_DATA;
     QString name;
     QStandardItem* parent;
     foreach (name, names) {
@@ -42,6 +47,7 @@ void SandBoxItemModel::populateSandBoxes(const QStringList &names)
 
 void SandBoxItemModel::createDirectoryItem(QString dirName, QStandardItem *parentItem)
 {
+    qDebug() << "SandBoxItemModel::createDirectoryItem" << LOG_DATA;
     QDir dir(dirName);
     QFileInfo item;
     QStandardItem* child;
@@ -50,15 +56,11 @@ void SandBoxItemModel::createDirectoryItem(QString dirName, QStandardItem *paren
     {
         if(item.isFile())
         {
-            child = new QStandardItem(iconProvider->icon(item), item.fileName());
-            child->setEditable(false);
-            child->setAccessibleDescription(item.filePath());
+            child = this->createFileItem(item);
         }
         else
         {
-            child = new QStandardItem(dirIcon, item.fileName());
-            child->setEditable(false);
-            child->setAccessibleDescription(item.filePath());
+            child = this->createDirItem(item);
         }
         parentItem->appendRow(child);
         createDirectoryItem(item.filePath(), child);
@@ -67,12 +69,14 @@ void SandBoxItemModel::createDirectoryItem(QString dirName, QStandardItem *paren
 
 QFileInfo SandBoxItemModel::fileInfo(QModelIndex index)
 {
+    qDebug() << "SandBoxItemModel::fileInfo" << LOG_DATA;
     QStandardItem* item = this->itemFromIndex(index);
     return QFileInfo(item->accessibleDescription());
 }
 
 QString SandBoxItemModel::fileName(QModelIndex index)
 {
+    qDebug() << "SandBoxItemModel::fileName" << LOG_DATA;
     if (!index.isValid()) return "";
 
     QFileInfo info = this->fileInfo(index);
@@ -81,6 +85,7 @@ QString SandBoxItemModel::fileName(QModelIndex index)
 
 QString SandBoxItemModel::filePath(QModelIndex index)
 {
+    qDebug() << "SandBoxItemModel::filePath" << LOG_DATA;
     if (!index.isValid()) return "";
 
     QFileInfo info = this->fileInfo(index);
@@ -89,6 +94,7 @@ QString SandBoxItemModel::filePath(QModelIndex index)
 
 bool SandBoxItemModel::rmdir(QModelIndex index)
 {
+    qDebug() << "SandBoxItemModel::rmdir" << LOG_DATA;
     if (!index.isValid()) return false;
 
     QFileInfo info = this->fileInfo(index);
@@ -107,6 +113,7 @@ bool SandBoxItemModel::rmdir(QModelIndex index)
 
 bool SandBoxItemModel::remove(QModelIndex index)
 {
+    qDebug() << "SandBoxItemModel::remove" << LOG_DATA;
     if (!index.isValid()) return false;
 
     QFileInfo info = this->fileInfo(index);
@@ -124,6 +131,7 @@ bool SandBoxItemModel::remove(QModelIndex index)
 
 bool SandBoxItemModel::rename(QModelIndex index, QString newName)
 {
+    qDebug() << "SandBoxItemModel::rename" << LOG_DATA;
     if (!index.isValid()) return false;
 
     QFileInfo info = this->fileInfo(index);
@@ -140,6 +148,7 @@ bool SandBoxItemModel::rename(QModelIndex index, QString newName)
 
 bool SandBoxItemModel::isDir(QModelIndex index)
 {
+    qDebug() << "SandBoxItemModel::isDir" << LOG_DATA;
     if (!index.isValid()) return false;
 
     QFileInfo info = this->fileInfo(index);
@@ -148,6 +157,7 @@ bool SandBoxItemModel::isDir(QModelIndex index)
 
 bool SandBoxItemModel::isFile(QModelIndex index)
 {
+    qDebug() << "SandBoxItemModel::isFile" << LOG_DATA;
     if (!index.isValid()) return false;
 
     QFileInfo info = this->fileInfo(index);
@@ -156,6 +166,7 @@ bool SandBoxItemModel::isFile(QModelIndex index)
 
 QModelIndex SandBoxItemModel::mkdir(QModelIndex index, QString name)
 {
+    qDebug() << "SandBoxItemModel::mkdir" << LOG_DATA;
     if (!index.isValid()) return QModelIndex().parent();
 
     QFileInfo info = this->fileInfo(index);
@@ -166,9 +177,7 @@ QModelIndex SandBoxItemModel::mkdir(QModelIndex index, QString name)
         qDebug() << parentItem->accessibleDescription();
         if (dir.mkdir(name))
         {
-            QStandardItem* child = new QStandardItem(this->dirIcon, name);
-            child->setEditable(false);
-            child->setAccessibleDescription(dir.absoluteFilePath(name));
+            QStandardItem* child = this->createDirItem(QDir(dir.absoluteFilePath(name)));
             parentItem->appendRow(child);
 
             return this->indexFromItem(child);
@@ -180,11 +189,13 @@ QModelIndex SandBoxItemModel::mkdir(QModelIndex index, QString name)
 
 void SandBoxItemModel::setNameFilters(QStringList filters)
 {
+    qDebug() << "SandBoxItemModel::setNameFilters" << LOG_DATA;
     this->filters = filters;
 }
 
 bool SandBoxItemModel::copy(QString from, QModelIndex to)
 {
+    qDebug() << "SandBoxItemModel::copy" << LOG_DATA;
     if (from.isEmpty() || !to.isValid()) return false;
 
     QFileInfo info(from);
@@ -199,9 +210,7 @@ bool SandBoxItemModel::copy(QString from, QModelIndex to)
 
         QFileInfo info(toPath);
 
-        QStandardItem* child = new QStandardItem(iconProvider->icon(info), fileName);
-        child->setEditable(false);
-        child->setAccessibleDescription(toPath);
+        QStandardItem* child = this->createFileItem(info);
         toItem->appendRow(child);
         return true;
     }
@@ -211,6 +220,7 @@ bool SandBoxItemModel::copy(QString from, QModelIndex to)
 
 bool SandBoxItemModel::copy(QModelIndex from, QModelIndex to)
 {
+    qDebug() << "SandBoxItemModel::copy" << LOG_DATA;
     if (!from.isValid() || !to.isValid()) return false;
 
     QString fromPath = this->filePath(from);
@@ -219,6 +229,7 @@ bool SandBoxItemModel::copy(QModelIndex from, QModelIndex to)
 
 bool SandBoxItemModel::move(QModelIndex from, QModelIndex to)
 {
+    qDebug() << "SandBoxItemModel::move" << LOG_DATA;
     if (!from.isValid() || !to.isValid()) return false;
 
     QString fileName = this->fileName(from);
@@ -239,9 +250,7 @@ bool SandBoxItemModel::move(QModelIndex from, QModelIndex to)
 
         QFileInfo info(toPath);
 
-        QStandardItem* child = new QStandardItem(iconProvider->icon(info), fileName);
-        child->setEditable(false);
-        child->setAccessibleDescription(toPath);
+        QStandardItem* child = this->createFileItem(info);
         toItem->appendRow(child);
 
         return true;
@@ -252,7 +261,76 @@ bool SandBoxItemModel::move(QModelIndex from, QModelIndex to)
 
 void SandBoxItemModel::setEnabled(QModelIndex index, bool enabled)
 {
+    qDebug() << "SandBoxItemModel::setEnabled" << LOG_DATA;
     if (!index.isValid()) return;
     QStandardItem* item = this->itemFromIndex(index);
     item->setEnabled(enabled);
+}
+
+QModelIndex SandBoxItemModel::markOutFile(QModelIndex index)
+{
+    qDebug() << "SandBoxItemModel::markOutFile" << LOG_DATA;
+    if (!index.isValid()) return QModelIndex().parent();
+
+    QFileInfo info = this->fileInfo(index);
+    QString fileName = info.fileName();
+    QString filePath = info.filePath();
+    QString newFileName = "+" + fileName;
+    QString newFilePath = info.dir().absoluteFilePath(newFileName);
+
+    qDebug() << "fileName " << fileName << LOG_DATA;
+    qDebug() << "filePath " << filePath << LOG_DATA;
+    qDebug() << "newFileName " << newFileName << LOG_DATA;
+    qDebug() << "newFilePath " << newFilePath << LOG_DATA;
+
+    SimpleGraphData *data = SimpleProcWave2Data(filePath, true);
+
+    WaveFile * waveFile = data->file_data;
+    qDebug() << "waveOpenHFile" << LOG_DATA;
+
+    int size = littleEndianBytesToUInt32(waveFile->dataChunk->chunkDataSize);
+    qDebug() << "file size " << size << LOG_DATA;
+
+    int pitchSize = data->d_pitch_log.x;
+    qDebug() << "pitch size " << pitchSize << LOG_DATA;
+
+    // TODO: process WAV file and add marks
+
+    saveWaveFile(waveFile, newFilePath.toLocal8Bit().data());
+
+    freeSimpleGraphData(data);
+    qDebug() << "freeSimpleGraphData" << LOG_DATA;
+
+    QStandardItem* item = this->itemFromIndex(index);
+    QStandardItem* newItem = this->createFileItem(QFileInfo(newFilePath));
+    item->parent()->appendRow(newItem);
+
+    return index;
+}
+
+QStandardItem * SandBoxItemModel::createFileItem(QFileInfo info)
+{
+    QStandardItem* item = new QStandardItem(iconProvider->icon(info), info.fileName());
+    item->setEditable(false);
+    item->setAccessibleDescription(info.filePath());
+
+    return item;
+}
+
+QStandardItem * SandBoxItemModel::createDirItem(QFileInfo info)
+{
+    QStandardItem* item = new QStandardItem(this->dirIcon, info.fileName());
+    item->setEditable(false);
+    item->setAccessibleDescription(info.filePath());
+
+    return item;
+}
+
+QStandardItem * SandBoxItemModel::createDirItem(QDir dir)
+{
+    QStandardItem* item = new QStandardItem(this->dirIcon, dir.dirName());
+    item->setEditable(false);
+    item->setAccessibleDescription(dir.absolutePath());
+
+    return item;
 }

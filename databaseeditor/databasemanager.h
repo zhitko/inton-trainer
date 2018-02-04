@@ -37,6 +37,7 @@ public slots:
 
     void actionOpen();
     void actionOpenWith();
+    void actionFileDir();
     void actionEdit();
     void actionCopy();
     void actionCut();
@@ -45,6 +46,7 @@ public slots:
     void actionDelete();
     void actionMkdir();
     void actionAdd();
+    void actionMarkOut();
 };
 
 #endif // DATABASEMANAGER_H

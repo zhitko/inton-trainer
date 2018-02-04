@@ -1,5 +1,28 @@
 #include "wavFile.h"
 
+#define LOG_LEVEL 4
+#define _fe(...) fprintf(stdout, __VA_ARGS__)
+#define _fo(...) fprintf(stdout, __VA_ARGS__)
+#define _if(level) if (LOG_LEVEL > level)
+#define ERROR(...) _if(0) { _fe("ERROR: "); _fe(__VA_ARGS__); }
+#define WARN(...)  _if(1) { _fo("WARN:  "); _fo(__VA_ARGS__); }
+#define INFO(...)  _if(2) { _fo("INFO:  "); _fo(__VA_ARGS__); }
+#define DEBUG(...) _if(3) { _fo("DEBUG: "); _fo(__VA_ARGS__); }
+
+#define INT32 littleEndianBytesToUInt32
+#define INT16 littleEndianBytesToUInt16
+#define CH4(c) c[0], c[1], c[2], c[3]
+#define CH2(c) c[0], c[1]
+
+uint32_t to_odd(uint32_t value)
+{
+    if (value % 2 == 1)
+    {
+        value += 1;
+    }
+    return value;
+}
+
 WaveFile * initWaveFile()
 {
     WaveFile * waveFile = (WaveFile *) malloc(sizeof(WaveFile));
@@ -22,7 +45,7 @@ WaveFile * waveOpenHFile(int handle)
     WaveFile * waveFile = initWaveFile();
     if(waveFile == NULL)
     {
-        fprintf(stderr, "Memory Allocation Error: Could not allocate memory for Wave File\n");
+        ERROR("[waveOpenHFile] Memory Allocation Error: Could not allocate memory for Wave File\n");
         return 0;
     }
 
@@ -31,7 +54,7 @@ WaveFile * waveOpenHFile(int handle)
     waveFile->file = fdopen(handle, "rb");
     if(waveFile->file == NULL)
     {
-        fprintf(stderr, "Could not open input file %s\n", waveFile->filePath);
+        ERROR("[waveOpenHFile] Could not open input file %s\n", waveFile->filePath);
         waveCloseFile(waveFile);
         return 0;
     }
@@ -43,7 +66,7 @@ WaveFile * waveOpenFile(const char* path)
     WaveFile * waveFile = initWaveFile();
     if(waveFile == NULL)
     {
-        fprintf(stderr, "Memory Allocation Error: Could not allocate memory for Wave File\n");
+        ERROR("[waveOpenFile] Memory Allocation Error: Could not allocate memory for Wave File\n");
         return 0;
     }
 
@@ -53,7 +76,7 @@ WaveFile * waveOpenFile(const char* path)
     waveFile->file = fopen(waveFile->filePath, "rb");
     if(waveFile->file == NULL)
     {
-        fprintf(stderr, "Could not open input file %s\n", waveFile->filePath);
+        ERROR("[waveOpenFile] Could not open input file %s\n", waveFile->filePath);
         waveCloseFile(waveFile);
         return 0;
     }
@@ -69,28 +92,28 @@ WaveFile * processFile(WaveFile * waveFile)
     waveFile->waveHeader = (WaveHeader *) malloc(sizeof(WaveHeader));
     if(waveFile->waveHeader == NULL)
     {
-        fprintf(stderr, "Memory Allocation Error: Could not allocate memory for Wave File Header\n");
+        ERROR("[processFile] Memory Allocation Error: Could not allocate memory for Wave File Header\n");
         waveCloseFile(waveFile);
         return 0;
     }
     fread(waveFile->waveHeader, sizeof(WaveHeader), 1, waveFile->file);
     if (ferror(waveFile->file) != 0)
     {
-        fprintf(stderr, "Error reading input file %s\n", waveFile->filePath);
+        ERROR("[processFile] Error reading input file %s\n", waveFile->filePath);
         waveCloseFile(waveFile);
         return 0;
     }
 
     if (strncmp(&(waveFile->waveHeader->chunkID[0]), "RIFF", 4) != 0)
     {
-        fprintf(stderr, "Input file is not a RIFF file\n");
+        ERROR("[processFile] Input file is not a RIFF file\n");
         waveCloseFile(waveFile);
         return 0;
     }
 
     if (strncmp(&(waveFile->waveHeader->riffType[0]), "WAVE", 4) != 0)
     {
-        fprintf(stderr, "Input file is not a WAVE file\n");
+        ERROR("[processFile] Input file is not a WAVE file\n");
         waveCloseFile(waveFile);
         return 0;
     }
@@ -100,7 +123,7 @@ WaveFile * processFile(WaveFile * waveFile)
 
     if (size <= 0)
     {
-        fprintf(stderr, "Input file is an empty WAVE file\n");
+        ERROR("[processFile] Input file is an empty WAVE file\n");
         waveCloseFile(waveFile);
         return 0;
     }
@@ -117,18 +140,18 @@ WaveFile * processFile(WaveFile * waveFile)
 
         if (ferror(waveFile->file) != 0)
         {
-            fprintf(stderr, "Error reading input file %s\n", waveFile->filePath);
+            ERROR("[processFile] Error reading input file %s\n", waveFile->filePath);
             waveCloseFile(waveFile);
             return 0;
         }
 
         if (strncmp(&nextChunkID[0], "fmt ", 4) == 0)
         {
-//            fprintf(stdout, "Found fmt chunk\n");
+            INFO("[processFile] Found FMT chunk\n");
             waveFile->formatChunk = (FormatChunk *)malloc(sizeof(FormatChunk));
             if (waveFile->formatChunk == NULL)
             {
-                fprintf(stderr, "Memory Allocation Error: Could not allocate memory for Wave File Format Chunk\n");
+                ERROR("[processFile] Memory Allocation Error: Could not allocate memory for Wave File Format Chunk\n");
                 waveCloseFile(waveFile);
                 return 0;
             }
@@ -137,14 +160,14 @@ WaveFile * processFile(WaveFile * waveFile)
             fread(waveFile->formatChunk, sizeof(FormatChunk), 1, waveFile->file);
             if (ferror(waveFile->file) != 0)
             {
-                fprintf(stderr, "Error reading input file %s\n", waveFile->filePath);
+                ERROR("[processFile] Error reading input file %s\n", waveFile->filePath);
                 waveCloseFile(waveFile);
                 return 0;
             }
 
             if (littleEndianBytesToUInt16(waveFile->formatChunk->compressionCode) != (uint16_t)1)
             {
-                fprintf(stderr, "Compressed audio formats are not supported\n");
+                ERROR("[processFile] Compressed audio formats are not supported\n");
                 waveCloseFile(waveFile);
                 return 0;
             }
@@ -169,13 +192,13 @@ WaveFile * processFile(WaveFile * waveFile)
 
         else if (strncmp(&nextChunkID[0], "data", 4) == 0)
         {
-//            fprintf(stdout, "Found data chunk\n");
+            INFO("[processFile] Found DATA chunk\n");
             // We found the data chunk
 
             waveFile->dataChunk = (DataChunk *)malloc(sizeof(DataChunk));
             if (waveFile->dataChunk == NULL)
             {
-                fprintf(stderr, "Memory Allocation Error: Could not allocate memory for Wave File Data Chunk\n");
+                ERROR("[processFile] Memory Allocation Error: Could not allocate memory for Wave File Data Chunk\n");
                 waveCloseFile(waveFile);
                 return 0;
             }
@@ -192,7 +215,7 @@ WaveFile * processFile(WaveFile * waveFile)
             fread(sampleDataSizeBytes, sizeof(char), 4, waveFile->file);
             if (ferror(waveFile->file) != 0)
             {
-                fprintf(stderr, "Error reading input file %s\n", waveFile->filePath);
+                ERROR("[processFile] Error reading input file %s\n", waveFile->filePath);
                 waveCloseFile(waveFile);
                 return 0;
             }
@@ -207,7 +230,7 @@ WaveFile * processFile(WaveFile * waveFile)
             fread(waveFile->dataChunk->waveformData, sampleDataSize, 1, waveFile->file);
             if (ferror(waveFile->file) != 0)
             {
-                fprintf(stderr, "Error reading input file %s\n", waveFile->filePath);
+                ERROR("[processFile] Error reading input file %s\n", waveFile->filePath);
                 waveCloseFile(waveFile);
                 return 0;
             }
@@ -221,14 +244,14 @@ WaveFile * processFile(WaveFile * waveFile)
 
         else if (strncmp(&nextChunkID[0], "cue ", 4) == 0)
         {
-//            fprintf(stdout, "Found cue chunk\n");
+            INFO("[processFile] Found CUE chunk\n");
             // We found an existing Cue Chunk
 
             char cueChunkDataSizeBytes[4];
             fread(cueChunkDataSizeBytes, sizeof(char), 4, waveFile->file);
             if (ferror(waveFile->file) != 0)
             {
-                fprintf(stderr, "Error reading input file %s\n", waveFile->filePath);
+                ERROR("[processFile] Error reading input file %s\n", waveFile->filePath);
                 waveCloseFile(waveFile);
                 return 0;
             }
@@ -238,20 +261,21 @@ WaveFile * processFile(WaveFile * waveFile)
             fread(cuePointsCountBytes, sizeof(char), 4, waveFile->file);
             if (ferror(waveFile->file) != 0)
             {
-                fprintf(stderr, "Error reading input file %s\n", waveFile->filePath);
+                ERROR("[processFile] Error reading input file %s\n", waveFile->filePath);
                 waveCloseFile(waveFile);
                 return 0;
             }
-            uint32_t cuePointsCount = littleEndianBytesToUInt16(cuePointsCountBytes);
+            uint32_t cuePointsCount = littleEndianBytesToUInt32(cuePointsCountBytes);
 
             // Read in the existing cue points into CuePoint Structs
             CuePoint *existingCuePoints = (CuePoint *)malloc(sizeof(CuePoint) * cuePointsCount);
             for (uint32_t cuePointIndex = 0; cuePointIndex < cuePointsCount; cuePointIndex++)
             {
+                INFO("[processFile] Found CUE POINT %i\n", cuePointIndex);
                 fread(&existingCuePoints[cuePointIndex], sizeof(CuePoint), 1, waveFile->file);
                 if (ferror(waveFile->file) != 0)
                 {
-                    fprintf(stderr, "Error reading input file %s\n", waveFile->filePath);
+                    ERROR("[processFile] Error reading input file %s\n", waveFile->filePath);
                     waveCloseFile(waveFile);
                     free(existingCuePoints);
                     return 0;
@@ -262,7 +286,7 @@ WaveFile * processFile(WaveFile * waveFile)
             waveFile->cueChunk = (CueChunk *) malloc(sizeof(CueChunk));
             if (waveFile->dataChunk == NULL)
             {
-                fprintf(stderr, "Memory Allocation Error: Could not allocate memory for Wave File Cue Chunk\n");
+                ERROR("[processFile] Memory Allocation Error: Could not allocate memory for Wave File Cue Chunk\n");
                 waveCloseFile(waveFile);
                 free(existingCuePoints);
                 return 0;
@@ -277,7 +301,7 @@ WaveFile * processFile(WaveFile * waveFile)
         }
         else if (strncmp(&nextChunkID[0], "LIST", 4) == 0)
         {
-//            fprintf(stdout, "Found LIST chunk\n");
+            INFO("[processFile] Found LIST chunk\n");
             // We found an existing List Chunk
 
             // Populate the existingListChunk struct
@@ -287,7 +311,7 @@ WaveFile * processFile(WaveFile * waveFile)
 
                 if (waveFile->dataChunk == NULL)
                 {
-                    fprintf(stderr, "Memory Allocation Error: Could not allocate memory for Wave File Cue Chunk\n");
+                    ERROR("[processFile] Memory Allocation Error: Could not allocate memory for Wave File Cue Chunk\n");
                     waveCloseFile(waveFile);
                     return 0;
                 }
@@ -306,7 +330,7 @@ WaveFile * processFile(WaveFile * waveFile)
             fread(listChunkDataSizeBytes, sizeof(char), 4, waveFile->file);
             if (ferror(waveFile->file) != 0)
             {
-                fprintf(stderr, "Error reading input file %s\n", waveFile->filePath);
+                ERROR("[processFile] Error reading input file %s\n", waveFile->filePath);
                 waveCloseFile(waveFile);
                 return 0;
             }
@@ -316,7 +340,7 @@ WaveFile * processFile(WaveFile * waveFile)
             fread(waveFile->listChunk->typeID, sizeof(char), 4, waveFile->file);
             if (ferror(waveFile->file) != 0)
             {
-                fprintf(stderr, "Error reading input file %s\n", waveFile->filePath);
+                ERROR("[processFile] Error reading input file %s\n", waveFile->filePath);
                 waveCloseFile(waveFile);
                 return 0;
             }
@@ -324,8 +348,8 @@ WaveFile * processFile(WaveFile * waveFile)
         }
         else if (strncmp(&nextChunkID[0], "labl", 4) == 0)
         {
-//            fprintf(stdout, "Found labl chunk\n");
-            // We found an existing labl Chunk in LIST chunk
+            INFO("[processFile] Found LABL chunk\n");
+            // We found an existing LABL chunk in LIST chunk
             waveFile->listChunk->lablChunks = realloc(waveFile->listChunk->lablChunks, sizeof(LablChunk)*(waveFile->listChunk->lablCount+1));
 
             LablChunk * lablChunk = &(waveFile->listChunk->lablChunks[waveFile->listChunk->lablCount]);
@@ -334,7 +358,7 @@ WaveFile * processFile(WaveFile * waveFile)
 
             if (lablChunk == NULL)
             {
-                fprintf(stderr, "Memory Allocation Error: Could not allocate memory for Wave File Labl Chunk\n");
+                ERROR("[processFile] Memory Allocation Error: Could not allocate memory for Wave File LABL chunk\n");
                 waveCloseFile(waveFile);
                 return 0;
             }
@@ -347,7 +371,7 @@ WaveFile * processFile(WaveFile * waveFile)
             fread(lablChunkDataSizeBytes, sizeof(char), 4, waveFile->file);
             if (ferror(waveFile->file) != 0)
             {
-                fprintf(stderr, "Error reading input file %s\n", waveFile->filePath);
+                ERROR("[processFile] Error reading input file %s\n", waveFile->filePath);
                 waveCloseFile(waveFile);
                 return 0;
             }
@@ -357,26 +381,32 @@ WaveFile * processFile(WaveFile * waveFile)
             fread(lablChunk->cuePointID, sizeof(char), 4, waveFile->file);
             if (ferror(waveFile->file) != 0)
             {
-                fprintf(stderr, "Error reading input file %s\n", waveFile->filePath);
+                ERROR("[processFile] Error reading input file %s\n", waveFile->filePath);
                 waveCloseFile(waveFile);
                 return 0;
             }
 
-            fprintf(stderr, "LABL chunkDataSize %d\n", lablChunkDataSize - 4);
+            DEBUG("[processFile] LABL dataSize %d\n", lablChunkDataSize);
 
-            if (lablChunkDataSize % 2 == 1)
-                lablChunkDataSize += 1;
+            lablChunkDataSize = to_odd(lablChunkDataSize);
 
-            lablChunk->text = (char *) malloc(lablChunkDataSize - 4);
-            fread(lablChunk->text, sizeof(char), lablChunkDataSize - 4, waveFile->file);
+            if (lablChunkDataSize > 4)
+            {
+                lablChunk->text = (char *) malloc(lablChunkDataSize - 4);
+                fread(lablChunk->text, sizeof(char), lablChunkDataSize - 4, waveFile->file);
 
-            fprintf(stderr, "LABL chunkDataSize %s\n", lablChunk->text);
+                DEBUG("[processFile] LABL text %s\n", lablChunk->text);
+            } else {
+                lablChunk->text = NULL;
+
+                WARN("[processFile] LABL text <skip>\n");
+            }
         }
         else if (strncmp(&nextChunkID[0], "ltxt", 4) == 0)
         {
-//            fprintf(stdout, "Found ltxt chunk\n");
+            INFO("[processFile] Found LTXT chunk\n");
 
-            // We found an existing ltxt Chunk in LIST chunk
+            // We found an existing LTXT chunk in LIST chunk
             waveFile->listChunk->ltxtChunks = realloc(waveFile->listChunk->ltxtChunks, sizeof(LtxtChunk)*(waveFile->listChunk->ltxtCount+1));
 
             LtxtChunk * ltxtChunk = &(waveFile->listChunk->ltxtChunks[waveFile->listChunk->ltxtCount]);
@@ -385,7 +415,7 @@ WaveFile * processFile(WaveFile * waveFile)
 
             if (ltxtChunk == NULL)
             {
-                fprintf(stderr, "Memory Allocation Error: Could not allocate memory for Wave File Labl Chunk\n");
+                ERROR("[processFile] Memory Allocation Error: Could not allocate memory for Wave File LABL chunk\n");
                 waveCloseFile(waveFile);
                 return 0;
             }
@@ -398,7 +428,7 @@ WaveFile * processFile(WaveFile * waveFile)
             fread(ltxtChunkDataSizeBytes, sizeof(char), 4, waveFile->file);
             if (ferror(waveFile->file) != 0)
             {
-                fprintf(stderr, "Error reading input file %s\n", waveFile->filePath);
+                ERROR("[processFile] Error reading input file %s\n", waveFile->filePath);
                 waveCloseFile(waveFile);
                 return 0;
             }
@@ -408,7 +438,7 @@ WaveFile * processFile(WaveFile * waveFile)
             fread(ltxtChunk->cuePointID, sizeof(char), 4, waveFile->file);
             if (ferror(waveFile->file) != 0)
             {
-                fprintf(stderr, "Error reading input file %s\n", waveFile->filePath);
+                ERROR("[processFile] Error reading input file %s\n", waveFile->filePath);
                 waveCloseFile(waveFile);
                 return 0;
             }
@@ -416,7 +446,7 @@ WaveFile * processFile(WaveFile * waveFile)
             fread(ltxtChunk->sampleLength, sizeof(char), 4, waveFile->file);
             if (ferror(waveFile->file) != 0)
             {
-                fprintf(stderr, "Error reading input file %s\n", waveFile->filePath);
+                ERROR("[processFile] Error reading input file %s\n", waveFile->filePath);
                 waveCloseFile(waveFile);
                 return 0;
             }
@@ -424,7 +454,7 @@ WaveFile * processFile(WaveFile * waveFile)
             fread(ltxtChunk->purposeID, sizeof(char), 4, waveFile->file);
             if (ferror(waveFile->file) != 0)
             {
-                fprintf(stderr, "Error reading input file %s\n", waveFile->filePath);
+                ERROR("[processFile] Error reading input file %s\n", waveFile->filePath);
                 waveCloseFile(waveFile);
                 return 0;
             }
@@ -432,7 +462,7 @@ WaveFile * processFile(WaveFile * waveFile)
             fread(ltxtChunk->country, sizeof(char), 2, waveFile->file);
             if (ferror(waveFile->file) != 0)
             {
-                fprintf(stderr, "Error reading input file %s\n", waveFile->filePath);
+                ERROR("[processFile] Error reading input file %s\n", waveFile->filePath);
                 waveCloseFile(waveFile);
                 return 0;
             }
@@ -440,7 +470,7 @@ WaveFile * processFile(WaveFile * waveFile)
             fread(ltxtChunk->language, sizeof(char), 2, waveFile->file);
             if (ferror(waveFile->file) != 0)
             {
-                fprintf(stderr, "Error reading input file %s\n", waveFile->filePath);
+                ERROR("[processFile] Error reading input file %s\n", waveFile->filePath);
                 waveCloseFile(waveFile);
                 return 0;
             }
@@ -448,7 +478,7 @@ WaveFile * processFile(WaveFile * waveFile)
             fread(ltxtChunk->dialect, sizeof(char), 2, waveFile->file);
             if (ferror(waveFile->file) != 0)
             {
-                fprintf(stderr, "Error reading input file %s\n", waveFile->filePath);
+                ERROR("[processFile] Error reading input file %s\n", waveFile->filePath);
                 waveCloseFile(waveFile);
                 return 0;
             }
@@ -456,27 +486,40 @@ WaveFile * processFile(WaveFile * waveFile)
             fread(ltxtChunk->codePage, sizeof(char), 2, waveFile->file);
             if (ferror(waveFile->file) != 0)
             {
-                fprintf(stderr, "Error reading input file %s\n", waveFile->filePath);
+                ERROR("[processFile] Error reading input file %s\n", waveFile->filePath);
                 waveCloseFile(waveFile);
                 return 0;
             }
 
+            DEBUG("[processFile] LTXT dataSize %d\n", ltxtChunkDataSize);
+
+            ltxtChunkDataSize = to_odd(ltxtChunkDataSize);
+
             if(ltxtChunkDataSize > 20) {
                 ltxtChunk->text = (char *) malloc(ltxtChunkDataSize-20);
                 fread(ltxtChunk->text, ltxtChunkDataSize-20, 1, waveFile->file);
+
+                DEBUG("[processFile] LTXT text %s\n", ltxtChunk->text);
+            } else {
+                ltxtChunk->text = NULL;
+
+                WARN("[processFile] LTXT text <skip>\n");
             }
         }
         else
         {
-            fprintf(stdout, "Found unsuppoted chunk %s\n", nextChunkID);
+            WARN("[processFile] Found unsuppoted chunk %s\n", nextChunkID);
             // We have found a chunk type that we are not going to work with.
+            // ISFTL
+            // IENGL
+            // ICRDL
             otherChunkLocation.startOffset = ftell(waveFile->file) - sizeof(nextChunkID);
 
             char chunkDataSizeBytes[4] = {0};
             fread(chunkDataSizeBytes, sizeof(char), 4, waveFile->file);
             if (ferror(waveFile->file) != 0)
             {
-                fprintf(stderr, "Error reading input file %s\n", waveFile->filePath);
+                ERROR("[processFile] Error reading input file %s\n", waveFile->filePath);
                 waveCloseFile(waveFile);
                 return 0;
             }
@@ -576,8 +619,121 @@ DataChunk * makeDataChunk(uint32_t chunkDataSize, char *waveformData)
     return data;
 }
 
-WaveFile * makeWaveFile(WaveHeader *waveHeader, FormatChunk *formatChunk, DataChunk *dataChunk)
-{
+CueChunk * makeCueChunk(
+        uint32_t cuePointsCount,
+        CuePoint *cuePoints
+) {
+    CueChunk * chunk = (CueChunk *) malloc(sizeof(CueChunk));
+    chunk->chunkID[0] = 'c';
+    chunk->chunkID[1] = 'u';
+    chunk->chunkID[2] = 'e';
+    chunk->chunkID[3] = ' ';
+    uint32_t chunkDataSize = 4 + 24 * cuePointsCount;
+    uint32ToLittleEndianBytes(chunkDataSize, chunk->chunkDataSize);
+    uint32ToLittleEndianBytes(cuePointsCount, chunk->cuePointsCount);
+    chunk->cuePoints = cuePoints;
+    return chunk;
+}
+
+CuePoint * makeCuePoint(
+        uint32_t cuePointID,
+        uint32_t playOrderPosition,
+        uint32_t dataChunkID,
+        uint32_t chunkStart,
+        uint32_t blockStart,
+        uint32_t frameOffset
+) {
+    CuePoint * chunk = (CuePoint *) malloc(sizeof(CuePoint));
+    uint32ToLittleEndianBytes(cuePointID, chunk->cuePointID);
+    uint32ToLittleEndianBytes(playOrderPosition, chunk->playOrderPosition);
+    uint32ToLittleEndianBytes(dataChunkID, chunk->dataChunkID);
+    uint32ToLittleEndianBytes(chunkStart, chunk->chunkStart);
+    uint32ToLittleEndianBytes(blockStart, chunk->blockStart);
+    uint32ToLittleEndianBytes(frameOffset, chunk->frameOffset);
+    return chunk;
+}
+
+ListChunk * makeListChunk(
+        uint32_t ltxtCount,
+        LtxtChunk *ltxtChunks,
+        uint32_t lablCount,
+        LablChunk *lablChunks
+) {
+    ListChunk * chunk = (ListChunk *) malloc(sizeof(ListChunk));
+    chunk->chunkID[0] = 'l';
+    chunk->chunkID[1] = 'i';
+    chunk->chunkID[2] = 's';
+    chunk->chunkID[3] = 't';
+    uint32_t chunkDataSize = 4;
+    for (int i=0; i<ltxtCount; i++)
+    {
+        chunkDataSize += littleEndianBytesToUInt32(ltxtChunks[i].chunkDataSize);
+    }
+    for (int i=0; i<lablCount; i++)
+    {
+        chunkDataSize += littleEndianBytesToUInt32(lablChunks[i].chunkDataSize);
+    }
+    uint32ToLittleEndianBytes(chunkDataSize, chunk->chunkDataSize);
+    chunk->typeID[0] = 'a';
+    chunk->typeID[1] = 'd';
+    chunk->typeID[2] = 't';
+    chunk->typeID[3] = 'l';
+    chunk->ltxtCount = ltxtCount;
+    chunk->ltxtChunks = ltxtChunks;
+    chunk->lablCount = lablCount;
+    chunk->lablChunks = lablChunks;
+    return chunk;
+}
+
+LtxtChunk * makeLtxtChunk(
+        uint32_t cuePointID,
+        uint32_t sampleLength,
+        uint32_t purposeID,
+        uint16_t country,
+        uint16_t language,
+        uint16_t dialect,
+        uint16_t codePage,
+        char *text
+) {
+    LtxtChunk * chunk = (LtxtChunk *) malloc(sizeof(LtxtChunk));
+    chunk->chunkID[0] = 'l';
+    chunk->chunkID[1] = 't';
+    chunk->chunkID[2] = 'x';
+    chunk->chunkID[3] = 't';
+    uint32_t chunkDataSize = 20 + (unsigned)strlen(text);
+    uint32ToLittleEndianBytes(chunkDataSize, chunk->chunkDataSize);
+    uint32ToLittleEndianBytes(cuePointID, chunk->cuePointID);
+    uint32ToLittleEndianBytes(sampleLength, chunk->sampleLength);
+    uint32ToLittleEndianBytes(purposeID, chunk->purposeID);
+    uint16ToLittleEndianBytes(country, chunk->country);
+    uint16ToLittleEndianBytes(language, chunk->language);
+    uint16ToLittleEndianBytes(dialect, chunk->dialect);
+    uint16ToLittleEndianBytes(codePage, chunk->codePage);
+    chunk->text = text;
+    return chunk;
+}
+
+LablChunk * makeLablChunk(
+        uint32_t cuePointID,
+        char *text
+) {
+    LablChunk * chunk = (LablChunk *) malloc(sizeof(LablChunk));
+    chunk->chunkID[0] = 'l';
+    chunk->chunkID[1] = 'a';
+    chunk->chunkID[2] = 'b';
+    chunk->chunkID[3] = 'l';
+    uint32_t chunkDataSize = 4 + (unsigned)strlen(text);
+    uint32ToLittleEndianBytes(chunkDataSize, chunk->chunkDataSize);
+    uint32ToLittleEndianBytes(cuePointID, chunk->cuePointID);
+    chunk->text = text;
+    return chunk;
+}
+
+WaveFile * makeWaveFile(
+        WaveHeader *waveHeader,
+        FormatChunk *formatChunk,
+        DataChunk *dataChunk
+) {
     WaveFile *wave = (WaveFile *) malloc(sizeof(WaveFile));
     wave->filePath = NULL;
     wave->file = NULL;
@@ -599,52 +755,286 @@ WaveFile * makeWaveFile(WaveHeader *waveHeader, FormatChunk *formatChunk, DataCh
 
 void saveWaveFile(WaveFile *waveFile, const char *filePath)
 {
-    waveFile->filePath = malloc(1 + strlen(filePath));
-    if(waveFile->filePath) strcpy(waveFile->filePath, filePath);
+    if (filePath != NULL)
+    {
+        waveFile->filePath = malloc(1 + strlen(filePath));
+        strcpy(waveFile->filePath, filePath);
+    }
     if (waveFile->file == NULL) waveFile->file = fopen(filePath, "wb");
     if (waveFile->file == NULL)
     {
-        fprintf(stderr, "Could not open output file %s\n", filePath);
+        ERROR("[saveWaveFile] Could not open output file %s\n", filePath);
         return;
     }
     if (waveFile->waveHeader != NULL)
+        INFO("[saveWaveFile] Write HEADER chunk\n");
         if (fwrite(waveFile->waveHeader, sizeof(WaveHeader), 1, waveFile->file) < 1)
         {
-            fprintf(stderr, "Error writing header to output file.\n");
+            ERROR("[saveWaveFile] Error writing header to output file\n");
             return;
         }
     if (waveFile->formatChunk != NULL)
+        INFO("[saveWaveFile] Write FMT chunk\n");
         if (fwrite(waveFile->formatChunk, sizeof(FormatChunk), 1, waveFile->file) < 1)
         {
-            fprintf(stderr, "Error writing format chunk to output file.\n");
+            ERROR("[saveWaveFile] Error writing format chunk to output file\n");
             return;
         }
     if (waveFile->dataChunk != NULL)
     {
+        INFO("[saveWaveFile] Write DATA chunk\n");
         uint32_t dataChunkSize = littleEndianBytesToUInt32(waveFile->dataChunk->chunkDataSize);
         if (fwrite(waveFile->dataChunk->chunkID, sizeof(char), 4, waveFile->file) < 1)
         {
-            fprintf(stderr, "Error writing data chunk (chunkID) to output file.\n");
+            ERROR("[saveWaveFile] Error writing data chunk (chunkID) to output file\n");
             return;
         }
         if (fwrite(waveFile->dataChunk->chunkDataSize, sizeof(char), 4, waveFile->file) < 1)
         {
-            fprintf(stderr, "Error writing data chunk (chunkDataSize) to output file.\n");
+            ERROR("[saveWaveFile] Error writing data chunk (chunkDataSize) to output file\n");
             return;
         }
         if (fwrite(waveFile->dataChunk->waveformData, dataChunkSize, 1, waveFile->file) < 1)
         {
-            fprintf(stderr, "Size data chunk (waveformData) %d.\n", dataChunkSize);
-            fprintf(stderr, "Error writing data chunk (waveformData) to output file.\n");
+            DEBUG("[saveWaveFile] Size data chunk (waveformData) %d\n", dataChunkSize);
+            ERROR("[saveWaveFile] Error writing data chunk (waveformData) to output file\n");
             return;
         }
         if (dataChunkSize % 2 != 0)
         {
             if (fwrite("\0", sizeof(char), 1, waveFile->file) < 1)
             {
-                fprintf(stderr, "Error writing padding character to output file.\n");
+                ERROR("[saveWaveFile] Error writing padding character to output file\n");
                 return;
 
+            }
+        }
+    }
+    if  (waveFile->cueChunk != NULL)
+    {
+        INFO("[saveWaveFile] Write CUE chunk\n");
+        CueChunk * cue_chunk = waveFile->cueChunk;
+
+        DEBUG("[saveWaveFile] Write CUE chunkID %c%c%c%c\n", CH4(cue_chunk->chunkID));
+        if (fwrite(cue_chunk->chunkID, sizeof(char), 4, waveFile->file) < 1)
+        {
+            ERROR("[saveWaveFile] Error writing cue chunk (chunkID) to output file\n");
+            return;
+        }
+
+        DEBUG("[saveWaveFile] Write CUE chunkDataSize %i\n", INT32(cue_chunk->chunkDataSize));
+        if (fwrite(cue_chunk->chunkDataSize, sizeof(char), 4, waveFile->file) < 1)
+        {
+            ERROR("[saveWaveFile] Error writing cue chunk (chunkDataSize) to output file\n");
+            return;
+        }
+
+        DEBUG("[saveWaveFile] Write CUE cuePointsCount %i\n", INT32(cue_chunk->cuePointsCount));
+        if (fwrite(cue_chunk->cuePointsCount, sizeof(char), 4, waveFile->file) < 1)
+        {
+            ERROR("[saveWaveFile] Error writing cue chunk (cuePointsCount) to output file\n");
+            return;
+        }
+
+        uint32_t cuePointsCount = littleEndianBytesToUInt32(cue_chunk->cuePointsCount);
+        for (uint32_t i=0; i<cuePointsCount; i++)
+        {
+            INFO("[saveWaveFile] Write CUE POINT %i\n", i);
+            CuePoint * cue_point = &cue_chunk->cuePoints[i];
+
+            DEBUG("[saveWaveFile] Write CUE POINT cuePointID %i\n", INT32(cue_point->cuePointID));
+            if (fwrite(cue_point->cuePointID, sizeof(char), 4, waveFile->file) < 1)
+            {
+                ERROR("[saveWaveFile] Error writing cue point (cuePointID) to output file\n");
+                return;
+            }
+
+            DEBUG("[saveWaveFile] Write CUE POINT playOrderPosition %i\n", INT32(cue_point->playOrderPosition));
+            if (fwrite(cue_point->playOrderPosition, sizeof(char), 4, waveFile->file) < 1)
+            {
+                ERROR("[saveWaveFile] Error writing cue point (playOrderPosition) to output file\n");
+                return;
+            }
+
+            DEBUG("[saveWaveFile] Write CUE POINT dataChunkID %c%c%c%c\n", CH4(cue_point->dataChunkID));
+            if (fwrite(cue_point->dataChunkID, sizeof(char), 4, waveFile->file) < 1)
+            {
+                ERROR("[saveWaveFile] Error writing cue point (dataChunkID) to output file\n");
+                return;
+            }
+
+            DEBUG("[saveWaveFile] Write CUE POINT chunkStart %i\n", INT32(cue_point->chunkStart));
+            if (fwrite(cue_point->chunkStart, sizeof(char), 4, waveFile->file) < 1)
+            {
+                ERROR("[saveWaveFile] Error writing cue point (chunkStart) to output file\n");
+                return;
+            }
+
+            DEBUG("[saveWaveFile] Write CUE POINT blockStart %i\n", INT32(cue_point->blockStart));
+            if (fwrite(cue_point->blockStart, sizeof(char), 4, waveFile->file) < 1)
+            {
+                ERROR("[saveWaveFile] Error writing cue point (blockStart) to output file\n");
+                return;
+            }
+
+            DEBUG("[saveWaveFile] Write CUE POINT frameOffset %i\n", INT32(cue_point->frameOffset));
+            if (fwrite(cue_point->frameOffset, sizeof(char), 4, waveFile->file) < 1)
+            {
+                ERROR("[saveWaveFile] Error writing cue point (frameOffset) to output file\n");
+                return;
+            }
+        }
+    }
+    if  (waveFile->listChunk != NULL)
+    {
+        INFO("[saveWaveFile] Write LIST chunk\n");
+        ListChunk * list_chunk = waveFile->listChunk;
+
+        DEBUG("[saveWaveFile] Write LIST chunkID %c%c%c%c\n", CH4(list_chunk->chunkID));
+        if (fwrite(list_chunk->chunkID, sizeof(char), 4, waveFile->file) < 1)
+        {
+            ERROR("[saveWaveFile] Error writing list chunk (chunkID) to output file\n");
+            return;
+        }
+
+        DEBUG("[saveWaveFile] Write LIST chunkDataSize %i\n", INT32(list_chunk->chunkDataSize));
+        if (fwrite(list_chunk->chunkDataSize, sizeof(char), 4, waveFile->file) < 1)
+        {
+            ERROR("[saveWaveFile] Error writing list chunk (chunkDataSize) to output file\n");
+            return;
+        }
+
+        DEBUG("[saveWaveFile] Write LIST typeID %c%c%c%c\n", CH4(list_chunk->typeID));
+        if (fwrite(list_chunk->typeID, sizeof(char), 4, waveFile->file) < 1)
+        {
+            ERROR("[saveWaveFile] Error writing list chunk (typeID) to output file\n");
+            return;
+        }
+
+        for( int i=0; i<list_chunk->lablCount; i++)
+        {
+            INFO("[saveWaveFile] Write LABL chunk %i\n", i);
+            LablChunk * labl_chank = &list_chunk->lablChunks[i];
+
+            DEBUG("[saveWaveFile] Write LABL chunkID %c%c%c%c\n", CH4(labl_chank->chunkID));
+            if (fwrite(labl_chank->chunkID, sizeof(char), 4, waveFile->file) < 1)
+            {
+                ERROR("[saveWaveFile] Error writing LABL chunk (chunkID) to output file\n");
+                return;
+            }
+
+            DEBUG("[saveWaveFile] Write LABL chunkDataSize %i\n", INT32(labl_chank->chunkDataSize));
+            if (fwrite(labl_chank->chunkDataSize, sizeof(char), 4, waveFile->file) < 1)
+            {
+                ERROR("[saveWaveFile] Error writing LABL chunk (chunkDataSize) to output file\n");
+                return;
+            }
+
+            DEBUG("[saveWaveFile] Write LABL cuePointID %i\n", INT32(labl_chank->cuePointID));
+            if (fwrite(labl_chank->cuePointID, sizeof(char), 4, waveFile->file) < 1)
+            {
+                ERROR("[saveWaveFile] Error writing LABL chunk (cuePointID) to output file\n");
+                return;
+            }
+
+            uint32_t size = littleEndianBytesToUInt32(labl_chank->chunkDataSize) - 4;
+            size = to_odd(size);
+
+            if (size > 0)
+            {
+                INFO("[saveWaveFile] Write LABL text %s\n", labl_chank->text);
+                if(fwrite(labl_chank->text, sizeof(char), size, waveFile->file) < 1)
+                {
+                    ERROR("[saveWaveFile] Error writing LABL chunk (text) to output file\n");
+                    return;
+                }
+            } else {
+                WARN("[saveWaveFile] LABL text <skip>\n");
+            }
+        }
+
+        for( int i=0; i<list_chunk->ltxtCount; i++)
+        {
+            INFO("[saveWaveFile] Write LTXT chunk %i\n", i);
+            LtxtChunk * ltxt_chank = &list_chunk->ltxtChunks[i];
+
+            DEBUG("[saveWaveFile] Write LTXT chunkID %c%c%c%c\n", CH4(ltxt_chank->chunkID));
+            if (fwrite(ltxt_chank->chunkID, sizeof(char), 4, waveFile->file) < 1)
+            {
+                ERROR("[saveWaveFile] Error writing LTXT chunk (chunkID) to output file\n");
+                return;
+            }
+
+            DEBUG("[saveWaveFile] Write LTXT chunkDataSize %i\n", INT32(ltxt_chank->chunkDataSize));
+            if (fwrite(ltxt_chank->chunkDataSize, sizeof(char), 4, waveFile->file) < 1)
+            {
+                ERROR("[saveWaveFile] Error writing LTXT chunk (chunkDataSize) to output file\n");
+                return;
+            }
+
+            DEBUG("[saveWaveFile] Write LTXT cuePointID %i\n", INT32(ltxt_chank->cuePointID));
+            if (fwrite(ltxt_chank->cuePointID, sizeof(char), 4, waveFile->file) < 1)
+            {
+                ERROR("[saveWaveFile] Error writing LTXT chunk (cuePointID) to output file\n");
+                return;
+            }
+
+            DEBUG("[saveWaveFile] Write LTXT sampleLength %i\n", INT32(ltxt_chank->sampleLength));
+            if (fwrite(ltxt_chank->sampleLength, sizeof(char), 4, waveFile->file) < 1)
+            {
+                ERROR("[saveWaveFile] Error writing LTXT chunk (sampleLength) to output file\n");
+                return;
+            }
+
+            DEBUG("[saveWaveFile] Write LTXT purposeID %c%c%c%c\n", CH4(ltxt_chank->purposeID));
+            if (fwrite(ltxt_chank->purposeID, sizeof(char), 4, waveFile->file) < 1)
+            {
+                ERROR("[saveWaveFile] Error writing LTXT chunk (purposeID) to output file\n");
+                return;
+            }
+
+            DEBUG("[saveWaveFile] Write LTXT country %i\n", INT16(ltxt_chank->country));
+            if (fwrite(ltxt_chank->country, sizeof(char), 2, waveFile->file) < 1)
+            {
+                ERROR("[saveWaveFile] Error writing LTXT chunk (country) to output file\n");
+                return;
+            }
+
+            DEBUG("[saveWaveFile] Write LTXT language %i\n", INT16(ltxt_chank->language));
+            if (fwrite(ltxt_chank->language, sizeof(char), 2, waveFile->file) < 1)
+            {
+                ERROR("[saveWaveFile] Error writing LTXT chunk (language) to output file\n");
+                return;
+            }
+
+            DEBUG("[saveWaveFile] Write LTXT dialect %i\n", INT16(ltxt_chank->dialect));
+            if (fwrite(ltxt_chank->dialect, sizeof(char), 2, waveFile->file) < 1)
+            {
+                ERROR("[saveWaveFile] Error writing LTXT chunk (dialect) to output file\n");
+                return;
+            }
+
+            DEBUG("[saveWaveFile] Write LTXT codePage %i\n", INT16(ltxt_chank->codePage));
+            if (fwrite(ltxt_chank->codePage, sizeof(char), 2, waveFile->file) < 1)
+            {
+                ERROR("[saveWaveFile] Error writing LTXT chunk (codePage) to output file\n");
+                return;
+            }
+
+            uint32_t size = littleEndianBytesToUInt32(ltxt_chank->chunkDataSize) - 20;
+            INFO("[saveWaveFile] LTXT text size %i\n", size);
+            size = to_odd(size);
+
+            if (size > 0)
+            {
+                INFO("[saveWaveFile] Write LTXT text %s\n", ltxt_chank->text);
+                if (fwrite(ltxt_chank->text, sizeof(char), size, waveFile->file) < 1)
+                {
+                    ERROR("[saveWaveFile] Error writing LTXT chunk (text) to output file\n");
+                    return;
+                }
+            } else {
+                WARN("[saveWaveFile] LTXT text <skip>\n");
             }
         }
     }
@@ -747,7 +1137,6 @@ uint16_t littleEndianBytesToUInt16(char littleEndianBytes[2])
 
     return uInt16Value;
 }
-
 
 void uint16ToLittleEndianBytes(uint16_t uInt16Value, char out_LittleEndianBytes[2])
 {

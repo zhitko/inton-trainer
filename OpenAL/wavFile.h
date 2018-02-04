@@ -71,15 +71,14 @@ typedef struct {
     char *text;
 } LtxtChunk;
 
-
 // Names are stored in a ListChunk
 typedef struct {
     char chunkID[4];        // String: Must be "list" (0x6C696E74).
     char chunkDataSize[4];  // Unsigned 4-byte little endian int: Byte count for the remainder of the chunk: 4 (size of typeID) + (24 (size of ListItem struct) * number of ListItems).
     char typeID[4];         // "adtl" (0x6164746C)
-    int ltxtCount;
+    uint32_t ltxtCount;
     LtxtChunk *ltxtChunks;
-    int lablCount;
+    uint32_t lablCount;
     LablChunk *lablChunks;
 } ListChunk;
 
@@ -107,16 +106,23 @@ WaveFile * initWaveFile();
 WaveFile * waveOpenHFile(int);
 WaveFile * waveOpenFile(const char*);
 
-// Close WaveFile
-void waveCloseFile(WaveFile*);
-
 // Create and Write WaveFile functions
 WaveHeader * makeWaveHeader();
 FormatChunk * makeFormatChunk(uint16_t numberOfChannels, uint32_t sampleRate, uint16_t significantBitsPerSample);
 DataChunk * makeDataChunk(uint32_t chunkDataSize, char *waveformData);
+CueChunk * makeCueChunk(uint32_t cuePointsCount, CuePoint *cuePoints);
+CuePoint * makeCuePoint(uint32_t cuePointID, uint32_t playOrderPosition, uint32_t dataChunkID, uint32_t chunkStart, uint32_t blockStart, uint32_t frameOffset);
+ListChunk * makeListChunk(uint32_t ltxtCount, LtxtChunk *ltxtChunks, uint32_t lablCount, LablChunk *lablChunks);
+LtxtChunk * makeLtxtChunk(uint32_t cuePointID, uint32_t sampleLength, uint32_t purposeID, uint16_t country, uint16_t language, uint16_t dialect, uint16_t codePage, char *text);
+LablChunk * makeLablChunk(uint32_t cuePointID, char *text);
 WaveFile * makeWaveFile(WaveHeader *waveHeader, FormatChunk *formatChunk, DataChunk *dataChunk);
 WaveFile * makeWaveFileFromData(char *waveformData, uint32_t chunkDataSize, uint16_t numberOfChannels, uint32_t sampleRate, uint16_t significantBitsPerSample);
+
+// Save WaveFile
 void saveWaveFile(WaveFile *waveFile, const char *filePath);
+
+// Close WaveFile
+void waveCloseFile(WaveFile*);
 
 // All data in a Wave file must be little endian.
 // These are functions to convert 2- and 4-byte unsigned ints to and from little endian, if needed

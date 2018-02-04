@@ -103,8 +103,12 @@ vector initv(int size, double* data) {
 vector makev(int xSz) {
     vector nw_vector;
     nw_vector.x = xSz;
-//    nw_vector.v = malloc(sizeof(double) * xSz);
-    nw_vector.v = calloc(xSz, sizeof(double));
+    if (xSz > 0)
+    {
+        nw_vector.v = calloc(xSz, sizeof(double));
+    } else {
+        nw_vector.v = NULL;
+    }
     return(nw_vector);
 }
 
