@@ -106,17 +106,70 @@ WaveFile * initWaveFile();
 WaveFile * waveOpenHFile(int);
 WaveFile * waveOpenFile(const char*);
 
-// Create and Write WaveFile functions
+// Create WaveFile functions
+WaveFile * makeWaveFile(
+        WaveHeader *waveHeader,
+        FormatChunk *formatChunk,
+        DataChunk *dataChunk,
+        CueChunk *cueChunk,
+        LtxtChunk *ltxtChunks,
+        uint32_t ltxtChunksCount,
+        LablChunk *lablChunks,
+        uint32_t lablChunksCount
+);
+WaveFile * makeWaveFileFromRawData(
+        char *waveformData,
+        uint32_t chunkDataSize,
+        uint16_t numberOfChannels,
+        uint32_t sampleRate,
+        uint16_t significantBitsPerSample,
+        uint32_t pointsCount,
+        uint32_t *pointsOffset,
+        uint32_t *pointsLenght,
+        char **pointsLabels
+);
+
+// Create Chunks functions
 WaveHeader * makeWaveHeader();
-FormatChunk * makeFormatChunk(uint16_t numberOfChannels, uint32_t sampleRate, uint16_t significantBitsPerSample);
-DataChunk * makeDataChunk(uint32_t chunkDataSize, char *waveformData);
-CueChunk * makeCueChunk(uint32_t cuePointsCount, CuePoint *cuePoints);
-CuePoint * makeCuePoint(uint32_t cuePointID, uint32_t playOrderPosition, uint32_t dataChunkID, uint32_t chunkStart, uint32_t blockStart, uint32_t frameOffset);
-ListChunk * makeListChunk(uint32_t ltxtCount, LtxtChunk *ltxtChunks, uint32_t lablCount, LablChunk *lablChunks);
-LtxtChunk * makeLtxtChunk(uint32_t cuePointID, uint32_t sampleLength, uint32_t purposeID, uint16_t country, uint16_t language, uint16_t dialect, uint16_t codePage, char *text);
-LablChunk * makeLablChunk(uint32_t cuePointID, char *text);
-WaveFile * makeWaveFile(WaveHeader *waveHeader, FormatChunk *formatChunk, DataChunk *dataChunk);
-WaveFile * makeWaveFileFromData(char *waveformData, uint32_t chunkDataSize, uint16_t numberOfChannels, uint32_t sampleRate, uint16_t significantBitsPerSample);
+FormatChunk * makeFormatChunk(
+        uint16_t numberOfChannels,
+        uint32_t sampleRate,
+        uint16_t significantBitsPerSample
+);
+DataChunk * makeDataChunk(
+        uint32_t chunkDataSize,
+        char *waveformData
+);
+CueChunk * makeCueChunk(
+        uint32_t cuePointsCount,
+        CuePoint *cuePoints
+);
+CuePoint * makeCuePoint(
+        uint32_t cuePointID,
+        uint32_t playOrderPosition,
+        uint32_t chunkStart,
+        uint32_t blockStart,
+        uint32_t frameOffset
+);
+ListChunk * makeListChunk(
+        uint32_t ltxtCount,
+        LtxtChunk *ltxtChunks,
+        uint32_t lablCount,
+        LablChunk *lablChunks
+);
+LtxtChunk * makeLtxtChunk(
+        uint32_t cuePointID,
+        uint32_t sampleLength,
+        uint16_t country,
+        uint16_t language,
+        uint16_t dialect,
+        uint16_t codePage,
+        char *text
+);
+LablChunk * makeLablChunk(
+        uint32_t cuePointID,
+        char *text
+);
 
 // Save WaveFile
 void saveWaveFile(WaveFile *waveFile, const char *filePath);

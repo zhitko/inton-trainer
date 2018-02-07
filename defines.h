@@ -23,6 +23,10 @@
 #define OCTAVE_MAX_1 2.5
 #define OCTAVE_MAX_2 5.0
 
+#define MARK_PRE_NUCLEUS 'P'
+#define MARK_NUCLEUS 'N'
+#define MARK_POST_NUCLEUS 'T'
+
 #define MASK_LEN 100
 #define MASK_MIN 0.0001
 #define MASK_MAX 1.0

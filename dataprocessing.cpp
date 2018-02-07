@@ -276,17 +276,17 @@ GraphData * ProcWave2Data(QString fname)
 
     vector norm_wave = normalizev(wave, 0.0, 1.0);
 
-    MaskData md_p = getLabelsFromFile(waveFile, 'P');
-    MaskData md_n = getLabelsFromFile(waveFile, 'N');
-    MaskData md_t = getLabelsFromFile(waveFile, 'T');
+    MaskData md_p = getLabelsFromFile(waveFile, MARK_PRE_NUCLEUS);
+    MaskData md_n = getLabelsFromFile(waveFile, MARK_NUCLEUS);
+    MaskData md_t = getLabelsFromFile(waveFile, MARK_POST_NUCLEUS);
 
-    vector p_mask = readMaskFromFile(waveFile, wave.x, 'P');
+    vector p_mask = readMaskFromFile(waveFile, wave.x, MARK_PRE_NUCLEUS);
     qDebug() << "p_mask" << LOG_DATA;
 
-    vector n_mask = readMaskFromFile(waveFile, wave.x, 'N');
+    vector n_mask = readMaskFromFile(waveFile, wave.x, MARK_NUCLEUS);
     qDebug() << "n_mask" << LOG_DATA;
 
-    vector t_mask = readMaskFromFile(waveFile, wave.x, 'T');
+    vector t_mask = readMaskFromFile(waveFile, wave.x, MARK_POST_NUCLEUS);
     qDebug() << "t_mask" << LOG_DATA;
 
     vector p_wave = zero_to_nan(vector_cut_by_mask(norm_wave, p_mask));
@@ -436,9 +436,9 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
     vector intensive_mid = vector_smooth_mid(intensive, sptk_settings->plotEnergy->midFrame);
     qDebug() << "::SimpleProcWave2Data intensive_mid" << LOG_DATA;
 
-    MaskData md_p = getLabelsFromFile(waveFile, 'P');
-    MaskData md_n = getLabelsFromFile(waveFile, 'N');
-    MaskData md_t = getLabelsFromFile(waveFile, 'T');
+    MaskData md_p = getLabelsFromFile(waveFile, MARK_PRE_NUCLEUS);
+    MaskData md_n = getLabelsFromFile(waveFile, MARK_NUCLEUS);
+    MaskData md_t = getLabelsFromFile(waveFile, MARK_POST_NUCLEUS);
 
     freev(frame);
     freev(window);

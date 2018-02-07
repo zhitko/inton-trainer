@@ -291,15 +291,112 @@ QModelIndex SandBoxItemModel::markOutFile(QModelIndex index)
     int size = littleEndianBytesToUInt32(waveFile->dataChunk->chunkDataSize);
     qDebug() << "file size " << size << LOG_DATA;
 
-    int pitchSize = data->d_pitch_log.x;
-    qDebug() << "pitch size " << pitchSize << LOG_DATA;
+    int pitchLogSize = data->d_pitch_log.x;
+    qDebug() << "pitch size " << pitchLogSize << LOG_DATA;
+
+    double scaleFactor = 1.0 * size / CHAR_BIT_RECORD / pitchLogSize;
+
+    uint32_t pointsCount = 0;
+    uint32_t *pointsOffset = NULL;
+    uint32_t *pointsLenght = NULL;
+    char **pointsLabels = NULL;
 
     // TODO: process WAV file and add marks
+    uint8_t limit = 0.1;
+    uint8_t cut = 0.3;
 
-    saveWaveFile(waveFile, newFilePath.toLocal8Bit().data());
+    uint8_t gotIt = 0;
+    uint32_t lenght = 0;
+    for (uint32_t i=0; i<pitchLogSize; i++)
+    {
+        if (data->d_pitch_log.v[i] < limit && gotIt == 1)
+        {
+            gotIt = 0;
+            if (pointsLenght == NULL)
+            {
+                pointsLenght = (uint32_t *) malloc(sizeof(uint32_t));
+            } else {
+                pointsLenght = (uint32_t *) realloc(pointsLenght, sizeof(uint32_t) * pointsCount);
+            }
+            lenght *= scaleFactor;
+            pointsLenght[pointsCount - 1] = lenght - cut*lenght;
+            pointsOffset[pointsCount - 1] += cut*lenght;
+
+            if (pointsLabels == NULL)
+            {
+                pointsLabels = (char **) malloc(sizeof(char *)*pointsCount);
+            } else {
+                pointsLabels = (char **) realloc(pointsLabels, sizeof(char *) * pointsCount);
+            }
+            pointsLabels[pointsCount - 1] = (char *) malloc(sizeof(char)*2);
+            pointsLabels[pointsCount - 1][0] = MARK_NUCLEUS;
+            pointsLabels[pointsCount - 1][1] = 0;
+        }
+        if (data->d_pitch_log.v[i] >= limit && gotIt == 1)
+        {
+            lenght++;
+        }
+        if (data->d_pitch_log.v[i] >= limit && gotIt == 0)
+        {
+            gotIt = 1;
+            pointsCount++;
+            lenght = 0;
+            if (pointsOffset == NULL)
+            {
+                pointsOffset = (uint32_t *) malloc(sizeof(uint32_t));
+            } else {
+                pointsOffset = (uint32_t *) realloc(pointsOffset, sizeof(uint32_t) * pointsCount);
+            }
+            pointsOffset[pointsCount - 1] = i * scaleFactor;
+        }
+    }
+
+    int waveDataSize = littleEndianBytesToUInt32(waveFile->dataChunk->chunkDataSize);
+    char* waveData = (char*) malloc(waveDataSize);
+    memcpy(waveData, waveFile->dataChunk->waveformData, waveDataSize);
+
+    if (0)
+    {
+        pointsCount = 3;
+        pointsOffset = (uint32_t *) malloc(sizeof(uint32_t)*pointsCount);
+        pointsOffset[0] = 1968;
+        pointsOffset[1] = 2160;
+        pointsOffset[2] = 3552;
+
+        pointsLenght = (uint32_t *) malloc(sizeof(uint32_t)*pointsCount);
+        pointsLenght[0] = 152;
+        pointsLenght[1] = 1280;
+        pointsLenght[2] = 472;
+
+        pointsLabels = (char **) malloc(sizeof(char *)*pointsCount);
+        pointsLabels[0] = (char *) malloc(sizeof(char)*2);
+        pointsLabels[1] = (char *) malloc(sizeof(char)*2);
+        pointsLabels[2] = (char *) malloc(sizeof(char)*2);
+        pointsLabels[0][0] = 'P';
+        pointsLabels[1][0] = 'N';
+        pointsLabels[2][0] = 'T';
+        pointsLabels[0][1] = 0;
+        pointsLabels[1][1] = 0;
+        pointsLabels[2][1] = 0;
+    }
+
+    WaveFile * newWaveFile = makeWaveFileFromRawData(
+                waveData,
+                waveDataSize,
+                NUMBER_OF_CHANNELS,
+                RECORD_FREQ,
+                SIGNIFICANT_BITS_PER_SAMPLE,
+                pointsCount,
+                pointsOffset,
+                pointsLenght,
+                pointsLabels
+    );
+    saveWaveFile(newWaveFile, newFilePath.toLocal8Bit().data());
 
     freeSimpleGraphData(data);
     qDebug() << "freeSimpleGraphData" << LOG_DATA;
+    waveCloseFile(newWaveFile);
+    qDebug() << "waveCloseFile newWaveFile" << LOG_DATA;
 
     QStandardItem* item = this->itemFromIndex(index);
     QStandardItem* newItem = this->createFileItem(QFileInfo(newFilePath));

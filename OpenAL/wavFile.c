@@ -606,14 +606,14 @@ FormatChunk * makeFormatChunk(uint16_t numberOfChannels, uint32_t sampleRate, ui
     return format;
 }
 
-DataChunk * makeDataChunk(uint32_t chunkDataSize, char *waveformData)
+DataChunk * makeDataChunk(uint32_t waveformDataSize, char *waveformData)
 {
     DataChunk * data = (DataChunk *) malloc(sizeof(DataChunk));
     data->chunkID[0] = 'd';
     data->chunkID[1] = 'a';
     data->chunkID[2] = 't';
     data->chunkID[3] = 'a';
-    uint32ToLittleEndianBytes(chunkDataSize, data->chunkDataSize);
+    uint32ToLittleEndianBytes(waveformDataSize, data->chunkDataSize);
     data->waveformData = waveformData;
     data->isWaveformDataOwned = 1;
     return data;
@@ -638,7 +638,6 @@ CueChunk * makeCueChunk(
 CuePoint * makeCuePoint(
         uint32_t cuePointID,
         uint32_t playOrderPosition,
-        uint32_t dataChunkID,
         uint32_t chunkStart,
         uint32_t blockStart,
         uint32_t frameOffset
@@ -646,7 +645,10 @@ CuePoint * makeCuePoint(
     CuePoint * chunk = (CuePoint *) malloc(sizeof(CuePoint));
     uint32ToLittleEndianBytes(cuePointID, chunk->cuePointID);
     uint32ToLittleEndianBytes(playOrderPosition, chunk->playOrderPosition);
-    uint32ToLittleEndianBytes(dataChunkID, chunk->dataChunkID);
+    chunk->dataChunkID[0] = 'd';
+    chunk->dataChunkID[1] = 'a';
+    chunk->dataChunkID[2] = 't';
+    chunk->dataChunkID[3] = 'a';
     uint32ToLittleEndianBytes(chunkStart, chunk->chunkStart);
     uint32ToLittleEndianBytes(blockStart, chunk->blockStart);
     uint32ToLittleEndianBytes(frameOffset, chunk->frameOffset);
@@ -659,11 +661,13 @@ ListChunk * makeListChunk(
         uint32_t lablCount,
         LablChunk *lablChunks
 ) {
+    if (ltxtCount == 0 && lablCount == 0) return NULL;
+
     ListChunk * chunk = (ListChunk *) malloc(sizeof(ListChunk));
-    chunk->chunkID[0] = 'l';
-    chunk->chunkID[1] = 'i';
-    chunk->chunkID[2] = 's';
-    chunk->chunkID[3] = 't';
+    chunk->chunkID[0] = 'L';
+    chunk->chunkID[1] = 'I';
+    chunk->chunkID[2] = 'S';
+    chunk->chunkID[3] = 'T';
     uint32_t chunkDataSize = 4;
     for (int i=0; i<ltxtCount; i++)
     {
@@ -673,6 +677,7 @@ ListChunk * makeListChunk(
     {
         chunkDataSize += littleEndianBytesToUInt32(lablChunks[i].chunkDataSize);
     }
+    chunkDataSize = to_odd(chunkDataSize);
     uint32ToLittleEndianBytes(chunkDataSize, chunk->chunkDataSize);
     chunk->typeID[0] = 'a';
     chunk->typeID[1] = 'd';
@@ -688,7 +693,6 @@ ListChunk * makeListChunk(
 LtxtChunk * makeLtxtChunk(
         uint32_t cuePointID,
         uint32_t sampleLength,
-        uint32_t purposeID,
         uint16_t country,
         uint16_t language,
         uint16_t dialect,
@@ -700,15 +704,24 @@ LtxtChunk * makeLtxtChunk(
     chunk->chunkID[1] = 't';
     chunk->chunkID[2] = 'x';
     chunk->chunkID[3] = 't';
-    uint32_t chunkDataSize = 20 + (unsigned)strlen(text);
+    uint32_t chunkDataSize = 20;
+    if (text) chunkDataSize += (unsigned)strlen(text);
+    chunkDataSize = to_odd(chunkDataSize);
     uint32ToLittleEndianBytes(chunkDataSize, chunk->chunkDataSize);
     uint32ToLittleEndianBytes(cuePointID, chunk->cuePointID);
     uint32ToLittleEndianBytes(sampleLength, chunk->sampleLength);
-    uint32ToLittleEndianBytes(purposeID, chunk->purposeID);
-    uint16ToLittleEndianBytes(country, chunk->country);
-    uint16ToLittleEndianBytes(language, chunk->language);
-    uint16ToLittleEndianBytes(dialect, chunk->dialect);
-    uint16ToLittleEndianBytes(codePage, chunk->codePage);
+    chunk->purposeID[0] = 'r';
+    chunk->purposeID[1] = 'g';
+    chunk->purposeID[2] = 'n';
+    chunk->purposeID[3] = ' ';
+    if (country != NULL) uint16ToLittleEndianBytes(country, chunk->country);
+    else country = 0;
+    if (language != NULL) uint16ToLittleEndianBytes(language, chunk->language);
+    else language = 0;
+    if (dialect != NULL) uint16ToLittleEndianBytes(dialect, chunk->dialect);
+    else dialect = 0;
+    if (codePage != NULL) uint16ToLittleEndianBytes(codePage, chunk->codePage);
+    else codePage = 0;
     chunk->text = text;
     return chunk;
 }
@@ -723,6 +736,7 @@ LablChunk * makeLablChunk(
     chunk->chunkID[2] = 'b';
     chunk->chunkID[3] = 'l';
     uint32_t chunkDataSize = 4 + (unsigned)strlen(text);
+    chunkDataSize = to_odd(chunkDataSize);
     uint32ToLittleEndianBytes(chunkDataSize, chunk->chunkDataSize);
     uint32ToLittleEndianBytes(cuePointID, chunk->cuePointID);
     chunk->text = text;
@@ -732,25 +746,109 @@ LablChunk * makeLablChunk(
 WaveFile * makeWaveFile(
         WaveHeader *waveHeader,
         FormatChunk *formatChunk,
-        DataChunk *dataChunk
+        DataChunk *dataChunk,
+        CueChunk *cueChunk,
+        LtxtChunk *ltxtChunks,
+        uint32_t ltxtChunksCount,
+        LablChunk *lablChunks,
+        uint32_t lablChunksCount
 ) {
     WaveFile *wave = (WaveFile *) malloc(sizeof(WaveFile));
     wave->filePath = NULL;
     wave->file = NULL;
-    uint32_t fileSize = 4; // the 4 bytes for the Riff Type "WAVE"
+    uint32_t fileSize = 4;
     if(formatChunk != NULL) fileSize += sizeof(FormatChunk);
     if(dataChunk != NULL)
     {
         uint32_t dataChunkSize = sizeof(DataChunk) + littleEndianBytesToUInt32(dataChunk->chunkDataSize);
-        fileSize += dataChunkSize;
-        if (dataChunkSize % 2 != 0) fileSize++;
+        fileSize = to_odd(fileSize + dataChunkSize);
     }
     uint32ToLittleEndianBytes(fileSize, waveHeader->dataSize);
     wave->waveHeader = waveHeader;
     wave->formatChunk = formatChunk;
     wave->dataChunk = dataChunk;
-    wave->cueChunk = NULL;
+    wave->cueChunk = cueChunk;
+    wave->listChunk = makeListChunk(ltxtChunksCount, ltxtChunks, lablChunksCount, lablChunks);
     return wave;
+}
+
+WaveFile * makeWaveFileFromRawData(
+        char *waveformData,
+        uint32_t waveformDataSize,
+        uint16_t numberOfChannels,
+        uint32_t sampleRate,
+        uint16_t significantBitsPerSample,
+        uint32_t pointsCount,
+        uint32_t *pointsOffset,
+        uint32_t *pointsLenght,
+        char **pointsLabels
+) {
+    WaveHeader *headerChunk = makeWaveHeader();
+    FormatChunk *formatChunk = makeFormatChunk(numberOfChannels, sampleRate, significantBitsPerSample);
+    DataChunk *dataChunk = makeDataChunk(waveformDataSize, waveformData);
+    dataChunk->isWaveformDataOwned = 0;
+
+    CueChunk *cueChunk = NULL;
+    LtxtChunk *ltxtChunks = NULL;
+    uint32_t ltxtChunksCount = NULL;
+    LablChunk *lablChunks = NULL;
+    uint32_t lablChunksCount = NULL;
+
+    if (pointsCount > 0)
+    {
+        ltxtChunksCount = pointsCount;
+        lablChunksCount = pointsCount;
+        CuePoint * cuePoints = (CuePoint *) malloc(sizeof(CuePoint) * pointsCount);
+        ltxtChunks = (LtxtChunk *) malloc(sizeof(LtxtChunk) * pointsCount);
+        lablChunks = (LablChunk *) malloc(sizeof(LablChunk) * pointsCount);
+
+        for (uint32_t i=0; i<pointsCount; i++)
+        {
+            CuePoint * cuePoint = makeCuePoint(
+                        i,
+                        pointsOffset[i],
+                        0,
+                        0,
+                        pointsOffset[i]
+            );
+            cuePoints[i] = *cuePoint;
+            free(cuePoint);
+
+            LtxtChunk * ltxtChunk = makeLtxtChunk(
+                        i,
+                        pointsLenght[i],
+                        NULL,
+                        NULL,
+                        NULL,
+                        NULL,
+                        NULL
+            );
+            ltxtChunks[i] = *ltxtChunk;
+            free(ltxtChunk);
+
+            char * text = malloc(strlen(pointsLabels[i]) + 1);
+            strcpy(text, pointsLabels[i]);
+            LablChunk * lablChunk = makeLablChunk(
+                        i,
+                        text
+            );
+            lablChunks[i] = *lablChunk;
+            free(lablChunk);
+        }
+
+        cueChunk = makeCueChunk(pointsCount, cuePoints);
+    }
+
+    return makeWaveFile(
+                headerChunk,
+                formatChunk,
+                dataChunk,
+                cueChunk,
+                ltxtChunks,
+                ltxtChunksCount,
+                lablChunks,
+                lablChunksCount
+    );
 }
 
 void saveWaveFile(WaveFile *waveFile, const char *filePath)
@@ -1039,15 +1137,6 @@ void saveWaveFile(WaveFile *waveFile, const char *filePath)
         }
     }
     fclose(waveFile->file);
-}
-
-WaveFile * makeWaveFileFromData(char *waveformData, uint32_t chunkDataSize, uint16_t numberOfChannels, uint32_t sampleRate, uint16_t significantBitsPerSample)
-{
-    WaveHeader *headerChunk = makeWaveHeader();
-    FormatChunk *formatChunk = makeFormatChunk(numberOfChannels, sampleRate, significantBitsPerSample);
-    DataChunk *dataChunk = makeDataChunk(chunkDataSize, waveformData);
-    dataChunk->isWaveformDataOwned = 0;
-    return makeWaveFile(headerChunk, formatChunk, dataChunk);
 }
 
 enum HostEndiannessType getHostEndianness()

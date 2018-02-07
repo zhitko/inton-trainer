@@ -226,7 +226,17 @@ void GraphsWindow::stopRecord(SoundRecorder * recorder)
     qDebug() << "GraphsWindow::stopRecord files cleaned" << LOG_DATA;
 
     path = QApplication::applicationDirPath() + DATA_PATH + path + WAVE_TYPE;
-    WaveFile *waveFile = makeWaveFileFromData((char *)data, size, NUMBER_OF_CHANNELS, RECORD_FREQ, SIGNIFICANT_BITS_PER_SAMPLE);
+    WaveFile *waveFile = makeWaveFileFromRawData(
+                (char *)data,
+                size,
+                NUMBER_OF_CHANNELS,
+                RECORD_FREQ,
+                SIGNIFICANT_BITS_PER_SAMPLE,
+                NULL,
+                NULL,
+                NULL,
+                NULL
+    );
     qDebug() << "GraphsWindow::stopRecord makeWaveFileFromData" << LOG_DATA;
     saveWaveFile(waveFile, path.toLocal8Bit().data());
     qDebug() << "GraphsWindow::stopRecord saveWaveFile" << LOG_DATA;
