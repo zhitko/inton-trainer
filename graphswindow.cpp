@@ -75,28 +75,11 @@ GraphsWindow::~GraphsWindow()
 void GraphsWindow::initUI()
 {
     ui->setupUi(this);
-    connect(this->ui->to3DBtn, SIGNAL(clicked()), this, SLOT(stereo()));
-
-    connect(this->ui->recordBtn, SIGNAL(clicked()), this, SLOT(_rec()));
-
-    connect(this->ui->lessBtn, SIGNAL(clicked()), this, SLOT(decrease()));
-    connect(this->ui->moreBtn, SIGNAL(clicked()), this, SLOT(increase()));
-    connect(this->ui->fitBtn, SIGNAL(clicked()), this, SLOT(fit()));
-    connect(this->ui->saveImage, SIGNAL(clicked()), this, SLOT(saveImage()));
-    connect(this->ui->openImage, SIGNAL(clicked()), this, SLOT(openImage()));
 
     connect(this->ui->playBtn, SIGNAL(clicked()), this, SLOT(playRecord()));
-
-    connect(this->ui->autoRecordBtn, SIGNAL(clicked()), this, SLOT(_autoRec()));
     connect(this->ui->setRecordBtn, SIGNAL(clicked()), this, SLOT(startRecord()));
-    connect(this->ui->stopRecordBtn, SIGNAL(clicked()), this, SLOT(stopRecord()));
-    connect(this->ui->startAutoRecordBtn, SIGNAL(clicked()), this, SLOT(startAutoRecord()));
 
     connect(this->ui->openFileBtn, SIGNAL(clicked()), this, SLOT(openFile()));
-
-    SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
-    this->ui->pitchMinSpin->setValue(sptk_settings->pitch->MIN_FREQ);
-    this->ui->pitchMaxSpin->setValue(sptk_settings->pitch->MAX_FREQ);
 
     QMGL = new QMathGL(this);
     QMGL->autoResize = false;
@@ -134,8 +117,6 @@ void GraphsWindow::startAutoRecord()
     qDebug() << "GraphsWindow::startAutoRecord" << LOG_DATA;
     this->ui->setRecordBtn->setEnabled(false);
     this->ui->openFileBtn->setEnabled(false);
-    this->ui->startAutoRecordBtn->setEnabled(false);
-    this->ui->stopRecordBtn->setEnabled(true);
 
     if (this->recorder) {
         this->recorder->deleteLater();
@@ -173,9 +154,6 @@ void GraphsWindow::startRecord()
         qDebug() << "GraphsWindow::startRecord" << LOG_DATA;
         this->ui->setRecordBtn->setEnabled(false);
         this->ui->openFileBtn->setEnabled(false);
-        this->ui->startAutoRecordBtn->setEnabled(false);
-        this->ui->stopRecordBtn->setEnabled(true);
-
         if (sptk_settings->dp->recordingType == 0) // Recording N sec
         {
             this->recorder = new TimeSoundRecorder(currentDevice, sizeof(short int), sptk_settings->dp->recordingSeconds);
@@ -212,8 +190,6 @@ void GraphsWindow::stopRecord(SoundRecorder * recorder)
 
     this->ui->setRecordBtn->setEnabled(true);
     this->ui->openFileBtn->setEnabled(true);
-    this->ui->startAutoRecordBtn->setEnabled(true);
-    this->ui->stopRecordBtn->setEnabled(false);
     qDebug() << "GraphsWindow::stopRecord UI changes" << LOG_DATA;
 
     char *data = NULL;
@@ -261,93 +237,11 @@ void GraphsWindow::_rec()
     emit rec();
 }
 
-void GraphsWindow::hideZoomControls()
-{
-    this->ui->lessBtn->hide();
-    this->ui->moreBtn->hide();
-    this->ui->fitBtn->hide();
-    this->ui->scaleStepSpin->hide();
-    this->ui->sizeLabel->hide();
-    this->ui->recordLabel->hide();
-    this->ui->autoRecordBtn->hide();
-    this->ui->recordBtn->hide();
-}
-
-void GraphsWindow::increase()
-{
-    int by = this->ui->scaleStepSpin->value();
-    this->increase(by);
-}
-
-void GraphsWindow::increase(int by)
-{
-    this->k_graph += by;
-    if(this->k_graph > GRAPH_K_MAX) this->k_graph = GRAPH_K_MAX;
-    this->setFitByK();
-    emit this->changeSig(this->k_graph);
-}
-
-void GraphsWindow::decrease()
-{
-    int by = this->ui->scaleStepSpin->value();
-    this->decrease(by);
-}
-
-void GraphsWindow::decrease(int by)
-{
-    this->k_graph -= by;
-    if(this->k_graph < 1) this->k_graph = 1;
-    this->setFitByK();
-    emit this->changeSig(this->k_graph);
-}
-
-void GraphsWindow::fit()
-{
-    this->fullFit();
-    emit this->changeSig(this->k_graph);
-}
-
-void GraphsWindow::setK(int k)
-{
-    this->k_graph = k;
-    this->setFitByK();
-}
-
-void GraphsWindow::setFitByK()
-{
-    QSize size = this->scrollArea->maximumViewportSize();
-    if(!this->isVisible()) size.setHeight(GRAPH_HEIGHT);
-    int width = (this->w_graph / GRAPH_K_MAX)* this->k_graph;
-    this->QMGL->setSize(width, size.height());
-}
-
 void GraphsWindow::fullFit()
 {
     QSize size = this->scrollArea->maximumViewportSize();
     if(!this->isVisible()) size.setHeight(GRAPH_HEIGHT);
     this->QMGL->setSize(size.width(), size.height());
-}
-
-void GraphsWindow::saveImage()
-{
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
-                               this->fileName,
-                               tr("Images (*.png)"));
-    QString fname = fileName.left(fileName.lastIndexOf("\."));
-    this->QMGL->exportPNGs(fname);
-    this->lastImageFile = fname + ".png";
-}
-
-void GraphsWindow::openImage()
-{
-    if(!this->lastImageFile.isEmpty())
-        QDesktopServices::openUrl(QUrl(this->lastImageFile));
-}
-
-void GraphsWindow::stereo()
-{
-    this->drawer->stereo = !this->drawer->stereo;
-    this->QMGL->update();
 }
 
 void GraphsWindow::playRecord()

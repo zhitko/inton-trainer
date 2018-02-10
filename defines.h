@@ -31,7 +31,7 @@
 #define MASK_MIN 0.0001
 #define MASK_MAX 1.0
 
-#define APP_VER "0.2.1"
+#define APP_VER "0.2.3"
 
 #endif // DEFINES
 

@@ -141,10 +141,6 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->spec->leng = instance->ui->frameSizeBox->currentText().toInt();
     sptk_settings->spec->order = instance->ui->lpcOrderSpin->value();
 
-    sptk_settings->spec->factor = instance->ui->specFactorSpin->value();
-    sptk_settings->spec->min = instance->ui->specMinSpin->value();
-    sptk_settings->spec->proc = instance->ui->specProcBox->currentIndex();
-
     sptk_settings->dp->continiusLimit = instance->ui->continiusDpLimit->value();
 
     sptk_settings->dp->continiusKD = instance->ui->continiusDpKD->value();
@@ -166,9 +162,6 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
 
     sptk_settings->dp->recordingType = instance->ui->recordingType->currentIndex();
     sptk_settings->dp->recordingSeconds = instance->ui->recordingSeconds->value();
-    sptk_settings->dp->recordingFrameSeconds = instance->ui->recordingFrameSeconds->value();
-    sptk_settings->dp->recordingFrameBefore = instance->ui->recordingFrameBefore->value();
-    sptk_settings->dp->recordingFrameAfter = instance->ui->recordingFrameAfter->value();
     sptk_settings->dp->recordingMaxFiles = instance->ui->recordingMaxFiles->value();
 
     sptk_settings->dp->mark_delimeter = instance->ui->markDelimeter->value();
@@ -236,13 +229,6 @@ void SettingsDialog::loadSettingsFrom(QString settings_path)
     if(settings.contains("plot_energy/interpolation_type"))
         this->ui->plotInterpolationTypeEnergyBox->setCurrentIndex(settings.value("plot_energy/interpolation_type").toInt());
 
-    if(settings.contains("spec/factor"))
-        this->ui->specFactorSpin->setValue(settings.value("spec/factor").toInt());
-    if(settings.contains("spec/min"))
-        this->ui->specMinSpin->setValue(settings.value("spec/min").toDouble());
-    if(settings.contains("spec/proc"))
-        this->ui->specProcBox->setCurrentText(settings.value("spec/proc").toString());
-
     if(settings.contains("dp/continiusLimit"))
         this->ui->continiusDpLimit->setValue(settings.value("dp/continiusLimit").toDouble());
 
@@ -279,12 +265,6 @@ void SettingsDialog::loadSettingsFrom(QString settings_path)
         this->ui->useForDP->setCurrentIndex(settings.value("dp/use").toInt());
     if(settings.contains("dp/recordingSeconds"))
         this->ui->recordingSeconds->setValue(settings.value("dp/recordingSeconds").toDouble());
-    if(settings.contains("dp/recordingFrameSeconds"))
-        this->ui->recordingFrameSeconds->setValue(settings.value("dp/recordingFrameSeconds").toDouble());
-    if(settings.contains("dp/recordingFrameAfter"))
-        this->ui->recordingFrameAfter->setValue(settings.value("dp/recordingFrameAfter").toInt());
-    if(settings.contains("dp/recordingFrameBefore"))
-        this->ui->recordingFrameBefore->setValue(settings.value("dp/recordingFrameBefore").toInt());
     if(settings.contains("dp/recordingMaxFiles"))
         this->ui->recordingMaxFiles->setValue(settings.value("dp/recordingMaxFiles").toInt());
     if(settings.contains("dp/recordingType"))
@@ -348,10 +328,6 @@ void SettingsDialog::saveSettings()
     settings.setValue("spec/leng", this->ui->frameSizeBox->currentText().toInt());
     settings.setValue("spec/order", this->ui->lpcOrderSpin->value());
 
-    settings.setValue("spec/factor", this->ui->specFactorSpin->value());
-    settings.setValue("spec/min", this->ui->specMinSpin->value());
-    settings.setValue("spec/proc", this->ui->specProcBox->currentText());
-
     settings.setValue("dp/continiusLimit", this->ui->continiusDpLimit->value());
 
     settings.setValue("dp/continiusDpKD", this->ui->continiusDpKD->value());
@@ -372,9 +348,6 @@ void SettingsDialog::saveSettings()
     settings.setValue("dp/use", this->ui->useForDP->currentIndex());
     settings.setValue("dp/recordingType", this->ui->recordingType->currentIndex());
     settings.setValue("dp/recordingSeconds", this->ui->recordingSeconds->value());
-    settings.setValue("dp/recordingFrameSeconds", this->ui->recordingFrameSeconds->value());
-    settings.setValue("dp/recordingFrameBefore", this->ui->recordingFrameBefore->value());
-    settings.setValue("dp/recordingFrameAfter", this->ui->recordingFrameAfter->value());
     settings.setValue("dp/recordingMaxFiles", this->ui->recordingMaxFiles->value());
 
     settings.setValue("dp/markDelimeter", this->ui->markDelimeter->value());

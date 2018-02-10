@@ -31,7 +31,7 @@ GraphsEvalWindow::GraphsEvalWindow(QString path, Drawer * drawer, QWidget *paren
     if(this->drawer->showUMP)
         this->ui->showUMP->setText("Show original");
     else
-        this->ui->showUMP->setText("Show UMP");
+        this->ui->showUMP->setText("Show Universal Melodic Portrait (UMP)");
 }
 
 GraphsEvalWindow::~GraphsEvalWindow()
@@ -80,7 +80,7 @@ void GraphsEvalWindow::playTemplate()
 void GraphsEvalWindow::showUMP()
 {
     if(this->drawer->showUMP)
-        this->ui->showUMP->setText("Show UMP");
+        this->ui->showUMP->setText("Show Universal Melodic Portrait (UMP)");
     else
         this->ui->showUMP->setText("Show original");
     this->drawer->showUMP = !this->drawer->showUMP;

@@ -776,8 +776,9 @@ QString getMarkLabel(int value, char * labels)
     }
 }
 
-double calculateMark(double value, double level, double delimeter)
+double calculateMark(double value, double level, double count)
 {
+    double delimeter = (100.0 - level) / count;
     double mark = 1.0;
     if (value >= level)
     {

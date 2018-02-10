@@ -27,7 +27,6 @@ public:
     explicit GraphsWindow(QWidget *parent = 0);
     explicit GraphsWindow(QString path, QWidget *parent = 0);
     ~GraphsWindow();
-    void hideZoomControls();
     void drawFile(QString path);
 
 protected:
@@ -59,17 +58,7 @@ public slots:
     void startAutoRecord();
     void openFile();
 
-    void stereo();
-    void increase();
-    void decrease();
-    void increase(int by);
-    void decrease(int by);
-    void fit();
-    void setK(int k);
-    void setFitByK();
     void fullFit();
-    void saveImage();
-    void openImage();
     void playRecord();
 };
 
