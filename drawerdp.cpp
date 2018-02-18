@@ -9,25 +9,27 @@
 
 #include "settingsdialog.h"
 #include <QApplication>
-#include "DP/continuousdp.h"
+#include "dp/continuousdp.h"
 
 #include "utils.h"
 #include "defines.h"
 
+#include "analysis/curve_similarity.h"
+
 extern "C" {
-    #include "./OpenAL/wavFile.h"
+    #include "./openal/wavFile.h"
 
     #include "float.h"
 
-    #include "./SPTK/SPTK.h"
-    #include "./SPTK/others/func.h"
-    #include "./SPTK/others/interpolation.h"
-    #include "./SPTK/pitch/pitch.h"
-    #include "./SPTK/x2x/x2x.h"
-    #include "./SPTK/frame/frame.h"
-    #include "./SPTK/window/window.h"
-    #include "./SPTK/lpc/lpc.h"
-    #include "./SPTK/spec/spec.h"
+    #include "./sptk/SPTK.h"
+    #include "./sptk/others/func.h"
+    #include "./sptk/others/interpolation.h"
+    #include "./sptk/pitch/pitch.h"
+    #include "./sptk/x2x/x2x.h"
+    #include "./sptk/frame/frame.h"
+    #include "./sptk/window/window.h"
+    #include "./sptk/lpc/lpc.h"
+    #include "./sptk/spec/spec.h"
 }
 
 typedef struct { int from; int len; int type; } MaskDetails;
@@ -66,6 +68,8 @@ DrawerDP::DrawerDP() :
     this->userf0max = 0;
     this->userf0min = 0;
     this->simple_data = NULL;
+    this->ru = 1.0;
+    this->rt = 1.0;
 }
 
 DrawerDP::~DrawerDP()
@@ -787,58 +791,7 @@ double calculateMark(double value, double level, double count)
     return mark;
 }
 
-/*
- * Correlation of F0-curves
-R_{ AB }=\left| \left[ \frac { \sum _{ len }^{ i=0 }{ { ({ A }_{ i }-{ M }_{ A }) } } { ({ B }_{ i }-{ M }_{ A }) } }{ \sqrt { \sum _{ len }^{ i=0 }{ { ({ A }_{ i }-{ M }_{ A }) }^{ 2 } } *\sum _{ len }^{ i=0 }{ { ({ B }_{ i }-{ M }_{ A }) }^{ 2 } }  }  } *100% \right]  \right| 
-*/
-double calculateResultR(vector x, vector y)
-{
-    double result = 0;
-    double my = midv(y);
-    double mx = midv(x);
-    double xx = 0.0;
-    double yy = 0.0;
-    for(int i=0; i<x.x && i<y.x; i++)
-    {
-        result += (getv(x, i)-mx)*(getv(y, i)-my);
-        xx += (getv(x, i)-mx)*(getv(x, i)-mx);
-        yy += (getv(y, i)-my)*(getv(y, i)-my);
-    }
-    result = result / sqrt(xx*yy);
-    return round(fabs(result)*100);
-}
 
-/*
- * Integral proximity of F0-curves
-D_{ AB }=\left[ \left( 1-\frac { \sqrt { \sum _{ len }^{ i=0 }{ { ({ A }_{ i }-{ B }_{ i }) }^{ 2 } }  }  }{ \sqrt { len }  }  \right) *100% \right] 
-*/
-double calculateResultD(vector x, vector y)
-{
-    double result = 0;
-    for(int i=0; i<x.x && i<y.x; i++)
-    {
-        result += (getv(x, i)-getv(y, i))*(getv(x, i)-getv(y, i));
-    }
-    result = sqrt(result) / sqrt(x.x);
-    return round((1-result)*100);
-}
-
-/*
- * Local proximity of F0-curves
-*/
-double calculateResultL(vector x, vector y)
-{
-    double result = 0;
-    for(int i=0; i<x.x && i<y.x; i++)
-    {
-        double r = fabs(getv(x, i)-getv(y, i));
-        if (r > result)
-        {
-            result = r;
-        }
-    }
-    return round((1-result)*100);
-}
 
 int DrawerDP::getDataSeconds()
 {
@@ -904,10 +857,12 @@ void DrawerDP::Proc(QString fname)
         this->f0max = mm.max;
         this->f0min = mm.min;
 
+        this->rt = (1.0 * this->f0max / this->f0min) - 1;
+
         this->octavData = new mglData(2);
         qDebug() << "this->f0max " << this->f0max << LOG_DATA;
         qDebug() << "this->f0min " << this->f0min << LOG_DATA;
-        this->octavData->a[0] = (1.0 * this->f0max / this->f0min) - 1;
+        this->octavData->a[0] = this->rt;
         qDebug() << "this->octavData->a[0] " << this->octavData->a[0] << LOG_DATA;
         if(this->octavData->a[0] > OCTAVE_MAX_2) this->octavData->a[0] = OCTAVE_MAX_2;
         qDebug() << "octavData createMglData" << LOG_DATA;
@@ -964,6 +919,8 @@ void DrawerDP::Proc(QString fname)
         this->proximity_curve_correlation = 0;
         this->proximity_curve_integral = 0;
         this->proximity_curve_local = 0;
+        this->proximity_curve_relative = 0;
+        this->proximity_curve_average_relative = 0;
     }
     else
     {
@@ -1085,8 +1042,10 @@ void DrawerDP::Proc(QString fname)
             pitch_smooth = copyv(pitch_cutted);
         }
 
+        this->ru = (1.0 * this->userf0max / this->userf0min) - 1;
+
         this->secOctavData = new mglData(2);
-        this->secOctavData->a[1] = (1.0 * this->userf0max / this->userf0min) - 1;
+        this->secOctavData->a[1] = this->ru;
         if(this->secOctavData->a[1] > OCTAVE_MAX_2) this->secOctavData->a[1] = OCTAVE_MAX_2;
 
         if(sptk_settings->dp->showF0)
@@ -1094,17 +1053,7 @@ void DrawerDP::Proc(QString fname)
             this->secPitchData = createMglData(pitch_smooth, this->secPitchData, true);
         }
 
-        double user_max = 1.0*this->userf0max;
-        double user_min = 1.0*this->userf0min;
-        double template_max = 1.0*this->f0max;
-        double template_min = 1.0*this->f0min;
-        if (user_min == 0) user_min = 1;
-        if (template_min == 0) template_min = 1;
-
-        double tmm = template_max/template_min;
-        double umm = user_max/user_min;
-
-        this->proximity_range = round( 100 * MIN(tmm, umm) / MAX(tmm, umm) );
+        this->proximity_range = round( 100.0 * MIN(this->rt, this->ru) / MAX(this->rt, this->ru) );
         this->proximity_range_mark = calculateMark(proximity_range, sptk_settings->dp->mark_level, sptk_settings->dp->mark_delimeter);
 
         qDebug() << "sptk_settings->dp->errorType " << sptk_settings->dp->errorType << LOG_DATA;
@@ -1132,9 +1081,11 @@ void DrawerDP::Proc(QString fname)
         ump.x = this->umpData->nx;
         ump.v = this->umpData->a;
 
-        this->proximity_curve_correlation = calculateResultR(ump, sec_ump);
-        this->proximity_curve_integral = calculateResultD(ump, sec_ump);
-        this->proximity_curve_local = calculateResultL(ump, sec_ump);
+        this->proximity_curve_correlation = calculateCurvesSimilarityCorrelation(ump, sec_ump);
+        this->proximity_curve_integral = calculateCurvesSimilarityAverageDistance(ump, sec_ump);
+        this->proximity_curve_local = calculateCurvesSimilarityMaxLocalDistance(ump, sec_ump);
+        this->proximity_curve_relative = calculateCurvesSimilarityRelativeDistance(ump, sec_ump);
+        this->proximity_curve_average_relative = calculateCurvesSimilarityRelativeAverageDistance(ump, sec_ump);
 
         switch (sptk_settings->dp->errorType) {
         case 0:
@@ -1145,6 +1096,12 @@ void DrawerDP::Proc(QString fname)
             break;
         case 2:
             this->proximity_curve_shape = proximity_curve_local;
+            break;
+        case 3:
+            this->proximity_curve_shape = proximity_curve_relative;
+            break;
+        case 4:
+            this->proximity_curve_shape = proximity_curve_average_relative;
             break;
         }
 

@@ -160,7 +160,6 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->dp->errorType = instance->ui->errorTypeBox->currentIndex();
     sptk_settings->dp->useForDP = instance->ui->useForDP->currentIndex();
 
-    sptk_settings->dp->recordingType = instance->ui->recordingType->currentIndex();
     sptk_settings->dp->recordingSeconds = instance->ui->recordingSeconds->value();
     sptk_settings->dp->recordingMaxFiles = instance->ui->recordingMaxFiles->value();
 
@@ -267,9 +266,6 @@ void SettingsDialog::loadSettingsFrom(QString settings_path)
         this->ui->recordingSeconds->setValue(settings.value("dp/recordingSeconds").toDouble());
     if(settings.contains("dp/recordingMaxFiles"))
         this->ui->recordingMaxFiles->setValue(settings.value("dp/recordingMaxFiles").toInt());
-    if(settings.contains("dp/recordingType"))
-        this->ui->recordingType->setCurrentIndex(settings.value("dp/recordingType").toInt());
-
 
     if(settings.contains("frame/leng"))
         this->ui->frameSizeBox->setCurrentText(QString::number(settings.value("frame/leng").toInt()));
@@ -346,7 +342,6 @@ void SettingsDialog::saveSettings()
     settings.setValue("dp/showTime", this->ui->showTime->isChecked());
     settings.setValue("error/type", this->ui->errorTypeBox->currentIndex());
     settings.setValue("dp/use", this->ui->useForDP->currentIndex());
-    settings.setValue("dp/recordingType", this->ui->recordingType->currentIndex());
     settings.setValue("dp/recordingSeconds", this->ui->recordingSeconds->value());
     settings.setValue("dp/recordingMaxFiles", this->ui->recordingMaxFiles->value());
 

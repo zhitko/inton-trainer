@@ -79,6 +79,11 @@ vector                            nansv(int);
 vector                            copyv(vector);
 vector                            subv(vector, int);
 vector                            cutv(vector, int, int);
+vector                            additionv(vector, vector);
+vector                            subtractionv(vector, vector);
+vector                            multiplicationv(vector, vector);
+vector                            divisionv(vector, vector);
+vector                            absv(vector);
 
 double                            getv(vector, int);
 double                            setv(vector, int, double);

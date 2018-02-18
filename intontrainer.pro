@@ -54,7 +54,8 @@ SOURCES += \
     dataprocessing.cpp \
     utils.cpp \
     databaseeditor/databasemanager.cpp \
-    databaseeditor/sandboxitemmodel.cpp
+    databaseeditor/sandboxitemmodel.cpp \
+    Analysis/curve_similarity.cpp
 
 HEADERS  += \
     mainwindow.h \
@@ -79,7 +80,8 @@ HEADERS  += \
     defines.h \
     utils.h \
     databaseeditor/databasemanager.h \
-    databaseeditor/sandboxitemmodel.h
+    databaseeditor/sandboxitemmodel.h \
+    Analysis/curve_similarity.h
 
 # OpenAL
 SOURCES += \

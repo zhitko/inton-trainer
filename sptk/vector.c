@@ -185,6 +185,69 @@ vector cutv(vector yr_vector, int start_index, int end_index)
     return(nw_vector);
 }
 
+vector additionv(vector a_vector, vector b_vector)
+{
+    vector nw_vector = makev(a_vector.x);
+    double v;
+    int i;
+    for (i=0; i<a_vector.x && i<b_vector.x; i++ )
+    {
+        v = getv(a_vector, i) + getv(b_vector, i);
+        setv(nw_vector, i, v);
+    }
+    return(nw_vector);
+}
+
+vector subtractionv(vector a_vector, vector b_vector)
+{
+    vector nw_vector = makev(a_vector.x);
+    double v;
+    int i;
+    for (i=0; i<a_vector.x && i<b_vector.x; i++ )
+    {
+        v = getv(a_vector, i) - getv(b_vector, i);
+        setv(nw_vector, i, v);
+    }
+    return(nw_vector);
+}
+
+vector multiplicationv(vector a_vector, vector b_vector)
+{
+    vector nw_vector = makev(a_vector.x);
+    double v;
+    int i;
+    for (i=0; i<a_vector.x && i<b_vector.x; i++ )
+    {
+        v = getv(a_vector, i) * getv(b_vector, i);
+        setv(nw_vector, i, v);
+    }
+    return(nw_vector);
+}
+
+vector divisionv(vector a_vector, vector b_vector)
+{
+    vector nw_vector = makev(a_vector.x);
+    double v;
+    int i;
+    for (i=0; i<a_vector.x && i<b_vector.x; i++ )
+    {
+        v = getv(a_vector, i) / getv(b_vector, i);
+        setv(nw_vector, i, v);
+    }
+    return(nw_vector);
+}
+
+vector absv(vector a_vector)
+{
+    vector nw_vector = makev(a_vector.x);
+    int i;
+    for (i=0; i<a_vector.x; i++ )
+    {
+        setv(nw_vector, i, fabs(getv(a_vector, i)));
+    }
+    return(nw_vector);
+}
+
 // free the memory associated with the vector
 void freev(vector yr_vector) {
     if (yr_vector.v)

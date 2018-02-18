@@ -42,7 +42,7 @@ public:
     void Reload();
     void Click();
 
-    double proximity_curve_correlation, proximity_curve_integral, proximity_curve_local;
+    double proximity_curve_correlation, proximity_curve_integral, proximity_curve_local, proximity_curve_relative, proximity_curve_average_relative;
     double proximity_range, proximity_curve_shape;
 protected:
     GraphData * data;

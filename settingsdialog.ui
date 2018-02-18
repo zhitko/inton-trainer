@@ -76,60 +76,23 @@
          </property>
          <layout class="QFormLayout" name="formLayout_12">
           <item row="0" column="0">
-           <widget class="QLabel" name="label_37">
+           <widget class="QLabel" name="label_38">
             <property name="text">
-             <string>Recorder type</string>
+             <string>Record time in sec.</string>
             </property>
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QComboBox" name="recordingType">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="editable">
-             <bool>false</bool>
-            </property>
-            <property name="currentIndex">
-             <number>3</number>
-            </property>
-            <item>
-             <property name="text">
-              <string>#1 Recording N seconds</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>#2 Manual recording</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>#3 Auto recording using F0</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>#4 Recording N + template length seconds</string>
-             </property>
-            </item>
-           </widget>
+           <widget class="QDoubleSpinBox" name="recordingSeconds"/>
           </item>
           <item row="1" column="0">
-           <widget class="QLabel" name="label_38">
-            <property name="text">
-             <string>Record time in sec. (for mode #1)</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
            <widget class="QLabel" name="label_16">
             <property name="text">
              <string>Number of files in history</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
+          <item row="1" column="1">
            <widget class="QSpinBox" name="recordingMaxFiles">
             <property name="minimum">
              <number>1</number>
@@ -138,9 +101,6 @@
              <number>10</number>
             </property>
            </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QDoubleSpinBox" name="recordingSeconds"/>
           </item>
          </layout>
         </widget>
@@ -173,6 +133,16 @@
             <item>
              <property name="text">
               <string>Maximum Local Distance</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Relative Distance</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Average Relative Distance</string>
              </property>
             </item>
            </widget>

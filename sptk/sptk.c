@@ -49,6 +49,7 @@ SPEC_SETTINGS *initSpecSettings()
     spec->order = 25;
     spec->factor = 10;
     spec->min = 0.1;
+    spec->proc = 0;
     return spec;
 }
 
