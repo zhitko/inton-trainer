@@ -47,8 +47,7 @@ Drawer * GraphsEvalWindow::createNewDrawer(QString path)
     this->ui->totalC->setText(QString::number(this->drawer->proximity_curve_correlation));
     this->ui->totalI->setText(QString::number(this->drawer->proximity_curve_integral));
     this->ui->totalL->setText(QString::number(this->drawer->proximity_curve_local));
-    this->ui->totalA->setText(QString::number(this->drawer->proximity_curve_relative));
-    this->ui->totalAR->setText(QString::number(this->drawer->proximity_curve_average_relative));
+    this->ui->totalA->setText(QString::number(this->drawer->proximity_average));
     this->ui->totalPr->setText(QString::number(this->drawer->proximity_range));
 
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
@@ -69,10 +68,6 @@ Drawer * GraphsEvalWindow::createNewDrawer(QString path)
     case 3:
         this->ui->totalA->setStyleSheet("font-weight: bold");
         this->ui->totalAtitle->setStyleSheet("font-weight: bold");
-        break;
-    case 4:
-        this->ui->totalAR->setStyleSheet("font-weight: bold");
-        this->ui->totalARtitle->setStyleSheet("font-weight: bold");
         break;
     default:
         break;

@@ -836,8 +836,8 @@ void DrawerDP::Proc(QString fname)
         freev(nVector);
         freev(tVector);
 
-        vector pitch_cutted = copyv(this->simple_data->d_pitch);
-        MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_mask);
+        vector pitch_cutted = copyv(this->simple_data->d_pitch_original);
+        MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_pitch_log);
         qDebug() << "MinMax " << mm.min << ":" << mm.max << LOG_DATA;
 
         vector pitch_smooth;
@@ -919,8 +919,7 @@ void DrawerDP::Proc(QString fname)
         this->proximity_curve_correlation = 0;
         this->proximity_curve_integral = 0;
         this->proximity_curve_local = 0;
-        this->proximity_curve_relative = 0;
-        this->proximity_curve_average_relative = 0;
+        this->proximity_average = 0;
     }
     else
     {
@@ -1028,7 +1027,7 @@ void DrawerDP::Proc(QString fname)
         vector pitch_cutted = cutv(dataSec->d_pitch, startPos, endPos);
         applyMapping(&pitch_cutted, &mapping);
 
-        MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_mask);
+        MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_pitch_log);
         this->userf0max = mm.max;
         this->userf0min = mm.min;
 
@@ -1056,10 +1055,6 @@ void DrawerDP::Proc(QString fname)
         this->proximity_range = round( 100.0 * MIN(this->rt, this->ru) / MAX(this->rt, this->ru) );
         this->proximity_range_mark = calculateMark(proximity_range, sptk_settings->dp->mark_level, sptk_settings->dp->mark_delimeter);
 
-        qDebug() << "sptk_settings->dp->errorType " << sptk_settings->dp->errorType << LOG_DATA;
-        vector o_pitch_cutted = copyv(this->simple_data->d_pitch_original);
-        applyMask(&o_pitch_cutted, &this->simple_data->d_mask);
-
         vector sec_ump = copyv(pitch_smooth);
 
         double mask_scale = 1.0 * this->simple_data->d_full_wave.x / this->simple_data->d_mask.x;
@@ -1084,8 +1079,7 @@ void DrawerDP::Proc(QString fname)
         this->proximity_curve_correlation = calculateCurvesSimilarityCorrelation(ump, sec_ump);
         this->proximity_curve_integral = calculateCurvesSimilarityAverageDistance(ump, sec_ump);
         this->proximity_curve_local = calculateCurvesSimilarityMaxLocalDistance(ump, sec_ump);
-        this->proximity_curve_relative = calculateCurvesSimilarityRelativeDistance(ump, sec_ump);
-        this->proximity_curve_average_relative = calculateCurvesSimilarityRelativeAverageDistance(ump, sec_ump);
+        this->proximity_average = round((this->proximity_curve_correlation + this->proximity_curve_integral + this->proximity_curve_local) / 3.0);
 
         switch (sptk_settings->dp->errorType) {
         case 0:
@@ -1098,10 +1092,7 @@ void DrawerDP::Proc(QString fname)
             this->proximity_curve_shape = proximity_curve_local;
             break;
         case 3:
-            this->proximity_curve_shape = proximity_curve_relative;
-            break;
-        case 4:
-            this->proximity_curve_shape = proximity_curve_average_relative;
+            this->proximity_curve_shape = proximity_average;
             break;
         }
 
@@ -1109,7 +1100,6 @@ void DrawerDP::Proc(QString fname)
 
         freev(sec_ump);
 
-        freev(o_pitch_cutted);
         freev(pitch_cutted);
         freev(pitch_smooth);
 

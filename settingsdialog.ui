@@ -137,12 +137,7 @@
             </item>
             <item>
              <property name="text">
-              <string>Relative Distance</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Average Relative Distance</string>
+              <string>Average</string>
              </property>
             </item>
            </widget>

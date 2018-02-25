@@ -124,8 +124,7 @@ Drawer::Drawer() : mglDraw(),
     proximity_curve_correlation = 0;
     proximity_curve_integral = 0;
     proximity_curve_local = 0;
-    proximity_curve_relative = 0;
-    proximity_curve_average_relative = 0;
+    proximity_average = 0;
 }
 
 Drawer::~Drawer()

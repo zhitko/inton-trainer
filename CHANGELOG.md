@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.2.5] - 2018-02-25
+
+### Fixed
+- Fixed F0 interpolation processing
+
+### Removed
+- Removed calculation type for F0 curves - relative
+- Removed calculation type for F0 curves - average relative
+
+### Added
+- New calculation type for F0 curves - average rating
+
 ## [0.2.4] - 2018-02-18
 
 ### Changed

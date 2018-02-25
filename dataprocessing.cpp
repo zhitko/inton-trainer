@@ -414,6 +414,7 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
 
     sptk_settings->pitch->OTYPE = 2;
     vector pitch_log = sptk_pitch_spec(smooth_wave, sptk_settings->pitch, intensive.x);
+    vector pitch_log_norm = normalizev(pitch_log, 0.0, 1.0);
     qDebug() << "::SimpleProcWave2Data pitch_log" << LOG_DATA;
 
     vector mask = getFileMask(waveFile, wave, pitch.x);
@@ -447,6 +448,7 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
     freev(pitch_interpolate);
     freev(inverted_mask);
     freev(smooth_wave);
+    freev(pitch_log);
     qDebug() << "::SimpleProcWave2Data freev" << LOG_DATA;
 
     file.close();
@@ -468,7 +470,7 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
     data->d_full_wave = norm_wave;
     data->d_pitch_original = pitch;
     data->d_pitch = pitch_mid;
-    data->d_pitch_log = pitch_log;
+    data->d_pitch_log = pitch_log_norm;
     data->d_intensive_original = intensive;
     data->d_intensive = intensive_mid;
     data->d_spec_proc = spec_proc;
