@@ -301,7 +301,6 @@ QModelIndex SandBoxItemModel::markOutFile(QModelIndex index)
     uint32_t *pointsLenght = NULL;
     char **pointsLabels = NULL;
 
-    // TODO: process WAV file and add marks
     uint8_t limit = 0.1;
     uint8_t cut = 0.3;
 
@@ -309,7 +308,7 @@ QModelIndex SandBoxItemModel::markOutFile(QModelIndex index)
     uint32_t lenght = 0;
     for (uint32_t i=0; i<pitchLogSize; i++)
     {
-        if (data->d_pitch_log.v[i] < limit && gotIt == 1)
+        if ((data->d_pitch_log.v[i] < limit ||  i==(pitchLogSize-1)) && gotIt == 1)
         {
             gotIt = 0;
             if (pointsLenght == NULL)
@@ -351,34 +350,21 @@ QModelIndex SandBoxItemModel::markOutFile(QModelIndex index)
         }
     }
 
+    qDebug() << "pointsOffset size " << pointsCount << LOG_DATA;
+
     int waveDataSize = littleEndianBytesToUInt32(waveFile->dataChunk->chunkDataSize);
     char* waveData = (char*) malloc(waveDataSize);
     memcpy(waveData, waveFile->dataChunk->waveformData, waveDataSize);
 
-    if (0)
-    {
-        pointsCount = 3;
-        pointsOffset = (uint32_t *) malloc(sizeof(uint32_t)*pointsCount);
-        pointsOffset[0] = 1968;
-        pointsOffset[1] = 2160;
-        pointsOffset[2] = 3552;
-
-        pointsLenght = (uint32_t *) malloc(sizeof(uint32_t)*pointsCount);
-        pointsLenght[0] = 152;
-        pointsLenght[1] = 1280;
-        pointsLenght[2] = 472;
-
-        pointsLabels = (char **) malloc(sizeof(char *)*pointsCount);
-        pointsLabels[0] = (char *) malloc(sizeof(char)*2);
-        pointsLabels[1] = (char *) malloc(sizeof(char)*2);
-        pointsLabels[2] = (char *) malloc(sizeof(char)*2);
-        pointsLabels[0][0] = 'P';
-        pointsLabels[1][0] = 'N';
-        pointsLabels[2][0] = 'T';
-        pointsLabels[0][1] = 0;
-        pointsLabels[1][1] = 0;
-        pointsLabels[2][1] = 0;
-    }
+    qDebug() << "waveData " << waveData << LOG_DATA;
+    qDebug() << "waveDataSize " << waveDataSize << LOG_DATA;
+    qDebug() << "NUMBER_OF_CHANNELS " << NUMBER_OF_CHANNELS << LOG_DATA;
+    qDebug() << "RECORD_FREQ " << RECORD_FREQ << LOG_DATA;
+    qDebug() << "SIGNIFICANT_BITS_PER_SAMPLE " << SIGNIFICANT_BITS_PER_SAMPLE << LOG_DATA;
+    qDebug() << "pointsCount " << pointsCount << LOG_DATA;
+    qDebug() << "pointsOffset " << pointsOffset << LOG_DATA;
+    qDebug() << "pointsLenght " << pointsLenght << LOG_DATA;
+    qDebug() << "pointsLabel " << pointsLabels << LOG_DATA;
 
     WaveFile * newWaveFile = makeWaveFileFromRawData(
                 waveData,
@@ -386,12 +372,15 @@ QModelIndex SandBoxItemModel::markOutFile(QModelIndex index)
                 NUMBER_OF_CHANNELS,
                 RECORD_FREQ,
                 SIGNIFICANT_BITS_PER_SAMPLE,
-                pointsCount,
+                pointsCount-1,
                 pointsOffset,
                 pointsLenght,
                 pointsLabels
     );
+    qDebug() << "makeWaveFileFromRawData " << waveDataSize << LOG_DATA;
     saveWaveFile(newWaveFile, newFilePath.toLocal8Bit().data());
+
+    qDebug() << "saveWaveFile " << waveDataSize << LOG_DATA;
 
     freeSimpleGraphData(data);
     qDebug() << "freeSimpleGraphData" << LOG_DATA;
