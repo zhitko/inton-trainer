@@ -147,7 +147,9 @@ vector getFileMask(WaveFile* waveFile, vector wave, int len, char marker = NULL)
     {
         qDebug() << "tryFileData" << LOG_DATA;
         vector mask_from_file = readMaskFromFile(waveFile, wave.x, marker);
-        mask = vector_resize(mask_from_file, len);
+        vector mask_norm = normalizev(mask_from_file, MASK_MIN, MASK_MAX);
+        mask = vector_resize(mask_norm, len);
+        freev(mask_norm);
         freev(mask_from_file);
         qDebug() << "vector_resize" << LOG_DATA;
     }
@@ -412,12 +414,18 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
     vector pitch = processZeros(sptk_pitch_spec(smooth_wave, sptk_settings->pitch, intensive.x));
     qDebug() << "::SimpleProcWave2Data pitch" << LOG_DATA;
 
+    int otype = sptk_settings->pitch->OTYPE;
     sptk_settings->pitch->OTYPE = 2;
     vector pitch_log = sptk_pitch_spec(smooth_wave, sptk_settings->pitch, intensive.x);
-    vector pitch_log_norm = normalizev(pitch_log, 0.0, 1.0);
+    sptk_settings->pitch->OTYPE = otype;
+    vector pitch_log_norm = normalizev(pitch_log, MASK_MIN, MASK_MAX);
     qDebug() << "::SimpleProcWave2Data pitch_log" << LOG_DATA;
 
-    vector mask = getFileMask(waveFile, wave, pitch.x);
+    vector file_mask = getFileMask(waveFile, wave, pitch.x);
+    qDebug() << "::SimpleProcWave2Data file_mask" << LOG_DATA;
+
+    vector mask_and = vector_mask_and(pitch_log_norm, file_mask);
+    vector mask = vector_smooth_mid(mask_and, 15);
     qDebug() << "::SimpleProcWave2Data mask" << LOG_DATA;
 
     vector inverted_mask = vector_invert_mask(mask);
@@ -449,6 +457,7 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
     freev(inverted_mask);
     freev(smooth_wave);
     freev(pitch_log);
+    freev(file_mask);
     qDebug() << "::SimpleProcWave2Data freev" << LOG_DATA;
 
     file.close();

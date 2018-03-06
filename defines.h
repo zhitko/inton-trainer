@@ -30,8 +30,12 @@
 #define MASK_LEN 100
 #define MASK_MIN 0.0001
 #define MASK_MAX 1.0
+#define MASK_LIMIT 0.9
 
-#define APP_VER "0.2.6"
+#define NORM_FROM 0.0
+#define NORM_TO   1.0
+
+#define APP_VER "0.2.7"
 
 #endif // DEFINES
 

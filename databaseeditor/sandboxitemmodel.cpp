@@ -301,14 +301,13 @@ QModelIndex SandBoxItemModel::markOutFile(QModelIndex index)
     uint32_t *pointsLenght = NULL;
     char **pointsLabels = NULL;
 
-    uint8_t limit = 0.1;
     uint8_t cut = 0.3;
 
     uint8_t gotIt = 0;
     uint32_t lenght = 0;
     for (uint32_t i=0; i<pitchLogSize; i++)
     {
-        if ((data->d_pitch_log.v[i] < limit ||  i==(pitchLogSize-1)) && gotIt == 1)
+        if ((data->d_pitch_log.v[i] < MASK_LIMIT ||  i==(pitchLogSize-1)) && gotIt == 1)
         {
             gotIt = 0;
             if (pointsLenght == NULL)
@@ -331,11 +330,11 @@ QModelIndex SandBoxItemModel::markOutFile(QModelIndex index)
             pointsLabels[pointsCount - 1][0] = MARK_NUCLEUS;
             pointsLabels[pointsCount - 1][1] = 0;
         }
-        if (data->d_pitch_log.v[i] >= limit && gotIt == 1)
+        if (data->d_pitch_log.v[i] >= MASK_LIMIT && gotIt == 1)
         {
             lenght++;
         }
-        if (data->d_pitch_log.v[i] >= limit && gotIt == 0)
+        if (data->d_pitch_log.v[i] >= MASK_LIMIT && gotIt == 0)
         {
             gotIt = 1;
             pointsCount++;

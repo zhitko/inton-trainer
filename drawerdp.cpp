@@ -419,47 +419,21 @@ int compare (const void * a, const void * b)
   return ( *(double*)a - *(double*)b );
 }
 
-vector mid(vector data, int frame, bool procZeros = true)
-{
-    int resultLength = data.x;
-    vector result = zerov(resultLength);
-    int frameIndex = 0;
-    vector middle = zerov(frame);
-    for(int i=0;i<resultLength;i++)
-    {
-        frameIndex = 0;
-        for(int j=0; j < frame; j++)
-        {
-            int position = i+j-frame/2;
-            if (procZeros || getv(data, i) != 0)
-                {
-                if( position < 0 || position > resultLength )
-                {
-                    setv(middle, frameIndex, 0.0);
-                } else {
-                    setv(middle, frameIndex, fabs(getv(data, position)));
-                    frameIndex++;
-                }
-            }
-        }
-        if (frameIndex > frame/3)
-        {
-            qsort (middle.v, frameIndex-1, sizeof(double), compare);
-            setv(result, i, getv(middle, frameIndex/2));
-        }
-    }
-    freev(middle);
-
-    return result;
-}
-
 int compare_mask_details (const void * a, const void * b)
 {
   return ( ((MaskDetails*)a)->from - ((MaskDetails*)b)->from );
 }
 
-vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, MaskData mask_t, double mask_scale, int part_len, int useStripUmp)
-{
+vector makeUmp(
+        vector * data,
+        vector * mask,
+        MaskData mask_p,
+        MaskData mask_n,
+        MaskData mask_t,
+        double mask_scale,
+        int part_len,
+        int useStripUmp
+) {
     const int TYPE_P = 1;
     const int TYPE_N = 2;
     const int TYPE_T = 3;
@@ -470,25 +444,34 @@ vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
     MaskDetails * details = new MaskDetails[len];
 
     for(int i=0; i<len_p; i++)
+    {
         details[i] = MaskDetails{
                 getiv(mask_p.pointsFrom, i)/mask_scale,
                 getiv(mask_p.pointsLength, i)/mask_scale,
                 TYPE_P
         };
+        qDebug() << "details P from " << details[i].from << LOG_DATA;
+    }
 
     for(int i=0; i<len_n; i++)
+    {
         details[len_p + i] = MaskDetails{
                 getiv(mask_n.pointsFrom, i)/mask_scale,
                 getiv(mask_n.pointsLength, i)/mask_scale,
                 TYPE_N
         };
+        qDebug() << "details N from " << details[len_p + i].from << LOG_DATA;
+    }
 
     for(int i=0; i<len_t; i++)
+    {
         details[len_p + len_n + i] = MaskDetails{
                 getiv(mask_t.pointsFrom, i)/mask_scale,
                 getiv(mask_t.pointsLength, i)/mask_scale,
                 TYPE_T
         };
+        qDebug() << "details T from " << details[len_p + len_n + i].from << LOG_DATA;
+    }
 
     qsort(details, len, sizeof(MaskDetails), compare_mask_details);
 
@@ -521,12 +504,6 @@ vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
 
     if(!useStripUmp)
     {
-        if(merge_len>0)
-        {
-            merged_details[0].len += merged_details[0].from;
-            merged_details[0].from = 0;
-        }
-
         for(int i=1; i<merge_len; i++)
         {
             int t1 = merged_details[i-1].type;
@@ -629,6 +606,7 @@ vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
     qDebug() << "mask " << mask->x << LOG_DATA;
     vector strip_data;
     strip_data = copyv(*data);
+//    strip_data = vector_strip_by_mask(*data, *mask);
     qDebug() << "strip_data " << strip_data.x << LOG_DATA;
 
     qDebug() << "clone_len " << clone_len << LOG_DATA;
@@ -649,6 +627,7 @@ vector makeUmp(vector * data, vector * mask, MaskData mask_p, MaskData mask_n, M
         for(int j=0; j<len; j++)
         {
             p = clone_details[i].from/scale + j;
+            qDebug() << "clone_details " << p << LOG_DATA;
             setv(in, j, getv(strip_data, p));
         }
         qDebug() << "len " << in.x << " - " << clone_details[i].from << LOG_DATA;
@@ -689,11 +668,11 @@ MinMax applyMask(vector * data, vector * mask)
     qDebug() << "scaledMask" << LOG_DATA;
     vector cuttedData = vector_cut_by_mask(*data, scaledMask);
     qDebug() << "newData" << LOG_DATA;
-    vector dataMid = mid(cuttedData, sptk_settings->plotF0->midFrame);
+    vector dataMid = vector_mid(cuttedData, sptk_settings->plotF0->midFrame, 1);
     min = getv(dataMid, min_greaterv(dataMid, 0.0));
     max = getv(dataMid, maxv(dataMid));
     qDebug() << "pitch_mid" << LOG_DATA;
-    vector newDataNorm = norm(dataMid, 0.0, 1.0, !sptk_settings->plotF0->normF0MinMax);
+    vector newDataNorm = norm(dataMid, NORM_FROM, NORM_TO, !sptk_settings->plotF0->normF0MinMax);
     qDebug() << "newDataNorm" << LOG_DATA;
     vector dataInterpolate = copyv(newDataNorm);
     qDebug() << "dataInterpolate " << dataInterpolate.x << LOG_DATA;
@@ -741,7 +720,6 @@ MinMax applyMask(vector * data, vector * mask)
     freev(dataMid);
     freev(newDataNorm);
     freev(*data);
-    data->v = newDataNorm.v;
     data->v = dataInterpolate.v;
     qDebug() << "finish applyMask" << LOG_DATA;
     return MinMax{min, max};
@@ -837,8 +815,11 @@ void DrawerDP::Proc(QString fname)
         freev(tVector);
 
         vector pitch_cutted = copyv(this->simple_data->d_pitch_original);
-        MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_pitch_log);
-        qDebug() << "MinMax " << mm.min << ":" << mm.max << LOG_DATA;
+        MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_mask);
+
+        this->f0max = mm.max;
+        this->f0min = mm.min;
+        qDebug() << "MinMax " << this->f0min << ":" << this->f0max << LOG_DATA;
 
         vector pitch_smooth;
         if (sptk_settings->dp->umpSmoothType == 0)
@@ -853,9 +834,6 @@ void DrawerDP::Proc(QString fname)
         this->pitchData = createMglData(pitch_smooth, this->pitchData, true);
         this->pitchData->Norm();
         qDebug() << "pitchData createMglData" << LOG_DATA;
-
-        this->f0max = mm.max;
-        this->f0min = mm.min;
 
         this->rt = (1.0 * this->f0max / this->f0min) - 1;
 
@@ -1027,7 +1005,7 @@ void DrawerDP::Proc(QString fname)
         vector pitch_cutted = cutv(dataSec->d_pitch, startPos, endPos);
         applyMapping(&pitch_cutted, &mapping);
 
-        MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_pitch_log);
+        MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_mask);
         this->userf0max = mm.max;
         this->userf0min = mm.min;
 

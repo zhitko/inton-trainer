@@ -134,9 +134,16 @@ vector vector_cut_by_mask(vector data, vector mask)
 vector vector_strip_by_mask(vector data, vector mask)
 {
     int len = 0;
-    for (int i=0; i<data.x && i<mask.x; i++ )
+    vector scaled_mask;
+    if (mask.x == data.x)
     {
-        if(getv(mask, i) > MASK_LIMIT)
+        scaled_mask = copyv(mask);
+    } else {
+        scaled_mask = vector_resize(mask, data.x);
+    }
+    for (int i=0; i<data.x && i<scaled_mask.x; i++ )
+    {
+        if(getv(scaled_mask, i) > MASK_LIMIT)
         {
             len++;
         }
@@ -144,15 +151,21 @@ vector vector_strip_by_mask(vector data, vector mask)
 
     vector result = zerov(len);
     int pos = 0;
-    for (int i=0; i<data.x && i<mask.x && pos<len; i++ )
+    for (int i=0; i<data.x && i<scaled_mask.x && pos<len; i++ )
     {
-        if(getv(mask, i) > MASK_LIMIT)
+        if(getv(scaled_mask, i) > MASK_LIMIT)
         {
             setv(result, pos, getv(data, i));
             pos++;
         }
     }
-    return result;
+
+    vector scaled_result = vector_resize(result, data.x);
+
+    freev(scaled_mask);
+    freev(result);
+
+    return scaled_result;
 }
 
 vector vector_invert_mask(vector mask)
@@ -170,6 +183,22 @@ vector vector_invert_mask(vector mask)
         }
     }
     return inverted;
+}
+
+vector vector_mask_and(vector mask, vector mask_to_apply)
+{
+    vector resized_mask = vector_resize(mask_to_apply, mask.x);
+    vector and_mask = zerov(mask.x);
+    for(int i=0; i<mask.x; i++ )
+    {
+        if (getv(mask, i) > MASK_LIMIT && getv(resized_mask, i) > MASK_LIMIT)
+        {
+            setv(and_mask, i, MASK_MAX);
+        } else {
+            setv(and_mask, i, MASK_MIN);
+        }
+    }
+    return and_mask;
 }
 
 vector make_mask(int length, int count, int * points_from, int * points_length)
@@ -201,3 +230,36 @@ vector vector_resize(vector orig, int new_size)
     return result;
 }
 
+vector vector_mid(vector data, int frame, int procZeros)
+{
+    int resultLength = data.x;
+    vector result = zerov(resultLength);
+    int frameIndex = 0;
+    vector middle = zerov(frame);
+    for(int i=0;i<resultLength;i++)
+    {
+        frameIndex = 0;
+        for(int j=0; j < frame; j++)
+        {
+            int position = i+j-frame/2;
+            if (procZeros || getv(data, i) != 0)
+                {
+                if( position < 0 || position > resultLength )
+                {
+                    setv(middle, frameIndex, 0.0);
+                } else {
+                    setv(middle, frameIndex, fabs(getv(data, position)));
+                    frameIndex++;
+                }
+            }
+        }
+        if (frameIndex > frame/3)
+        {
+            qsort (middle.v, frameIndex-1, sizeof(double), compare);
+            setv(result, i, getv(middle, frameIndex/2));
+        }
+    }
+    freev(middle);
+
+    return result;
+}

@@ -282,16 +282,20 @@ vector normalizev(vector data, double targetMin, double targetMax)
 }
 
 // Find index of the minimum item is greater than value
-int min_greaterv(vector data, double value)
+int min_greaterv(vector data, double limit)
 {
-    int index = 0;
     double min_value = getv(data, maxv(data));
+    double value;
+    int index = 0;
     for(int i = 0; i < data.x; i++)
-        if(getv(data, i) > value && getv(data, i) < min_value)
+    {
+        value = getv(data, i);
+        if(value > limit && value < min_value)
         {
-            min_value = getv(data, i);
+            min_value = value;
             index = i;
         }
+    }
     return index;
 }
 
