@@ -27,15 +27,18 @@
 #define MARK_NUCLEUS 'N'
 #define MARK_POST_NUCLEUS 'T'
 
+#define MARKOUT_PREFIX '_'
+
 #define MASK_LEN 100
 #define MASK_MIN 0.0001
 #define MASK_MAX 1.0
-#define MASK_LIMIT 0.9
+#define MASK_LIMIT 0.5
 
 #define NORM_FROM 0.0
 #define NORM_TO   1.0
 
-#define APP_VER "0.2.7"
+#define APP_VER "0.2.8"
+#define FULL_APP_VERIOSN ("IntonTrainer (ver. " + QString(APP_VER) + " - " + QString(__DATE__) + ")")
 
 #endif // DEFINES
 

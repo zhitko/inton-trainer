@@ -75,6 +75,7 @@ GraphsWindow::~GraphsWindow()
 void GraphsWindow::initUI()
 {
     ui->setupUi(this);
+    this->setWindowTitle(FULL_APP_VERIOSN);
 
     connect(this->ui->playBtn, SIGNAL(clicked()), this, SLOT(playRecord()));
     connect(this->ui->setRecordBtn, SIGNAL(clicked()), this, SLOT(startRecord()));

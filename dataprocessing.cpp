@@ -19,7 +19,7 @@ extern "C" {
 
 MaskData getLabelsFromFile(WaveFile* waveFile, char marker)
 {
-    MaskData data;// = new MaskData();
+    MaskData data;
     data.pointsFrom.x = 0;
     data.pointsLength.x = 0;
     data.pointsFrom.v = NULL;
@@ -40,6 +40,7 @@ MaskData getLabelsFromFile(WaveFile* waveFile, char marker)
 
     int *pointsFrom = (int*) malloc(sizeof(int)*cuePointsCount);
     int *pointsLength = (int*) malloc(sizeof(int)*cuePointsCount);
+    int *pointsId = (int*) malloc(sizeof(int)*cuePointsCount);
 
 
     qDebug() << "cueChunks" << LOG_DATA;
@@ -48,8 +49,9 @@ MaskData getLabelsFromFile(WaveFile* waveFile, char marker)
         CuePoint point = waveFile->cueChunk->cuePoints[i];
         int id = littleEndianBytesToUInt16(point.cuePointID);
         int pos = littleEndianBytesToUInt16(point.frameOffset);
-        pointsFrom[id-1]=pos;
-        pointsLength[id-1]=0;
+        pointsFrom[i]=pos;
+        pointsLength[i]=0;
+        pointsId[i]=id;
         qDebug() << "cueChunk cuePointID " << id << " frameOffset " << pos << LOG_DATA;
     }
 
@@ -59,7 +61,7 @@ MaskData getLabelsFromFile(WaveFile* waveFile, char marker)
         LtxtChunk ltxt = waveFile->listChunk->ltxtChunks[i];
         int id = littleEndianBytesToUInt16(ltxt.cuePointID);
         int length = littleEndianBytesToUInt32(ltxt.sampleLength);
-        pointsLength[id-1] = length;
+        pointsLength[i] = length;
         qDebug() << "ltxtChunk cuePointID " << id << " sampleLength " << length << LOG_DATA;
     }
 
@@ -79,8 +81,8 @@ MaskData getLabelsFromFile(WaveFile* waveFile, char marker)
                 count++;
                 markedPointsFrom = (int*) realloc(markedPointsFrom, sizeof(int)*count);
                 markedPointsLength = (int*) realloc(markedPointsLength, sizeof(int)*count);
-                markedPointsFrom[count-1] = pointsFrom[id-1];
-                markedPointsLength[count-1] = pointsLength[id-1];
+                markedPointsFrom[count-1] = pointsFrom[i];
+                markedPointsLength[count-1] = pointsLength[i];
             }
             qDebug() << "lablChunk cuePointID " << id << " text " << text[0] << LOG_DATA;
         }
@@ -90,6 +92,8 @@ MaskData getLabelsFromFile(WaveFile* waveFile, char marker)
         pointsLength = markedPointsLength;
         cuePointsCount = count;
     }
+
+    free(pointsId);
 
     data.pointsFrom.x = cuePointsCount;
     data.pointsLength.x = cuePointsCount;
@@ -425,7 +429,7 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
     qDebug() << "::SimpleProcWave2Data file_mask" << LOG_DATA;
 
     vector mask_and = vector_mask_and(pitch_log_norm, file_mask);
-    vector mask = vector_smooth_mid(mask_and, 15);
+    vector mask = vector_smooth_mid(mask_and, 10);
     qDebug() << "::SimpleProcWave2Data mask" << LOG_DATA;
 
     vector inverted_mask = vector_invert_mask(mask);
@@ -458,6 +462,7 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
     freev(smooth_wave);
     freev(pitch_log);
     freev(file_mask);
+    freev(mask_and);
     qDebug() << "::SimpleProcWave2Data freev" << LOG_DATA;
 
     file.close();

@@ -47,7 +47,7 @@ void SandBoxItemModel::populateSandBoxes(const QStringList &names)
 
 void SandBoxItemModel::createDirectoryItem(QString dirName, QStandardItem *parentItem)
 {
-    qDebug() << "SandBoxItemModel::createDirectoryItem" << LOG_DATA;
+//    qDebug() << "SandBoxItemModel::createDirectoryItem" << LOG_DATA;
     QDir dir(dirName);
     QFileInfo item;
     QStandardItem* child;
@@ -275,7 +275,7 @@ QModelIndex SandBoxItemModel::markOutFile(QModelIndex index)
     QFileInfo info = this->fileInfo(index);
     QString fileName = info.fileName();
     QString filePath = info.filePath();
-    QString newFileName = "+" + fileName;
+    QString newFileName = MARKOUT_PREFIX + fileName;
     QString newFilePath = info.dir().absoluteFilePath(newFileName);
 
     qDebug() << "fileName " << fileName << LOG_DATA;
@@ -371,7 +371,7 @@ QModelIndex SandBoxItemModel::markOutFile(QModelIndex index)
                 NUMBER_OF_CHANNELS,
                 RECORD_FREQ,
                 SIGNIFICANT_BITS_PER_SAMPLE,
-                pointsCount-1,
+                pointsCount,
                 pointsOffset,
                 pointsLenght,
                 pointsLabels

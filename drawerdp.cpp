@@ -156,7 +156,7 @@ int DrawerDP::Draw(mglGraph *gr)
         gr->Grid("y", "W", "");
         if(sptk_settings->dp->showF0) gr->Plot(*this->pitchData, "-r3");
         if(sptk_settings->dp->showOriginalF0) gr->Plot(*this->pitchDataOriginal, "-r2");
-        if(sptk_settings->dp->showA0) gr->Plot(*this->intensiveData, "-g3");
+        if(sptk_settings->dp->showA0) gr->Plot(*this->intensiveData, "-b3");
         gr->Plot(*pWaveData, "q2");
         gr->Plot(*nWaveData, "k2");
         gr->Plot(*tWaveData, "c2");
@@ -252,7 +252,7 @@ int DrawerDP::Draw(mglGraph *gr)
             if(this->errorData) gr->Plot(*this->errorData, "-B3");
             if(this->timeData) gr->Plot(*this->timeData, "-R3");
             if(sptk_settings->dp->showF0) gr->Plot(*this->secPitchData, "-R4");
-            if(sptk_settings->dp->showA0) gr->Plot(*this->secIntensiveData, "-G4");
+            if(sptk_settings->dp->showA0) gr->Plot(*this->secIntensiveData, "-B4");
 
             gr->MultiPlot(2, 15, 27, 1, 1, "#");
             gr->Puts(
@@ -606,7 +606,6 @@ vector makeUmp(
     qDebug() << "mask " << mask->x << LOG_DATA;
     vector strip_data;
     strip_data = copyv(*data);
-//    strip_data = vector_strip_by_mask(*data, *mask);
     qDebug() << "strip_data " << strip_data.x << LOG_DATA;
 
     qDebug() << "clone_len " << clone_len << LOG_DATA;
@@ -627,7 +626,7 @@ vector makeUmp(
         for(int j=0; j<len; j++)
         {
             p = clone_details[i].from/scale + j;
-            qDebug() << "clone_details " << p << LOG_DATA;
+//            qDebug() << "clone_details " << p << LOG_DATA;
             setv(in, j, getv(strip_data, p));
         }
         qDebug() << "len " << in.x << " - " << clone_details[i].from << LOG_DATA;
@@ -682,7 +681,7 @@ MinMax applyMask(vector * data, vector * mask)
 
     if (start == 0)
     {
-        qDebug() << "vector_interpolate_part(" << &dataInterpolate << ", " << start << ", " << end << ", " << sptk_settings->plotF0->interpolation_type << ")" << LOG_DATA;
+        qDebug() << "vector_interpolate_part_first(" << &dataInterpolate << ", " << start << ", " << end << ", " << sptk_settings->plotF0->interpolation_type << ")" << LOG_DATA;
         vector_interpolate_part(
                     &dataInterpolate,
                     start,
@@ -707,7 +706,7 @@ MinMax applyMask(vector * data, vector * mask)
         end = first_greater_fromv(dataInterpolate, start, 0.0);
     } while (end != start && end != dataInterpolate.x);
 
-    qDebug() << "vector_interpolate_part(" << &dataInterpolate << ", " << start-1 << ", " << dataInterpolate.x - 1 << ", " << sptk_settings->plotF0->interpolation_type << ")" << LOG_DATA;
+    qDebug() << "vector_interpolate_part_last(" << &dataInterpolate << ", " << start-1 << ", " << dataInterpolate.x - 1 << ", " << sptk_settings->plotF0->interpolation_type << ")" << LOG_DATA;
     vector_interpolate_part(
                 &dataInterpolate,
                 start-1,

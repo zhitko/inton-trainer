@@ -52,18 +52,18 @@ int compare (const void * a, const void * b)
 
 vector vector_smooth_mid(vector data, int frame)
 {
-    int resultLength = data.x;
-    vector result = makev(resultLength);
+    int shift = frame / 2;
+    vector result = zerov(data.x);
 
     double* middle = malloc(frame * sizeof(double));
-    for(int i=0;i<resultLength;i++)
+    for(int i=0;i<data.x;i++)
     {
         for(int j=0; j < frame; j++)
         {
-            middle[j] = fabs(getv(data, i+j));
+            middle[j] = fabs(getv(data, i+j-shift));
         }
         qsort (middle, frame, sizeof(double), compare);
-        setv(result, i, middle[frame/2]);
+        setv(result, i, middle[shift]);
     }
 
     return result;
@@ -170,16 +170,16 @@ vector vector_strip_by_mask(vector data, vector mask)
 
 vector vector_invert_mask(vector mask)
 {
-    vector inverted = makev(mask.x);
+    vector inverted = zerov(mask.x);
     for(int i=0; i<mask.x; i++ )
     {
         if(getv(mask, i) > MASK_LIMIT)
         {
-            setv(inverted, i, 0.0);
+            setv(inverted, i, MASK_MIN);
         }
         else
         {
-            setv(inverted, i, 1.0);
+            setv(inverted, i, MASK_MAX);
         }
     }
     return inverted;
@@ -223,7 +223,7 @@ vector vector_resize(vector orig, int new_size)
 
     for (int i=0; i<new_size; i++)
     {
-        int scaled_i = (i*orig_size)/new_size;
+        int scaled_i = (1.0*i*orig_size)/new_size;
         setv(result, i, getv(orig, scaled_i));
     }
 

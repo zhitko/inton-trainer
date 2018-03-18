@@ -805,7 +805,7 @@ WaveFile * makeWaveFileFromRawData(
         for (uint32_t i=0; i<pointsCount; i++)
         {
             CuePoint * cuePoint = makeCuePoint(
-                        i,
+                        i+1,
                         pointsOffset[i],
                         0,
                         0,
@@ -815,7 +815,7 @@ WaveFile * makeWaveFileFromRawData(
             free(cuePoint);
 
             LtxtChunk * ltxtChunk = makeLtxtChunk(
-                        i,
+                        i+1,
                         pointsLenght[i],
                         NULL,
                         NULL,
@@ -829,7 +829,7 @@ WaveFile * makeWaveFileFromRawData(
             char * text = malloc(strlen(pointsLabels[i]) + 1);
             strcpy(text, pointsLabels[i]);
             LablChunk * lablChunk = makeLablChunk(
-                        i,
+                        i+1,
                         text
             );
             lablChunks[i] = *lablChunk;

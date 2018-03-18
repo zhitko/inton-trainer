@@ -305,11 +305,14 @@ void MainWindow::cleanRecordFiles()
 
     QString path = QApplication::applicationDirPath() + DATA_PATH + USER_DATA_PATH;
     QDir directory(path);
+
     QStringList files = scanDirIter(directory);
     files.sort();
+
     qDebug() << "Files list" << files;
-    int count = files.size() - sptk_settings->dp->recordingMaxFiles;
-    for(int i=0;i<count;i++)
+    int count = files.size();
+    int i=sptk_settings->dp->recordingMaxFiles - 1;
+    for(i; i<count; i++)
     {
         QFile(path + files.at(i)).remove();
         qDebug() << "delete" << files.at(i);
