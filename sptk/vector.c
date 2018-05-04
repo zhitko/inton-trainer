@@ -248,6 +248,35 @@ vector absv(vector a_vector)
     return(nw_vector);
 }
 
+// Merge two vectors to one
+vector mergev(vector a_vector, vector b_vector, int factor)
+{
+    vector target_vector;
+    vector inject_vector;
+    if (a_vector.x > b_vector.x) {
+        target_vector = a_vector;
+        inject_vector = b_vector;
+    } else {
+        target_vector = b_vector;
+        inject_vector = a_vector;
+    }
+    int shift = target_vector.x / inject_vector.x;
+    vector result_vector = zerov(target_vector.x + inject_vector.x*factor);
+    int index = 0;
+    for (int i=0; i<inject_vector.x; i++) {
+        int target_shift = shift*i;
+        for (int j=0; j<shift; j++) {
+            setv(result_vector, index, getv(target_vector, target_shift+j));
+            index++;
+        }
+        for (int k=0; k<factor; k++) {
+            setv(result_vector, index, getv(inject_vector, i));
+            index++;
+        }
+    }
+    return result_vector;
+}
+
 // free the memory associated with the vector
 void freev(vector yr_vector) {
     if (yr_vector.v)

@@ -136,10 +136,7 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->window->leng = instance->ui->frameSizeBox->currentText().toInt();
     sptk_settings->window->window_type = static_cast<Window>(instance->ui->windoTypeBox->currentIndex());
     sptk_settings->lpc->leng = instance->ui->frameSizeBox->currentText().toInt();
-    sptk_settings->lpc->order = instance->ui->lpcOrderSpin->value();
-    sptk_settings->lpc->cepstrum_order = instance->ui->lpcCepstrumOrderSpin->value();
     sptk_settings->spec->leng = instance->ui->frameSizeBox->currentText().toInt();
-    sptk_settings->spec->order = instance->ui->lpcOrderSpin->value();
 
     sptk_settings->dp->continiusLimit = instance->ui->continiusDpLimit->value();
 
@@ -159,6 +156,8 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->dp->showTime = instance->ui->showTime->isChecked();
     sptk_settings->dp->errorType = instance->ui->errorTypeBox->currentIndex();
     sptk_settings->dp->useForDP = instance->ui->useForDP->currentIndex();
+    sptk_settings->dp->dpA0Coeficient = instance->ui->dpA0Coeficient->value();
+    sptk_settings->dp->dpF0Coeficient = instance->ui->dpF0Coeficient->value();
 
     sptk_settings->dp->recordingSeconds = instance->ui->recordingSeconds->value();
     sptk_settings->dp->recordingMaxFiles = instance->ui->recordingMaxFiles->value();
@@ -167,7 +166,6 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->dp->mark_level = instance->ui->markLimit->value();
     sptk_settings->dp->mark_labels = strdup(instance->ui->markLabels->text().toStdString().c_str());
 
-    sptk_settings->dp->smooth_frame = instance->ui->smoothFrame->value();
     sptk_settings->dp->show_marks = instance->ui->showMarks->isChecked();
 
     return sptk_settings;
@@ -262,6 +260,10 @@ void SettingsDialog::loadSettingsFrom(QString settings_path)
         this->ui->errorTypeBox->setCurrentIndex(settings.value("error/type").toInt());
     if(settings.contains("dp/use"))
         this->ui->useForDP->setCurrentIndex(settings.value("dp/use").toInt());
+    if(settings.contains("dp/a0Coeficient"))
+        this->ui->dpA0Coeficient->setValue(settings.value("dp/a0Coeficient").toDouble());
+    if(settings.contains("dp/f0Coeficient"))
+        this->ui->dpF0Coeficient->setValue(settings.value("dp/f0Coeficient").toDouble());
     if(settings.contains("dp/recordingSeconds"))
         this->ui->recordingSeconds->setValue(settings.value("dp/recordingSeconds").toDouble());
     if(settings.contains("dp/recordingMaxFiles"))
@@ -273,10 +275,6 @@ void SettingsDialog::loadSettingsFrom(QString settings_path)
         this->ui->frameShiftSpin->setValue(settings.value("frame/shift").toInt());
     if(settings.contains("window/window_type"))
         this->ui->windoTypeBox->setCurrentText(settings.value("window/window_type").toString());
-    if(settings.contains("lpc/order"))
-        this->ui->lpcOrderSpin->setValue(settings.value("lpc/order").toInt());
-    if(settings.contains("lpc/cepstrum_order"))
-        this->ui->lpcCepstrumOrderSpin->setValue(settings.value("lpc/cepstrum_order").toInt());
 
     if(settings.contains("dp/markDelimeter"))
         this->ui->markDelimeter->setValue(settings.value("dp/markDelimeter").toDouble());
@@ -285,8 +283,6 @@ void SettingsDialog::loadSettingsFrom(QString settings_path)
     if(settings.contains("dp/markLabels"))
         this->ui->markLabels->setText(settings.value("dp/markLabels").toString());
 
-    if(settings.contains("dp/smoothFrame"))
-        this->ui->smoothFrame->setValue(settings.value("dp/smoothFrame").toInt());
     if(settings.contains("dp/showMarks"))
         this->ui->showMarks->setChecked(settings.value("dp/showMarks").toBool());
 
@@ -319,10 +315,7 @@ void SettingsDialog::saveSettings()
     settings.setValue("window/leng", this->ui->frameSizeBox->currentText().toInt());
     settings.setValue("window/window_type", this->ui->windoTypeBox->currentText());
     settings.setValue("lpc/leng", this->ui->frameSizeBox->currentText().toInt());
-    settings.setValue("lpc/order", this->ui->lpcOrderSpin->value());
-    settings.setValue("lpc/cepstrum_order", this->ui->lpcCepstrumOrderSpin->value());
     settings.setValue("spec/leng", this->ui->frameSizeBox->currentText().toInt());
-    settings.setValue("spec/order", this->ui->lpcOrderSpin->value());
 
     settings.setValue("dp/continiusLimit", this->ui->continiusDpLimit->value());
 
@@ -342,6 +335,8 @@ void SettingsDialog::saveSettings()
     settings.setValue("dp/showTime", this->ui->showTime->isChecked());
     settings.setValue("error/type", this->ui->errorTypeBox->currentIndex());
     settings.setValue("dp/use", this->ui->useForDP->currentIndex());
+    settings.setValue("dp/a0Coeficient", this->ui->dpA0Coeficient->value());
+    settings.setValue("dp/f0Coeficient", this->ui->dpF0Coeficient->value());
     settings.setValue("dp/recordingSeconds", this->ui->recordingSeconds->value());
     settings.setValue("dp/recordingMaxFiles", this->ui->recordingMaxFiles->value());
 
@@ -349,6 +344,5 @@ void SettingsDialog::saveSettings()
     settings.setValue("dp/markLimit", this->ui->markLimit->value());
     settings.setValue("dp/markLabels", this->ui->markLabels->text());
 
-    settings.setValue("dp/smoothFrame", this->ui->smoothFrame->value());
     settings.setValue("dp/showMarks", this->ui->showMarks->isChecked());
 }

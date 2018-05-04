@@ -449,6 +449,9 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
     vector intensive_mid = vector_smooth_mid(intensive, sptk_settings->plotEnergy->midFrame);
     qDebug() << "::SimpleProcWave2Data intensive_mid" << LOG_DATA;
 
+    vector intensive_norm = normalizev(intensive_mid, MASK_MIN, MASK_MAX);
+    qDebug() << "::SimpleProcWave2Data normalizev" << LOG_DATA;
+
     MaskData md_p = getLabelsFromFile(waveFile, MARK_PRE_NUCLEUS);
     MaskData md_n = getLabelsFromFile(waveFile, MARK_NUCLEUS);
     MaskData md_t = getLabelsFromFile(waveFile, MARK_POST_NUCLEUS);
@@ -487,6 +490,7 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
     data->d_pitch_log = pitch_log_norm;
     data->d_intensive_original = intensive;
     data->d_intensive = intensive_mid;
+    data->d_intensive_norm = intensive_norm;
     data->d_spec_proc = spec_proc;
     data->d_spec = spec;
     data->d_cepstrum = lpc2c;

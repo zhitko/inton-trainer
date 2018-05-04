@@ -76,7 +76,9 @@ DP_SETTINGS *initDpSettings()
     dp->showError = 0;
     dp->showTime = 0;
     dp->errorType = 0;
-    dp->useForDP = 0;
+    dp->useForDP = 1;
+    dp->dpA0Coeficient = 1.0;
+    dp->dpF0Coeficient = 1.0;
     dp->showPortr = 1;
     dp->portLen = 5;
     dp->umpSmoothType = 0;

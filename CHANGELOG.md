@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.2.9] - 2018-05-03
+
+### Changed
+- Advanced settings refactored
+
+### Added
+- Added "Cepstrum with A0 or/and logF0" for DP processing
+
 ## [0.2.8] - 2018-03-11
 
 ### Fixed

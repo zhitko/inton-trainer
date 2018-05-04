@@ -84,6 +84,7 @@ vector                            subtractionv(vector, vector);
 vector                            multiplicationv(vector, vector);
 vector                            divisionv(vector, vector);
 vector                            absv(vector);
+vector                            mergev(vector, vector, int);
 
 double                            getv(vector, int);
 double                            setv(vector, int, double);

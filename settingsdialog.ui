@@ -279,24 +279,17 @@
                </property>
                <layout class="QFormLayout" name="formLayout_10">
                 <item row="0" column="0">
-                 <widget class="QCheckBox" name="showPortr">
-                  <property name="text">
-                   <string>Show UMP</string>
-                  </property>
-                  <property name="checked">
-                   <bool>true</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="0">
                  <widget class="QLabel" name="label_35">
                   <property name="text">
                    <string>Use for DP</string>
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="1">
+                <item row="0" column="1">
                  <widget class="QComboBox" name="useForDP">
+                  <property name="currentIndex">
+                   <number>1</number>
+                  </property>
                   <item>
                    <property name="text">
                     <string>Spectrum</string>
@@ -307,140 +300,66 @@
                     <string>Cepstrum</string>
                    </property>
                   </item>
-                 </widget>
-                </item>
-                <item row="2" column="0" colspan="2">
-                 <widget class="QCheckBox" name="showA0">
-                  <property name="text">
-                   <string>Show А0</string>
-                  </property>
-                  <property name="checked">
-                   <bool>false</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="0" colspan="2">
-                 <widget class="QCheckBox" name="showF0">
-                  <property name="text">
-                   <string>Show F0</string>
-                  </property>
-                  <property name="checked">
-                   <bool>true</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item row="4" column="0">
-                 <widget class="QCheckBox" name="showOriginalF0">
-                  <property name="text">
-                   <string>Show original F0</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="5" column="0">
-                 <widget class="QLabel" name="label_17">
-                  <property name="text">
-                   <string>Smoothing Type</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="5" column="1">
-                 <widget class="QComboBox" name="umpSmoothType">
                   <item>
                    <property name="text">
-                    <string>Linear</string>
+                    <string>Cepstrum A0</string>
                    </property>
                   </item>
                   <item>
                    <property name="text">
-                    <string>Median</string>
+                    <string>Cepstrum logF0</string>
                    </property>
                   </item>
                   <item>
                    <property name="text">
-                    <string>None</string>
+                    <string>Cepstrum A0+logF0</string>
                    </property>
                   </item>
                  </widget>
                 </item>
-                <item row="6" column="0">
-                 <widget class="QLabel" name="label_18">
-                  <property name="text">
-                   <string>Smoothing frame</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="6" column="1">
-                 <widget class="QSpinBox" name="umpSmoothValue">
-                  <property name="minimum">
-                   <number>1</number>
-                  </property>
-                  <property name="value">
-                   <number>5</number>
-                  </property>
-                 </widget>
-                </item>
-                <item row="7" column="0">
-                 <widget class="QLabel" name="label_36">
-                  <property name="text">
-                   <string>UMP part points count</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="7" column="1">
-                 <widget class="QSpinBox" name="portLen">
-                  <property name="minimum">
-                   <number>1</number>
-                  </property>
-                  <property name="maximum">
-                   <number>300</number>
-                  </property>
-                  <property name="value">
-                   <number>5</number>
-                  </property>
-                 </widget>
-                </item>
-                <item row="8" column="0" colspan="2">
-                 <widget class="QCheckBox" name="showTime">
-                  <property name="text">
-                   <string>Show DP time</string>
-                  </property>
-                  <property name="checked">
-                   <bool>false</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item row="9" column="0">
-                 <widget class="QCheckBox" name="showError">
-                  <property name="text">
-                   <string>Show DP error</string>
-                  </property>
-                  <property name="checked">
-                   <bool>false</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item row="10" column="0">
+                <item row="2" column="0">
                  <widget class="QLabel" name="label_29">
                   <property name="text">
                    <string>Threshold</string>
                   </property>
                  </widget>
                 </item>
-                <item row="10" column="1">
+                <item row="2" column="1">
                  <widget class="QSpinBox" name="continiusDpLimit">
                   <property name="maximum">
                    <number>9999</number>
                   </property>
                  </widget>
                 </item>
-                <item row="12" column="0">
+                <item row="3" column="0">
                  <widget class="QLabel" name="label_30">
                   <property name="text">
                    <string>kH</string>
                   </property>
                  </widget>
                 </item>
-                <item row="12" column="1">
+                <item row="4" column="0">
+                 <widget class="QLabel" name="label_31">
+                  <property name="text">
+                   <string>kV</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="0">
+                 <widget class="QLabel" name="label_32">
+                  <property name="text">
+                   <string>kD</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="6" column="0">
+                 <widget class="QLabel" name="label_33">
+                  <property name="text">
+                   <string>kT</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="1">
                  <widget class="QDoubleSpinBox" name="continiusDpKH">
                   <property name="singleStep">
                    <double>0.100000000000000</double>
@@ -450,14 +369,7 @@
                   </property>
                  </widget>
                 </item>
-                <item row="13" column="0">
-                 <widget class="QLabel" name="label_31">
-                  <property name="text">
-                   <string>kV</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="13" column="1">
+                <item row="4" column="1">
                  <widget class="QDoubleSpinBox" name="continiusDpKV">
                   <property name="singleStep">
                    <double>0.100000000000000</double>
@@ -467,14 +379,7 @@
                   </property>
                  </widget>
                 </item>
-                <item row="14" column="0">
-                 <widget class="QLabel" name="label_32">
-                  <property name="text">
-                   <string>kD</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="14" column="1">
+                <item row="5" column="1">
                  <widget class="QDoubleSpinBox" name="continiusDpKD">
                   <property name="singleStep">
                    <double>0.100000000000000</double>
@@ -484,19 +389,105 @@
                   </property>
                  </widget>
                 </item>
-                <item row="15" column="0">
-                 <widget class="QLabel" name="label_33">
-                  <property name="text">
-                   <string>kT</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="15" column="1">
+                <item row="6" column="1">
                  <widget class="QDoubleSpinBox" name="continiusDpKT">
                   <property name="value">
                    <double>20.000000000000000</double>
                   </property>
                  </widget>
+                </item>
+                <item row="7" column="0" colspan="2">
+                 <layout class="QGridLayout" name="gridLayout">
+                  <item row="1" column="2">
+                   <widget class="QCheckBox" name="showF0">
+                    <property name="text">
+                     <string>Show F0</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QCheckBox" name="showError">
+                    <property name="text">
+                     <string>Show DP error</string>
+                    </property>
+                    <property name="checked">
+                     <bool>false</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QCheckBox" name="showPortr">
+                    <property name="text">
+                     <string>Show UMP</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="2">
+                   <widget class="QCheckBox" name="showA0">
+                    <property name="text">
+                     <string>Show А0</string>
+                    </property>
+                    <property name="checked">
+                     <bool>false</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="0">
+                   <widget class="QCheckBox" name="showTime">
+                    <property name="text">
+                     <string>Show DP time</string>
+                    </property>
+                    <property name="checked">
+                     <bool>false</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="2">
+                   <widget class="QCheckBox" name="showOriginalF0">
+                    <property name="text">
+                     <string>Show original F0</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item row="1" column="0" colspan="2">
+                 <layout class="QGridLayout" name="gridLayout_2">
+                  <item row="0" column="2">
+                   <widget class="QLabel" name="label_24">
+                    <property name="text">
+                     <string>logF0 Coeficient</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QDoubleSpinBox" name="dpA0Coeficient">
+                    <property name="value">
+                     <double>1.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="label_8">
+                    <property name="text">
+                     <string>A0 Coeficient</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="3">
+                   <widget class="QDoubleSpinBox" name="dpF0Coeficient">
+                    <property name="value">
+                     <double>1.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </item>
                </layout>
               </widget>
@@ -531,7 +522,7 @@
             <x>0</x>
             <y>0</y>
             <width>516</width>
-            <height>745</height>
+            <height>703</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -692,37 +683,6 @@
                   </item>
                  </widget>
                 </item>
-                <item row="3" column="0">
-                 <widget class="QLabel" name="label_8">
-                  <property name="text">
-                   <string>LPC Order</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="1">
-                 <widget class="QSpinBox" name="lpcOrderSpin">
-                  <property name="minimum">
-                   <number>1</number>
-                  </property>
-                  <property name="value">
-                   <number>16</number>
-                  </property>
-                 </widget>
-                </item>
-                <item row="4" column="1">
-                 <widget class="QSpinBox" name="lpcCepstrumOrderSpin">
-                  <property name="value">
-                   <number>16</number>
-                  </property>
-                 </widget>
-                </item>
-                <item row="4" column="0">
-                 <widget class="QLabel" name="label_34">
-                  <property name="text">
-                   <string>Cepstrum Order</string>
-                  </property>
-                 </widget>
-                </item>
                </layout>
               </widget>
              </item>
@@ -848,37 +808,21 @@
               </widget>
              </item>
              <item>
-              <widget class="QGroupBox" name="groupBox_8">
-               <property name="title">
-                <string>Wave processing</string>
-               </property>
-               <layout class="QFormLayout" name="formLayout_3">
-                <item row="0" column="0">
-                 <widget class="QLabel" name="label_41">
-                  <property name="text">
-                   <string>Before F0 Smoothing Frame</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="1">
-                 <widget class="QSpinBox" name="smoothFrame">
-                  <property name="minimum">
-                   <number>1</number>
-                  </property>
-                  <property name="maximum">
-                   <number>500</number>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-             </item>
-             <item>
               <widget class="QGroupBox" name="groupBox_5">
                <property name="title">
                 <string>F0 Processing</string>
                </property>
                <layout class="QFormLayout" name="formLayout_6">
+                <item row="0" column="0">
+                 <widget class="QCheckBox" name="normF0MinMax">
+                  <property name="text">
+                   <string>Normalization of min and max</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
                 <item row="1" column="0">
                  <widget class="QLabel" name="label_19">
                   <property name="text">
@@ -945,13 +889,66 @@
                   </item>
                  </widget>
                 </item>
-                <item row="0" column="0">
-                 <widget class="QCheckBox" name="normF0MinMax">
+                <item row="3" column="0">
+                 <widget class="QLabel" name="label_17">
                   <property name="text">
-                   <string>Normalization of min and max</string>
+                   <string>Smoothing Type</string>
                   </property>
-                  <property name="checked">
-                   <bool>true</bool>
+                 </widget>
+                </item>
+                <item row="3" column="1">
+                 <widget class="QComboBox" name="umpSmoothType">
+                  <item>
+                   <property name="text">
+                    <string>Linear</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Median</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>None</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item row="4" column="0">
+                 <widget class="QLabel" name="label_18">
+                  <property name="text">
+                   <string>Smoothing frame</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="1">
+                 <widget class="QSpinBox" name="umpSmoothValue">
+                  <property name="minimum">
+                   <number>1</number>
+                  </property>
+                  <property name="value">
+                   <number>5</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="0">
+                 <widget class="QLabel" name="label_36">
+                  <property name="text">
+                   <string>UMP part points count</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="1">
+                 <widget class="QSpinBox" name="portLen">
+                  <property name="minimum">
+                   <number>1</number>
+                  </property>
+                  <property name="maximum">
+                   <number>300</number>
+                  </property>
+                  <property name="value">
+                   <number>5</number>
                   </property>
                  </widget>
                 </item>
