@@ -157,7 +157,7 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->dp->errorType = instance->ui->errorTypeBox->currentIndex();
     sptk_settings->dp->useForDP = instance->ui->useForDP->currentIndex();
     sptk_settings->dp->dpA0Coeficient = instance->ui->dpA0Coeficient->value();
-    sptk_settings->dp->dpF0Coeficient = instance->ui->dpF0Coeficient->value();
+    sptk_settings->dp->dpDA0Coeficient = instance->ui->dpDA0Coeficient->value();
 
     sptk_settings->dp->recordingSeconds = instance->ui->recordingSeconds->value();
     sptk_settings->dp->recordingMaxFiles = instance->ui->recordingMaxFiles->value();
@@ -262,8 +262,8 @@ void SettingsDialog::loadSettingsFrom(QString settings_path)
         this->ui->useForDP->setCurrentIndex(settings.value("dp/use").toInt());
     if(settings.contains("dp/a0Coeficient"))
         this->ui->dpA0Coeficient->setValue(settings.value("dp/a0Coeficient").toDouble());
-    if(settings.contains("dp/f0Coeficient"))
-        this->ui->dpF0Coeficient->setValue(settings.value("dp/f0Coeficient").toDouble());
+    if(settings.contains("dp/DA0Coeficient"))
+        this->ui->dpDA0Coeficient->setValue(settings.value("dp/DA0Coeficient").toDouble());
     if(settings.contains("dp/recordingSeconds"))
         this->ui->recordingSeconds->setValue(settings.value("dp/recordingSeconds").toDouble());
     if(settings.contains("dp/recordingMaxFiles"))
@@ -336,7 +336,7 @@ void SettingsDialog::saveSettings()
     settings.setValue("error/type", this->ui->errorTypeBox->currentIndex());
     settings.setValue("dp/use", this->ui->useForDP->currentIndex());
     settings.setValue("dp/a0Coeficient", this->ui->dpA0Coeficient->value());
-    settings.setValue("dp/f0Coeficient", this->ui->dpF0Coeficient->value());
+    settings.setValue("dp/DA0Coeficient", this->ui->dpDA0Coeficient->value());
     settings.setValue("dp/recordingSeconds", this->ui->recordingSeconds->value());
     settings.setValue("dp/recordingMaxFiles", this->ui->recordingMaxFiles->value());
 

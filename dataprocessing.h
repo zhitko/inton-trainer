@@ -24,6 +24,7 @@ struct SimpleGraphData{
     vector d_intensive_original;
     vector d_intensive;
     vector d_intensive_norm;
+    vector d_derivative_intensive_norm;
     vector d_spec_proc;
     vector d_spec;
     vector d_cepstrum;

@@ -23,6 +23,14 @@
 #define OCTAVE_MAX_1 2.5
 #define OCTAVE_MAX_2 5.0
 
+#define DP_USE_SPECTRUM 0
+#define DP_USE_CEPSTRUM 1
+#define DP_USE_CEPSTRUM_A0 2
+#define DP_USE_CEPSTRUM_DA0 3
+#define DP_USE_CEPSTRUM_A0_DA0 4
+#define DP_USE_CEPSTRUM_LOGF0 5
+#define DP_USE_CEPSTRUM_A0_LOGF0 6
+
 #define MARK_PRE_NUCLEUS 'P'
 #define MARK_NUCLEUS 'N'
 #define MARK_POST_NUCLEUS 'T'
@@ -37,7 +45,7 @@
 #define NORM_FROM 0.0
 #define NORM_TO   1.0
 
-#define APP_VER "0.2.9"
+#define APP_VER "0.2.10"
 #define FULL_APP_VERIOSN ("IntonTrainer (ver. " + QString(APP_VER) + " - " + QString(__DATE__) + ")")
 
 #endif // DEFINES

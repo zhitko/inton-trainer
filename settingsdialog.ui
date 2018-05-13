@@ -288,7 +288,7 @@
                 <item row="0" column="1">
                  <widget class="QComboBox" name="useForDP">
                   <property name="currentIndex">
-                   <number>1</number>
+                   <number>0</number>
                   </property>
                   <item>
                    <property name="text">
@@ -307,12 +307,12 @@
                   </item>
                   <item>
                    <property name="text">
-                    <string>Cepstrum logF0</string>
+                    <string>Cepstrum A'0</string>
                    </property>
                   </item>
                   <item>
                    <property name="text">
-                    <string>Cepstrum A0+logF0</string>
+                    <string>Cepstrum A0+A'0</string>
                    </property>
                   </item>
                  </widget>
@@ -462,7 +462,7 @@
                   <item row="0" column="2">
                    <widget class="QLabel" name="label_24">
                     <property name="text">
-                     <string>logF0 Coeficient</string>
+                     <string>A'0 Coeficient</string>
                     </property>
                    </widget>
                   </item>
@@ -481,7 +481,7 @@
                    </widget>
                   </item>
                   <item row="0" column="3">
-                   <widget class="QDoubleSpinBox" name="dpF0Coeficient">
+                   <widget class="QDoubleSpinBox" name="dpDA0Coeficient">
                     <property name="value">
                      <double>1.000000000000000</double>
                     </property>
@@ -520,7 +520,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-155</y>
             <width>516</width>
             <height>703</height>
            </rect>

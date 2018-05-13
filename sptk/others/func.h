@@ -19,5 +19,6 @@ vector make_mask(int, int, int*, int*);
 vector vector_resize(vector,int);
 vector zero_to_nan(vector);
 vector vector_mid(vector, int, int);
+vector vector_derivative(vector);
 
 #endif

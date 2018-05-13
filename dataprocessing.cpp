@@ -452,6 +452,10 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
     vector intensive_norm = normalizev(intensive_mid, MASK_MIN, MASK_MAX);
     qDebug() << "::SimpleProcWave2Data normalizev" << LOG_DATA;
 
+    vector derivative_intensive = vector_derivative(intensive_norm);
+    vector derivative_intensive_norm = normalizev(derivative_intensive, MASK_MIN, MASK_MAX);
+    freev(derivative_intensive);
+
     MaskData md_p = getLabelsFromFile(waveFile, MARK_PRE_NUCLEUS);
     MaskData md_n = getLabelsFromFile(waveFile, MARK_NUCLEUS);
     MaskData md_t = getLabelsFromFile(waveFile, MARK_POST_NUCLEUS);
@@ -491,6 +495,7 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
     data->d_intensive_original = intensive;
     data->d_intensive = intensive_mid;
     data->d_intensive_norm = intensive_norm;
+    data->d_derivative_intensive_norm = derivative_intensive_norm;
     data->d_spec_proc = spec_proc;
     data->d_spec = spec;
     data->d_cepstrum = lpc2c;
@@ -532,6 +537,8 @@ void freeSimpleGraphData(SimpleGraphData * data)
     freev(data->d_pitch_log);
     freev(data->d_intensive_original);
     freev(data->d_intensive);
+    freev(data->d_intensive_norm);
+    freev(data->d_derivative_intensive_norm);
     freev(data->d_spec_proc);
     freev(data->d_spec);
 

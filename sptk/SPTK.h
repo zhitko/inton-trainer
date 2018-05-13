@@ -180,9 +180,10 @@ typedef struct _DP_SETTINGS {
 
     int errorType; // 0 - r; 1 - d
 
-    int useForDP; // 0 - Spectr; 1 - Cepstrum; 2 - Cepstrum A0; 3 - Cepstrum logF0; 4 - Cepstrum A0+logF0
+    int useForDP; // 0 - Spectr; 1 - Cepstrum; 2 - Cepstrum A0;  3 - Cepstrum dA0;  4 - Cepstrum A0+dA0; 5 - Cepstrum logF0; 6 - Cepstrum A0+logF0
     double dpA0Coeficient;
     double dpF0Coeficient;
+    double dpDA0Coeficient;
 
     int recordingType;
     int recordingSeconds;

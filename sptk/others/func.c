@@ -263,3 +263,12 @@ vector vector_mid(vector data, int frame, int procZeros)
 
     return result;
 }
+
+vector vector_derivative(vector v)
+{
+    vector dv = copyv(v);
+    for (int i=1; i<v.x; i++) {
+        setv(dv, i, getv(v, i-1) - getv(v, i));
+    }
+    return dv;
+}

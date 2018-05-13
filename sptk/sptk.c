@@ -79,6 +79,7 @@ DP_SETTINGS *initDpSettings()
     dp->useForDP = 1;
     dp->dpA0Coeficient = 1.0;
     dp->dpF0Coeficient = 1.0;
+    dp->dpDA0Coeficient = 1.0;
     dp->showPortr = 1;
     dp->portLen = 5;
     dp->umpSmoothType = 0;
