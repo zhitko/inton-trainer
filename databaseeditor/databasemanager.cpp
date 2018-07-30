@@ -82,7 +82,9 @@ void DatabaseManager::showContextMenu(const QPoint &pos)
     QAction actionCut(tr("Cut File"), this->treeView);
     QAction actionPaste(tr("Paste File"), this->treeView);
     QAction actionMkdir(tr("Make Dir"), this->treeView);
-    QAction actionMarkOut(tr("Mark Out File"), this->treeView);
+    QAction actionMarkOutByF0(tr("Mark Out File By F0"), this->treeView);
+    QAction actionMarkOutByA0(tr("Mark Out File By A0"), this->treeView);
+    QAction actionMarkOutByF0A0(tr("Mark Out File By F0&&A0"), this->treeView);
 
     if (this->isSelectedDir)
     {
@@ -109,13 +111,17 @@ void DatabaseManager::showContextMenu(const QPoint &pos)
         connect(&actionEdit, SIGNAL(triggered()), this, SLOT(actionEdit()));
         connect(&actionCopy, SIGNAL(triggered()), this, SLOT(actionCopy()));
         connect(&actionCut, SIGNAL(triggered()), this, SLOT(actionCut()));
-        connect(&actionMarkOut, SIGNAL(triggered()), this, SLOT(actionMarkOut()));
+        connect(&actionMarkOutByF0, SIGNAL(triggered()), this, SLOT(actionMarkOutByF0()));
+        connect(&actionMarkOutByA0, SIGNAL(triggered()), this, SLOT(actionMarkOutByA0()));
+        connect(&actionMarkOutByF0A0, SIGNAL(triggered()), this, SLOT(actionMarkOutByF0A0()));
 
         contextMenu.addAction(&actionOpen);
         contextMenu.addAction(&actionFileDir);
 //        contextMenu.addAction(&actionOpenWith);
 //        contextMenu.addAction(&actionEdit);
-        contextMenu.addAction(&actionMarkOut);
+        contextMenu.addAction(&actionMarkOutByF0);
+        contextMenu.addAction(&actionMarkOutByA0);
+        contextMenu.addAction(&actionMarkOutByF0A0);
         contextMenu.addSeparator();
         contextMenu.addAction(&actionCopy);
         contextMenu.addAction(&actionCut);
@@ -287,12 +293,32 @@ void DatabaseManager::actionMkdir()
     }
 }
 
-void DatabaseManager::actionMarkOut()
+void DatabaseManager::actionMarkOutByF0()
 {
     QModelIndex index = this->treeView->currentIndex();
     if ( !index.isValid() ) {
         return;
     }
 
-    model->markOutFile(index);
+    model->markOutFile(index, MARKOUT_MODE_F0);
+}
+
+void DatabaseManager::actionMarkOutByA0()
+{
+    QModelIndex index = this->treeView->currentIndex();
+    if ( !index.isValid() ) {
+        return;
+    }
+
+    model->markOutFile(index, MARKOUT_MODE_A0);
+}
+
+void DatabaseManager::actionMarkOutByF0A0()
+{
+    QModelIndex index = this->treeView->currentIndex();
+    if ( !index.isValid() ) {
+        return;
+    }
+
+    model->markOutFile(index, MARKOUT_MODE_F0A0);
 }

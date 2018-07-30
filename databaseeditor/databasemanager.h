@@ -46,7 +46,9 @@ public slots:
     void actionDelete();
     void actionMkdir();
     void actionAdd();
-    void actionMarkOut();
+    void actionMarkOutByF0();
+    void actionMarkOutByA0();
+    void actionMarkOutByF0A0();
 };
 
 #endif // DATABASEMANAGER_H

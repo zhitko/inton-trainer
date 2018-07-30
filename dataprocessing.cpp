@@ -388,7 +388,7 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
     vector frame = sptk_frame(wave, sptk_settings->frame);
     qDebug() << "::SimpleProcWave2Data frame" << LOG_DATA;
 
-    vector intensive = vector_intensive(frame, sptk_settings->frame);
+    vector intensive = vector_intensive(wave, sptk_settings->frame);
     qDebug() << "::SimpleProcWave2Data intensive" << LOG_DATA;
 
     vector window = sptk_window(frame, sptk_settings->window);

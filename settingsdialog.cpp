@@ -166,6 +166,8 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->dp->mark_level = instance->ui->markLimit->value();
     sptk_settings->dp->mark_labels = strdup(instance->ui->markLabels->text().toStdString().c_str());
 
+    sptk_settings->dp->markoutA0limit = instance->ui->markoutA0limit->value();
+
     sptk_settings->dp->show_marks = instance->ui->showMarks->isChecked();
 
     return sptk_settings;
@@ -286,6 +288,9 @@ void SettingsDialog::loadSettingsFrom(QString settings_path)
     if(settings.contains("dp/showMarks"))
         this->ui->showMarks->setChecked(settings.value("dp/showMarks").toBool());
 
+    if(settings.contains("dp/markoutA0limit"))
+        this->ui->markoutA0limit->setValue(settings.value("dp/markoutA0limit").toInt());
+
 }
 
 void SettingsDialog::saveSettings()
@@ -345,4 +350,6 @@ void SettingsDialog::saveSettings()
     settings.setValue("dp/markLabels", this->ui->markLabels->text());
 
     settings.setValue("dp/showMarks", this->ui->showMarks->isChecked());
+
+    settings.setValue("dp/markoutA0limit", this->ui->markoutA0limit->value());
 }

@@ -8,17 +8,25 @@
 
 vector vector_intensive(vector data, FRAME_SETTINGS * settings)
 {
-    int frameLength = settings->leng,
-        resultLength = data.x / frameLength;
-    vector result = makev(resultLength);
+    int frame_length = settings->leng;
+    int frame_shift = settings->shift;
+    int result_length = data.x / frame_shift;
+    vector result = makev(result_length);
 
-    double middle = 0.0;
-    for(int i=0;i<resultLength;i++)
+    double middle;
+    int half_frame = frame_length / 2;
+    int position, start_position, stop_position;
+    for(int i=0; i<result_length; i++)
     {
         middle = 0.0;
-        for(int j=(i*frameLength);j<((i+1)*frameLength) && j<data.x;j++)
+        position = i*frame_shift;
+        start_position = position - half_frame;
+        stop_position = position + half_frame;
+        for(int j=start_position; j<stop_position; j++)
+        {
             middle += fabs(getv(data, j));
-        middle /= frameLength;
+        }
+        middle /= frame_length;
         setv(result, i, middle);
     }
 

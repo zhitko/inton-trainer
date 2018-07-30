@@ -38,7 +38,12 @@ public:
 
     void setEnabled(QModelIndex index, bool disable = true);
 
-    QModelIndex markOutFile(QModelIndex index);
+    /*
+     * mode 0 - F0
+     * mode 1 - A0
+     * mode 2 - F0 & A0
+     */
+    QModelIndex markOutFile(QModelIndex index, int mode);
 
 private:
     QStandardItem *rootItem;

@@ -35,7 +35,9 @@
 #define MARK_NUCLEUS 'N'
 #define MARK_POST_NUCLEUS 'T'
 
-#define MARKOUT_PREFIX '_'
+#define MARKOUT_PREFIX_F0 "_F0_"
+#define MARKOUT_PREFIX_A0 "_A0_"
+#define MARKOUT_PREFIX_F0A0 "_F0A0_"
 
 #define MASK_LEN 100
 #define MASK_MIN 0.0001
@@ -45,8 +47,12 @@
 #define NORM_FROM 0.0
 #define NORM_TO   1.0
 
-#define APP_VER "0.2.10"
+#define APP_VER "0.2.11"
 #define FULL_APP_VERIOSN ("IntonTrainer (ver. " + QString(APP_VER) + " - " + QString(__DATE__) + ")")
+
+#define MARKOUT_MODE_F0 0
+#define MARKOUT_MODE_A0 1
+#define MARKOUT_MODE_F0A0 2
 
 #endif // DEFINES
 
