@@ -33,7 +33,8 @@ WaveFile * initWaveFile()
     waveFile->dataChunk = NULL;
     waveFile->cueChunk = NULL;
     waveFile->filePath = NULL;
-    waveFile->listChunk = NULL;
+    waveFile->listChunks = NULL;
+    waveFile->listCount = 0;
 
     return waveFile;
 }
@@ -128,6 +129,9 @@ WaveFile * processFile(WaveFile * waveFile)
         return 0;
     }
 
+    waveFile->listCount = 0;
+    waveFile->listChunks = NULL;
+
     while (1)
     {
         char nextChunkID[4];
@@ -193,7 +197,6 @@ WaveFile * processFile(WaveFile * waveFile)
         else if (strncmp(&nextChunkID[0], "data", 4) == 0)
         {
             INFO("[processFile] Found DATA chunk\n");
-            // We found the data chunk
 
             waveFile->dataChunk = (DataChunk *)malloc(sizeof(DataChunk));
             if (waveFile->dataChunk == NULL)
@@ -245,7 +248,6 @@ WaveFile * processFile(WaveFile * waveFile)
         else if (strncmp(&nextChunkID[0], "cue ", 4) == 0)
         {
             INFO("[processFile] Found CUE chunk\n");
-            // We found an existing Cue Chunk
 
             char cueChunkDataSizeBytes[4];
             fread(cueChunkDataSizeBytes, sizeof(char), 4, waveFile->file);
@@ -271,8 +273,9 @@ WaveFile * processFile(WaveFile * waveFile)
             CuePoint *existingCuePoints = (CuePoint *)malloc(sizeof(CuePoint) * cuePointsCount);
             for (uint32_t cuePointIndex = 0; cuePointIndex < cuePointsCount; cuePointIndex++)
             {
+                CuePoint * cue_point = &existingCuePoints[cuePointIndex];
                 INFO("[processFile] Found CUE POINT %i\n", cuePointIndex);
-                fread(&existingCuePoints[cuePointIndex], sizeof(CuePoint), 1, waveFile->file);
+                fread(cue_point, sizeof(CuePoint), 1, waveFile->file);
                 if (ferror(waveFile->file) != 0)
                 {
                     ERROR("[processFile] Error reading input file %s\n", waveFile->filePath);
@@ -280,6 +283,12 @@ WaveFile * processFile(WaveFile * waveFile)
                     free(existingCuePoints);
                     return 0;
                 }
+                DEBUG("[processFile] Read CUE POINT cuePointID %i\n", INT32(cue_point->cuePointID));
+                DEBUG("[processFile] Read CUE POINT playOrderPosition %i\n", INT32(cue_point->playOrderPosition));
+                DEBUG("[processFile] Read CUE POINT dataChunkID %c%c%c%c\n", CH4(cue_point->dataChunkID));
+                DEBUG("[processFile] Read CUE POINT chunkStart %i\n", INT32(cue_point->chunkStart));
+                DEBUG("[processFile] Read CUE POINT blockStart %i\n", INT32(cue_point->blockStart));
+                DEBUG("[processFile] Read CUE POINT frameOffset %i\n", INT32(cue_point->frameOffset));
             }
 
             // Populate the existingCueChunk struct
@@ -298,33 +307,36 @@ WaveFile * processFile(WaveFile * waveFile)
             uint32ToLittleEndianBytes(cueChunkDataSize, waveFile->cueChunk->chunkDataSize);
             uint32ToLittleEndianBytes(cuePointsCount, waveFile->cueChunk->cuePointsCount);
             waveFile->cueChunk->cuePoints = existingCuePoints;
+
+            DEBUG("[processFile] Read CUE chunkID %c%c%c%c\n", CH4(waveFile->cueChunk->chunkID));
+            DEBUG("[processFile] Read CUE chunkDataSize %i\n", INT32(waveFile->cueChunk->chunkDataSize));
+            DEBUG("[processFile] Read CUE cuePointsCount %i\n", INT32(waveFile->cueChunk->cuePointsCount));
         }
         else if (strncmp(&nextChunkID[0], "LIST", 4) == 0)
         {
             INFO("[processFile] Found LIST chunk\n");
             // We found an existing List Chunk
+            waveFile->listChunks = realloc(waveFile->listChunks, sizeof(ListChunk)*(waveFile->listCount+1));
 
-            // Populate the existingListChunk struct
-            if (waveFile->listChunk == NULL)
+            ListChunk * listChunk = &waveFile->listChunks[waveFile->listCount];
+
+            waveFile->listCount++;
+
+            if (waveFile->dataChunk == NULL)
             {
-                waveFile->listChunk = (ListChunk *) malloc(sizeof(ListChunk));
-
-                if (waveFile->dataChunk == NULL)
-                {
-                    ERROR("[processFile] Memory Allocation Error: Could not allocate memory for Wave File Cue Chunk\n");
-                    waveCloseFile(waveFile);
-                    return 0;
-                }
-                waveFile->listChunk->chunkID[0] = 'L';
-                waveFile->listChunk->chunkID[1] = 'I';
-                waveFile->listChunk->chunkID[2] = 'S';
-                waveFile->listChunk->chunkID[3] = 'T';
-
-                waveFile->listChunk->lablChunks = NULL;
-                waveFile->listChunk->ltxtChunks = NULL;
-                waveFile->listChunk->lablCount = 0;
-                waveFile->listChunk->ltxtCount = 0;
+                ERROR("[processFile] Memory Allocation Error: Could not allocate memory for Wave File Cue Chunk\n");
+                waveCloseFile(waveFile);
+                return 0;
             }
+            listChunk->chunkID[0] = 'L';
+            listChunk->chunkID[1] = 'I';
+            listChunk->chunkID[2] = 'S';
+            listChunk->chunkID[3] = 'T';
+
+            listChunk->lablChunks = NULL;
+            listChunk->ltxtChunks = NULL;
+            listChunk->lablCount = 0;
+            listChunk->ltxtCount = 0;
 
             char listChunkDataSizeBytes[4];
             fread(listChunkDataSizeBytes, sizeof(char), 4, waveFile->file);
@@ -335,83 +347,31 @@ WaveFile * processFile(WaveFile * waveFile)
                 return 0;
             }
             uint32_t listChunkDataSize = littleEndianBytesToUInt32(listChunkDataSizeBytes);
-            uint32ToLittleEndianBytes(listChunkDataSize, waveFile->listChunk->chunkDataSize);
+            uint32ToLittleEndianBytes(listChunkDataSize, listChunk->chunkDataSize);
 
-            fread(waveFile->listChunk->typeID, sizeof(char), 4, waveFile->file);
+            fread(listChunk->typeID, sizeof(char), 4, waveFile->file);
             if (ferror(waveFile->file) != 0)
             {
                 ERROR("[processFile] Error reading input file %s\n", waveFile->filePath);
                 waveCloseFile(waveFile);
                 return 0;
             }
-
-        }
-        else if (strncmp(&nextChunkID[0], "labl", 4) == 0)
-        {
-            INFO("[processFile] Found LABL chunk\n");
-            // We found an existing LABL chunk in LIST chunk
-            waveFile->listChunk->lablChunks = realloc(waveFile->listChunk->lablChunks, sizeof(LablChunk)*(waveFile->listChunk->lablCount+1));
-
-            LablChunk * lablChunk = &(waveFile->listChunk->lablChunks[waveFile->listChunk->lablCount]);
-
-            waveFile->listChunk->lablCount++;
-
-            if (lablChunk == NULL)
-            {
-                ERROR("[processFile] Memory Allocation Error: Could not allocate memory for Wave File LABL chunk\n");
-                waveCloseFile(waveFile);
-                return 0;
-            }
-            lablChunk->chunkID[0] = 'l';
-            lablChunk->chunkID[1] = 'a';
-            lablChunk->chunkID[2] = 'b';
-            lablChunk->chunkID[3] = 'l';
-
-            char lablChunkDataSizeBytes[4];
-            fread(lablChunkDataSizeBytes, sizeof(char), 4, waveFile->file);
-            if (ferror(waveFile->file) != 0)
-            {
-                ERROR("[processFile] Error reading input file %s\n", waveFile->filePath);
-                waveCloseFile(waveFile);
-                return 0;
-            }
-            uint32_t lablChunkDataSize = littleEndianBytesToUInt32(lablChunkDataSizeBytes);
-            uint32ToLittleEndianBytes(lablChunkDataSize, lablChunk->chunkDataSize);
-
-            fread(lablChunk->cuePointID, sizeof(char), 4, waveFile->file);
-            if (ferror(waveFile->file) != 0)
-            {
-                ERROR("[processFile] Error reading input file %s\n", waveFile->filePath);
-                waveCloseFile(waveFile);
-                return 0;
-            }
-
-            DEBUG("[processFile] LABL dataSize %d\n", lablChunkDataSize);
-
-            lablChunkDataSize = to_odd(lablChunkDataSize);
-
-            if (lablChunkDataSize > 4)
-            {
-                lablChunk->text = (char *) malloc(lablChunkDataSize - 4);
-                fread(lablChunk->text, sizeof(char), lablChunkDataSize - 4, waveFile->file);
-
-                DEBUG("[processFile] LABL text %s\n", lablChunk->text);
-            } else {
-                lablChunk->text = NULL;
-
-                WARN("[processFile] LABL text <skip>\n");
-            }
+            DEBUG("[processFile] Read LIST chunkID %c%c%c%c\n", CH4(listChunk->chunkID));
+            DEBUG("[processFile] Read LIST chunkDataSize %i\n", INT32(listChunk->chunkDataSize));
+            DEBUG("[processFile] Read LIST typeID %c%c%c%c\n", CH4(listChunk->typeID));
         }
         else if (strncmp(&nextChunkID[0], "ltxt", 4) == 0)
         {
             INFO("[processFile] Found LTXT chunk\n");
+            ListChunk * listChunk = &(waveFile->listChunks[waveFile->listCount-1]);
+            INFO("[processFile] listCount %i\n", waveFile->listCount);
 
             // We found an existing LTXT chunk in LIST chunk
-            waveFile->listChunk->ltxtChunks = realloc(waveFile->listChunk->ltxtChunks, sizeof(LtxtChunk)*(waveFile->listChunk->ltxtCount+1));
+            listChunk->ltxtChunks = realloc(listChunk->ltxtChunks, sizeof(LtxtChunk)*(listChunk->ltxtCount+1));
 
-            LtxtChunk * ltxtChunk = &(waveFile->listChunk->ltxtChunks[waveFile->listChunk->ltxtCount]);
+            LtxtChunk * ltxtChunk = &(listChunk->ltxtChunks[listChunk->ltxtCount]);
 
-            waveFile->listChunk->ltxtCount++;
+            listChunk->ltxtCount++;
 
             if (ltxtChunk == NULL)
             {
@@ -505,6 +465,76 @@ WaveFile * processFile(WaveFile * waveFile)
 
                 WARN("[processFile] LTXT text <skip>\n");
             }
+            DEBUG("[processFile] Read LTXT chunkID %c%c%c%c\n", CH4(ltxtChunk->chunkID));
+            DEBUG("[processFile] Read LTXT chunkDataSize %i\n", INT32(ltxtChunk->chunkDataSize));
+            DEBUG("[processFile] Read LTXT cuePointID %i\n", INT32(ltxtChunk->cuePointID));
+            DEBUG("[processFile] Read LTXT sampleLength %i\n", INT32(ltxtChunk->sampleLength));
+            DEBUG("[processFile] Read LTXT purposeID %c%c%c%c\n", CH4(ltxtChunk->purposeID));
+            DEBUG("[processFile] Read LTXT country %i\n", INT16(ltxtChunk->country));
+            DEBUG("[processFile] Read LTXT language %i\n", INT16(ltxtChunk->language));
+            DEBUG("[processFile] Read LTXT dialect %i\n", INT16(ltxtChunk->dialect));
+            DEBUG("[processFile] Read LTXT codePage %i\n", INT16(ltxtChunk->codePage));
+        }
+        else if (strncmp(&nextChunkID[0], "labl", 4) == 0)
+        {
+            INFO("[processFile] Found LABL chunk\n");
+            ListChunk * listChunk = &waveFile->listChunks[waveFile->listCount-1];
+
+            // We found an existing LABL chunk in LIST chunk
+            listChunk->lablChunks = realloc(listChunk->lablChunks, sizeof(LablChunk)*(listChunk->lablCount+1));
+
+            LablChunk * lablChunk = &listChunk->lablChunks[listChunk->lablCount];
+
+            listChunk->lablCount++;
+
+            if (lablChunk == NULL)
+            {
+                ERROR("[processFile] Memory Allocation Error: Could not allocate memory for Wave File LABL chunk\n");
+                waveCloseFile(waveFile);
+                return 0;
+            }
+            lablChunk->chunkID[0] = 'l';
+            lablChunk->chunkID[1] = 'a';
+            lablChunk->chunkID[2] = 'b';
+            lablChunk->chunkID[3] = 'l';
+
+            char lablChunkDataSizeBytes[4];
+            fread(lablChunkDataSizeBytes, sizeof(char), 4, waveFile->file);
+            if (ferror(waveFile->file) != 0)
+            {
+                ERROR("[processFile] Error reading input file %s\n", waveFile->filePath);
+                waveCloseFile(waveFile);
+                return 0;
+            }
+            uint32_t lablChunkDataSize = littleEndianBytesToUInt32(lablChunkDataSizeBytes);
+            uint32ToLittleEndianBytes(lablChunkDataSize, lablChunk->chunkDataSize);
+
+            fread(lablChunk->cuePointID, sizeof(char), 4, waveFile->file);
+            if (ferror(waveFile->file) != 0)
+            {
+                ERROR("[processFile] Error reading input file %s\n", waveFile->filePath);
+                waveCloseFile(waveFile);
+                return 0;
+            }
+
+            DEBUG("[processFile] LABL dataSize %d\n", lablChunkDataSize);
+
+            lablChunkDataSize = to_odd(lablChunkDataSize);
+
+            if (lablChunkDataSize > 4)
+            {
+                lablChunk->text = (char *) malloc(lablChunkDataSize - 4);
+                fread(lablChunk->text, sizeof(char), lablChunkDataSize - 4, waveFile->file);
+
+                DEBUG("[processFile] LABL text %s\n", lablChunk->text);
+            } else {
+                lablChunk->text = NULL;
+
+                WARN("[processFile] LABL text <skip>\n");
+            }
+            DEBUG("[processFile] Read LABL chunkID %c%c%c%c\n", CH4(lablChunk->chunkID));
+            DEBUG("[processFile] Read LABL chunkDataSize %i\n", INT32(lablChunk->chunkDataSize));
+            DEBUG("[processFile] Read LABL cuePointID %i\n", INT32(lablChunk->cuePointID));
         }
         else
         {
@@ -555,18 +585,84 @@ void waveCloseFile(WaveFile *waveFile)
         free(waveFile->dataChunk);
     }
     if(waveFile->cueChunk != NULL) free(waveFile->cueChunk);
-    if(waveFile->listChunk != NULL)
+    if(waveFile->listChunks != NULL)
     {
-        free(waveFile->listChunk);
+        free(waveFile->listChunks);
     }
     if(waveFile->filePath != NULL) free(waveFile->filePath);
     free(waveFile);
 }
 
-WaveHeader * makeWaveHeader()
+WaveFile * waveCloneFile(WaveFile *waveFile)
+{
+    WaveFile *clone = initWaveFile();
+
+    clone->waveHeader = makeWaveHeader(
+        INT32(waveFile->waveHeader->dataSize)
+    );
+
+    clone->formatChunk = makeFormatChunk(
+        INT16(waveFile->formatChunk->numberOfChannels),
+        INT32(waveFile->formatChunk->sampleRate),
+        INT16(waveFile->formatChunk->significantBitsPerSample)
+    );
+
+    char * data = (char*) malloc(INT32(waveFile->dataChunk->chunkDataSize));
+    memcpy(data, waveFile->dataChunk->waveformData, INT32(waveFile->dataChunk->chunkDataSize));
+    clone->dataChunk = makeDataChunk(
+        INT32(waveFile->dataChunk->chunkDataSize),
+        data
+    );
+
+    CuePoint * cuePoints = (CuePoint *) malloc(sizeof(CuePoint) * INT32(waveFile->cueChunk->cuePointsCount));
+    for (int i=0; i<INT32(waveFile->cueChunk->cuePointsCount); i++)
+    {
+        cuePoints[i] = *makeCuePoint(
+            INT32(waveFile->cueChunk->cuePoints[i].cuePointID),
+            INT32(waveFile->cueChunk->cuePoints[i].playOrderPosition),
+            INT32(waveFile->cueChunk->cuePoints[i].chunkStart),
+            INT32(waveFile->cueChunk->cuePoints[i].blockStart),
+            INT32(waveFile->cueChunk->cuePoints[i].frameOffset)
+        );
+    }
+    clone->cueChunk = makeCueChunk(
+        INT32(waveFile->cueChunk->cuePointsCount),
+        cuePoints
+    );
+
+    LtxtChunk * ltxtChunks = (LtxtChunk *) malloc(sizeof(LtxtChunk) * INT32(waveFile->cueChunk->cuePointsCount));
+    LablChunk * lablChunks = (LablChunk *) malloc(sizeof(LablChunk) * INT32(waveFile->cueChunk->cuePointsCount));
+    for (int i=0; i<INT32(waveFile->cueChunk->cuePointsCount); i++)
+    {
+        ltxtChunks[i] = *makeLtxtChunk(
+            INT32(waveFile->listChunks[0].ltxtChunks[i].cuePointID),
+            INT32(waveFile->listChunks[0].ltxtChunks[i].sampleLength),
+            INT16(waveFile->listChunks[0].ltxtChunks[i].country),
+            INT16(waveFile->listChunks[0].ltxtChunks[i].language),
+            INT16(waveFile->listChunks[0].ltxtChunks[i].dialect),
+            INT16(waveFile->listChunks[0].ltxtChunks[i].codePage),
+            waveFile->listChunks[0].ltxtChunks[i].text
+        );
+        lablChunks[i] = *makeLablChunk(
+            INT32(waveFile->listChunks[0].lablChunks[i].cuePointID),
+            waveFile->listChunks[0].lablChunks[i].text
+        );
+    }
+    clone->listCount = 1;
+    clone->listChunks = makeListChunk(
+        INT32(waveFile->cueChunk->cuePointsCount),
+        ltxtChunks,
+        INT32(waveFile->cueChunk->cuePointsCount),
+        lablChunks
+    );
+
+    return clone;
+}
+
+WaveHeader * makeWaveHeader(uint32_t dataSize)
 {
     WaveHeader * header = (WaveHeader *) malloc(sizeof(WaveHeader));
-    uint32ToLittleEndianBytes(0, header->dataSize);
+    uint32ToLittleEndianBytes(dataSize, header->dataSize);
     header->chunkID[0] = 'R';
     header->chunkID[1] = 'I';
     header->chunkID[2] = 'F';
@@ -578,8 +674,11 @@ WaveHeader * makeWaveHeader()
     return header;
 }
 
-FormatChunk * makeFormatChunk(uint16_t numberOfChannels, uint32_t sampleRate, uint16_t significantBitsPerSample)
-{
+FormatChunk * makeFormatChunk(
+        uint16_t numberOfChannels,
+        uint32_t sampleRate,
+        uint16_t significantBitsPerSample
+) {
     FormatChunk * format = (FormatChunk *) malloc(sizeof(FormatChunk));
     format->chunkID[0] = 'f';
     format->chunkID[1] = 'm';
@@ -606,8 +705,10 @@ FormatChunk * makeFormatChunk(uint16_t numberOfChannels, uint32_t sampleRate, ui
     return format;
 }
 
-DataChunk * makeDataChunk(uint32_t waveformDataSize, char *waveformData)
-{
+DataChunk * makeDataChunk(
+        uint32_t waveformDataSize,
+        char *waveformData
+) {
     DataChunk * data = (DataChunk *) malloc(sizeof(DataChunk));
     data->chunkID[0] = 'd';
     data->chunkID[1] = 'a';
@@ -661,32 +762,47 @@ ListChunk * makeListChunk(
         uint32_t lablCount,
         LablChunk *lablChunks
 ) {
-    if (ltxtCount == 0 && lablCount == 0) return NULL;
-
     ListChunk * chunk = (ListChunk *) malloc(sizeof(ListChunk));
+
+    chunk->ltxtCount = 0;
+    chunk->ltxtChunks = NULL;
+    chunk->lablCount = 0;
+    chunk->lablChunks = NULL;
+
     chunk->chunkID[0] = 'L';
     chunk->chunkID[1] = 'I';
     chunk->chunkID[2] = 'S';
     chunk->chunkID[3] = 'T';
-    uint32_t chunkDataSize = 4;
-    for (int i=0; i<ltxtCount; i++)
-    {
-        chunkDataSize += littleEndianBytesToUInt32(ltxtChunks[i].chunkDataSize);
-    }
-    for (int i=0; i<lablCount; i++)
-    {
-        chunkDataSize += littleEndianBytesToUInt32(lablChunks[i].chunkDataSize);
-    }
-    chunkDataSize = to_odd(chunkDataSize);
-    uint32ToLittleEndianBytes(chunkDataSize, chunk->chunkDataSize);
+
     chunk->typeID[0] = 'a';
     chunk->typeID[1] = 'd';
     chunk->typeID[2] = 't';
     chunk->typeID[3] = 'l';
-    chunk->ltxtCount = ltxtCount;
-    chunk->ltxtChunks = ltxtChunks;
-    chunk->lablCount = lablCount;
-    chunk->lablChunks = lablChunks;
+
+    uint32_t chunkDataSize = 4;
+
+    if (ltxtCount > 0)
+    {
+        for (int i=0; i<ltxtCount; i++)
+        {
+            chunkDataSize += 8 + littleEndianBytesToUInt32(ltxtChunks[i].chunkDataSize);
+        }
+        uint32ToLittleEndianBytes(chunkDataSize, chunk->chunkDataSize);
+        chunk->ltxtCount = ltxtCount;
+        chunk->ltxtChunks = ltxtChunks;
+    }
+
+    if (lablCount > 0)
+    {
+        for (int i=0; i<lablCount; i++)
+        {
+            chunkDataSize += 8 + littleEndianBytesToUInt32(lablChunks[i].chunkDataSize);
+        }
+        uint32ToLittleEndianBytes(chunkDataSize, chunk->chunkDataSize);
+        chunk->lablCount = lablCount;
+        chunk->lablChunks = lablChunks;
+    }
+
     return chunk;
 }
 
@@ -704,25 +820,34 @@ LtxtChunk * makeLtxtChunk(
     chunk->chunkID[1] = 't';
     chunk->chunkID[2] = 'x';
     chunk->chunkID[3] = 't';
-    uint32_t chunkDataSize = 20;
-    if (text) chunkDataSize += (unsigned)strlen(text);
-    chunkDataSize = to_odd(chunkDataSize);
-    uint32ToLittleEndianBytes(chunkDataSize, chunk->chunkDataSize);
-    uint32ToLittleEndianBytes(cuePointID, chunk->cuePointID);
-    uint32ToLittleEndianBytes(sampleLength, chunk->sampleLength);
     chunk->purposeID[0] = 'r';
     chunk->purposeID[1] = 'g';
     chunk->purposeID[2] = 'n';
     chunk->purposeID[3] = ' ';
+    uint32ToLittleEndianBytes(cuePointID, chunk->cuePointID);
+    uint32ToLittleEndianBytes(sampleLength, chunk->sampleLength);
     if (country != NULL) uint16ToLittleEndianBytes(country, chunk->country);
-    else country = 0;
+    else uint16ToLittleEndianBytes(0, chunk->country);
     if (language != NULL) uint16ToLittleEndianBytes(language, chunk->language);
-    else language = 0;
+    else uint16ToLittleEndianBytes(0, chunk->language);
     if (dialect != NULL) uint16ToLittleEndianBytes(dialect, chunk->dialect);
-    else dialect = 0;
+    else uint16ToLittleEndianBytes(0, chunk->dialect);
     if (codePage != NULL) uint16ToLittleEndianBytes(codePage, chunk->codePage);
-    else codePage = 0;
-    chunk->text = text;
+    else uint16ToLittleEndianBytes(0, chunk->codePage);
+    uint32_t chunkDataSize = 20;
+    if (text)
+    {
+        int text_size = to_odd((unsigned)strlen(text)+1);
+        chunk->text = (char*) malloc(sizeof(char)*text_size);
+        chunk->text[text_size-1] = 0;
+        chunk->text[text_size-2] = 0;
+        strcpy(chunk->text, text);
+
+        chunkDataSize += sizeof(char) * text_size;
+    } else {
+        chunk->text = NULL;
+    }
+    uint32ToLittleEndianBytes(chunkDataSize, chunk->chunkDataSize);
     return chunk;
 }
 
@@ -735,11 +860,21 @@ LablChunk * makeLablChunk(
     chunk->chunkID[1] = 'a';
     chunk->chunkID[2] = 'b';
     chunk->chunkID[3] = 'l';
-    uint32_t chunkDataSize = 4 + (unsigned)strlen(text);
-    chunkDataSize = to_odd(chunkDataSize);
-    uint32ToLittleEndianBytes(chunkDataSize, chunk->chunkDataSize);
+    uint32_t chunkDataSize = 4;
     uint32ToLittleEndianBytes(cuePointID, chunk->cuePointID);
-    chunk->text = text;
+    if (text)
+    {
+        int text_size = to_odd((unsigned)strlen(text)+1);
+        chunk->text = (char*) malloc(sizeof(char)*text_size);
+        chunk->text[text_size-1] = 0;
+        chunk->text[text_size-2] = 0;
+        strcpy(chunk->text, text);
+
+        chunkDataSize += sizeof(char) * text_size;
+    } else {
+        chunk->text = NULL;
+    }
+    uint32ToLittleEndianBytes(chunkDataSize, chunk->chunkDataSize);
     return chunk;
 }
 
@@ -753,22 +888,26 @@ WaveFile * makeWaveFile(
         LablChunk *lablChunks,
         uint32_t lablChunksCount
 ) {
-    WaveFile *wave = (WaveFile *) malloc(sizeof(WaveFile));
-    wave->filePath = NULL;
-    wave->file = NULL;
-    uint32_t fileSize = 4;
-    if(formatChunk != NULL) fileSize += sizeof(FormatChunk);
-    if(dataChunk != NULL)
-    {
-        uint32_t dataChunkSize = sizeof(DataChunk) + littleEndianBytesToUInt32(dataChunk->chunkDataSize);
-        fileSize = to_odd(fileSize + dataChunkSize);
-    }
-    uint32ToLittleEndianBytes(fileSize, waveHeader->dataSize);
+    WaveFile *wave = initWaveFile();
+
     wave->waveHeader = waveHeader;
     wave->formatChunk = formatChunk;
     wave->dataChunk = dataChunk;
     wave->cueChunk = cueChunk;
-    wave->listChunk = makeListChunk(ltxtChunksCount, ltxtChunks, lablChunksCount, lablChunks);
+    wave->listCount = 1;
+    wave->listChunks = makeListChunk(ltxtChunksCount, ltxtChunks, lablChunksCount, lablChunks);
+
+    uint32_t fileSize = 4;
+    if(formatChunk != NULL)
+        fileSize += 8 + INT32(formatChunk->chunkDataSize);
+    if(dataChunk != NULL)
+        fileSize += 8 + INT32(dataChunk->chunkDataSize);
+    if(cueChunk != NULL)
+        fileSize += 8 + INT32(cueChunk->chunkDataSize);
+    if(wave->listChunks != NULL)
+        fileSize += 8 + INT32(wave->listChunks->chunkDataSize);
+    uint32ToLittleEndianBytes(fileSize, waveHeader->dataSize);
+
     return wave;
 }
 
@@ -783,7 +922,7 @@ WaveFile * makeWaveFileFromRawData(
         uint32_t *pointsLenght,
         char **pointsLabels
 ) {
-    WaveHeader *headerChunk = makeWaveHeader();
+    WaveHeader *headerChunk = makeWaveHeader(0);
     FormatChunk *formatChunk = makeFormatChunk(numberOfChannels, sampleRate, significantBitsPerSample);
     DataChunk *dataChunk = makeDataChunk(waveformDataSize, waveformData);
     dataChunk->isWaveformDataOwned = 0;
@@ -804,8 +943,9 @@ WaveFile * makeWaveFileFromRawData(
 
         for (uint32_t i=0; i<pointsCount; i++)
         {
+            uint32_t pintId = i + 1;
             CuePoint * cuePoint = makeCuePoint(
-                        i+1,
+                        pintId,
                         pointsOffset[i],
                         0,
                         0,
@@ -815,22 +955,20 @@ WaveFile * makeWaveFileFromRawData(
             free(cuePoint);
 
             LtxtChunk * ltxtChunk = makeLtxtChunk(
-                        i+1,
+                        pintId,
                         pointsLenght[i],
-                        NULL,
-                        NULL,
-                        NULL,
-                        NULL,
+                        0,
+                        0,
+                        0,
+                        0,
                         NULL
             );
             ltxtChunks[i] = *ltxtChunk;
             free(ltxtChunk);
 
-            char * text = malloc(strlen(pointsLabels[i]) + 1);
-            strcpy(text, pointsLabels[i]);
             LablChunk * lablChunk = makeLablChunk(
-                        i+1,
-                        text
+                        pintId,
+                        pointsLabels[i]
             );
             lablChunks[i] = *lablChunk;
             free(lablChunk);
@@ -865,19 +1003,23 @@ void saveWaveFile(WaveFile *waveFile, const char *filePath)
         return;
     }
     if (waveFile->waveHeader != NULL)
+    {
         INFO("[saveWaveFile] Write HEADER chunk\n");
         if (fwrite(waveFile->waveHeader, sizeof(WaveHeader), 1, waveFile->file) < 1)
         {
             ERROR("[saveWaveFile] Error writing header to output file\n");
             return;
         }
+    }
     if (waveFile->formatChunk != NULL)
+    {
         INFO("[saveWaveFile] Write FMT chunk\n");
         if (fwrite(waveFile->formatChunk, sizeof(FormatChunk), 1, waveFile->file) < 1)
         {
             ERROR("[saveWaveFile] Error writing format chunk to output file\n");
             return;
         }
+    }
     if (waveFile->dataChunk != NULL)
     {
         INFO("[saveWaveFile] Write DATA chunk\n");
@@ -983,156 +1125,156 @@ void saveWaveFile(WaveFile *waveFile, const char *filePath)
             }
         }
     }
-    if  (waveFile->listChunk != NULL)
+    if  (waveFile->listChunks != NULL)
     {
         INFO("[saveWaveFile] Write LIST chunk\n");
-        ListChunk * list_chunk = waveFile->listChunk;
-
-        DEBUG("[saveWaveFile] Write LIST chunkID %c%c%c%c\n", CH4(list_chunk->chunkID));
-        if (fwrite(list_chunk->chunkID, sizeof(char), 4, waveFile->file) < 1)
+        for (int listChunkIndex=0; listChunkIndex<waveFile->listCount; listChunkIndex++)
         {
-            ERROR("[saveWaveFile] Error writing list chunk (chunkID) to output file\n");
-            return;
-        }
+            ListChunk * list_chunk = &waveFile->listChunks[listChunkIndex];
 
-        DEBUG("[saveWaveFile] Write LIST chunkDataSize %i\n", INT32(list_chunk->chunkDataSize));
-        if (fwrite(list_chunk->chunkDataSize, sizeof(char), 4, waveFile->file) < 1)
-        {
-            ERROR("[saveWaveFile] Error writing list chunk (chunkDataSize) to output file\n");
-            return;
-        }
+            if (list_chunk->lablCount == 0 && list_chunk->ltxtCount == 0) continue;
 
-        DEBUG("[saveWaveFile] Write LIST typeID %c%c%c%c\n", CH4(list_chunk->typeID));
-        if (fwrite(list_chunk->typeID, sizeof(char), 4, waveFile->file) < 1)
-        {
-            ERROR("[saveWaveFile] Error writing list chunk (typeID) to output file\n");
-            return;
-        }
-
-        for( int i=0; i<list_chunk->lablCount; i++)
-        {
-            INFO("[saveWaveFile] Write LABL chunk %i\n", i);
-            LablChunk * labl_chank = &list_chunk->lablChunks[i];
-
-            DEBUG("[saveWaveFile] Write LABL chunkID %c%c%c%c\n", CH4(labl_chank->chunkID));
-            if (fwrite(labl_chank->chunkID, sizeof(char), 4, waveFile->file) < 1)
+            DEBUG("[saveWaveFile] Write LIST chunkID %c%c%c%c\n", CH4(list_chunk->chunkID));
+            if (fwrite(list_chunk->chunkID, sizeof(char), 4, waveFile->file) < 1)
             {
-                ERROR("[saveWaveFile] Error writing LABL chunk (chunkID) to output file\n");
+                ERROR("[saveWaveFile] Error writing list chunk (chunkID) to output file\n");
                 return;
             }
 
-            DEBUG("[saveWaveFile] Write LABL chunkDataSize %i\n", INT32(labl_chank->chunkDataSize));
-            if (fwrite(labl_chank->chunkDataSize, sizeof(char), 4, waveFile->file) < 1)
+            DEBUG("[saveWaveFile] Write LIST chunkDataSize %i\n", INT32(list_chunk->chunkDataSize));
+            if (fwrite(list_chunk->chunkDataSize, sizeof(char), 4, waveFile->file) < 1)
             {
-                ERROR("[saveWaveFile] Error writing LABL chunk (chunkDataSize) to output file\n");
+                ERROR("[saveWaveFile] Error writing list chunk (chunkDataSize) to output file\n");
                 return;
             }
 
-            DEBUG("[saveWaveFile] Write LABL cuePointID %i\n", INT32(labl_chank->cuePointID));
-            if (fwrite(labl_chank->cuePointID, sizeof(char), 4, waveFile->file) < 1)
+            DEBUG("[saveWaveFile] Write LIST typeID %c%c%c%c\n", CH4(list_chunk->typeID));
+            if (fwrite(list_chunk->typeID, sizeof(char), 4, waveFile->file) < 1)
             {
-                ERROR("[saveWaveFile] Error writing LABL chunk (cuePointID) to output file\n");
+                ERROR("[saveWaveFile] Error writing list chunk (typeID) to output file\n");
                 return;
             }
 
-            uint32_t size = littleEndianBytesToUInt32(labl_chank->chunkDataSize) - 4;
-            size = to_odd(size);
-
-            if (size > 0)
+            for( int i=0; i<list_chunk->ltxtCount; i++)
             {
-                INFO("[saveWaveFile] Write LABL text %s\n", labl_chank->text);
-                if(fwrite(labl_chank->text, sizeof(char), size, waveFile->file) < 1)
+                INFO("[saveWaveFile] Write LTXT chunk %i\n", i);
+                LtxtChunk * ltxt_chank = &list_chunk->ltxtChunks[i];
+
+                DEBUG("[saveWaveFile] Write LTXT chunkID %c%c%c%c\n", CH4(ltxt_chank->chunkID));
+                if (fwrite(ltxt_chank->chunkID, sizeof(char), 4, waveFile->file) < 1)
                 {
-                    ERROR("[saveWaveFile] Error writing LABL chunk (text) to output file\n");
+                    ERROR("[saveWaveFile] Error writing LTXT chunk (chunkID) to output file\n");
                     return;
                 }
-            } else {
-                WARN("[saveWaveFile] LABL text <skip>\n");
-            }
-        }
 
-        for( int i=0; i<list_chunk->ltxtCount; i++)
-        {
-            INFO("[saveWaveFile] Write LTXT chunk %i\n", i);
-            LtxtChunk * ltxt_chank = &list_chunk->ltxtChunks[i];
-
-            DEBUG("[saveWaveFile] Write LTXT chunkID %c%c%c%c\n", CH4(ltxt_chank->chunkID));
-            if (fwrite(ltxt_chank->chunkID, sizeof(char), 4, waveFile->file) < 1)
-            {
-                ERROR("[saveWaveFile] Error writing LTXT chunk (chunkID) to output file\n");
-                return;
-            }
-
-            DEBUG("[saveWaveFile] Write LTXT chunkDataSize %i\n", INT32(ltxt_chank->chunkDataSize));
-            if (fwrite(ltxt_chank->chunkDataSize, sizeof(char), 4, waveFile->file) < 1)
-            {
-                ERROR("[saveWaveFile] Error writing LTXT chunk (chunkDataSize) to output file\n");
-                return;
-            }
-
-            DEBUG("[saveWaveFile] Write LTXT cuePointID %i\n", INT32(ltxt_chank->cuePointID));
-            if (fwrite(ltxt_chank->cuePointID, sizeof(char), 4, waveFile->file) < 1)
-            {
-                ERROR("[saveWaveFile] Error writing LTXT chunk (cuePointID) to output file\n");
-                return;
-            }
-
-            DEBUG("[saveWaveFile] Write LTXT sampleLength %i\n", INT32(ltxt_chank->sampleLength));
-            if (fwrite(ltxt_chank->sampleLength, sizeof(char), 4, waveFile->file) < 1)
-            {
-                ERROR("[saveWaveFile] Error writing LTXT chunk (sampleLength) to output file\n");
-                return;
-            }
-
-            DEBUG("[saveWaveFile] Write LTXT purposeID %c%c%c%c\n", CH4(ltxt_chank->purposeID));
-            if (fwrite(ltxt_chank->purposeID, sizeof(char), 4, waveFile->file) < 1)
-            {
-                ERROR("[saveWaveFile] Error writing LTXT chunk (purposeID) to output file\n");
-                return;
-            }
-
-            DEBUG("[saveWaveFile] Write LTXT country %i\n", INT16(ltxt_chank->country));
-            if (fwrite(ltxt_chank->country, sizeof(char), 2, waveFile->file) < 1)
-            {
-                ERROR("[saveWaveFile] Error writing LTXT chunk (country) to output file\n");
-                return;
-            }
-
-            DEBUG("[saveWaveFile] Write LTXT language %i\n", INT16(ltxt_chank->language));
-            if (fwrite(ltxt_chank->language, sizeof(char), 2, waveFile->file) < 1)
-            {
-                ERROR("[saveWaveFile] Error writing LTXT chunk (language) to output file\n");
-                return;
-            }
-
-            DEBUG("[saveWaveFile] Write LTXT dialect %i\n", INT16(ltxt_chank->dialect));
-            if (fwrite(ltxt_chank->dialect, sizeof(char), 2, waveFile->file) < 1)
-            {
-                ERROR("[saveWaveFile] Error writing LTXT chunk (dialect) to output file\n");
-                return;
-            }
-
-            DEBUG("[saveWaveFile] Write LTXT codePage %i\n", INT16(ltxt_chank->codePage));
-            if (fwrite(ltxt_chank->codePage, sizeof(char), 2, waveFile->file) < 1)
-            {
-                ERROR("[saveWaveFile] Error writing LTXT chunk (codePage) to output file\n");
-                return;
-            }
-
-            uint32_t size = littleEndianBytesToUInt32(ltxt_chank->chunkDataSize) - 20;
-            INFO("[saveWaveFile] LTXT text size %i\n", size);
-            size = to_odd(size);
-
-            if (size > 0)
-            {
-                INFO("[saveWaveFile] Write LTXT text %s\n", ltxt_chank->text);
-                if (fwrite(ltxt_chank->text, sizeof(char), size, waveFile->file) < 1)
+                DEBUG("[saveWaveFile] Write LTXT chunkDataSize %i\n", INT32(ltxt_chank->chunkDataSize));
+                if (fwrite(ltxt_chank->chunkDataSize, sizeof(char), 4, waveFile->file) < 1)
                 {
-                    ERROR("[saveWaveFile] Error writing LTXT chunk (text) to output file\n");
+                    ERROR("[saveWaveFile] Error writing LTXT chunk (chunkDataSize) to output file\n");
                     return;
                 }
-            } else {
-                WARN("[saveWaveFile] LTXT text <skip>\n");
+
+                DEBUG("[saveWaveFile] Write LTXT cuePointID %i\n", INT32(ltxt_chank->cuePointID));
+                if (fwrite(ltxt_chank->cuePointID, sizeof(char), 4, waveFile->file) < 1)
+                {
+                    ERROR("[saveWaveFile] Error writing LTXT chunk (cuePointID) to output file\n");
+                    return;
+                }
+
+                DEBUG("[saveWaveFile] Write LTXT sampleLength %i\n", INT32(ltxt_chank->sampleLength));
+                if (fwrite(ltxt_chank->sampleLength, sizeof(char), 4, waveFile->file) < 1)
+                {
+                    ERROR("[saveWaveFile] Error writing LTXT chunk (sampleLength) to output file\n");
+                    return;
+                }
+
+                DEBUG("[saveWaveFile] Write LTXT purposeID %c%c%c%c\n", CH4(ltxt_chank->purposeID));
+                if (fwrite(ltxt_chank->purposeID, sizeof(char), 4, waveFile->file) < 1)
+                {
+                    ERROR("[saveWaveFile] Error writing LTXT chunk (purposeID) to output file\n");
+                    return;
+                }
+
+                DEBUG("[saveWaveFile] Write LTXT country %i\n", INT16(ltxt_chank->country));
+                if (fwrite(ltxt_chank->country, sizeof(char), 2, waveFile->file) < 1)
+                {
+                    ERROR("[saveWaveFile] Error writing LTXT chunk (country) to output file\n");
+                    return;
+                }
+
+                DEBUG("[saveWaveFile] Write LTXT language %i\n", INT16(ltxt_chank->language));
+                if (fwrite(ltxt_chank->language, sizeof(char), 2, waveFile->file) < 1)
+                {
+                    ERROR("[saveWaveFile] Error writing LTXT chunk (language) to output file\n");
+                    return;
+                }
+
+                DEBUG("[saveWaveFile] Write LTXT dialect %i\n", INT16(ltxt_chank->dialect));
+                if (fwrite(ltxt_chank->dialect, sizeof(char), 2, waveFile->file) < 1)
+                {
+                    ERROR("[saveWaveFile] Error writing LTXT chunk (dialect) to output file\n");
+                    return;
+                }
+
+                DEBUG("[saveWaveFile] Write LTXT codePage %i\n", INT16(ltxt_chank->codePage));
+                if (fwrite(ltxt_chank->codePage, sizeof(char), 2, waveFile->file) < 1)
+                {
+                    ERROR("[saveWaveFile] Error writing LTXT chunk (codePage) to output file\n");
+                    return;
+                }
+
+                if (ltxt_chank->text)
+                {
+                    INFO("[saveWaveFile] Write LTXT text %s\n", ltxt_chank->text);
+                    uint32_t size = littleEndianBytesToUInt32(ltxt_chank->chunkDataSize) - 20;
+                    if (fwrite(ltxt_chank->text, sizeof(char), size, waveFile->file) < 1)
+                    {
+                        ERROR("[saveWaveFile] Error writing LTXT chunk (text) to output file\n");
+                        return;
+                    }
+                } else {
+                    WARN("[saveWaveFile] LTXT text <skip>\n");
+                }
+            }
+
+            for( int i=0; i<list_chunk->lablCount; i++)
+            {
+                INFO("[saveWaveFile] Write LABL chunk %i\n", i);
+                LablChunk * labl_chank = &list_chunk->lablChunks[i];
+
+                DEBUG("[saveWaveFile] Write LABL chunkID %c%c%c%c\n", CH4(labl_chank->chunkID));
+                if (fwrite(labl_chank->chunkID, sizeof(char), 4, waveFile->file) < 1)
+                {
+                    ERROR("[saveWaveFile] Error writing LABL chunk (chunkID) to output file\n");
+                    return;
+                }
+
+                DEBUG("[saveWaveFile] Write LABL chunkDataSize %i\n", INT32(labl_chank->chunkDataSize));
+                if (fwrite(labl_chank->chunkDataSize, sizeof(char), 4, waveFile->file) < 1)
+                {
+                    ERROR("[saveWaveFile] Error writing LABL chunk (chunkDataSize) to output file\n");
+                    return;
+                }
+
+                DEBUG("[saveWaveFile] Write LABL cuePointID %i\n", INT32(labl_chank->cuePointID));
+                if (fwrite(labl_chank->cuePointID, sizeof(char), 4, waveFile->file) < 1)
+                {
+                    ERROR("[saveWaveFile] Error writing LABL chunk (cuePointID) to output file\n");
+                    return;
+                }
+
+                if (labl_chank->text)
+                {
+                    INFO("[saveWaveFile] Write LABL text %s\n", labl_chank->text);
+                    uint32_t size = littleEndianBytesToUInt32(labl_chank->chunkDataSize) - 4;
+                    if(fwrite(labl_chank->text, sizeof(char), size, waveFile->file) < 1)
+                    {
+                        ERROR("[saveWaveFile] Error writing LABL chunk (text) to output file\n");
+                        return;
+                    }
+                } else {
+                    WARN("[saveWaveFile] LABL text <skip>\n");
+                }
             }
         }
     }

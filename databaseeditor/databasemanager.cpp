@@ -82,9 +82,11 @@ void DatabaseManager::showContextMenu(const QPoint &pos)
     QAction actionCut(tr("Cut File"), this->treeView);
     QAction actionPaste(tr("Paste File"), this->treeView);
     QAction actionMkdir(tr("Make Dir"), this->treeView);
+    QAction actionMarkOutByF0A0(tr("Mark Out File"), this->treeView);
     QAction actionMarkOutByF0(tr("Mark Out File By F0"), this->treeView);
     QAction actionMarkOutByA0(tr("Mark Out File By A0"), this->treeView);
-    QAction actionMarkOutByF0A0(tr("Mark Out File By F0&&A0"), this->treeView);
+    QAction actionMarkOutTest(tr("Test Mark Out File"), this->treeView);
+    QAction actionMarkOutTestSave(tr("Test Save File"), this->treeView);
 
     if (this->isSelectedDir)
     {
@@ -114,14 +116,18 @@ void DatabaseManager::showContextMenu(const QPoint &pos)
         connect(&actionMarkOutByF0, SIGNAL(triggered()), this, SLOT(actionMarkOutByF0()));
         connect(&actionMarkOutByA0, SIGNAL(triggered()), this, SLOT(actionMarkOutByA0()));
         connect(&actionMarkOutByF0A0, SIGNAL(triggered()), this, SLOT(actionMarkOutByF0A0()));
+        connect(&actionMarkOutTest, SIGNAL(triggered()), this, SLOT(actionMarkOutTest()));
+        connect(&actionMarkOutTestSave, SIGNAL(triggered()), this, SLOT(actionMarkOutTestSave()));
 
         contextMenu.addAction(&actionOpen);
         contextMenu.addAction(&actionFileDir);
 //        contextMenu.addAction(&actionOpenWith);
 //        contextMenu.addAction(&actionEdit);
-        contextMenu.addAction(&actionMarkOutByF0);
-        contextMenu.addAction(&actionMarkOutByA0);
+        TEST(contextMenu.addAction(&actionMarkOutByF0));
+        TEST(contextMenu.addAction(&actionMarkOutByA0));
         contextMenu.addAction(&actionMarkOutByF0A0);
+        TEST(contextMenu.addAction(&actionMarkOutTest));
+        TEST(contextMenu.addAction(&actionMarkOutTestSave));
         contextMenu.addSeparator();
         contextMenu.addAction(&actionCopy);
         contextMenu.addAction(&actionCut);
@@ -291,6 +297,26 @@ void DatabaseManager::actionMkdir()
             QMessageBox::information(this->treeView, tr("Create directory failed..."), tr("Failed to create directory"));
         }
     }
+}
+
+void DatabaseManager::actionMarkOutTest()
+{
+    QModelIndex index = this->treeView->currentIndex();
+    if ( !index.isValid() ) {
+        return;
+    }
+
+    model->markOutFile(index, MARKOUT_MODE_TEST);
+}
+
+void DatabaseManager::actionMarkOutTestSave()
+{
+    QModelIndex index = this->treeView->currentIndex();
+    if ( !index.isValid() ) {
+        return;
+    }
+
+    model->markOutFile(index, MARKOUT_MODE_TEST_SAVE);
 }
 
 void DatabaseManager::actionMarkOutByF0()

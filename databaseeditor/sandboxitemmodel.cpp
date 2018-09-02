@@ -327,6 +327,12 @@ QModelIndex SandBoxItemModel::markOutFile(QModelIndex index, int mode)
     } else if (mode == MARKOUT_MODE_F0A0) {
         newWaveFile = markOutFileByF0A0(data);
         newFileName = MARKOUT_PREFIX_F0A0 + fileName;
+    } else if (mode == MARKOUT_MODE_TEST) {
+        newWaveFile = waveCloneFile(data->file_data);
+        newFileName = "_TEST_" + fileName;
+    }else if (mode == MARKOUT_MODE_TEST_SAVE) {
+        newWaveFile = data->file_data;
+        newFileName = "_SAVE_" + fileName;
     }
 
     QString newFilePath = info.dir().absoluteFilePath(newFileName);
@@ -339,7 +345,8 @@ QModelIndex SandBoxItemModel::markOutFile(QModelIndex index, int mode)
         qDebug() << "makeWaveFileFromRawData " << LOG_DATA;
         saveWaveFile(newWaveFile, newFilePath.toLocal8Bit().data());
         qDebug() << "saveWaveFile " << LOG_DATA;
-        waveCloseFile(newWaveFile);
+        if (mode != MARKOUT_MODE_TEST_SAVE)
+            waveCloseFile(newWaveFile);
         qDebug() << "waveCloseFile newWaveFile" << LOG_DATA;
 
         QStandardItem* item = this->itemFromIndex(index);
@@ -362,7 +369,7 @@ struct Points {
     char **pointsLabels = NULL;
 };
 
-Points addLabel(Points points)
+Points addLabel(Points points, int index = 1)
 {
     if (points.pointsLabels == NULL)
     {
@@ -370,9 +377,10 @@ Points addLabel(Points points)
     } else {
         points.pointsLabels = (char **) realloc(points.pointsLabels, sizeof(char *) * points.pointsCount);
     }
-    points.pointsLabels[points.pointsCount - 1] = (char *) malloc(sizeof(char)*2);
+    points.pointsLabels[points.pointsCount - 1] = (char *) malloc(sizeof(char)*3);
     points.pointsLabels[points.pointsCount - 1][0] = MARK_NUCLEUS;
-    points.pointsLabels[points.pointsCount - 1][1] = 0;
+    points.pointsLabels[points.pointsCount - 1][1] = index + '0';
+    points.pointsLabels[points.pointsCount - 1][2] = 0;
     return points;
 }
 
@@ -432,7 +440,7 @@ Points mergePoints(Points thisPoints, Points thatPoints)
                 {
                     points.pointsCount++;
 
-                    points = addLabel(points);
+                    points = addLabel(points, points.pointsCount);
                     points = addOffset(points, newPointStart);
                     points = addLenght(points, newPointLenght);
                 }
@@ -461,7 +469,7 @@ Points getPoints(int dataSize, vector data, double scaleFactor, double limit)
 
             points.pointsOffset[points.pointsCount - 1] += cut*lenght;
 
-            points = addLabel(points);
+            points = addLabel(points, points.pointsCount);
         }
         if (data.v[i] >= limit && gotIt == 1)
         {

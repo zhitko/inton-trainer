@@ -5,6 +5,9 @@
 #define LAG_FILE_MAX_SIZE 1000000
 #define LOG_DATA  "["<<__func__<<"] "<<__FILE__<<":"<<__LINE__
 
+#define TESTING false
+#define TEST(code) if (TESTING) { code; }
+
 #define DATA_PATH "/data"
 #define DATA_PATH_TRAINING "/data/PATTERNS"
 #define DATA_PATH_TEST "/data/TEST"
@@ -37,7 +40,7 @@
 
 #define MARKOUT_PREFIX_F0 "_F0_"
 #define MARKOUT_PREFIX_A0 "_A0_"
-#define MARKOUT_PREFIX_F0A0 "_F0A0_"
+#define MARKOUT_PREFIX_F0A0 "_"
 
 #define MASK_LEN 100
 #define MASK_MIN 0.0001
@@ -47,9 +50,11 @@
 #define NORM_FROM 0.0
 #define NORM_TO   1.0
 
-#define APP_VER "0.2.11"
+#define APP_VER "0.2.12"
 #define FULL_APP_VERIOSN ("IntonTrainer (ver. " + QString(APP_VER) + " - " + QString(__DATE__) + ")")
 
+#define MARKOUT_MODE_TEST_SAVE -2
+#define MARKOUT_MODE_TEST -1
 #define MARKOUT_MODE_F0 0
 #define MARKOUT_MODE_A0 1
 #define MARKOUT_MODE_F0A0 2

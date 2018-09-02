@@ -97,7 +97,8 @@ typedef struct {
     FormatChunk *formatChunk;
     DataChunk *dataChunk;
     CueChunk *cueChunk;
-    ListChunk *listChunk;
+    uint32_t listCount;
+    ListChunk *listChunks;
 } WaveFile;
 
 WaveFile * initWaveFile();
@@ -130,7 +131,9 @@ WaveFile * makeWaveFileFromRawData(
 );
 
 // Create Chunks functions
-WaveHeader * makeWaveHeader();
+WaveHeader * makeWaveHeader(
+        uint32_t uint32
+);
 FormatChunk * makeFormatChunk(
         uint16_t numberOfChannels,
         uint32_t sampleRate,
@@ -176,6 +179,9 @@ void saveWaveFile(WaveFile *waveFile, const char *filePath);
 
 // Close WaveFile
 void waveCloseFile(WaveFile*);
+
+// Clone WaveFile
+WaveFile * waveCloneFile(WaveFile*);
 
 // All data in a Wave file must be little endian.
 // These are functions to convert 2- and 4-byte unsigned ints to and from little endian, if needed

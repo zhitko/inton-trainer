@@ -27,13 +27,29 @@ MaskData getLabelsFromFile(WaveFile* waveFile, char marker)
 
     qDebug() << "Use file data for mask" << LOG_DATA;
 
+    ListChunk * listLablChunk = NULL;
+    ListChunk * listLtxtChunk = NULL;
+
+    for (int i=0; i<waveFile->listCount; i++)
+    {
+        ListChunk * listChunk = &(waveFile->listChunks[i]);
+        if (listChunk != NULL && listChunk->lablChunks != NULL && listChunk->lablCount > 0)
+        {
+            listLablChunk = listChunk;
+        } else if (listChunk != NULL && listChunk->ltxtChunks != NULL && listChunk->ltxtCount > 0)
+        {
+            listLtxtChunk = listChunk;
+        }
+    }
+
     if (!((waveFile->cueChunk != NULL)
             && (littleEndianBytesToUInt16(waveFile->cueChunk->cuePointsCount) > 0)
-            && (waveFile->listChunk != NULL)
-            && (waveFile->listChunk->ltxtChunks != NULL)
-            && (waveFile->listChunk->ltxtCount > 0)
-            && (waveFile->listChunk->lablChunks != NULL)
-            && (waveFile->listChunk->lablCount > 0)))
+            && (listLtxtChunk != NULL)
+            && (listLtxtChunk->ltxtChunks != NULL)
+            && (listLtxtChunk->ltxtCount > 0)
+            && (listLablChunk != NULL)
+            && (listLablChunk->lablChunks != NULL)
+            && (listLablChunk->lablCount > 0)))
             return data;
 
     int cuePointsCount = littleEndianBytesToUInt16(waveFile->cueChunk->cuePointsCount);
@@ -56,9 +72,9 @@ MaskData getLabelsFromFile(WaveFile* waveFile, char marker)
     }
 
     qDebug() << "ltxtCount" << LOG_DATA;
-    for(int i=0; i<waveFile->listChunk->ltxtCount; i++)
+    for(int i=0; i<listLtxtChunk->ltxtCount; i++)
     {
-        LtxtChunk ltxt = waveFile->listChunk->ltxtChunks[i];
+        LtxtChunk ltxt = listLtxtChunk->ltxtChunks[i];
         int id = littleEndianBytesToUInt16(ltxt.cuePointID);
         int length = littleEndianBytesToUInt32(ltxt.sampleLength);
         pointsLength[i] = length;
@@ -71,11 +87,11 @@ MaskData getLabelsFromFile(WaveFile* waveFile, char marker)
         int *markedPointsFrom = NULL;
         int *markedPointsLength = NULL;
         int count = 0;
-        for(int i=0; i<waveFile->listChunk->lablCount; i++)
+        for(int i=0; i<listLablChunk->lablCount; i++)
         {
-            LablChunk labl = waveFile->listChunk->lablChunks[i];
+            LablChunk labl = listLablChunk->lablChunks[i];
             int id = littleEndianBytesToUInt16(labl.cuePointID);
-            char * text = waveFile->listChunk->lablChunks[i].text;
+            char * text = listLablChunk->lablChunks[i].text;
             if (toupper(text[0]) == toupper(marker))
             {
                 count++;
@@ -134,18 +150,32 @@ bool validateMask(vector mask)
 vector getFileMask(WaveFile* waveFile, vector wave, int len, char marker = NULL)
 {
     vector mask;
+
+    ListChunk * listLablChunk = NULL;
+    ListChunk * listLtxtChunk = NULL;
+
+    qDebug() << "listCount " << waveFile->listCount << LOG_DATA;
+
+    for (int i=0; i<waveFile->listCount; i++)
+    {
+        ListChunk * listChunk = &(waveFile->listChunks[i]);
+        if (listChunk != NULL && listChunk->lablChunks != NULL && listChunk->lablCount > 0)
+        {
+            listLablChunk = listChunk;
+        } else if (listChunk != NULL && listChunk->ltxtChunks != NULL && listChunk->ltxtCount > 0)
+        {
+            listLtxtChunk = listChunk;
+        }
+    }
+
     bool tryFileData = (waveFile->cueChunk != NULL)
             && (littleEndianBytesToUInt16(waveFile->cueChunk->cuePointsCount) > 0)
-            && (waveFile->listChunk != NULL)
-            && (waveFile->listChunk->ltxtChunks != NULL)
-            && (waveFile->listChunk->ltxtCount > 0)
-            && (waveFile->listChunk->lablChunks != NULL)
-            && (waveFile->listChunk->lablCount > 0);
-
-//    qDebug() << "waveFile->cueChunk " << (waveFile->cueChunk != NULL) << LOG_DATA;
-//    qDebug() << "waveFile->listChunk " << (waveFile->listChunk != NULL) << LOG_DATA;
-//    qDebug() << "waveFile->listChunk->ltxtCount " << (waveFile->listChunk->ltxtCount) << LOG_DATA;
-//    qDebug() << "waveFile->listChunk->lablCount " << (waveFile->listChunk->lablCount) << LOG_DATA;
+            && (listLtxtChunk != NULL)
+            && (listLtxtChunk->ltxtChunks != NULL)
+            && (listLtxtChunk->ltxtCount > 0)
+            && (listLablChunk != NULL)
+            && (listLablChunk->lablChunks != NULL)
+            && (listLablChunk->lablCount > 0);
 
     if (tryFileData)
     {

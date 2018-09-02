@@ -220,7 +220,7 @@ int DrawerDP::Draw(mglGraph *gr)
         gr->SetRange('x', 0, this->umpData->nx);
         gr->Grid("y", "W", "");
         gr->SetTicks('x', sptk_settings->dp->portLen);
-        gr->Grid("x", "W", "");
+        gr->Grid("x", "W5-", "");
 
         gr->Area(*this->umpMask, "gwwww!");
         gr->Plot(*this->umpData, "-r4");
@@ -321,7 +321,7 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->SetRange('x', 0, this->umpData->nx);
             gr->Grid("y", "W", "");
             gr->SetTicks('x', sptk_settings->dp->portLen);
-            gr->Grid("x", "W", "");
+            gr->Grid("x", "W5-", "");
 
             gr->Area(*this->umpMask, "gwwww!");
             gr->Plot(*this->secUmpData, "-R5");

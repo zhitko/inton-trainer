@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.2.12] - 2018-09-03
+
+### Changed
+- Autosegmentation by F0&A0 set as default
+- Add UMP vertical delimeters
+
+### Added
+- Segmentation pattern
+
+### Fixed
+- Fixed save wave file with correct file size in header
+
 ## [0.2.11] - 2018-07-16
 
 ### Added

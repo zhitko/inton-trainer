@@ -49,6 +49,8 @@ public slots:
     void actionMarkOutByF0();
     void actionMarkOutByA0();
     void actionMarkOutByF0A0();
+    void actionMarkOutTest();
+    void actionMarkOutTestSave();
 };
 
 #endif // DATABASEMANAGER_H
