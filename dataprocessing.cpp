@@ -33,10 +33,16 @@ MaskData getLabelsFromFile(WaveFile* waveFile, char marker)
     for (int i=0; i<waveFile->listCount; i++)
     {
         ListChunk * listChunk = &(waveFile->listChunks[i]);
-        if (listChunk != NULL && listChunk->lablChunks != NULL && listChunk->lablCount > 0)
+        if (listChunk == NULL) continue;
+
+        qDebug() << "listChunk->lablCount " << listChunk->lablCount << LOG_DATA;
+        if (listChunk->lablChunks != NULL && listChunk->lablCount > 0)
         {
             listLablChunk = listChunk;
-        } else if (listChunk != NULL && listChunk->ltxtChunks != NULL && listChunk->ltxtCount > 0)
+        }
+
+        qDebug() << "listChunk->ltxtCount " << listChunk->ltxtCount << LOG_DATA;
+        if (listChunk->ltxtChunks != NULL && listChunk->ltxtCount > 0)
         {
             listLtxtChunk = listChunk;
         }
@@ -124,6 +130,8 @@ vector readMaskFromFile(WaveFile* waveFile, int length, char marker)
     vector mask_from_file;
 
     MaskData data = getLabelsFromFile(waveFile, marker);
+    qDebug() << "MaskData pointsFrom" << data.pointsFrom.x << LOG_DATA;
+    qDebug() << "MaskData pointsLength" << data.pointsLength.x << LOG_DATA;
 
     mask_from_file = make_mask(length, data.pointsFrom.x, data.pointsFrom.v, data.pointsLength.v);
     qDebug() << "make_mask" << LOG_DATA;
@@ -159,10 +167,16 @@ vector getFileMask(WaveFile* waveFile, vector wave, int len, char marker = NULL)
     for (int i=0; i<waveFile->listCount; i++)
     {
         ListChunk * listChunk = &(waveFile->listChunks[i]);
-        if (listChunk != NULL && listChunk->lablChunks != NULL && listChunk->lablCount > 0)
+        if (listChunk == NULL) continue;
+
+        qDebug() << "listChunk->lablCount " << listChunk->lablCount << LOG_DATA;
+        if (listChunk->lablChunks != NULL && listChunk->lablCount > 0)
         {
             listLablChunk = listChunk;
-        } else if (listChunk != NULL && listChunk->ltxtChunks != NULL && listChunk->ltxtCount > 0)
+        }
+
+        qDebug() << "listChunk->ltxtCount " << listChunk->ltxtCount << LOG_DATA;
+        if (listChunk->ltxtChunks != NULL && listChunk->ltxtCount > 0)
         {
             listLtxtChunk = listChunk;
         }
