@@ -197,6 +197,7 @@ typedef struct _DP_SETTINGS {
     char * mark_labels;
     int smooth_frame;
     int show_marks;
+    int auto_marking;
 
     int markoutA0limit;
 } DP_SETTINGS;
