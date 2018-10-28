@@ -124,11 +124,11 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->pitch->THRESH_RAPT = instance->ui->pitchThreshRaptSpin->value();
     sptk_settings->pitch->THRESH_SWIPE = instance->ui->pitchThreshSwipeSpin->value();
 
-    sptk_settings->plotF0->midFrame = instance->ui->plotMidFrameF0Spin->value();
+    sptk_settings->plotF0->frame = instance->ui->plotMidFrameF0Spin->value();
     sptk_settings->plotF0->interpolation_type = instance->ui->plotInterpolationTypeF0Box->currentIndex();
     sptk_settings->plotF0->normF0MinMax = instance->ui->normF0MinMax->isChecked();
 
-    sptk_settings->plotEnergy->midFrame = instance->ui->plotMidFrameEnergySpin->value();
+    sptk_settings->plotEnergy->frame = instance->ui->plotLinFrameEnergySpin->value();
     sptk_settings->plotEnergy->interpolation_type = instance->ui->plotInterpolationTypeEnergyBox->currentIndex();
 
     sptk_settings->frame->leng = instance->ui->frameSizeBox->currentText().toInt();
@@ -224,7 +224,7 @@ void SettingsDialog::loadSettingsFrom(QString settings_path)
         this->ui->normF0MinMax->setChecked(settings.value("plot_f0/normF0MinMax").toBool());
 
     if(settings.contains("plot_energy/mid_frame"))
-        this->ui->plotMidFrameEnergySpin->setValue(settings.value("plot_energy/mid_frame").toInt());
+        this->ui->plotLinFrameEnergySpin->setValue(settings.value("plot_energy/frame").toInt());
     if(settings.contains("plot_energy/interpolation_type"))
         this->ui->plotInterpolationTypeEnergyBox->setCurrentIndex(settings.value("plot_energy/interpolation_type").toInt());
 
@@ -312,7 +312,7 @@ void SettingsDialog::saveSettings()
     settings.setValue("plot_f0/interpolation_type", this->ui->plotInterpolationTypeF0Box->currentIndex());
     settings.setValue("plot_f0/normF0MinMax", this->ui->normF0MinMax->isChecked());
 
-    settings.setValue("plot_energy/mid_frame", this->ui->plotMidFrameEnergySpin->value());
+    settings.setValue("plot_energy/frame", this->ui->plotLinFrameEnergySpin->value());
     settings.setValue("plot_energy/interpolation_type", this->ui->plotInterpolationTypeEnergyBox->currentIndex());
 
     settings.setValue("frame/leng", this->ui->frameSizeBox->currentText().toInt());

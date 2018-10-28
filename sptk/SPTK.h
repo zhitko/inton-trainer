@@ -210,7 +210,7 @@ typedef struct _SPEC_SETTINGS {
 } SPEC_SETTINGS;
 
 typedef struct _PLOT_SETTINGS {
-    int midFrame;
+    int frame;
     int interpolation_type;
     int normF0MinMax;
 } PLOT_SETTINGS;

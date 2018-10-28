@@ -667,7 +667,7 @@ MinMax applyMask(vector * data, vector * mask)
     qDebug() << "scaledMask" << LOG_DATA;
     vector cuttedData = vector_cut_by_mask(*data, scaledMask);
     qDebug() << "newData" << LOG_DATA;
-    vector dataMid = vector_mid(cuttedData, sptk_settings->plotF0->midFrame, 1);
+    vector dataMid = vector_mid(cuttedData, sptk_settings->plotF0->frame, 1);
     min = getv(dataMid, min_greaterv(dataMid, 0.0));
     max = getv(dataMid, maxv(dataMid));
     qDebug() << "pitch_mid" << LOG_DATA;
