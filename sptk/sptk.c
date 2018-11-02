@@ -93,6 +93,7 @@ DP_SETTINGS *initDpSettings()
     dp->recordingType = 3;
     dp->mark_delimeter = 5.0;
     dp->mark_level = 50.0;
+    dp->relative_limit = 50.0;
     dp->mark_labels = "F (Failure), D (Insufficient), C (Mediocre), B (Satisfactory), A (Excellent)";
     dp->smooth_frame = 1;
     dp->show_marks = 1;

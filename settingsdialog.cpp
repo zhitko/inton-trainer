@@ -164,6 +164,7 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
 
     sptk_settings->dp->mark_delimeter = instance->ui->markDelimeter->value();
     sptk_settings->dp->mark_level = instance->ui->markLimit->value();
+    sptk_settings->dp->relative_limit = instance->ui->relativeLimit->value();
     sptk_settings->dp->mark_labels = strdup(instance->ui->markLabels->text().toStdString().c_str());
 
     sptk_settings->dp->markoutA0limit = instance->ui->markoutA0limit->value();
@@ -283,6 +284,8 @@ void SettingsDialog::loadSettingsFrom(QString settings_path)
         this->ui->markDelimeter->setValue(settings.value("dp/markDelimeter").toDouble());
     if(settings.contains("dp/markLimit"))
         this->ui->markLimit->setValue(settings.value("dp/markLimit").toDouble());
+    if(settings.contains("dp/relativeLimit"))
+        this->ui->relativeLimit->setValue(settings.value("dp/relativeLimit").toDouble());
     if(settings.contains("dp/markLabels"))
         this->ui->markLabels->setText(settings.value("dp/markLabels").toString());
 
@@ -350,6 +353,7 @@ void SettingsDialog::saveSettings()
 
     settings.setValue("dp/markDelimeter", this->ui->markDelimeter->value());
     settings.setValue("dp/markLimit", this->ui->markLimit->value());
+    settings.setValue("dp/relativeLimit", this->ui->relativeLimit->value());
     settings.setValue("dp/markLabels", this->ui->markLabels->text());
 
     settings.setValue("dp/showMarks", this->ui->showMarks->isChecked());

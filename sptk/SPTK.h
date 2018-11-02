@@ -193,6 +193,7 @@ typedef struct _DP_SETTINGS {
     int recordingMaxFiles;
 
     double mark_level;
+    double relative_limit;
     double mark_delimeter;
     char * mark_labels;
     int smooth_frame;

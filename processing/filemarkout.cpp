@@ -93,7 +93,76 @@ Points mergePoints(Points thisPoints, Points thatPoints)
     return points;
 }
 
-Points getPoints(int dataSize, vector data, double scaleFactor, double limit)
+#define DEFAULT_RELATIVE 100
+
+/*
+ * Re-markout segment by relative limit of segment max value
+ */
+Points relativeAlignSement(Points points, vector data, int relativeLimit, double scaleFactor)
+{
+    int pointIndex = points.pointsCount - 1;
+    qDebug() << "relativeAlignSement" << LOG_DATA;
+    uint32_t startPosition = points.pointsOffset[pointIndex] / scaleFactor;
+    uint32_t stopPosition = startPosition + points.pointsLenght[pointIndex] / scaleFactor;
+
+    qDebug() << "startPosition: " << startPosition << LOG_DATA;
+    qDebug() << "stopPosition: " << stopPosition << LOG_DATA;
+
+    // Look for max value
+    double maxValue = 0.0;
+    double minValue = 1.0;
+    for (int i = startPosition; i<=stopPosition; i++)
+    {
+        double value = getv(data, i);
+        if (maxValue < value)
+            maxValue = value;
+        if (minValue > value)
+            minValue = value;
+    }
+    qDebug() << "maxValue: " << maxValue << LOG_DATA;
+    qDebug() << "minValue: " << minValue << LOG_DATA;
+
+    // Calculate new absolute limit
+    double delta = (maxValue - minValue) * relativeLimit / 100.0;
+    double limit = maxValue - delta;
+    qDebug() << "delta: " << delta << LOG_DATA;
+    qDebug() << "limit: " << limit << LOG_DATA;
+
+    // Recalculate start segments border
+    uint32_t newSegmentOffset = -1;
+    for (uint32_t i = startPosition; i<=stopPosition || newSegmentOffset == -1; i++)
+    {
+        double value = getv(data, i);
+        if (value > limit)
+        {
+            newSegmentOffset = i;
+            break;
+        }
+    }
+
+    // Recalculate stop segments border
+    uint32_t newSegmentLenght = -1;
+    for (uint32_t i = stopPosition; i>=startPosition || newSegmentLenght == -1; i--)
+    {
+        double value = getv(data, i);
+        if (value > limit)
+        {
+            newSegmentLenght = i - newSegmentOffset;
+            break;
+        }
+    }
+
+    qDebug() << "pointsOffset: " << points.pointsOffset[pointIndex] << LOG_DATA;
+    qDebug() << "pointsLenght: " << points.pointsLenght[pointIndex] << LOG_DATA;
+    points.pointsOffset[pointIndex] = newSegmentOffset * scaleFactor;
+    points.pointsLenght[pointIndex] = newSegmentLenght * scaleFactor;
+    qDebug() << "pointsOffset: " << points.pointsOffset[pointIndex] << LOG_DATA;
+    qDebug() << "pointsLenght: " << points.pointsLenght[pointIndex] << LOG_DATA;
+
+    return points;
+}
+
+Points getPoints(int dataSize, vector data, double scaleFactor, double limit, int relativeLimit = DEFAULT_RELATIVE)
 {
     Points points;
 
@@ -103,6 +172,7 @@ Points getPoints(int dataSize, vector data, double scaleFactor, double limit)
     uint32_t lenght = 0;
     for (uint32_t i=0; i<dataSize; i++)
     {
+        // Found segment end
         if ((data.v[i] < limit ||  i==(dataSize-1)) && gotIt == 1)
         {
             gotIt = 0;
@@ -112,11 +182,16 @@ Points getPoints(int dataSize, vector data, double scaleFactor, double limit)
             points.pointsOffset[points.pointsCount - 1] += cut*lenght;
 
             points = addLabel(points, points.pointsCount);
+
+            if (relativeLimit != DEFAULT_RELATIVE)
+                points = relativeAlignSement(points, data, relativeLimit, scaleFactor);
         }
+        //  It's segment, go on
         if (data.v[i] >= limit && gotIt == 1)
         {
             lenght++;
         }
+        // Found segment end
         if (data.v[i] >= limit && gotIt == 0)
         {
             gotIt = 1;
@@ -193,7 +268,13 @@ WaveFile * markOutFileByA0(SimpleGraphData *data)
     double intensiveLimit = 1.0 * sptk_settings->dp->markoutA0limit / 100;
     qDebug() << "intensiveLimit " << intensiveLimit << LOG_DATA;
 
-    Points points = getPoints(intensiveSize, data->d_intensive_norm, scaleFactor, intensiveLimit);
+    Points points = getPoints(
+                intensiveSize,
+                data->d_intensive_norm,
+                scaleFactor,
+                intensiveLimit,
+                sptk_settings->dp->relative_limit
+    );
 
     int waveDataSize = littleEndianBytesToUInt32(waveFile->dataChunk->chunkDataSize);
     char* waveData = (char*) malloc(waveDataSize);
@@ -247,8 +328,19 @@ WaveFile * markOutFileByF0A0(SimpleGraphData *data)
     double intensiveLimit = 1.0 * sptk_settings->dp->markoutA0limit / 100;
     qDebug() << "intensive_limit " << intensiveLimit << LOG_DATA;
 
-    Points intensivePoints = getPoints(intensiveSize, data->d_intensive_norm, intensiveScaleFactor, intensiveLimit);
-    Points pitchLogPoints = getPoints(pitchLogSize, data->d_pitch_log, pitchLogScaleFactor, MASK_LIMIT);
+    Points intensivePoints = getPoints(
+                intensiveSize,
+                data->d_intensive_norm,
+                intensiveScaleFactor,
+                intensiveLimit,
+                sptk_settings->dp->relative_limit
+    );
+    Points pitchLogPoints = getPoints(
+                pitchLogSize,
+                data->d_pitch_log,
+                pitchLogScaleFactor,
+                MASK_LIMIT
+    );
 
     int waveDataSize = littleEndianBytesToUInt32(waveFile->dataChunk->chunkDataSize);
     char* waveData = (char*) malloc(waveDataSize);
