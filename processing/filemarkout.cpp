@@ -93,7 +93,7 @@ Points mergePoints(Points thisPoints, Points thatPoints)
     return points;
 }
 
-#define DEFAULT_RELATIVE 100
+#define DEFAULT_RELATIVE 100.0
 
 /*
  * Re-markout segment by relative limit of segment max value
@@ -110,22 +110,16 @@ Points relativeAlignSement(Points points, vector data, int relativeLimit, double
 
     // Look for max value
     double maxValue = 0.0;
-    double minValue = 1.0;
     for (int i = startPosition; i<=stopPosition; i++)
     {
         double value = getv(data, i);
         if (maxValue < value)
             maxValue = value;
-        if (minValue > value)
-            minValue = value;
     }
     qDebug() << "maxValue: " << maxValue << LOG_DATA;
-    qDebug() << "minValue: " << minValue << LOG_DATA;
 
     // Calculate new absolute limit
-    double delta = (maxValue - minValue) * relativeLimit / 100.0;
-    double limit = maxValue - delta;
-    qDebug() << "delta: " << delta << LOG_DATA;
+    double limit = maxValue * relativeLimit / 100.0;
     qDebug() << "limit: " << limit << LOG_DATA;
 
     // Recalculate start segments border
@@ -162,43 +156,102 @@ Points relativeAlignSement(Points points, vector data, int relativeLimit, double
     return points;
 }
 
+/*
+ * Get new relative limit of segment max value
+ */
+double getRelativeLimitForSement(uint32_t startPosition, uint32_t stopPosition, vector data, int relativeLimit)
+{
+    // Look for max value
+    double maxValue = 0.0;
+    double minValue = 1.0;
+    for (int i = startPosition; i<=stopPosition; i++)
+    {
+        double value = getv(data, i);
+        if (maxValue < value)
+            maxValue = value;
+        if (minValue > value)
+            minValue = value;
+    }
+    qDebug() << "maxValue: " << maxValue << LOG_DATA;
+    qDebug() << "minValue: " << minValue << LOG_DATA;
+
+    // Calculate new absolute limit
+    double limit = minValue + ((maxValue - minValue) * relativeLimit / 100.0);
+
+    return limit;
+}
+
 Points getPoints(int dataSize, vector data, double scaleFactor, double limit, int relativeLimit = DEFAULT_RELATIVE)
 {
     Points points;
 
-    uint8_t cut = 0.3;
-
     uint8_t gotIt = 0;
     uint32_t lenght = 0;
+
+    double initialLimit = limit;
+
+    int useRelative = 0;
+    if (relativeLimit != DEFAULT_RELATIVE)
+        useRelative = 1;
+    int isRelative = 0;
+    int offset = 0;
+    uint32_t startRelativePosition = 0;
+    uint32_t stopRelativePosition = 0;
     for (uint32_t i=0; i<dataSize; i++)
     {
+        double value = getv(data, i);
         // Found segment end
-        if ((data.v[i] < limit ||  i==(dataSize-1)) && gotIt == 1)
+
+        if (((value < limit ||  i==(dataSize-1)) && gotIt == 1)
+                || (useRelative && isRelative && i > stopRelativePosition))
         {
+            qDebug() << "found end: " << i << " relative " << isRelative << limit << LOG_DATA;
+
+            // Add point if don't use relative or it's 2nd-gen segmant
+            if ((!useRelative || isRelative) && gotIt == 1)
+            {
+                points.pointsCount++;
+                points = addOffset(points, scaleFactor * offset);
+                points = addLenght(points, scaleFactor * lenght);
+                points = addLabel(points, points.pointsCount);
+            }
+
             gotIt = 0;
-            lenght *= scaleFactor;
-            points = addLenght(points, lenght - cut*lenght);
 
-            points.pointsOffset[points.pointsCount - 1] += cut*lenght;
+            // Calculate relative limit for 1st-gen segment
+            if (useRelative && !isRelative)
+            {
+                stopRelativePosition = i;
+                isRelative = 1;
+                limit = getRelativeLimitForSement(startRelativePosition, stopRelativePosition, data, relativeLimit);
+                qDebug() << "limit relative: " << limit << LOG_DATA;
+                i = startRelativePosition;
+            }
 
-            points = addLabel(points, points.pointsCount);
-
-            if (relativeLimit != DEFAULT_RELATIVE)
-                points = relativeAlignSement(points, data, relativeLimit, scaleFactor);
+            // Finish scan for 1st-gen segment, go find next one
+            if (useRelative && isRelative && i > stopRelativePosition)
+            {
+                isRelative = 0;
+                startRelativePosition = i;
+                stopRelativePosition = i;
+                limit = initialLimit;
+                qDebug() << "limit original: " << limit << LOG_DATA;
+            }
         }
         //  It's segment, go on
-        if (data.v[i] >= limit && gotIt == 1)
+        if (value > limit && gotIt == 1)
         {
             lenght++;
         }
-        // Found segment end
-        if (data.v[i] >= limit && gotIt == 0)
+        // Found segment start
+        if (value > limit && gotIt == 0)
         {
+            qDebug() << "found start: " << i << " relative " << isRelative << limit << LOG_DATA;
+            if (useRelative && !isRelative)
+                startRelativePosition = i;
             gotIt = 1;
-            points.pointsCount++;
             lenght = 0;
-
-            points = addOffset(points, i * scaleFactor);
+            offset = i;
         }
     }
 
