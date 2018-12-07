@@ -8,12 +8,8 @@
 extern "C" {
     #include "./SPTK/vector.h"
     #include "./OpenAL/wavFile.h"
+    #include "./analysis/mask_data.h"
 }
-
-struct MaskData{
-    intvector pointsFrom;
-    intvector pointsLength;
-};
 
 struct SimpleGraphData{
     double seconds;

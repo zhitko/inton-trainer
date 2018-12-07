@@ -20,5 +20,6 @@ vector vector_resize(vector,int);
 vector zero_to_nan(vector);
 vector vector_mid(vector, int, int);
 vector vector_derivative(vector);
+vector vector_normalize_optional_zeros(vector, double, double, int);
 
 #endif

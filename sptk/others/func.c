@@ -280,3 +280,29 @@ vector vector_derivative(vector v)
     }
     return dv;
 }
+
+vector vector_normalize_optional_zeros(vector data, double targetMin, double targetMax, int procZeros)
+{
+    vector result = makev(data.x);
+    double sourceMin = 0.0;
+    if (procZeros){
+        sourceMin = getv(data, minv(data));
+    } else {
+        sourceMin = getv(data, min_greaterv(data, 0.0));
+    }
+    double sourceMax = getv(data, maxv(data));
+
+    double sourceScale = sourceMax - sourceMin;
+    double targetScale = targetMax - targetMin;
+
+    double zsrc, scaled;
+
+    for(int i=0;i<data.x;i++)
+        if (procZeros || getv(data, i) != 0)
+        {
+            zsrc =  getv(data, i) - sourceMin;
+            scaled = zsrc * targetScale / sourceScale;
+            setv(result, i, scaled + targetMin);
+        }
+    return result;
+}
