@@ -57,7 +57,8 @@ SOURCES += \
     databaseeditor/sandboxitemmodel.cpp \
     analysis/curve_similarity.cpp \
     processing/filemarkout.cpp \
-    analysis/ump.cpp
+    analysis/ump.cpp \
+    analysis/derivative.c
 
 HEADERS  += \
     mainwindow.h \
@@ -86,7 +87,8 @@ HEADERS  += \
     analysis/curve_similarity.h \
     processing/filemarkout.h \
     analysis/ump.h \
-    analysis/mask_data.h
+    analysis/mask_data.h \
+    analysis/derivative.h
 
 # OpenAL
 SOURCES += \

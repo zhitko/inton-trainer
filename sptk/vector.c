@@ -277,6 +277,15 @@ vector mergev(vector a_vector, vector b_vector, int factor)
     return result_vector;
 }
 
+vector derivativev(vector v)
+{
+    vector dv = zerov(v.x);
+    for (int i=1; i<v.x; i++) {
+        setv(dv, i, getv(v, i) - getv(v, i-1));
+    }
+    return dv;
+}
+
 // free the memory associated with the vector
 void freev(vector yr_vector) {
     if (yr_vector.v)

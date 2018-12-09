@@ -50,7 +50,7 @@
 #define NORM_FROM 0.0
 #define NORM_TO   1.0
 
-#define APP_VER "0.3.2"
+#define APP_VER "0.3.3"
 #define FULL_APP_VERIOSN ("IntonTrainer (ver. " + QString(APP_VER) + " - " + QString(__DATE__) + ")")
 
 #define MARKOUT_MODE_TEST_SAVE -2

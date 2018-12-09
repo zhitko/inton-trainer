@@ -455,6 +455,13 @@
                     </property>
                    </widget>
                   </item>
+                  <item row="3" column="2">
+                   <widget class="QCheckBox" name="showDerivativeF0">
+                    <property name="text">
+                     <string>Show derivative F0</string>
+                    </property>
+                   </widget>
+                  </item>
                  </layout>
                 </item>
                 <item row="1" column="0" colspan="2">

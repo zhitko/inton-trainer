@@ -32,6 +32,7 @@ extern "C" {
     #include "./sptk/window/window.h"
     #include "./sptk/lpc/lpc.h"
     #include "./sptk/spec/spec.h"
+    #include "./analysis/derivative.h"
 }
 
 typedef struct { double min; double max; } MinMax;
@@ -52,6 +53,7 @@ DrawerDP::DrawerDP() :
     this->tSecData = NULL;
     this->secPitchData = NULL;
     this->secIntensiveData = NULL;
+    this->secPitchDataDerivative = NULL;
     this->umpData = NULL;
     this->secUmpData = NULL;
     this->octavData = NULL;
@@ -91,6 +93,8 @@ DrawerDP::~DrawerDP()
     qDebug() << "DrawerDP removed tSecData" << LOG_DATA;
     if (this->secPitchData) delete this->secPitchData;
     qDebug() << "DrawerDP removed secPitchData" << LOG_DATA;
+    if (this->secPitchDataDerivative) delete this->secPitchDataDerivative;
+    qDebug() << "DrawerDP removed secPitchDataDerivative" << LOG_DATA;
     if (this->secIntensiveData) delete this->secIntensiveData;
     qDebug() << "DrawerDP removed secIntensiveData" << LOG_DATA;
     if (this->simple_data) freeSimpleGraphData(this->simple_data);
@@ -156,6 +160,11 @@ int DrawerDP::Draw(mglGraph *gr)
         gr->Grid("y", "W", "");
         if(sptk_settings->dp->showF0) gr->Plot(*this->pitchData, "-r3");
         if(sptk_settings->dp->showOriginalF0) gr->Plot(*this->pitchDataOriginal, "-r2");
+        if(sptk_settings->dp->showDerivativeF0)
+        {
+            gr->Plot(*this->pitchDataDerivative, "-m2");
+            gr->Line(mglPoint(-1,this->pitchDataDerivativeZero), mglPoint(1,this->pitchDataDerivativeZero), "-m2");
+        }
         if(sptk_settings->dp->showA0) gr->Plot(*this->intensiveData, "-b3");
         gr->Plot(*pWaveData, "q2");
         gr->Plot(*nWaveData, "k2");
@@ -253,6 +262,11 @@ int DrawerDP::Draw(mglGraph *gr)
             if(this->timeData) gr->Plot(*this->timeData, "-R3");
             if(sptk_settings->dp->showF0) gr->Plot(*this->secPitchData, "-R4");
             if(sptk_settings->dp->showA0) gr->Plot(*this->secIntensiveData, "-B4");
+            if(sptk_settings->dp->showDerivativeF0)
+            {
+                gr->Plot(*this->secPitchDataDerivative, "-m4");
+                gr->Line(mglPoint(-1,this->secPitchDataDerivativeZero), mglPoint(1,this->secPitchDataDerivativeZero), "-m4");
+            }
 
             gr->MultiPlot(2, 15, 27, 1, 1, "#");
             gr->Puts(
@@ -543,7 +557,7 @@ void DrawerDP::Proc(QString fname)
         freev(nVector);
         freev(tVector);
 
-        vector pitch_cutted = copyv(this->simple_data->d_pitch_original);
+        vector pitch_cutted = copyv(this->simple_data->d_pitch);
         MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_mask);
 
         this->f0max = mm.max;
@@ -562,7 +576,16 @@ void DrawerDP::Proc(QString fname)
 
         this->pitchData = createMglData(pitch_smooth, this->pitchData, true);
         this->pitchData->Norm();
-        qDebug() << "pitchData createMglData" << LOG_DATA;
+        qDebug() << "pitchData createMglData" << LOG_DATA;        
+
+        if(sptk_settings->dp->showDerivativeF0)
+        {
+            derivative derivative_data = get_derivative_data(pitch_smooth, sptk_settings->dp->umpSmoothValue);
+            this->pitchDataDerivative = createMglData(derivative_data.data, this->pitchDataDerivative, true);
+            this->pitchDataDerivative->Norm();
+            this->pitchDataDerivativeZero = derivative_data.zero;
+            qDebug() << "pitchDataDerivative createMglData" << LOG_DATA;
+        }
 
         this->rt = (1.0 * this->f0max / this->f0min) - 1;
 
@@ -828,6 +851,15 @@ void DrawerDP::Proc(QString fname)
         if(sptk_settings->dp->showF0)
         {
             this->secPitchData = createMglData(pitch_smooth, this->secPitchData, true);
+        }
+
+        if(sptk_settings->dp->showDerivativeF0)
+        {
+            derivative derivative_data = get_derivative_data(pitch_smooth, sptk_settings->dp->umpSmoothValue);
+            this->secPitchDataDerivative = createMglData(derivative_data.data, this->secPitchDataDerivative, true);
+            this->secPitchDataDerivative->Norm();
+            this->secPitchDataDerivativeZero = derivative_data.zero;
+            qDebug() << "secPitchDataDerivative createMglData" << LOG_DATA;
         }
 
         this->proximity_range = round( 100.0 * MIN(this->rt, this->ru) / MAX(this->rt, this->ru) );

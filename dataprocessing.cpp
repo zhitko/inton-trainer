@@ -265,7 +265,7 @@ GraphData * ProcWave2Data(QString fname)
     vector frame = sptk_frame(wave, sptk_settings->frame);
     qDebug() << "frame" << LOG_DATA;
 
-    vector intensive = vector_intensive(frame, sptk_settings->frame);
+    vector intensive = vector_intensive(frame, sptk_settings->frame->leng, sptk_settings->frame->shift);
     qDebug() << "intensive" << LOG_DATA;
 
     vector window = sptk_window(frame, sptk_settings->window);
@@ -439,7 +439,7 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
     vector frame = sptk_frame(wave, sptk_settings->frame);
     qDebug() << "::SimpleProcWave2Data frame" << LOG_DATA;
 
-    vector intensive = vector_intensive(wave, sptk_settings->frame);
+    vector intensive = vector_intensive(wave, sptk_settings->frame->leng, sptk_settings->frame->shift);
     qDebug() << "::SimpleProcWave2Data intensive" << LOG_DATA;
     data->d_intensive_original = intensive;
 
@@ -534,7 +534,7 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
     qDebug() << "::SimpleProcWave2Data pitch_mid" << LOG_DATA;
     data->d_pitch = pitch_mid;
 
-    vector derivative_intensive = vector_derivative(intensive_norm);
+    vector derivative_intensive = derivativev(intensive_norm);
     vector derivative_intensive_norm = normalizev(derivative_intensive, MASK_MIN, MASK_MAX);
     freev(derivative_intensive);
     data->d_derivative_intensive_norm = derivative_intensive_norm;

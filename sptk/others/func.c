@@ -6,10 +6,8 @@
 #include "func.h"
 #include "float.h"
 
-vector vector_intensive(vector data, FRAME_SETTINGS * settings)
+vector vector_intensive(vector data, int frame_length, int frame_shift)
 {
-    int frame_length = settings->leng;
-    int frame_shift = settings->shift;
     int result_length = data.x / frame_shift;
     vector result = makev(result_length);
 
@@ -270,15 +268,6 @@ vector vector_mid(vector data, int frame, int procZeros)
     freev(middle);
 
     return result;
-}
-
-vector vector_derivative(vector v)
-{
-    vector dv = copyv(v);
-    for (int i=1; i<v.x; i++) {
-        setv(dv, i, getv(v, i-1) - getv(v, i));
-    }
-    return dv;
 }
 
 vector vector_normalize_optional_zeros(vector data, double targetMin, double targetMax, int procZeros)

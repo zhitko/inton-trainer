@@ -174,6 +174,7 @@ typedef struct _DP_SETTINGS {
     int showA0;
     int showF0;
     int showOriginalF0;
+    int showDerivativeF0;
     int showTime;
     int showError;
     int showPortr;

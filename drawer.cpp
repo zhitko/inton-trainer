@@ -19,6 +19,7 @@ extern "C" {
     #include "./SPTK/spec/spec.h"
     #include "./others/func.h"
     #include "./others/interpolation.h"
+    #include "./analysis/derivative.h"
 }
 
 vector calculateMask(vector wave, vector pitch)
@@ -113,6 +114,7 @@ Drawer::Drawer() : mglDraw(),
     waveData = NULL;
     pitchData = NULL;
     pitchDataOriginal = NULL;
+    pitchDataDerivative = NULL;
     specData = NULL;
     maskData = NULL;
     scaledMaskData = NULL;
@@ -132,6 +134,7 @@ Drawer::~Drawer()
     if (this->waveData) delete this->waveData;
     if (this->pitchData) delete this->pitchData;
     if (this->pitchDataOriginal) delete this->pitchDataOriginal;
+    if (this->pitchDataDerivative) delete this->pitchDataDerivative;
     if (this->specData) delete this->specData;
     if (this->maskData) delete this->maskData;
     if (this->scaledMaskData) delete this->scaledMaskData;
@@ -196,6 +199,14 @@ void Drawer::Proc(QString fname)
 
     pitchDataOriginal = createMglData(data->d_pitch_original, pitchDataOriginal, true);
     pitchDataOriginal->Norm();
+    qDebug() << "pitchDataOriginal Filled" << LOG_DATA;
+
+    derivative derivative_data = get_derivative_data(data->d_pitch_original, sptk_settings->dp->umpSmoothValue);
+    pitchDataDerivative = createMglData(derivative_data.data, pitchDataDerivative, true);
+    pitchDataDerivative->Norm();
+    this->pitchDataDerivativeZero = derivative_data.zero;
+    qDebug() << "pitchDataDerivative Filled" << LOG_DATA;
+
     pitchData = createMglData(data->d_pitch, pitchData);
     pitchData->Norm();
     qDebug() << "pitchData Filled" << LOG_DATA;

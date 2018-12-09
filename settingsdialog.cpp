@@ -153,6 +153,7 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->dp->showError = instance->ui->showError->isChecked();
     sptk_settings->dp->showF0 = instance->ui->showF0->isChecked();
     sptk_settings->dp->showOriginalF0 = instance->ui->showOriginalF0->isChecked();
+    sptk_settings->dp->showDerivativeF0 = instance->ui->showDerivativeF0->isChecked();
     sptk_settings->dp->showTime = instance->ui->showTime->isChecked();
     sptk_settings->dp->errorType = instance->ui->errorTypeBox->currentIndex();
     sptk_settings->dp->useForDP = instance->ui->useForDP->currentIndex();
@@ -258,6 +259,8 @@ void SettingsDialog::loadSettingsFrom(QString settings_path)
         this->ui->showF0->setChecked(settings.value("dp/showF0").toBool());
     if(settings.contains("dp/showOriginalF0"))
         this->ui->showOriginalF0->setChecked(settings.value("dp/showOriginalF0").toBool());
+    if(settings.contains("dp/showDerivativeF0"))
+        this->ui->showDerivativeF0->setChecked(settings.value("dp/showDerivativeF0").toBool());
     if(settings.contains("dp/showTime"))
         this->ui->showTime->setChecked(settings.value("dp/showTime").toBool());
     if(settings.contains("error/type"))
@@ -343,6 +346,7 @@ void SettingsDialog::saveSettings()
     settings.setValue("dp/showError", this->ui->showError->isChecked());
     settings.setValue("dp/showF0", this->ui->showF0->isChecked());
     settings.setValue("dp/showOriginalF0", this->ui->showOriginalF0->isChecked());
+    settings.setValue("dp/showDerivativeF0", this->ui->showDerivativeF0->isChecked());
     settings.setValue("dp/showTime", this->ui->showTime->isChecked());
     settings.setValue("error/type", this->ui->errorTypeBox->currentIndex());
     settings.setValue("dp/use", this->ui->useForDP->currentIndex());
