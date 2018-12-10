@@ -578,9 +578,11 @@ void DrawerDP::Proc(QString fname)
         this->pitchData->Norm();
         qDebug() << "pitchData createMglData" << LOG_DATA;        
 
+        vector derivative_pitch;
         if(sptk_settings->dp->showDerivativeF0)
         {
             derivative derivative_data = get_derivative_data(pitch_smooth, sptk_settings->dp->umpSmoothValue);
+            derivative_pitch = derivative_data.data;
             this->pitchDataDerivative = createMglData(derivative_data.data, this->pitchDataDerivative, true);
             this->pitchDataDerivative->Norm();
             this->pitchDataDerivativeZero = derivative_data.zero;
@@ -597,7 +599,16 @@ void DrawerDP::Proc(QString fname)
         if(this->octavData->a[0] > OCTAVE_MAX_2) this->octavData->a[0] = OCTAVE_MAX_2;
         qDebug() << "octavData createMglData" << LOG_DATA;
 
-        vector origin_ump = copyv(pitch_smooth);
+        vector origin_ump;
+        if (sptk_settings->dp->showF0)
+        {
+            origin_ump = copyv(pitch_smooth);
+        } else if (sptk_settings->dp->showDerivativeF0)
+        {
+            origin_ump = copyv(derivative_pitch);
+        } else {
+            origin_ump = copyv(pitch_smooth);
+        }
 
         double mask_scale = 1.0 * this->simple_data->d_full_wave.x / this->simple_data->d_mask.x;
         qDebug() << "mask_scale " << mask_scale << LOG_DATA;
@@ -853,9 +864,11 @@ void DrawerDP::Proc(QString fname)
             this->secPitchData = createMglData(pitch_smooth, this->secPitchData, true);
         }
 
+        vector derivative_pitch;
         if(sptk_settings->dp->showDerivativeF0)
         {
             derivative derivative_data = get_derivative_data(pitch_smooth, sptk_settings->dp->umpSmoothValue);
+            derivative_pitch = derivative_data.data;
             this->secPitchDataDerivative = createMglData(derivative_data.data, this->secPitchDataDerivative, true);
             this->secPitchDataDerivative->Norm();
             this->secPitchDataDerivativeZero = derivative_data.zero;
@@ -865,7 +878,16 @@ void DrawerDP::Proc(QString fname)
         this->proximity_range = round( 100.0 * MIN(this->rt, this->ru) / MAX(this->rt, this->ru) );
         this->proximity_range_mark = calculateMark(proximity_range, sptk_settings->dp->mark_level, sptk_settings->dp->mark_delimeter);
 
-        vector sec_ump = copyv(pitch_smooth);
+        vector sec_ump;
+        if (sptk_settings->dp->showF0)
+        {
+            sec_ump = copyv(pitch_smooth);
+        } else if (sptk_settings->dp->showDerivativeF0)
+        {
+            sec_ump = copyv(derivative_pitch);
+        } else {
+            sec_ump = copyv(pitch_smooth);
+        }
 
         double mask_scale = 1.0 * this->simple_data->d_full_wave.x / this->simple_data->d_mask.x;
         makeUmp(

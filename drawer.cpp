@@ -201,11 +201,14 @@ void Drawer::Proc(QString fname)
     pitchDataOriginal->Norm();
     qDebug() << "pitchDataOriginal Filled" << LOG_DATA;
 
-    derivative derivative_data = get_derivative_data(data->d_pitch_original, sptk_settings->dp->umpSmoothValue);
-    pitchDataDerivative = createMglData(derivative_data.data, pitchDataDerivative, true);
-    pitchDataDerivative->Norm();
-    this->pitchDataDerivativeZero = derivative_data.zero;
-    qDebug() << "pitchDataDerivative Filled" << LOG_DATA;
+    if (sptk_settings->dp->showDerivativeF0)
+    {
+        derivative derivative_data = get_derivative_data(data->d_pitch_original, sptk_settings->dp->umpSmoothValue);
+        pitchDataDerivative = createMglData(derivative_data.data, pitchDataDerivative, true);
+        pitchDataDerivative->Norm();
+        this->pitchDataDerivativeZero = derivative_data.zero;
+        qDebug() << "pitchDataDerivative Filled" << LOG_DATA;
+    }
 
     pitchData = createMglData(data->d_pitch, pitchData);
     pitchData->Norm();
