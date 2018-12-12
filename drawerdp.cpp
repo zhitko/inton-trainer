@@ -56,6 +56,8 @@ DrawerDP::DrawerDP() :
     this->secPitchDataDerivative = NULL;
     this->umpData = NULL;
     this->secUmpData = NULL;
+    this->umpDerivativeData = NULL;
+    this->secUmpDerivativeData = NULL;
     this->octavData = NULL;
     this->secOctavData = NULL;
     this->umpMask = NULL;
@@ -103,6 +105,10 @@ DrawerDP::~DrawerDP()
     qDebug() << "DrawerDP removed umpData" << LOG_DATA;
     if (this->secUmpData) delete this->secUmpData;
     qDebug() << "DrawerDP removed secUmpData" << LOG_DATA;
+    if (this->umpDerivativeData) delete this->umpDerivativeData;
+    qDebug() << "DrawerDP removed umpDerivativeData" << LOG_DATA;
+    if (this->secUmpDerivativeData) delete this->secUmpDerivativeData;
+    qDebug() << "DrawerDP removed secUmpDerivativeData" << LOG_DATA;
     if (this->octavData) delete this->octavData;
     qDebug() << "DrawerDP removed octavData" << LOG_DATA;
     if (this->secOctavData) delete this->secOctavData;
@@ -226,13 +232,21 @@ int DrawerDP::Draw(mglGraph *gr)
 
         gr->SetRange('y', 0, 1);
         gr->SetTicks('y', 1./3.);
-        gr->SetRange('x', 0, this->umpData->nx);
         gr->Grid("y", "W", "");
         gr->SetTicks('x', sptk_settings->dp->portLen);
         gr->Grid("x", "W5-", "");
 
         gr->Area(*this->umpMask, "gwwww!");
-        gr->Plot(*this->umpData, "-r4");
+        if (sptk_settings->dp->showF0 || !sptk_settings->dp->showDerivativeF0)
+        {
+            gr->SetRange('x', 0, this->umpData->nx);
+            gr->Plot(*this->umpData, "-r4");
+        }
+        if (sptk_settings->dp->showDerivativeF0)
+        {
+            gr->SetRange('x', 0, this->umpDerivativeData->nx);
+            gr->Plot(*this->umpDerivativeData, "-m4");
+        }
     }
 
     if(isCompare){
@@ -332,14 +346,23 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->MultiPlot(20, 12, 46, 13, 8, "#");
             gr->SetRange('y', 0, 1);
             gr->SetTicks('y', 1./3.);
-            gr->SetRange('x', 0, this->umpData->nx);
             gr->Grid("y", "W", "");
             gr->SetTicks('x', sptk_settings->dp->portLen);
             gr->Grid("x", "W5-", "");
 
             gr->Area(*this->umpMask, "gwwww!");
-            gr->Plot(*this->secUmpData, "-R5");
-            gr->Plot(*this->umpData, "-r4");
+            if (sptk_settings->dp->showF0 || !sptk_settings->dp->showDerivativeF0)
+            {
+                gr->SetRange('x', 0, this->umpData->nx);
+                gr->Plot(*this->secUmpData, "-R5");
+                gr->Plot(*this->umpData, "-r4");
+            }
+            if (sptk_settings->dp->showDerivativeF0)
+            {
+                gr->SetRange('x', 0, this->umpDerivativeData->nx);
+                gr->Plot(*this->secUmpDerivativeData, "-M5");
+                gr->Plot(*this->umpDerivativeData, "-m4");
+            }
         }
     }
 
@@ -599,42 +622,67 @@ void DrawerDP::Proc(QString fname)
         if(this->octavData->a[0] > OCTAVE_MAX_2) this->octavData->a[0] = OCTAVE_MAX_2;
         qDebug() << "octavData createMglData" << LOG_DATA;
 
-        vector origin_ump;
-        if (sptk_settings->dp->showF0)
-        {
-            origin_ump = copyv(pitch_smooth);
-        } else if (sptk_settings->dp->showDerivativeF0)
-        {
-            origin_ump = copyv(derivative_pitch);
-        } else {
-            origin_ump = copyv(pitch_smooth);
-        }
-
         double mask_scale = 1.0 * this->simple_data->d_full_wave.x / this->simple_data->d_mask.x;
         qDebug() << "mask_scale " << mask_scale << LOG_DATA;
-        vector ump_mask = makeUmp(
-            &origin_ump,
-            &this->simple_data->d_mask,
-            this->simple_data->md_p,
-            this->simple_data->md_n,
-            this->simple_data->md_t,
-            mask_scale,
-            sptk_settings->dp->portLen,
-            sptk_settings->dp->useStripUmp
-        );
 
-        qDebug() << "ump_mask " << ump_mask.x << LOG_DATA;
-        qDebug() << "origin_ump " << origin_ump.x << LOG_DATA;
+        if (sptk_settings->dp->showF0 || !sptk_settings->dp->showDerivativeF0)
+        {
+            vector origin_ump = copyv(pitch_smooth);
+            vector ump_mask = makeUmp(
+                &origin_ump,
+                &this->simple_data->d_mask,
+                this->simple_data->md_p,
+                this->simple_data->md_n,
+                this->simple_data->md_t,
+                mask_scale,
+                sptk_settings->dp->portLen,
+                sptk_settings->dp->useStripUmp
+            );
 
-        this->umpData = createMglData(origin_ump, this->umpData);
-        this->umpData->Norm();
-        qDebug() << "umpData createMglData" << LOG_DATA;
+            qDebug() << "ump_mask " << ump_mask.x << LOG_DATA;
+            qDebug() << "origin_ump " << origin_ump.x << LOG_DATA;
 
-        this->umpMask = createMglData(ump_mask, this->umpMask, true);
-        qDebug() << "umpMask createMglData" << LOG_DATA;
+            this->umpData = createMglData(origin_ump, this->umpData);
+            this->umpData->Norm();
+            qDebug() << "umpData createMglData" << LOG_DATA;
 
-        freev(origin_ump);
-        qDebug() << "freev origin_ump" << LOG_DATA;
+            freev(origin_ump);
+            qDebug() << "freev origin_ump" << LOG_DATA;
+
+            this->umpMask = createMglData(ump_mask, this->umpMask, true);
+            qDebug() << "umpMask createMglData" << LOG_DATA;
+        }
+
+        if (sptk_settings->dp->showDerivativeF0)
+        {
+            vector derivative_ump = copyv(derivative_pitch);
+            vector derivative_ump_mask = makeUmp(
+                &derivative_ump,
+                &this->simple_data->d_mask,
+                this->simple_data->md_p,
+                this->simple_data->md_n,
+                this->simple_data->md_t,
+                mask_scale,
+                sptk_settings->dp->portLen,
+                sptk_settings->dp->useStripUmp
+            );
+
+            qDebug() << "derivative_ump_mask " << derivative_ump_mask.x << LOG_DATA;
+            qDebug() << "derivative_ump " << derivative_ump.x << LOG_DATA;
+
+            this->umpDerivativeData = createMglData(derivative_ump, this->umpDerivativeData);
+            this->umpDerivativeData->Norm();
+            qDebug() << "umpData createMglData" << LOG_DATA;
+
+            freev(derivative_ump);
+            qDebug() << "freev derivative_ump" << LOG_DATA;
+
+            if (this->umpMask == NULL)
+            {
+                this->umpMask = createMglData(derivative_ump_mask, this->umpMask, true);
+                qDebug() << "umpMask createMglData" << LOG_DATA;
+            }
+        }
 
         freev(pitch_cutted);
         qDebug() << "freev pitch_cutted" << LOG_DATA;
@@ -878,59 +926,121 @@ void DrawerDP::Proc(QString fname)
         this->proximity_range = round( 100.0 * MIN(this->rt, this->ru) / MAX(this->rt, this->ru) );
         this->proximity_range_mark = calculateMark(proximity_range, sptk_settings->dp->mark_level, sptk_settings->dp->mark_delimeter);
 
-        vector sec_ump;
-        if (sptk_settings->dp->showF0)
-        {
-            sec_ump = copyv(pitch_smooth);
-        } else if (sptk_settings->dp->showDerivativeF0)
-        {
-            sec_ump = copyv(derivative_pitch);
-        } else {
-            sec_ump = copyv(pitch_smooth);
-        }
-
         double mask_scale = 1.0 * this->simple_data->d_full_wave.x / this->simple_data->d_mask.x;
-        makeUmp(
-            &sec_ump,
-            &this->simple_data->d_mask,
-            this->simple_data->md_p,
-            this->simple_data->md_n,
-            this->simple_data->md_t,
-            mask_scale,
-            sptk_settings->dp->portLen,
-            sptk_settings->dp->useStripUmp
-        );
+        qDebug() << "mask_scale " << mask_scale << LOG_DATA;
 
-        this->secUmpData = createMglData(sec_ump, this->secUmpData);
-        this->secUmpData->Norm();
+        if (sptk_settings->dp->showF0 || !sptk_settings->dp->showDerivativeF0)
+        {
+            vector sec_ump = copyv(pitch_smooth);
 
-        vector ump;
-        ump.x = this->umpData->nx;
-        ump.v = this->umpData->a;
+            makeUmp(
+                &sec_ump,
+                &this->simple_data->d_mask,
+                this->simple_data->md_p,
+                this->simple_data->md_n,
+                this->simple_data->md_t,
+                mask_scale,
+                sptk_settings->dp->portLen,
+                sptk_settings->dp->useStripUmp
+            );
 
-        this->proximity_curve_correlation = calculateCurvesSimilarityCorrelation(ump, sec_ump);
-        this->proximity_curve_integral = calculateCurvesSimilarityAverageDistance(ump, sec_ump);
-        this->proximity_curve_local = calculateCurvesSimilarityMaxLocalDistance(ump, sec_ump);
-        this->proximity_average = round((this->proximity_curve_correlation + this->proximity_curve_integral + this->proximity_curve_local) / 3.0);
+            this->secUmpData = createMglData(sec_ump, this->secUmpData);
+            this->secUmpData->Norm();
 
-        switch (sptk_settings->dp->errorType) {
-        case 0:
-            this->proximity_curve_shape = proximity_curve_correlation;
-            break;
-        case 1:
-            this->proximity_curve_shape = proximity_curve_integral;
-            break;
-        case 2:
-            this->proximity_curve_shape = proximity_curve_local;
-            break;
-        case 3:
-            this->proximity_curve_shape = proximity_average;
-            break;
+            vector ump;
+            ump.x = this->umpData->nx;
+            ump.v = this->umpData->a;
+
+            this->proximity_curve_correlation = calculateCurvesSimilarityCorrelation(ump, sec_ump);
+            this->proximity_curve_integral = calculateCurvesSimilarityAverageDistance(ump, sec_ump);
+            this->proximity_curve_local = calculateCurvesSimilarityMaxLocalDistance(ump, sec_ump);
+            this->proximity_average = round((this->proximity_curve_correlation + this->proximity_curve_integral + this->proximity_curve_local) / 3.0);
+
+            switch (sptk_settings->dp->errorType) {
+            case 0:
+                this->proximity_curve_shape = proximity_curve_correlation;
+                break;
+            case 1:
+                this->proximity_curve_shape = proximity_curve_integral;
+                break;
+            case 2:
+                this->proximity_curve_shape = proximity_curve_local;
+                break;
+            case 3:
+                this->proximity_curve_shape = proximity_average;
+                break;
+            }
+
+            this->proximity_shape_mark = calculateMark(proximity_curve_shape, sptk_settings->dp->mark_level, sptk_settings->dp->mark_delimeter);
+
+            freev(sec_ump);
         }
 
-        this->proximity_shape_mark = calculateMark(proximity_curve_shape, sptk_settings->dp->mark_level, sptk_settings->dp->mark_delimeter);
+        if (sptk_settings->dp->showDerivativeF0)
+        {
+            vector derivative_sec_ump = copyv(derivative_pitch);
 
-        freev(sec_ump);
+            makeUmp(
+                &derivative_sec_ump,
+                &this->simple_data->d_mask,
+                this->simple_data->md_p,
+                this->simple_data->md_n,
+                this->simple_data->md_t,
+                mask_scale,
+                sptk_settings->dp->portLen,
+                sptk_settings->dp->useStripUmp
+            );
+
+            this->secUmpDerivativeData = createMglData(derivative_sec_ump, this->secUmpDerivativeData);
+            this->secUmpDerivativeData->Norm();
+
+            vector derivative_ump;
+            derivative_ump.x = this->umpDerivativeData->nx;
+            derivative_ump.v = this->umpDerivativeData->a;
+
+            double derivative_proximity_curve_correlation = calculateCurvesSimilarityCorrelation(derivative_ump, derivative_sec_ump);
+            double derivative_proximity_curve_integral = calculateCurvesSimilarityAverageDistance(derivative_ump, derivative_sec_ump);
+            double derivative_proximity_curve_local = calculateCurvesSimilarityMaxLocalDistance(derivative_ump, derivative_sec_ump);
+
+            double derivative_proximity_average = round((derivative_proximity_curve_correlation + derivative_proximity_curve_integral + derivative_proximity_curve_local) / 3.0);
+
+            double derivative_proximity_curve_shape;
+            switch (sptk_settings->dp->errorType) {
+            case 0:
+                derivative_proximity_curve_shape = derivative_proximity_curve_correlation;
+                break;
+            case 1:
+                derivative_proximity_curve_shape = derivative_proximity_curve_integral;
+                break;
+            case 2:
+                derivative_proximity_curve_shape = derivative_proximity_curve_local;
+                break;
+            case 3:
+                derivative_proximity_curve_shape = derivative_proximity_average;
+                break;
+            }
+
+            double derivative_proximity_shape_mark = calculateMark(derivative_proximity_curve_shape, sptk_settings->dp->mark_level, sptk_settings->dp->mark_delimeter);
+
+            this->proximity_curve_correlation += derivative_proximity_curve_correlation;
+            this->proximity_curve_integral += derivative_proximity_curve_integral;
+            this->proximity_curve_local += derivative_proximity_curve_local;
+            this->proximity_average += derivative_proximity_average;
+            this->proximity_curve_shape += derivative_proximity_curve_shape;
+            this->proximity_shape_mark += derivative_proximity_shape_mark;
+
+            if (sptk_settings->dp->showF0)
+            {
+                this->proximity_curve_correlation /= 2.0;
+                this->proximity_curve_integral /= 2.0;
+                this->proximity_curve_local /= 2.0;
+                this->proximity_average /= 2.0;
+                this->proximity_curve_shape /= 2.0;
+                this->proximity_shape_mark /= 2.0;
+            }
+
+            freev(derivative_sec_ump);
+        }
 
         freev(pitch_cutted);
         freev(pitch_smooth);

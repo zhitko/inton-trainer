@@ -22,7 +22,8 @@ protected:
     bool first;
     QString secFileName;
     mglData *dpData, *secWaveData, *errorData, *timeData, *secPitchData, *secPitchDataDerivative,
-        *secIntensiveData, *umpData, *secUmpData, *umpMask, *octavData, *secOctavData;
+        *secIntensiveData, *umpData, *secUmpData, *umpDerivativeData, *secUmpDerivativeData, *umpMask,
+        *octavData, *secOctavData;
     mglData *pSecData, *nSecData, *tSecData;
     int errorMax, errorMin;
     double proximity_shape_mark, proximity_range_mark;
