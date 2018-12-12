@@ -929,6 +929,13 @@ void DrawerDP::Proc(QString fname)
         double mask_scale = 1.0 * this->simple_data->d_full_wave.x / this->simple_data->d_mask.x;
         qDebug() << "mask_scale " << mask_scale << LOG_DATA;
 
+        this->proximity_curve_correlation = 0.0;;
+        this->proximity_curve_integral = 0.0;;
+        this->proximity_curve_local = 0.0;;
+        this->proximity_average = 0.0;;
+        this->proximity_curve_shape = 0.0;;
+        this->proximity_shape_mark = 0.0;;
+
         if (sptk_settings->dp->showF0 || !sptk_settings->dp->showDerivativeF0)
         {
             vector sec_ump = copyv(pitch_smooth);
