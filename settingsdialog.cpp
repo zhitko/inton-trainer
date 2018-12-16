@@ -154,6 +154,7 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->dp->showF0 = instance->ui->showF0->isChecked();
     sptk_settings->dp->showOriginalF0 = instance->ui->showOriginalF0->isChecked();
     sptk_settings->dp->showDerivativeF0 = instance->ui->showDerivativeF0->isChecked();
+    sptk_settings->dp->showPlane = instance->ui->showPlane->isChecked();
     sptk_settings->dp->showTime = instance->ui->showTime->isChecked();
     sptk_settings->dp->errorType = instance->ui->errorTypeBox->currentIndex();
     sptk_settings->dp->useForDP = instance->ui->useForDP->currentIndex();
@@ -261,6 +262,8 @@ void SettingsDialog::loadSettingsFrom(QString settings_path)
         this->ui->showOriginalF0->setChecked(settings.value("dp/showOriginalF0").toBool());
     if(settings.contains("dp/showDerivativeF0"))
         this->ui->showDerivativeF0->setChecked(settings.value("dp/showDerivativeF0").toBool());
+    if(settings.contains("dp/showPlane"))
+        this->ui->showPlane->setChecked(settings.value("dp/showPlane").toBool());
     if(settings.contains("dp/showTime"))
         this->ui->showTime->setChecked(settings.value("dp/showTime").toBool());
     if(settings.contains("error/type"))
@@ -347,6 +350,7 @@ void SettingsDialog::saveSettings()
     settings.setValue("dp/showF0", this->ui->showF0->isChecked());
     settings.setValue("dp/showOriginalF0", this->ui->showOriginalF0->isChecked());
     settings.setValue("dp/showDerivativeF0", this->ui->showDerivativeF0->isChecked());
+    settings.setValue("dp/showPlane", this->ui->showPlane->isChecked());
     settings.setValue("dp/showTime", this->ui->showTime->isChecked());
     settings.setValue("error/type", this->ui->errorTypeBox->currentIndex());
     settings.setValue("dp/use", this->ui->useForDP->currentIndex());
@@ -364,4 +368,29 @@ void SettingsDialog::saveSettings()
     settings.setValue("dp/autoMarking", this->ui->autoMarking->isChecked());
 
     settings.setValue("dp/markoutA0limit", this->ui->markoutA0limit->value());
+}
+
+void SettingsDialog::on_showPlane_stateChanged(int arg1)
+{
+    if (arg1)
+    {
+        this->ui->showDerivativeF0->setChecked(arg1);
+        this->ui->showF0->setChecked(arg1);
+    }
+}
+
+void SettingsDialog::on_showF0_stateChanged(int arg1)
+{
+    if (!arg1)
+    {
+        this->ui->showPlane->setChecked(arg1);
+    }
+}
+
+void SettingsDialog::on_showDerivativeF0_stateChanged(int arg1)
+{
+    if (!arg1)
+    {
+        this->ui->showPlane->setChecked(arg1);
+    }
 }

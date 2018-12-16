@@ -48,7 +48,7 @@ protected:
     GraphData * data;
     QString fileName;
     mglData *waveData, *pitchData, *pitchDataOriginal, *pitchDataDerivative, *specData, *maskData,
-        *scaledMaskData, *intensiveData, *intensiveDataOriginal;
+        *scaledMaskData, *intensiveData, *intensiveDataOriginal, *planeData;
     mglData *pWaveData, *nWaveData, *tWaveData;
     double pitchDataDerivativeZero;
     int waveDataLen;

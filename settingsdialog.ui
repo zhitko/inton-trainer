@@ -462,6 +462,13 @@
                     </property>
                    </widget>
                   </item>
+                  <item row="1" column="1">
+                   <widget class="QCheckBox" name="showPlane">
+                    <property name="text">
+                     <string>Show  phase  plane</string>
+                    </property>
+                   </widget>
+                  </item>
                  </layout>
                 </item>
                 <item row="1" column="0" colspan="2">
@@ -1194,8 +1201,8 @@ p, li { white-space: pre-wrap; }
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>257</x>
+     <y>644</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -1210,8 +1217,8 @@ p, li { white-space: pre-wrap; }
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>325</x>
+     <y>644</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>

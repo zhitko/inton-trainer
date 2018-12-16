@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.3.6] - 2018-12-13
 
+### Add
+- Add phase plate view for F0 and derivative F0
+
 ### Fix
 - Fix marks calculation on single derivative F0 mode
 

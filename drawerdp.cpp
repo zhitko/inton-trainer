@@ -223,29 +223,40 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->Bars(*this->octavData, "r");
         }
 
-        gr->MultiPlot(40, 12, 129, 12, 6, "#");
-        gr->Label('y', "_{low}", -1);
-        gr->Label('y', "_{medium}", 0);
-        gr->Label('y', "_{high}", 1);
-
         gr->MultiPlot(20, 12, 46, 13, 8, "#");
 
-        gr->SetRange('y', 0, 1);
-        gr->SetTicks('y', 1./3.);
-        gr->Grid("y", "W", "");
-        gr->SetTicks('x', sptk_settings->dp->portLen);
-        gr->Grid("x", "W5-", "");
+        if (sptk_settings->dp->showPlane) {
+            mreal minimalX = this->umpData->Minimal();
+            mreal maximalX = this->umpData->Maximal();
+            mreal minimalY = this->umpDerivativeData->Minimal();
+            mreal maximalY = this->umpDerivativeData->Maximal();
+            gr->SetRange('x', minimalX, maximalX);
+            gr->SetRange('y', minimalY, maximalY);
+            gr->Plot(*this->umpData, *this->umpDerivativeData, "-r4");
+        } else {
+            gr->SetRange('y', 0, 1);
+            gr->SetTicks('y', 1./3.);
+            gr->Grid("y", "W", "");
+            gr->SetTicks('x', sptk_settings->dp->portLen);
+            gr->Grid("x", "W5-", "");
 
-        gr->Area(*this->umpMask, "gwwww!");
-        if (sptk_settings->dp->showF0 || !sptk_settings->dp->showDerivativeF0)
-        {
-            gr->SetRange('x', 0, this->umpData->nx);
-            gr->Plot(*this->umpData, "-r4");
-        }
-        if (sptk_settings->dp->showDerivativeF0)
-        {
-            gr->SetRange('x', 0, this->umpDerivativeData->nx);
-            gr->Plot(*this->umpDerivativeData, "-m4");
+            gr->Area(*this->umpMask, "gwwww!");
+
+            if (sptk_settings->dp->showF0 || !sptk_settings->dp->showDerivativeF0)
+            {
+                gr->SetRange('x', 0, this->umpData->nx);
+                gr->Plot(*this->umpData, "-r4");
+            }
+            if (sptk_settings->dp->showDerivativeF0)
+            {
+                gr->SetRange('x', 0, this->umpDerivativeData->nx);
+                gr->Plot(*this->umpDerivativeData, "-m4");
+            }
+
+            gr->MultiPlot(40, 12, 129, 12, 6, "#");
+            gr->Label('y', "_{low}", -1);
+            gr->Label('y', "_{medium}", 0);
+            gr->Label('y', "_{high}", 1);
         }
     }
 
@@ -338,30 +349,51 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->Bars(*this->secOctavData, "R");
             gr->Bars(*this->octavData, "r");
 
-            gr->MultiPlot(40, 12, 129, 12, 6, "#");
-            gr->Label('y', "_{low}", -1);
-            gr->Label('y', "_{medium}", 0);
-            gr->Label('y', "_{high}", 1);
-
             gr->MultiPlot(20, 12, 46, 13, 8, "#");
-            gr->SetRange('y', 0, 1);
-            gr->SetTicks('y', 1./3.);
-            gr->Grid("y", "W", "");
-            gr->SetTicks('x', sptk_settings->dp->portLen);
-            gr->Grid("x", "W5-", "");
 
-            gr->Area(*this->umpMask, "gwwww!");
-            if (sptk_settings->dp->showF0 || !sptk_settings->dp->showDerivativeF0)
-            {
-                gr->SetRange('x', 0, this->umpData->nx);
-                gr->Plot(*this->secUmpData, "-R5");
-                gr->Plot(*this->umpData, "-r4");
-            }
-            if (sptk_settings->dp->showDerivativeF0)
-            {
-                gr->SetRange('x', 0, this->umpDerivativeData->nx);
-                gr->Plot(*this->secUmpDerivativeData, "-M5");
-                gr->Plot(*this->umpDerivativeData, "-m4");
+            if (sptk_settings->dp->showPlane) {
+                mreal minimalX1 = this->umpData->Minimal();
+                mreal maximalX1 = this->umpData->Maximal();
+                mreal minimalY1 = this->umpDerivativeData->Minimal();
+                mreal maximalY1 = this->umpDerivativeData->Maximal();
+                mreal minimalX2 = this->secUmpData->Minimal();
+                mreal maximalX2 = this->secUmpData->Maximal();
+                mreal minimalY2 = this->secUmpDerivativeData->Minimal();
+                mreal maximalY2 = this->secUmpDerivativeData->Maximal();
+                if (minimalX1 > minimalX2) minimalX1 = minimalX2;
+                if (maximalX1 < maximalX2) maximalX1 = maximalX2;
+                if (minimalY1 > minimalY2) minimalY1 = minimalY2;
+                if (maximalY1 < maximalY2) maximalY1 = maximalY2;
+                gr->SetRange('x', minimalX1, maximalX1);
+                gr->SetRange('y', minimalY1, maximalY1);
+
+                gr->Plot(*this->umpData, *this->umpDerivativeData, "-r4");
+                gr->Plot(*this->secUmpData, *this->secUmpDerivativeData, "-R5");
+            } else {
+                gr->SetRange('y', 0, 1);
+                gr->SetTicks('y', 1./3.);
+                gr->Grid("y", "W", "");
+                gr->SetTicks('x', sptk_settings->dp->portLen);
+                gr->Grid("x", "W5-", "");
+
+                gr->Area(*this->umpMask, "gwwww!");
+                if (sptk_settings->dp->showF0 || !sptk_settings->dp->showDerivativeF0)
+                {
+                    gr->SetRange('x', 0, this->umpData->nx);
+                    gr->Plot(*this->secUmpData, "-R5");
+                    gr->Plot(*this->umpData, "-r4");
+                }
+                if (sptk_settings->dp->showDerivativeF0)
+                {
+                    gr->SetRange('x', 0, this->umpDerivativeData->nx);
+                    gr->Plot(*this->secUmpDerivativeData, "-M5");
+                    gr->Plot(*this->umpDerivativeData, "-m4");
+                }
+
+                gr->MultiPlot(40, 12, 129, 12, 6, "#");
+                gr->Label('y', "_{low}", -1);
+                gr->Label('y', "_{medium}", 0);
+                gr->Label('y', "_{high}", 1);
             }
         }
     }

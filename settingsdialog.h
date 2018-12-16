@@ -60,6 +60,9 @@ private slots:
     void outputDeviceChanged(int);
     void saveSettings();
     void setDefaultSettings();
+    void on_showPlane_stateChanged(int arg1);
+    void on_showF0_stateChanged(int arg1);
+    void on_showDerivativeF0_stateChanged(int arg1);
 };
 
 #endif // SETTINGSDIALOG_H

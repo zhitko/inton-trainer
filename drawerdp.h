@@ -23,7 +23,7 @@ protected:
     QString secFileName;
     mglData *dpData, *secWaveData, *errorData, *timeData, *secPitchData, *secPitchDataDerivative,
         *secIntensiveData, *umpData, *secUmpData, *umpDerivativeData, *secUmpDerivativeData, *umpMask,
-        *octavData, *secOctavData;
+        *octavData, *secOctavData, *secPlaneData;
     mglData *pSecData, *nSecData, *tSecData;
     int errorMax, errorMin;
     double proximity_shape_mark, proximity_range_mark;
