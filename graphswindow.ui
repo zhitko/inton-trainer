@@ -160,7 +160,7 @@
          <item>
           <widget class="QGroupBox" name="groupBox_2">
            <property name="title">
-            <string>Universal Melodic Portrait (UMP)</string>
+            <string>Universal Melodic Portrait Similarity (%)</string>
            </property>
            <layout class="QFormLayout" name="formLayout">
             <item row="0" column="0">
@@ -172,7 +172,7 @@
                </font>
               </property>
               <property name="text">
-               <string>F0-Range similarity (%)</string>
+               <string>F0-Range</string>
               </property>
              </widget>
             </item>
@@ -189,7 +189,7 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="0">
+            <item row="2" column="0">
              <widget class="QLabel" name="totalCtitle">
               <property name="font">
                <font>
@@ -198,56 +198,63 @@
                </font>
               </property>
               <property name="text">
-               <string>F0-Curves similarity thru Correlation (%)</string>
+               <string>- thru Correlation</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="1">
+            <item row="2" column="1">
              <widget class="QLabel" name="totalC">
               <property name="text">
                <string>0</string>
               </property>
              </widget>
             </item>
-            <item row="2" column="0">
+            <item row="3" column="0">
              <widget class="QLabel" name="totalItitle">
               <property name="text">
-               <string>F0-Curves similarity thru Average Distance (%)</string>
+               <string>- thru Average Distance</string>
               </property>
              </widget>
             </item>
-            <item row="2" column="1">
+            <item row="3" column="1">
              <widget class="QLabel" name="totalI">
               <property name="text">
                <string>0</string>
               </property>
              </widget>
             </item>
-            <item row="3" column="0">
+            <item row="4" column="0">
              <widget class="QLabel" name="totalLtitle">
               <property name="text">
-               <string>F0-Curves similarity thru Max Local Distance (%)</string>
+               <string>- thru Max Local Distance</string>
               </property>
              </widget>
             </item>
-            <item row="3" column="1">
+            <item row="4" column="1">
              <widget class="QLabel" name="totalL">
               <property name="text">
                <string>0</string>
               </property>
              </widget>
             </item>
-            <item row="4" column="0">
+            <item row="5" column="0">
              <widget class="QLabel" name="totalAtitle">
               <property name="text">
-               <string>F0-Mean value of three similarities (%)</string>
+               <string>F0-Mean value of three</string>
               </property>
              </widget>
             </item>
-            <item row="4" column="1">
+            <item row="5" column="1">
              <widget class="QLabel" name="totalA">
               <property name="text">
                <string>0</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>F0-Curves:</string>
               </property>
              </widget>
             </item>
