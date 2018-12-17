@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Change
 - move display and autosegment setting to first screen
 - add to phase plate ticks
+- change display text for UMP similarity
+- change open instance file button position
 
 ## [0.3.6] - 2018-12-16
 
