@@ -201,7 +201,7 @@ int DrawerDP::Draw(mglGraph *gr)
         gr->MultiPlot(1, 12, 11, 1, 1, "#");
         gr->Puts(mglPoint(0,0),phrase.toLocal8Bit().data(), ":C", 24);
 
-        gr->MultiPlot(2, 12, 20, 1, 1, "#");
+        gr->MultiPlot(8, 12, 80, 3, 1, "#");
         gr->Puts(
             mglPoint(0,0),
             QString("Template F0 min = %1, F0 max = %2").arg(this->f0min).arg(this->f0max).toLocal8Bit().data(),
@@ -223,9 +223,8 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->Bars(*this->octavData, "r");
         }
 
-        gr->MultiPlot(20, 12, 46, 13, 8, "#");
-
         if (sptk_settings->dp->showPlane) {
+            gr->MultiPlot(20, 12, 48, 8, 8, "#");
             gr->SetRange('x', 0, 1);
             gr->SetRange('y', 0, 1);
             gr->SetTicks('x', 0.2);
@@ -234,6 +233,7 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->Grid("y", "W", "");
             gr->Plot(*this->umpData, *this->umpDerivativeData, "-r4");
         } else {
+            gr->MultiPlot(20, 12, 47, 13, 8, "#");
             gr->SetRange('y', 0, 1);
             gr->SetTicks('y', 1./3.);
             gr->Grid("y", "W", "");
@@ -321,7 +321,7 @@ int DrawerDP::Draw(mglGraph *gr)
 
             gr->Puts(mglPoint(0,0),phrase.toLocal8Bit().data(), ":C", 24);
 
-            gr->MultiPlot(2, 12, 20, 1, 1, "#");
+            gr->MultiPlot(8, 12, 80, 3, 1, "#");
             gr->Puts(
                 mglPoint(0,0),
                 QString("Template F0 min = %1, F0 max = %2").arg(this->f0min).arg(this->f0max).toLocal8Bit().data(),
@@ -329,7 +329,7 @@ int DrawerDP::Draw(mglGraph *gr)
                 20
             );
 
-            gr->MultiPlot(2, 12, 21, 1, 1, "#");
+            gr->MultiPlot(8, 12, 83, 3, 1, "#");
             gr->Puts(
                 mglPoint(0,0),
                 QString("User F0 min = %1, F0 max = %2").arg(this->userf0min).arg(this->userf0max).toLocal8Bit().data(),
@@ -349,9 +349,8 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->Bars(*this->secOctavData, "R");
             gr->Bars(*this->octavData, "r");
 
-            gr->MultiPlot(20, 12, 46, 13, 8, "#");
-
             if (sptk_settings->dp->showPlane) {
+                gr->MultiPlot(20, 12, 48, 8, 8, "#");
                 gr->SetRange('x', 0, 1);
                 gr->SetRange('y', 0, 1);
                 gr->SetTicks('x', 0.2);
@@ -362,6 +361,7 @@ int DrawerDP::Draw(mglGraph *gr)
                 gr->Plot(*this->umpData, *this->umpDerivativeData, "-r4");
                 gr->Plot(*this->secUmpData, *this->secUmpDerivativeData, "-R5");
             } else {
+                gr->MultiPlot(20, 12, 46, 13, 8, "#");
                 gr->SetRange('y', 0, 1);
                 gr->SetTicks('y', 1./3.);
                 gr->Grid("y", "W", "");
