@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - change display text for UMP similarity
 - change open instance file button position
 - change phase plote size
+- add phase plot legend
 
 ## [0.3.6] - 2018-12-16
 

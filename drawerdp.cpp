@@ -225,12 +225,21 @@ int DrawerDP::Draw(mglGraph *gr)
 
         if (sptk_settings->dp->showPlane) {
             gr->MultiPlot(20, 12, 48, 8, 8, "#");
+            gr->Puts(mglPoint(-0.8, 2.6), "F0 (%)", ":C", 3);
+            gr->Puts(mglPoint(1.3, 0), "dF0 (%)", ":C", 3);
             gr->SetRange('x', 0, 1);
             gr->SetRange('y', 0, 1);
-            gr->SetTicks('x', 0.2);
+            gr->SetTicks('y', 2);
+            gr->AddTick('y', 0.2, "20");
+            gr->AddTick('y', 0.4, "40");
+            gr->AddTick('y', 0.6, "60");
+            gr->AddTick('y', 0.8, "80");
+            gr->AddTick('y', 1.0, "100");
             gr->Grid("x", "W", "");
-            gr->SetTicks('y', 0.2);
             gr->Grid("y", "W", "");
+            gr->Axis("y");
+            gr->Box();
+
             gr->Plot(*this->umpData, *this->umpDerivativeData, "-r4");
         } else {
             gr->MultiPlot(20, 12, 47, 13, 8, "#");
@@ -351,12 +360,20 @@ int DrawerDP::Draw(mglGraph *gr)
 
             if (sptk_settings->dp->showPlane) {
                 gr->MultiPlot(20, 12, 48, 8, 8, "#");
+                gr->Puts(mglPoint(-0.8, 2.6), "F0 (%)", ":C", 3);
+                gr->Puts(mglPoint(1.3, 0), "dF0 (%)", ":C", 3);
                 gr->SetRange('x', 0, 1);
                 gr->SetRange('y', 0, 1);
-                gr->SetTicks('x', 0.2);
+                gr->SetTicks('y', 2);
+                gr->AddTick('y', 0.2, "20");
+                gr->AddTick('y', 0.4, "40");
+                gr->AddTick('y', 0.6, "60");
+                gr->AddTick('y', 0.8, "80");
+                gr->AddTick('y', 1.0, "100");
                 gr->Grid("x", "W", "");
-                gr->SetTicks('y', 0.2);
                 gr->Grid("y", "W", "");
+                gr->Axis("y");
+                gr->Box();
 
                 gr->Plot(*this->umpData, *this->umpDerivativeData, "-r4");
                 gr->Plot(*this->secUmpData, *this->secUmpDerivativeData, "-R5");
