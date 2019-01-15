@@ -410,8 +410,9 @@ double midv(vector yr_vector) {
     int i;
     double val = 0.0;
     for (i = 0; i < yr_vector.x; i++) {
-        val += getv(yr_vector, i) / yr_vector.x;
+        val += getv(yr_vector, i);
     }
+    val = val / yr_vector.x;
     return(val);
 }
 

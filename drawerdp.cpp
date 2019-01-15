@@ -148,7 +148,7 @@ int DrawerDP::Draw(mglGraph *gr)
     QFileInfo fileInfo(this->fileName);
     QString phrase = QString(fileInfo.baseName());
     phrase = "\\b\\big{" + phrase + "}";
-    qDebug() << "Phrase" << phrase;
+    qDebug() << "Phrase" << phrase << LOG_DATA;
 
     if(!this->showUMP)
     {
@@ -624,6 +624,14 @@ void DrawerDP::Proc(QString fname)
         vector pitch_cutted = copyv(this->simple_data->d_pitch);
         MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_mask);
 
+        this->relativeF0 = midv(pitch_cutted);
+        this->relativeTempo = pitch_cutted.x;
+
+        vector intensive_cutted = copyv(this->simple_data->d_intensive);
+        applyMask(&intensive_cutted, &this->simple_data->d_mask);
+        this->relativeVolume = midv(intensive_cutted);
+        freev(intensive_cutted);
+
         this->f0max = mm.max;
         this->f0min = mm.min;
         qDebug() << "MinMax " << this->f0min << ":" << this->f0max << LOG_DATA;
@@ -642,16 +650,13 @@ void DrawerDP::Proc(QString fname)
         this->pitchData->Norm();
         qDebug() << "pitchData createMglData" << LOG_DATA;        
 
-        vector derivative_pitch;
-        if(sptk_settings->dp->showDerivativeF0)
-        {
-            derivative derivative_data = get_derivative_data(pitch_smooth, sptk_settings->dp->umpSmoothValue);
-            derivative_pitch = derivative_data.data;
-            this->pitchDataDerivative = createMglData(derivative_data.data, this->pitchDataDerivative, true);
-            this->pitchDataDerivative->Norm();
-            this->pitchDataDerivativeZero = derivative_data.zero;
-            qDebug() << "pitchDataDerivative createMglData" << LOG_DATA;
-        }
+        derivative derivative_data = get_derivative_data(pitch_smooth, sptk_settings->dp->umpSmoothValue);
+        vector derivative_pitch = derivative_data.data;
+        this->relativeDF0 = midv(derivative_pitch);
+        this->pitchDataDerivative = createMglData(derivative_data.data, this->pitchDataDerivative, true);
+        this->pitchDataDerivative->Norm();
+        this->pitchDataDerivativeZero = derivative_data.zero;
+        qDebug() << "pitchDataDerivative createMglData" << LOG_DATA;
 
         this->rt = (1.0 * this->f0max / this->f0min) - 1;
 
@@ -932,6 +937,14 @@ void DrawerDP::Proc(QString fname)
         this->userf0max = mm.max;
         this->userf0min = mm.min;
 
+        this->userRelativeF0 = midv(pitch_cutted);
+        this->userRelativeTempo = pitch_cutted.x;
+
+        vector intensive_cutted = copyv(dataSec->d_intensive);
+        applyMask(&intensive_cutted, &this->simple_data->d_mask);
+        this->userRelativeVolume = midv(intensive_cutted);
+        freev(intensive_cutted);
+
         vector pitch_smooth;
         if (sptk_settings->dp->umpSmoothType == 0)
         {
@@ -953,16 +966,13 @@ void DrawerDP::Proc(QString fname)
             this->secPitchData = createMglData(pitch_smooth, this->secPitchData, true);
         }
 
-        vector derivative_pitch;
-        if(sptk_settings->dp->showDerivativeF0)
-        {
-            derivative derivative_data = get_derivative_data(pitch_smooth, sptk_settings->dp->umpSmoothValue);
-            derivative_pitch = derivative_data.data;
-            this->secPitchDataDerivative = createMglData(derivative_data.data, this->secPitchDataDerivative, true);
-            this->secPitchDataDerivative->Norm();
-            this->secPitchDataDerivativeZero = derivative_data.zero;
-            qDebug() << "secPitchDataDerivative createMglData" << LOG_DATA;
-        }
+        derivative derivative_data = get_derivative_data(pitch_smooth, sptk_settings->dp->umpSmoothValue);
+        vector derivative_pitch = derivative_data.data;
+        this->userRelativeDF0 = midv(derivative_pitch);
+        this->secPitchDataDerivative = createMglData(derivative_data.data, this->secPitchDataDerivative, true);
+        this->secPitchDataDerivative->Norm();
+        this->secPitchDataDerivativeZero = derivative_data.zero;
+        qDebug() << "secPitchDataDerivative createMglData" << LOG_DATA;
 
         this->proximity_range = round( 100.0 * MIN(this->rt, this->ru) / MAX(this->rt, this->ru) );
         this->proximity_range_mark = calculateMark(proximity_range, sptk_settings->dp->mark_level, sptk_settings->dp->mark_delimeter);
@@ -970,12 +980,12 @@ void DrawerDP::Proc(QString fname)
         double mask_scale = 1.0 * this->simple_data->d_full_wave.x / this->simple_data->d_mask.x;
         qDebug() << "mask_scale " << mask_scale << LOG_DATA;
 
-        this->proximity_curve_correlation = 0.0;;
-        this->proximity_curve_integral = 0.0;;
-        this->proximity_curve_local = 0.0;;
-        this->proximity_average = 0.0;;
-        this->proximity_curve_shape = 0.0;;
-        this->proximity_shape_mark = 0.0;;
+        this->proximity_curve_correlation = 0.0;
+        this->proximity_curve_integral = 0.0;
+        this->proximity_curve_local = 0.0;
+        this->proximity_average = 0.0;
+        this->proximity_curve_shape = 0.0;
+        this->proximity_shape_mark = 0.0;
 
         if (sptk_settings->dp->showF0 || !sptk_settings->dp->showDerivativeF0)
         {
@@ -1109,6 +1119,22 @@ void DrawerDP::Proc(QString fname)
         freeSimpleGraphData(dataSec);
         qDebug() << "New Data Processed" << LOG_DATA;
     }
+}
+
+QMap<QString, QVariant> DrawerDP::getStatisticData()
+{
+    QMap<QString, QVariant> data = Drawer::getStatisticData();
+
+    data["Template F0 min"] = QVariant(this->f0min);
+    data["Template F0 max"] = QVariant(this->f0max);
+    data["Record F0 min"] = QVariant(this->userf0min);
+    data["Record F0 max"] = QVariant(this->userf0max);
+    data["Relative F0"] = QVariant(this->relativeF0 / this->userRelativeF0 * 100);
+    data["Relative dF0"] = QVariant(this->relativeDF0 / this->userRelativeDF0 * 100);
+    data["Relative Tempo"] = QVariant(this->relativeTempo / this->userRelativeTempo * 100);
+    data["Relative Volume"] = QVariant(this->relativeVolume / this->userRelativeVolume * 100);
+
+    return data;
 }
 
 

@@ -15,6 +15,8 @@ public:
     void Proc(QString fname);
     virtual int getDataSeconds();
 
+    virtual QMap<QString, QVariant> getStatisticData();
+
 private:
     QString getMarksTitle();
 
@@ -31,6 +33,10 @@ protected:
     int f0min, f0max;
     int userf0min, userf0max;
     double rt, ru;
+    double relativeF0, userRelativeF0;
+    double relativeDF0, userRelativeDF0;
+    double relativeTempo, userRelativeTempo;
+    double relativeVolume, userRelativeVolume;
 
     SimpleGraphData * simple_data;
 };

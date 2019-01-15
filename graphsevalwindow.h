@@ -17,12 +17,15 @@ public:
 protected:
     virtual Drawer * createNewDrawer(QString path);
     QString templatePath;
+    QString metricsFilePath;
 
 signals:
 
 public slots:
     void playTemplate();
     void showUMP();
+    void saveMetrics();
+    void openMetrics();
 
 };
 

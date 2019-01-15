@@ -1,6 +1,8 @@
 #ifndef DRAWER_H
 #define DRAWER_H
 
+#include <QMap>
+
 #include "defines.h"
 
 #include <mgl2/qmathgl.h>
@@ -44,6 +46,9 @@ public:
 
     double proximity_curve_correlation, proximity_curve_integral, proximity_curve_local, proximity_average;
     double proximity_range, proximity_curve_shape;
+
+    virtual QMap<QString, QVariant> getStatisticData();
+
 protected:
     GraphData * data;
     QString fileName;
