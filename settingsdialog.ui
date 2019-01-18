@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1106</width>
-    <height>654</height>
+    <height>708</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -215,13 +215,6 @@
           <string>Display</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_3">
-          <item row="1" column="0">
-           <widget class="QCheckBox" name="showPlane">
-            <property name="text">
-             <string>Show  phase  plane</string>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="0">
            <widget class="QCheckBox" name="showPortr">
             <property name="text">
@@ -232,13 +225,17 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="QCheckBox" name="showA0">
+          <item row="1" column="2">
+           <widget class="QCheckBox" name="showDerivativeF0">
             <property name="text">
-             <string>Show А0</string>
+             <string>Show derivative F0</string>
             </property>
-            <property name="checked">
-             <bool>false</bool>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QCheckBox" name="showOriginalF0">
+            <property name="text">
+             <string>Show original F0</string>
             </property>
            </widget>
           </item>
@@ -252,17 +249,40 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
-           <widget class="QCheckBox" name="showOriginalF0">
+          <item row="2" column="2">
+           <widget class="QCheckBox" name="showMeanValueUMP">
             <property name="text">
-             <string>Show original F0</string>
+             <string>Show mean value UMP</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
-          <item row="1" column="2">
-           <widget class="QCheckBox" name="showDerivativeF0">
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="showPlane">
             <property name="text">
-             <string>Show derivative F0</string>
+             <string>Show  phase  plane</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QCheckBox" name="showA0">
+            <property name="text">
+             <string>Show А0</string>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="2">
+           <widget class="QCheckBox" name="showCenterGravityUMP">
+            <property name="text">
+             <string>Show Center gravity UMP</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -379,7 +399,7 @@
             <x>0</x>
             <y>0</y>
             <width>528</width>
-            <height>562</height>
+            <height>616</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -749,7 +769,7 @@
             <x>0</x>
             <y>0</y>
             <width>528</width>
-            <height>562</height>
+            <height>616</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_3">

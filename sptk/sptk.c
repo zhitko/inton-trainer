@@ -71,6 +71,8 @@ DP_SETTINGS *initDpSettings()
     dp->continiusKH = 0.1;
     dp->continiusKT = 20;
     dp->showA0 = 1;
+    dp->showMeanValueUMP = 1;
+    dp->showCenterGravityUMP = 1;
     dp->showF0 = 1;
     dp->showOriginalF0 = 0;
     dp->showDerivativeF0 = 0;

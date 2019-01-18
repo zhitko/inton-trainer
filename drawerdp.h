@@ -33,10 +33,13 @@ protected:
     int f0min, f0max;
     int userf0min, userf0max;
     double rt, ru;
-    double relativeF0, userRelativeF0;
-    double relativeDF0, userRelativeDF0;
     double relativeTempo, userRelativeTempo;
     double relativeVolume, userRelativeVolume;
+    double relativeRegF0, userRelativeRegF0;
+    double relativeDiapF0, userRelativeDiapF0;
+    double meanValueUMP, userMeanValueUMP;
+    double rootMeanSquareUMP, userRootMeanSquareUMP;
+    double centricGravityUMP, userCentricGravityUMP;
 
     SimpleGraphData * simple_data;
 };

@@ -179,6 +179,8 @@ typedef struct _DP_SETTINGS {
     int showTime;
     int showError;
     int showPortr;
+    int showMeanValueUMP;
+    int showCenterGravityUMP;
 
     int errorType; // 0 - r; 1 - d
 

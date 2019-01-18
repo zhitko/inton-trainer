@@ -160,6 +160,8 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->dp->useForDP = instance->ui->useForDP->currentIndex();
     sptk_settings->dp->dpA0Coeficient = instance->ui->dpA0Coeficient->value();
     sptk_settings->dp->dpDA0Coeficient = instance->ui->dpDA0Coeficient->value();
+    sptk_settings->dp->showMeanValueUMP = instance->ui->showMeanValueUMP->isChecked();
+    sptk_settings->dp->showCenterGravityUMP = instance->ui->showCenterGravityUMP->isChecked();
 
     sptk_settings->dp->recordingSeconds = instance->ui->recordingSeconds->value();
     sptk_settings->dp->recordingMaxFiles = instance->ui->recordingMaxFiles->value();
@@ -278,6 +280,10 @@ void SettingsDialog::loadSettingsFrom(QString settings_path)
         this->ui->recordingSeconds->setValue(settings.value("dp/recordingSeconds").toDouble());
     if(settings.contains("dp/recordingMaxFiles"))
         this->ui->recordingMaxFiles->setValue(settings.value("dp/recordingMaxFiles").toInt());
+    if(settings.contains("dp/showMeanValueUMP"))
+        this->ui->showMeanValueUMP->setChecked(settings.value("dp/showMeanValueUMP").toBool());
+    if(settings.contains("dp/showCenterGravityUMP"))
+        this->ui->showCenterGravityUMP->setChecked(settings.value("dp/showCenterGravityUMP").toBool());
 
     if(settings.contains("frame/leng"))
         this->ui->frameSizeBox->setCurrentText(QString::number(settings.value("frame/leng").toInt()));
@@ -358,6 +364,8 @@ void SettingsDialog::saveSettings()
     settings.setValue("dp/DA0Coeficient", this->ui->dpDA0Coeficient->value());
     settings.setValue("dp/recordingSeconds", this->ui->recordingSeconds->value());
     settings.setValue("dp/recordingMaxFiles", this->ui->recordingMaxFiles->value());
+    settings.setValue("dp/showMeanValueUMP", this->ui->showMeanValueUMP->isChecked());
+    settings.setValue("dp/showCenterGravityUMP", this->ui->showCenterGravityUMP->isChecked());
 
     settings.setValue("dp/markDelimeter", this->ui->markDelimeter->value());
     settings.setValue("dp/markLimit", this->ui->markLimit->value());
