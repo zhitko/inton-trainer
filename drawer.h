@@ -14,6 +14,7 @@
 #include "dataprocessing.h"
 
 extern "C" {
+    #include "analysis/metrics.h"
     #include "./OpenAL/wavFile.h"
     #include "./SPTK/SPTK.h"
     #include "./SPTK/vector.h"
@@ -47,7 +48,7 @@ public:
     double proximity_curve_correlation, proximity_curve_integral, proximity_curve_local, proximity_average;
     double proximity_range, proximity_curve_shape;
 
-    virtual QMap<QString, QVariant> getStatisticData();
+    MetricsData getMetricData();
 
 protected:
     GraphData * data;
@@ -57,6 +58,7 @@ protected:
     mglData *pWaveData, *nWaveData, *tWaveData;
     double pitchDataDerivativeZero;
     int waveDataLen;
+    MetricsData metrics;
 };
 
 #endif // DRAWER_H

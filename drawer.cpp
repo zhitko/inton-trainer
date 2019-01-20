@@ -123,10 +123,7 @@ Drawer::Drawer() : mglDraw(),
     pWaveData = NULL;
     nWaveData = NULL;
     tWaveData = NULL;
-    proximity_curve_correlation = 0;
-    proximity_curve_integral = 0;
-    proximity_curve_local = 0;
-    proximity_average = 0;
+    metrics = createMetricData();
 }
 
 Drawer::~Drawer()
@@ -286,16 +283,7 @@ int Drawer::Draw(mglGraph *gr)
 void Drawer::Reload()	{}		///< Function for reloading data
 void Drawer::Click()	{}		///< Callback function on mouse click
 
-QMap<QString, QVariant> Drawer::getStatisticData()
+MetricsData Drawer::getMetricData()
 {
-    QMap<QString, QVariant> data;
-
-    data["Proximity curve correlation"] = QVariant(this->proximity_curve_correlation);
-    data["Proximity curve integral"] = QVariant(this->proximity_curve_integral);
-    data["Proximity curve local"] = QVariant(this->proximity_curve_local);
-    data["Proximity average"] = QVariant(this->proximity_average);
-    data["Proximity range"] = QVariant(this->proximity_range);
-    data["Proximity shape"] = QVariant(this->proximity_curve_shape);
-
-    return data;
+    return this->metrics;
 }

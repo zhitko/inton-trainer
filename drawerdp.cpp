@@ -267,7 +267,7 @@ int DrawerDP::Draw(mglGraph *gr)
             }
             if (sptk_settings->dp->showCenterGravityUMP)
             {
-                gr->SetRange('x', 0, this->relativeTempo);
+                gr->SetRange('x', 0, getMetric(this->metrics, METRIC_TEMPO_TEMPLATE));
                 gr->FPlot(QString::number(this->centricGravityUMP).toLocal8Bit().data(), "t", "0", "ir4");
             }
 
@@ -414,9 +414,9 @@ int DrawerDP::Draw(mglGraph *gr)
                 }
                 if (sptk_settings->dp->showCenterGravityUMP)
                 {
-                    gr->SetRange('x', 0, this->relativeTempo);
+                    gr->SetRange('x', 0, getMetric(this->metrics, METRIC_TEMPO_TEMPLATE));
                     gr->FPlot(QString::number(this->centricGravityUMP).toLocal8Bit().data(), "t", "0", "ir4");
-                    gr->SetRange('x', 0, this->userRelativeTempo);
+                    gr->SetRange('x', 0, getMetric(this->metrics, METRIC_TEMPO_RECORDED));
                     gr->FPlot(QString::number(this->userCentricGravityUMP).toLocal8Bit().data(), "t", "0", "iR4");
                 }
 
@@ -645,16 +645,47 @@ void DrawerDP::Proc(QString fname)
         vector pitch_cutted = copyv(this->simple_data->d_pitch);
         MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_mask);
         this->f0max = mm.max;
+        this->metrics = storeMetric(
+            this->metrics,
+            METRIC_TEMPLATE_F0_MAX,
+            this->f0max
+        );
         this->f0min = mm.min;
+        this->metrics = storeMetric(
+            this->metrics,
+            METRIC_TEMPLATE_F0_MIN,
+            this->f0min
+        );
         qDebug() << "MinMax " << this->f0min << ":" << this->f0max << LOG_DATA;
 
-        this->relativeRegF0 = 1.0 * (this->f0max + this->f0min) / 2.0;
-        this->relativeDiapF0 = 1.0 * this->f0max / this->f0min;
-        this->relativeTempo = pitch_cutted.x;
+        this->metrics = storeMetric(
+            this->metrics,
+            METRIC_REGISTER_F0_TEMPLATE,
+            1.0 * (this->f0max + this->f0min) / 2.0
+        );
+
+        this->metrics = storeMetric(
+            this->metrics,
+            METRIC_DIAPASON_F0_TEMPLATE,
+            1.0 * this->f0max / this->f0min
+        );
+
+        this->metrics = storeMetric(
+            this->metrics,
+            METRIC_TEMPO_TEMPLATE,
+            pitch_cutted.x
+        );
 
         vector intensive_cutted = copyv(this->simple_data->d_intensive);
         applyMask(&intensive_cutted, &this->simple_data->d_mask);
-        this->relativeVolume = midv(intensive_cutted);
+        this->metrics = storeMetric(
+            this->metrics,
+            METRIC_RMS_VOLUME_TEMPLATE,
+            calculateRMS(
+                intensive_cutted,
+                midv(intensive_cutted)
+            )
+        );
         freev(intensive_cutted);
 
         vector pitch_smooth;
@@ -669,19 +700,31 @@ void DrawerDP::Proc(QString fname)
 
         vector pitch_norm = normalizev(pitch_smooth, 0.0, 1.0);
         this->meanValueUMP = midv(pitch_norm);
+        this->metrics = storeMetric(
+            this->metrics,
+            METRIC_MEAN_VALUE_UMP_TEMPLATE,
+            this->meanValueUMP
+        );
 
-        this->rootMeanSquareUMP = 0.0;
-        double centricGravityPX = 0.0;
-        double centricGravityP = 0.0;
-        for (int i=0; i<pitch_norm.x; i++)
-        {
-            this->rootMeanSquareUMP += pow(getv(pitch_norm, i) - this->meanValueUMP, 2);
-            centricGravityPX += getv(pitch_norm, i) * (i+1);
-            centricGravityP += getv(pitch_norm, i);
-        }
-        this->rootMeanSquareUMP = sqrt(this->rootMeanSquareUMP);
+        this->centricGravityUMP = calculateCentricGravity(pitch_norm);
+        this->metrics = storeMetric(
+            this->metrics,
+            METRIC_CENTER_GRAVITY_UMP_TEMPLATE,
+            this->centricGravityUMP
+        );
+
+        this->metrics = storeMetric(
+            this->metrics,
+            METRIC_RMS_UMP_TEMPLATE,
+            calculateRMS(
+                pitch_norm,
+                getMetric(
+                    this->metrics,
+                    METRIC_MEAN_VALUE_UMP_TEMPLATE
+                )
+            )
+        );
         freev(pitch_norm);
-        this->centricGravityUMP = centricGravityPX / centricGravityP;
 
         this->pitchData = createMglData(pitch_smooth, this->pitchData, true);
         this->pitchData->Norm();
@@ -971,16 +1014,76 @@ void DrawerDP::Proc(QString fname)
 
         MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_mask);
         this->userf0max = mm.max;
-        this->userf0min = mm.min;
+        this->metrics = storeMetric(
+            this->metrics,
+            METRIC_RECORD_F0_MAX,
+            this->userf0max
+        );
 
-        this->userRelativeRegF0 = 1.0 * (this->userf0max + this->userf0min) / 2.0;
-        this->userRelativeDiapF0 = 1.0 * this->userf0max / this->userf0min;
-        this->userRelativeTempo = pitch_cutted.x;
+        this->userf0min = mm.min;
+        this->metrics = storeMetric(
+            this->metrics,
+            METRIC_RECORD_F0_MIN,
+            this->userf0min
+        );
+
+        this->metrics = storeMetric(
+            this->metrics,
+            METRIC_REGISTER_F0_RECORDED,
+            1.0 * (this->userf0max + this->userf0min) / 2.0
+        );
+
+        this->metrics = generateRelativeMetric(
+            this->metrics,
+            METRIC_RELATIVE_REGISTER_F0,
+            METRIC_REGISTER_F0_RECORDED,
+            METRIC_REGISTER_F0_TEMPLATE
+        );
+
+        this->metrics = storeMetric(
+            this->metrics,
+            METRIC_DIAPASON_F0_RECORDED,
+            1.0 * this->userf0max / this->userf0min
+        );
+
+        this->metrics = generateRelativeMetric(
+            this->metrics,
+            METRIC_RELATIVE_DIAPASON_F0,
+            METRIC_DIAPASON_F0_RECORDED,
+            METRIC_DIAPASON_F0_TEMPLATE
+        );
+
+        this->metrics = storeMetric(
+            this->metrics,
+            METRIC_TEMPO_RECORDED,
+            pitch_cutted.x
+        );
+
+        this->metrics = generateRelativeMetric(
+            this->metrics,
+            METRIC_RELATIVE_TEMPO,
+            METRIC_TEMPO_RECORDED,
+            METRIC_TEMPO_TEMPLATE
+        );
 
         vector intensive_cutted = copyv(dataSec->d_intensive);
         applyMask(&intensive_cutted, &this->simple_data->d_mask);
-        this->userRelativeVolume = midv(intensive_cutted);
+        this->metrics = storeMetric(
+            this->metrics,
+            METRIC_RMS_VOLUME_RECORDED,
+            calculateRMS(
+                intensive_cutted,
+                midv(intensive_cutted)
+            )
+        );
         freev(intensive_cutted);
+
+        this->metrics = generateRelativeMetric(
+            this->metrics,
+            METRIC_RELATEVE_RMS_VOLUME,
+            METRIC_RMS_VOLUME_RECORDED,
+            METRIC_RMS_VOLUME_TEMPLATE
+        );
 
         vector pitch_smooth;
         if (sptk_settings->dp->umpSmoothType == 0)
@@ -994,19 +1097,43 @@ void DrawerDP::Proc(QString fname)
 
         vector pitch_norm = normalizev(pitch_smooth, 0.0, 1.0);
         this->userMeanValueUMP = midv(pitch_norm);
+        this->metrics = storeMetric(
+            this->metrics,
+            METRIC_MEAN_VALUE_UMP_RECORDED,
+            this->userMeanValueUMP
+        );
 
-        this->userRootMeanSquareUMP = 0.0;
-        double centricGravityPX = 0.0;
-        double centricGravityP = 0.0;
-        for (int i=0; i<pitch_norm.x; i++)
-        {
-            this->userRootMeanSquareUMP += pow(getv(pitch_norm, i) - this->userMeanValueUMP, 2);
-            centricGravityPX += getv(pitch_norm, i) * i;
-            centricGravityP += getv(pitch_norm, i);
-        }
-        this->userRootMeanSquareUMP = sqrt(this->userRootMeanSquareUMP);
+        this->userCentricGravityUMP = calculateCentricGravity(pitch_norm);
+        this->metrics = storeMetric(
+            this->metrics,
+            METRIC_CENTER_GRAVITY_UMP_RECORDED,
+            this->userCentricGravityUMP
+        );
+
+        this->metrics = generateRelativeMetric(
+            this->metrics,
+            METRIC_RELATIVE_CENTER_GRAVITY_UMP,
+            METRIC_CENTER_GRAVITY_UMP_RECORDED,
+            METRIC_CENTER_GRAVITY_UMP_TEMPLATE
+        );
+
+        this->metrics = storeMetric(
+            this->metrics,
+            METRIC_RMS_UMP_RECORDED,
+            calculateRMS(
+                pitch_norm,
+                getMetric(this->metrics, METRIC_MEAN_VALUE_UMP_RECORDED)
+            )
+        );
+
+        this->metrics = generateRelativeMetric(
+            this->metrics,
+            METRIC_RELATIVE_RMS_UMP,
+            METRIC_RMS_UMP_RECORDED,
+            METRIC_RMS_UMP_TEMPLATE
+        );
+
         freev(pitch_norm);
-        this->userCentricGravityUMP = centricGravityPX / centricGravityP;
 
         this->ru = (1.0 * this->userf0max / this->userf0min) - 1;
 
@@ -1027,6 +1154,11 @@ void DrawerDP::Proc(QString fname)
         qDebug() << "secPitchDataDerivative createMglData" << LOG_DATA;
 
         this->proximity_range = round( 100.0 * MIN(this->rt, this->ru) / MAX(this->rt, this->ru) );
+        this->metrics = storeMetric(
+            this->metrics,
+            METRIC_PROXIMITY_RANGE,
+            this->proximity_range
+        );
         this->proximity_range_mark = calculateMark(proximity_range, sptk_settings->dp->mark_level, sptk_settings->dp->mark_delimeter);
 
         double mask_scale = 1.0 * this->simple_data->d_full_wave.x / this->simple_data->d_mask.x;
@@ -1062,9 +1194,29 @@ void DrawerDP::Proc(QString fname)
             ump.v = this->umpData->a;
 
             this->proximity_curve_correlation = calculateCurvesSimilarityCorrelation(ump, sec_ump);
+            this->metrics = storeMetric(
+                this->metrics,
+                METRIC_PROXIMITY_CURVE_CORRELATION,
+                this->proximity_curve_correlation
+            );
             this->proximity_curve_integral = calculateCurvesSimilarityAverageDistance(ump, sec_ump);
+            this->metrics = storeMetric(
+                this->metrics,
+                METRIC_PROXIMITY_CURVE_INTEGRAL,
+                this->proximity_curve_integral
+            );
             this->proximity_curve_local = calculateCurvesSimilarityMaxLocalDistance(ump, sec_ump);
+            this->metrics = storeMetric(
+                this->metrics,
+                METRIC_PROXIMITY_CURVE_LOCAL,
+                this->proximity_curve_local
+            );
             this->proximity_average = round((this->proximity_curve_correlation + this->proximity_curve_integral + this->proximity_curve_local) / 3.0);
+            this->metrics = storeMetric(
+                this->metrics,
+                METRIC_PROXIMITY_AVERAGE,
+                this->proximity_average
+            );
 
             switch (sptk_settings->dp->errorType) {
             case 0:
@@ -1152,6 +1304,12 @@ void DrawerDP::Proc(QString fname)
             freev(derivative_sec_ump);
         }
 
+        this->metrics = storeMetric(
+            this->metrics,
+            METRIC_PROXIMITY_CURVE_SHAPE,
+            this->proximity_curve_shape
+        );
+
         freev(pitch_cutted);
         freev(pitch_smooth);
 
@@ -1172,28 +1330,4 @@ void DrawerDP::Proc(QString fname)
         qDebug() << "New Data Processed" << LOG_DATA;
     }
 }
-
-QMap<QString, QVariant> DrawerDP::getStatisticData()
-{
-    QMap<QString, QVariant> data = Drawer::getStatisticData();
-
-    data["Template F0 min"] = QVariant(this->f0min);
-    data["Template F0 max"] = QVariant(this->f0max);
-    data["Record F0 min"] = QVariant(this->userf0min);
-    data["Record F0 max"] = QVariant(this->userf0max);
-    data["Relative Tempo"] = QVariant(this->userRelativeTempo / this->relativeTempo * 100);
-    data["Relative Volume"] = QVariant(this->userRelativeVolume / this->relativeVolume * 100);
-    data["Relative Register F0"] = QVariant(this->userRelativeRegF0 / this->relativeRegF0 * 100);
-    data["Relative Diapason F0"] = QVariant(this->userRelativeDiapF0 / this->relativeDiapF0 * 100);
-    data["MeanValue UMP Recorded"] = QVariant(this->userMeanValueUMP);
-    data["MeanValue UMP Template"] = QVariant(this->meanValueUMP);
-    data["Root Mean Square UMP Recorded"] = QVariant(this->userRootMeanSquareUMP);
-    data["Root Mean Square UMP Template"] = QVariant(this->rootMeanSquareUMP);
-    data["Relative Root Mean Square UMP(%)"] = QVariant(this->userRootMeanSquareUMP / this->rootMeanSquareUMP * 100);
-    data["CenterGravity UMP Recorded"] = QVariant(this->userCentricGravityUMP);
-    data["CenterGravity UMP Template"] = QVariant(this->centricGravityUMP);
-
-    return data;
-}
-
 

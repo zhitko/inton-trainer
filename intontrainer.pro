@@ -60,7 +60,8 @@ SOURCES += \
     analysis/curve_similarity.cpp \
     processing/filemarkout.cpp \
     analysis/ump.cpp \
-    analysis/derivative.c
+    analysis/derivative.c \
+    analysis/metrics.c
 
 HEADERS  += \
     mainwindow.h \
@@ -90,7 +91,8 @@ HEADERS  += \
     processing/filemarkout.h \
     analysis/ump.h \
     analysis/mask_data.h \
-    analysis/derivative.h
+    analysis/derivative.h \
+    analysis/metrics.h
 
 # OpenAL
 SOURCES += \
