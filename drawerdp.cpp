@@ -686,6 +686,11 @@ void DrawerDP::Proc(QString fname)
                 midv(intensive_cutted)
             )
         );
+        this->metrics = storeMetric(
+            this->metrics,
+            METRIC_MEAN_VOLUME_TEMPLATE,
+            midv(intensive_cutted)
+        );
         freev(intensive_cutted);
 
         vector pitch_smooth;
@@ -1076,6 +1081,18 @@ void DrawerDP::Proc(QString fname)
                 midv(intensive_cutted)
             )
         );
+        this->metrics = storeMetric(
+            this->metrics,
+            METRIC_MEAN_VOLUME_RECORDED,
+            midv(intensive_cutted)
+        );
+        this->metrics = generateRelativeMetric(
+            this->metrics,
+            METRIC_RELATEVE_MEAN_VOLUME,
+            METRIC_MEAN_VOLUME_RECORDED,
+            METRIC_MEAN_VOLUME_TEMPLATE
+        );
+
         freev(intensive_cutted);
 
         this->metrics = generateRelativeMetric(
@@ -1101,6 +1118,13 @@ void DrawerDP::Proc(QString fname)
             this->metrics,
             METRIC_MEAN_VALUE_UMP_RECORDED,
             this->userMeanValueUMP
+        );
+
+        this->metrics = generateRelativeMetric(
+            this->metrics,
+            METRIC_RELATIVE_MEAN_UMP,
+            METRIC_MEAN_VALUE_UMP_RECORDED,
+            METRIC_MEAN_VALUE_UMP_TEMPLATE
         );
 
         this->userCentricGravityUMP = calculateCentricGravity(pitch_norm);
