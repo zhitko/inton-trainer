@@ -59,18 +59,26 @@ double calculateRMS(vector data, double mean_value)
     return result;
 }
 
-double calculateCentricGravity(vector data)
+double calculateCentricGravitySubvector(vector data, int from, int to)
 {
     double result = 0.0;
 
+    if (from < 0) from = 0;
+    if (to > data.x) to = data.x;
+
     double px = 0.0;
     double p = 0.0;
-    for (int i=0; i<data.x; i++)
+    for (int i=from; i<to; i++)
     {
         px += getv(data, i) * i;
         p += getv(data, i);
     }
     result = px / p;
 
-    return result;
+    return result / data.x * 100;
+}
+
+double calculateCentricGravity(vector data)
+{
+    return calculateCentricGravitySubvector(data, 0, data.x);
 }

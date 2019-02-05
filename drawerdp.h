@@ -33,6 +33,8 @@ protected:
     double rt, ru;
     double meanValueUMP, userMeanValueUMP;
     double centricGravityUMP, userCentricGravityUMP;
+    double centricGravityUMP1, userCentricGravityUMP1;
+    double centricGravityUMP2, userCentricGravityUMP2;
 
     SimpleGraphData * simple_data;
 };

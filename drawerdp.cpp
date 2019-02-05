@@ -263,12 +263,14 @@ int DrawerDP::Draw(mglGraph *gr)
             }
             if (sptk_settings->dp->showMeanValueUMP)
             {
+                gr->SetRange('y', 0, 100);
                 gr->FPlot(QString::number(this->meanValueUMP).toLocal8Bit().data(), ";r4");
             }
             if (sptk_settings->dp->showCenterGravityUMP)
             {
-                gr->SetRange('x', 0, getMetric(this->metrics, METRIC_TEMPO_TEMPLATE));
-                gr->FPlot(QString::number(this->centricGravityUMP).toLocal8Bit().data(), "t", "0", "ir4");
+                gr->SetRanges(0,100,0,1);
+                gr->FPlot(QString::number(this->centricGravityUMP1).toLocal8Bit().data(), "t", "0", "ir4");
+                gr->FPlot(QString::number(this->centricGravityUMP2).toLocal8Bit().data(), "t", "0", "ir4");
             }
 
             gr->MultiPlot(40, 12, 129, 12, 6, "#");
@@ -409,15 +411,18 @@ int DrawerDP::Draw(mglGraph *gr)
                 }
                 if (sptk_settings->dp->showMeanValueUMP)
                 {
+                    gr->SetRange('y', 0, 100);
                     gr->FPlot(QString::number(this->meanValueUMP).toLocal8Bit().data(), ";r4");
                     gr->FPlot(QString::number(this->userMeanValueUMP).toLocal8Bit().data(), ";R4");
                 }
                 if (sptk_settings->dp->showCenterGravityUMP)
                 {
-                    gr->SetRange('x', 0, getMetric(this->metrics, METRIC_TEMPO_TEMPLATE));
-                    gr->FPlot(QString::number(this->centricGravityUMP).toLocal8Bit().data(), "t", "0", "ir4");
-                    gr->SetRange('x', 0, getMetric(this->metrics, METRIC_TEMPO_RECORDED));
-                    gr->FPlot(QString::number(this->userCentricGravityUMP).toLocal8Bit().data(), "t", "0", "iR4");
+                    gr->SetRanges(0,100,0,1);
+                    gr->FPlot(QString::number(this->centricGravityUMP1).toLocal8Bit().data(), "t", "0", "ir4");
+                    gr->FPlot(QString::number(this->centricGravityUMP2).toLocal8Bit().data(), "t", "0", "ir4");
+                    gr->SetRanges(0,100,0,1);
+                    gr->FPlot(QString::number(this->userCentricGravityUMP1).toLocal8Bit().data(), "t", "0", "iR4");
+                    gr->FPlot(QString::number(this->userCentricGravityUMP2).toLocal8Bit().data(), "t", "0", "iR4");
                 }
 
                 gr->MultiPlot(40, 12, 129, 12, 6, "#");
@@ -704,7 +709,7 @@ void DrawerDP::Proc(QString fname)
         }
 
         vector pitch_norm = normalizev(pitch_smooth, 0.0, 1.0);
-        this->meanValueUMP = midv(pitch_norm);
+        this->meanValueUMP = midv(pitch_norm) * 100;
         this->metrics = storeMetric(
             this->metrics,
             METRIC_MEAN_VALUE_UMP_TEMPLATE,
@@ -712,10 +717,22 @@ void DrawerDP::Proc(QString fname)
         );
 
         this->centricGravityUMP = calculateCentricGravity(pitch_norm);
+        this->centricGravityUMP1 = calculateCentricGravitySubvector(pitch_norm, 0, this->centricGravityUMP);
+        this->centricGravityUMP2 = calculateCentricGravitySubvector(pitch_norm, this->centricGravityUMP, pitch_norm.x);
         this->metrics = storeMetric(
             this->metrics,
             METRIC_CENTER_GRAVITY_UMP_TEMPLATE,
             this->centricGravityUMP
+        );
+        this->metrics = storeMetric(
+            this->metrics,
+            METRIC_CENTER_GRAVITY_UMP_TEMPLATE_1,
+            this->centricGravityUMP1
+        );
+        this->metrics = storeMetric(
+            this->metrics,
+            METRIC_CENTER_GRAVITY_UMP_TEMPLATE_2,
+            this->centricGravityUMP2
         );
 
         this->metrics = storeMetric(
@@ -1113,7 +1130,7 @@ void DrawerDP::Proc(QString fname)
         }
 
         vector pitch_norm = normalizev(pitch_smooth, 0.0, 1.0);
-        this->userMeanValueUMP = midv(pitch_norm);
+        this->userMeanValueUMP = midv(pitch_norm) * 100;
         this->metrics = storeMetric(
             this->metrics,
             METRIC_MEAN_VALUE_UMP_RECORDED,
@@ -1128,10 +1145,22 @@ void DrawerDP::Proc(QString fname)
         );
 
         this->userCentricGravityUMP = calculateCentricGravity(pitch_norm);
+        this->userCentricGravityUMP1 = calculateCentricGravitySubvector(pitch_norm, 0, this->userCentricGravityUMP);
+        this->userCentricGravityUMP2 = calculateCentricGravitySubvector(pitch_norm, this->userCentricGravityUMP, pitch_norm.x);
         this->metrics = storeMetric(
             this->metrics,
             METRIC_CENTER_GRAVITY_UMP_RECORDED,
             this->userCentricGravityUMP
+        );
+        this->metrics = storeMetric(
+            this->metrics,
+            METRIC_CENTER_GRAVITY_UMP_RECORDED_1,
+            this->userCentricGravityUMP1
+        );
+        this->metrics = storeMetric(
+            this->metrics,
+            METRIC_CENTER_GRAVITY_UMP_RECORDED_2,
+            this->userCentricGravityUMP2
         );
 
         this->metrics = generateRelativeMetric(
@@ -1139,6 +1168,18 @@ void DrawerDP::Proc(QString fname)
             METRIC_RELATIVE_CENTER_GRAVITY_UMP,
             METRIC_CENTER_GRAVITY_UMP_RECORDED,
             METRIC_CENTER_GRAVITY_UMP_TEMPLATE
+        );
+        this->metrics = generateRelativeMetric(
+            this->metrics,
+            METRIC_RELATIVE_CENTER_GRAVITY_UMP_1,
+            METRIC_CENTER_GRAVITY_UMP_RECORDED_1,
+            METRIC_CENTER_GRAVITY_UMP_TEMPLATE_1
+        );
+        this->metrics = generateRelativeMetric(
+            this->metrics,
+            METRIC_RELATIVE_CENTER_GRAVITY_UMP_2,
+            METRIC_CENTER_GRAVITY_UMP_RECORDED_2,
+            METRIC_CENTER_GRAVITY_UMP_TEMPLATE_2
         );
 
         this->metrics = storeMetric(
