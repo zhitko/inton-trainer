@@ -1,4 +1,5 @@
 #include "metrics.h"
+#include "math.h"
 
 
 MetricsData createMetricData()
@@ -8,7 +9,7 @@ MetricsData createMetricData()
     for (int i=0; i < METRIC_DATA_SIZE; i++)
     {
         data.calculated[i] = 0;
-        data.values[i] = -1.0;
+        data.values[i] = NAN;
     }
 
     return data;
@@ -32,7 +33,7 @@ MetricsData generateRelativeMetric(MetricsData metrics, int index, int index1, i
     metrics = storeMetric(
         metrics,
         index,
-        getMetric(metrics, index1) / getMetric(metrics, index2) * 100
+        10 * log10(getMetric(metrics, index1) / getMetric(metrics, index2))
     );
     return metrics;
 }
@@ -45,6 +46,19 @@ double getMetric(MetricsData metrics, int index)
     }
 
     return metrics.values[index];
+}
+
+int hasMetric(MetricsData metrics, int index)
+{
+    if (index < 0 || index >= METRIC_DATA_SIZE)
+    {
+        return 0;
+    } else if (isnan(metrics.values[index]))
+    {
+        return 0;
+    } else {
+        return 1;
+    }
 }
 
 
@@ -75,7 +89,7 @@ double calculateCentricGravitySubvector(vector data, int from, int to)
     }
     result = px / p;
 
-    return result / data.x * 100;
+    return result;
 }
 
 double calculateCentricGravity(vector data)

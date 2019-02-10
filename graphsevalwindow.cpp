@@ -30,7 +30,7 @@ GraphsEvalWindow::GraphsEvalWindow(QString path, Drawer * drawer, QWidget *paren
     this->QMGL->setDraw(this->drawer);
     this->drawFile(path);
     this->ui->playTemplateBtn->hide();
-    this->ui->saveMetrics->hide();
+    this->ui->saveMetrics->show();
     this->ui->openMetrics->hide();
     connect(this->ui->playTemplateBtn, SIGNAL(clicked()), this, SLOT(playTemplate()));
     connect(this->ui->showUMP, SIGNAL(clicked()), this, SLOT(showUMP()));
@@ -56,6 +56,7 @@ Drawer * GraphsEvalWindow::createNewDrawer(QString path)
 {
     this->ui->saveMetrics->show();
     this->ui->playTemplateBtn->show();
+    this->ui->openMetrics->hide();
     this->drawer->Proc(path);
     this->path = path;
 
@@ -149,78 +150,193 @@ void GraphsEvalWindow::saveMetrics()
     xlsx.write(row,   1, "The data on the proximity", format_title);
     xlsx.write(row,   2, "Proximity", format_title);
     xlsx.write(row++, 3, "Distance", format_title);
-    xlsx.write(row,   1, "Proximity curve correlation", format_subtitle);
-    xlsx.write(row,   2, getMetric(data, METRIC_PROXIMITY_CURVE_CORRELATION), format_value);
-    xlsx.write(row++, 3, 100.0 - getMetric(data, METRIC_PROXIMITY_CURVE_CORRELATION), format_value);
-    xlsx.write(row,   1, "Proximity curve integral", format_subtitle);
-    xlsx.write(row,   2, getMetric(data, METRIC_PROXIMITY_CURVE_INTEGRAL), format_value);
-    xlsx.write(row++, 3, 100.0 - getMetric(data, METRIC_PROXIMITY_CURVE_INTEGRAL), format_value);
-    xlsx.write(row,   1, "Proximity curve local", format_subtitle);
-    xlsx.write(row,   2, getMetric(data, METRIC_PROXIMITY_CURVE_LOCAL), format_value);
-    xlsx.write(row++, 3, 100.0 - getMetric(data, METRIC_PROXIMITY_CURVE_LOCAL), format_value);
-    xlsx.write(row,   1, "Average data on the proximity of curves", format_subtitle);
-    xlsx.write(row,   2, getMetric(data, METRIC_PROXIMITY_AVERAGE), format_value);
-    xlsx.write(row++, 3, 100.0 - getMetric(data, METRIC_PROXIMITY_AVERAGE), format_value);
-    xlsx.write(row,   1, "Proximity range", format_subtitle);
-    xlsx.write(row,   2, getMetric(data, METRIC_PROXIMITY_RANGE), format_value);
-    xlsx.write(row++, 3, 100.0 - getMetric(data, METRIC_PROXIMITY_RANGE), format_value);
+    if (hasMetric(data, METRIC_PROXIMITY_CURVE_CORRELATION))
+    {
+        xlsx.write(row,   1, "Proximity curve correlation", format_subtitle);
+        xlsx.write(row,   2, getMetric(data, METRIC_PROXIMITY_CURVE_CORRELATION), format_value);
+        xlsx.write(row++, 3, 100.0 - getMetric(data, METRIC_PROXIMITY_CURVE_CORRELATION), format_value);
+    }
+    if (hasMetric(data, METRIC_PROXIMITY_CURVE_INTEGRAL))
+    {
+        xlsx.write(row,   1, "Proximity curve integral", format_subtitle);
+        xlsx.write(row,   2, getMetric(data, METRIC_PROXIMITY_CURVE_INTEGRAL), format_value);
+        xlsx.write(row++, 3, 100.0 - getMetric(data, METRIC_PROXIMITY_CURVE_INTEGRAL), format_value);
+    }
+    if (hasMetric(data, METRIC_PROXIMITY_CURVE_LOCAL))
+    {
+        xlsx.write(row,   1, "Proximity curve local", format_subtitle);
+        xlsx.write(row,   2, getMetric(data, METRIC_PROXIMITY_CURVE_LOCAL), format_value);
+        xlsx.write(row++, 3, 100.0 - getMetric(data, METRIC_PROXIMITY_CURVE_LOCAL), format_value);
+    }
+    if (hasMetric(data, METRIC_PROXIMITY_AVERAGE))
+    {
+        xlsx.write(row,   1, "Average data on the proximity of curves", format_subtitle);
+        xlsx.write(row,   2, getMetric(data, METRIC_PROXIMITY_AVERAGE), format_value);
+        xlsx.write(row++, 3, 100.0 - getMetric(data, METRIC_PROXIMITY_AVERAGE), format_value);
+    }
+    if (hasMetric(data, METRIC_PROXIMITY_RANGE))
+    {
+        xlsx.write(row,   1, "Proximity range", format_subtitle);
+        xlsx.write(row,   2, getMetric(data, METRIC_PROXIMITY_RANGE), format_value);
+        xlsx.write(row++, 3, 100.0 - getMetric(data, METRIC_PROXIMITY_RANGE), format_value);
+    }
 
     row++;
     xlsx.write(row++, 1, "Reference data on templates and records", format_title);
-    xlsx.write(row,   1, "F0 max - Template", format_subtitle);
-    xlsx.write(row++, 2, getMetric(data, METRIC_TEMPLATE_F0_MAX), format_value);
-    xlsx.write(row,   1, "F0 min - Template", format_subtitle);
-    xlsx.write(row++, 2, getMetric(data, METRIC_TEMPLATE_F0_MIN), format_value);
-    xlsx.write(row,   1, "F0 max - Recorded", format_subtitle);
-    xlsx.write(row++, 2, getMetric(data, METRIC_RECORD_F0_MAX), format_value);
-    xlsx.write(row,   1, "F0 min - Recorded", format_subtitle);
-    xlsx.write(row++, 2, getMetric(data, METRIC_RECORD_F0_MIN), format_value);
-    xlsx.write(row,   1, "Mean Value UMP - Recorded", format_subtitle);
-    xlsx.write(row++, 2, getMetric(data, METRIC_MEAN_VALUE_UMP_RECORDED), format_value);
-    xlsx.write(row,   1, "Mean Value UMP - Template", format_subtitle);
-    xlsx.write(row++, 2, getMetric(data, METRIC_MEAN_VALUE_UMP_TEMPLATE), format_value);
-    xlsx.write(row,   1, "Center of Gravity UMP - Recorded 1", format_subtitle);
-    xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_RECORDED_1), format_value);
-    xlsx.write(row,   1, "Center of Gravity UMP - Recorded 2", format_subtitle);
-    xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_RECORDED_2), format_value);
-    xlsx.write(row,   1, "Center of Gravity UMP- Template 1", format_subtitle);
-    xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_TEMPLATE_1), format_value);
-    xlsx.write(row,   1, "Center of Gravity UMP- Template 2", format_subtitle);
-    xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_TEMPLATE_2), format_value);
-    xlsx.write(row,   1, "Voiced Souds Level - Recorded", format_subtitle);
-    xlsx.write(row++, 2, getMetric(data, METRIC_MEAN_VOLUME_RECORDED), format_value);
-    xlsx.write(row,   1, "Voiced Sounds Level - Template", format_subtitle);
-    xlsx.write(row++, 2, getMetric(data, METRIC_MEAN_VOLUME_TEMPLATE), format_value);
-    xlsx.write(row,   1, "Voiced Sounds Duration - Recorded", format_subtitle);
-    xlsx.write(row++, 2, getMetric(data, METRIC_TEMPO_RECORDED), format_value);
-    xlsx.write(row,   1, "Voiced Sounds Duration - Template", format_subtitle);
-    xlsx.write(row++, 2, getMetric(data, METRIC_TEMPO_TEMPLATE), format_value);
+    if (hasMetric(data, METRIC_TEMPLATE_F0_MAX))
+    {
+        xlsx.write(row,   1, "F0 max - Template", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_TEMPLATE_F0_MAX), format_value);
+    }
+    if (hasMetric(data, METRIC_TEMPLATE_F0_MIN))
+    {
+        xlsx.write(row,   1, "F0 min - Template", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_TEMPLATE_F0_MIN), format_value);
+    }
+    if (hasMetric(data, METRIC_DIAPASON_F0_TEMPLATE))
+    {
+        xlsx.write(row,   1, "Diapason F0 - Template", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_DIAPASON_F0_TEMPLATE), format_value);
+    }
+    if (hasMetric(data, METRIC_REGISTER_F0_TEMPLATE))
+    {
+        xlsx.write(row,   1, "Register F0 - Template", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_REGISTER_F0_TEMPLATE), format_value);
+    }
+    if (hasMetric(data, METRIC_MEAN_VALUE_UMP_TEMPLATE))
+    {
+        xlsx.write(row,   1, "Mean Value of the UMP curve - Template", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_MEAN_VALUE_UMP_TEMPLATE), format_value);
+    }
+    if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_TEMPLATE_MID))
+    {
+        xlsx.write(row,   1, "Center of the UMP curve - Template", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_TEMPLATE_MID), format_value);
+    }
+    if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_TEMPLATE_LENGHT))
+    {
+        xlsx.write(row,   1, "Width of the UMP curve - Template", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_TEMPLATE_LENGHT), format_value);
+    }
+    if (hasMetric(data, METRIC_MEAN_VOLUME_TEMPLATE))
+    {
+        xlsx.write(row,   1, "Voiced Sounds Level - Template", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_MEAN_VOLUME_TEMPLATE), format_value);
+    }
+    if (hasMetric(data, METRIC_TEMPO_TEMPLATE))
+    {
+        xlsx.write(row,   1, "Voiced Sounds Duration - Template", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_TEMPO_TEMPLATE), format_value);
+    }
+    if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_TEMPLATE_MID))
+    {
+        xlsx.write(row,   1, "Center of the Derivative UMP curve - Template", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_TEMPLATE_MID), format_value);
+    }
+    if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_TEMPLATE_LENGHT))
+    {
+        xlsx.write(row,   1, "Width of the Derivative UMP curve - Template", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_TEMPLATE_LENGHT), format_value);
+    }
+    if (hasMetric(data, METRIC_RECORD_F0_MAX))
+    {
+        xlsx.write(row,   1, "F0 max - Recorded", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_RECORD_F0_MAX), format_value);
+    }
+    if (hasMetric(data, METRIC_RECORD_F0_MIN))
+    {
+        xlsx.write(row,   1, "F0 min - Recorded", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_RECORD_F0_MIN), format_value);
+    }
+    if (hasMetric(data, METRIC_DIAPASON_F0_RECORDED))
+    {
+        xlsx.write(row,   1, "Diapason F0 - Recorded", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_DIAPASON_F0_RECORDED), format_value);
+    }
+    if (hasMetric(data, METRIC_REGISTER_F0_RECORDED))
+    {
+        xlsx.write(row,   1, "Register F0 - Recorded", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_REGISTER_F0_RECORDED), format_value);
+    }
+    if (hasMetric(data, METRIC_MEAN_VALUE_UMP_RECORDED))
+    {
+        xlsx.write(row,   1, "Mean Value of the UMP curve - Recorded", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_MEAN_VALUE_UMP_RECORDED), format_value);
+    }
+    if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_RECORDED_MID))
+    {
+        xlsx.write(row,   1, "Center of the UMP curve - Recorded", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_RECORDED_MID), format_value);
+    }
+    if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_RECORDED_LENGHT))
+    {
+        xlsx.write(row,   1, "Width of the UMP curve - Recorded", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_RECORDED_LENGHT), format_value);
+    }
+    if (hasMetric(data, METRIC_MEAN_VOLUME_RECORDED))
+    {
+        xlsx.write(row,   1, "Voiced Souds Level - Recorded", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_MEAN_VOLUME_RECORDED), format_value);
+    }
+    if (hasMetric(data, METRIC_TEMPO_RECORDED))
+    {
+        xlsx.write(row,   1, "Voiced Sounds Duration - Recorded", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_TEMPO_RECORDED), format_value);
+    }
+    if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED_MID))
+    {
+        xlsx.write(row,   1, "Center of the Derivative UMP curve - Recorded", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED_MID), format_value);
+    }
+    if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED_LENGHT))
+    {
+        xlsx.write(row,   1, "Width of the Derivative UMP curve - Recorded", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED_LENGHT), format_value);
+    }
 
     row++;
     xlsx.write(row,   1, "Relative data on templates and records", format_title);
-    xlsx.write(row,   2, "Relation", format_title);
-    xlsx.write(row++, 3, "Difference", format_title);
-    xlsx.write(row,   1, "Relative Diapason F0", format_subtitle);
-    xlsx.write(row,   2, getMetric(data, METRIC_RELATIVE_DIAPASON_F0), format_value);
-    xlsx.write(row++, 3, getMetric(data, METRIC_RELATIVE_DIAPASON_F0) - 100.0, format_value);
-    xlsx.write(row,   1, "Relative Register F0", format_subtitle);
-    xlsx.write(row,   2, getMetric(data, METRIC_RELATIVE_REGISTER_F0), format_value);
-    xlsx.write(row++, 3, getMetric(data, METRIC_RELATIVE_REGISTER_F0) - 100.0, format_value);
-    xlsx.write(row,   1, "Relative Center of Gravity UMP 1", format_subtitle);
-    xlsx.write(row,   2, getMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_1), format_value);
-    xlsx.write(row++, 3, getMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_1) - 100.0, format_value);
-    xlsx.write(row,   1, "Relative Center of Gravity UMP 2", format_subtitle);
-    xlsx.write(row,   2, getMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_2), format_value);
-    xlsx.write(row++, 3, getMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_2) - 100.0, format_value);
-    xlsx.write(row,   1, "Relative Mean Value UMP", format_subtitle);
-    xlsx.write(row,   2, getMetric(data, METRIC_RELATIVE_MEAN_UMP), format_value);
-    xlsx.write(row++, 3, getMetric(data, METRIC_RELATIVE_MEAN_UMP) - 100.0, format_value);
-    xlsx.write(row,   1, "Relative Voiced Sounds Level", format_subtitle);
-    xlsx.write(row,   2, getMetric(data, METRIC_RELATEVE_MEAN_VOLUME), format_value);
-    xlsx.write(row++, 3, getMetric(data, METRIC_RELATEVE_MEAN_VOLUME) - 100.0, format_value);
-    xlsx.write(row,   1, "Relative Voiced Sounds Duration", format_subtitle);
-    xlsx.write(row,   2, getMetric(data, METRIC_RELATIVE_TEMPO), format_value);
-    xlsx.write(row++, 3, getMetric(data, METRIC_RELATIVE_TEMPO) - 100.0, format_value);
+    xlsx.write(row++, 2, "Relation", format_title);
+    if (hasMetric(data, METRIC_RELATIVE_DIAPASON_F0))
+    {
+        xlsx.write(row,   1, "Relative Diapason F0", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_DIAPASON_F0), format_value);
+    }
+    if (hasMetric(data, METRIC_RELATIVE_REGISTER_F0))
+    {
+        xlsx.write(row,   1, "Relative Register F0", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_REGISTER_F0), format_value);
+    }
+    if (hasMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_1))
+    {
+        xlsx.write(row,   1, "Relative Center of Gravity UMP 1", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_1), format_value);
+    }
+    if (hasMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_2))
+    {
+        xlsx.write(row,   1, "Relative Center of Gravity UMP 2", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_2), format_value);
+    }
+    if (hasMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_LENGHT))
+    {
+        xlsx.write(row,   1, "Relative Center of Gravity Length UMP", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_LENGHT), format_value);
+    }
+    if (hasMetric(data, METRIC_RELATIVE_MEAN_UMP))
+    {
+        xlsx.write(row,   1, "Relative Mean Value UMP", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_MEAN_UMP), format_value);
+    }
+    if (hasMetric(data, METRIC_RELATEVE_MEAN_VOLUME))
+    {
+        xlsx.write(row,   1, "Relative Voiced Sounds Level", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_RELATEVE_MEAN_VOLUME), format_value);
+    }
+    if (hasMetric(data, METRIC_RELATIVE_TEMPO))
+    {
+        xlsx.write(row,   1, "Relative Voiced Sounds Duration", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_TEMPO), format_value);
+    }
 
     QDir templateDir(this->templatePath);
     QString templateName = templateDir.dirName().remove(".wav", Qt::CaseInsensitive);
