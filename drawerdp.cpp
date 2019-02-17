@@ -263,17 +263,29 @@ int DrawerDP::Draw(mglGraph *gr)
                 gr->SetRange('x', 0, this->umpDerivativeData->nx);
                 gr->Plot(*this->umpDerivativeData, "-m4");
             }
-            if (sptk_settings->dp->showMeanValueUMP)
+            if (sptk_settings->dp->showMeanValueUMP && sptk_settings->dp->showF0)
             {
                 gr->SetRange('y', 0, 100);
                 gr->FPlot(QString::number(this->meanValueUMP).toLocal8Bit().data(), ";r4");
             }
-            if (sptk_settings->dp->showCenterGravityUMP)
+            if (sptk_settings->dp->showMeanValueUMP && sptk_settings->dp->showDerivativeF0)
+            {
+                gr->SetRange('y', 0, 100);
+                gr->FPlot(QString::number(this->meanDerivativeValueUMP).toLocal8Bit().data(), ";m4");
+            }
+            if (sptk_settings->dp->showCenterGravityUMP && sptk_settings->dp->showF0)
             {
                 gr->SetRanges(0,100,0,1);
                 gr->FPlot(QString::number(this->centricGravityUMP1).toLocal8Bit().data(), "t", "0", "ir4");
                 gr->SetRanges(0,100,0,1);
                 gr->FPlot(QString::number(this->centricGravityUMP2).toLocal8Bit().data(), "t", "0", "{dF198}r4");
+            }
+            if (sptk_settings->dp->showCenterGravityUMP && sptk_settings->dp->showDerivativeF0)
+            {
+                gr->SetRanges(0,100,0,1);
+                gr->FPlot(QString::number(this->centricGravityDerivativeUMP1).toLocal8Bit().data(), "t", "0", "im4");
+                gr->SetRanges(0,100,0,1);
+                gr->FPlot(QString::number(this->centricGravityDerivativeUMP2).toLocal8Bit().data(), "t", "0", "{dF198}m4");
             }
 
             gr->MultiPlot(40, 12, 129, 12, 6, "#");
@@ -412,13 +424,19 @@ int DrawerDP::Draw(mglGraph *gr)
                     gr->Plot(*this->secUmpDerivativeData, "-M5");
                     gr->Plot(*this->umpDerivativeData, "-m4");
                 }
-                if (sptk_settings->dp->showMeanValueUMP)
+                if (sptk_settings->dp->showMeanValueUMP && sptk_settings->dp->showF0)
                 {
                     gr->SetRange('y', 0, 100);
                     gr->FPlot(QString::number(this->meanValueUMP).toLocal8Bit().data(), ";r4");
                     gr->FPlot(QString::number(this->userMeanValueUMP).toLocal8Bit().data(), ";R4");
                 }
-                if (sptk_settings->dp->showCenterGravityUMP)
+                if (sptk_settings->dp->showMeanValueUMP && sptk_settings->dp->showDerivativeF0)
+                {
+                    gr->SetRange('y', 0, 100);
+                    gr->FPlot(QString::number(this->meanDerivativeValueUMP).toLocal8Bit().data(), ";m4");
+                    gr->FPlot(QString::number(this->userDerivativeMeanValueUMP).toLocal8Bit().data(), ";M4");
+                }
+                if (sptk_settings->dp->showCenterGravityUMP && sptk_settings->dp->showF0)
                 {
                     gr->SetRanges(0,100,0,1);
                     gr->FPlot(QString::number(this->centricGravityUMP1).toLocal8Bit().data(), "t", "0", "ir4");
@@ -428,6 +446,17 @@ int DrawerDP::Draw(mglGraph *gr)
                     gr->FPlot(QString::number(this->userCentricGravityUMP1).toLocal8Bit().data(), "t", "0", "iR4");
                     gr->SetRanges(0,100,0,1);
                     gr->FPlot(QString::number(this->userCentricGravityUMP2).toLocal8Bit().data(), "t", "0", "{dF198}R4");
+                }
+                if (sptk_settings->dp->showCenterGravityUMP && sptk_settings->dp->showDerivativeF0)
+                {
+                    gr->SetRanges(0,100,0,1);
+                    gr->FPlot(QString::number(this->centricGravityDerivativeUMP1).toLocal8Bit().data(), "t", "0", "im4");
+                    gr->SetRanges(0,100,0,1);
+                    gr->FPlot(QString::number(this->centricGravityDerivativeUMP2).toLocal8Bit().data(), "t", "0", "{dF198}m4");
+                    gr->SetRanges(0,100,0,1);
+                    gr->FPlot(QString::number(this->userCentricGravityDerivativeUMP1).toLocal8Bit().data(), "t", "0", "iM4");
+                    gr->SetRanges(0,100,0,1);
+                    gr->FPlot(QString::number(this->userCentricGravityDerivativeUMP2).toLocal8Bit().data(), "t", "0", "{dF198}M4");
                 }
 
                 gr->MultiPlot(40, 12, 129, 12, 6, "#");
@@ -749,7 +778,7 @@ void DrawerDP::Proc(QString fname)
         this->metrics = storeMetric(
             this->metrics,
             METRIC_CENTER_GRAVITY_UMP_TEMPLATE_MID,
-            (this->centricGravityUMP2 - this->centricGravityUMP1) / 2.0
+            this->centricGravityUMP1 + (this->centricGravityUMP2 - this->centricGravityUMP1) / 2.0
         );
         this->metrics = storeMetric(
             this->metrics,
@@ -773,7 +802,7 @@ void DrawerDP::Proc(QString fname)
         qDebug() << "pitchData createMglData" << LOG_DATA;        
 
         derivative derivative_data = get_derivative_data(pitch_norm, sptk_settings->dp->umpSmoothValue);
-        vector derivative_pitch = derivative_data.data;
+        vector derivative_pitch = normalizev(derivative_data.data, 0.0, 1.0);
         this->pitchDataDerivative = createMglData(derivative_data.data, this->pitchDataDerivative, true);
         this->pitchDataDerivativeZero = derivative_data.zero;
         qDebug() << "pitchDataDerivative createMglData" << LOG_DATA;
@@ -786,8 +815,12 @@ void DrawerDP::Proc(QString fname)
         );
 
         this->centricGravityDerivativeUMP = calculateCentricGravity(derivative_pitch);
-        this->centricGravityDerivativeUMP1 = calculateCentricGravitySubvector(derivative_pitch, 0, this->centricGravityUMP);
-        this->centricGravityDerivativeUMP2 = calculateCentricGravitySubvector(derivative_pitch, this->centricGravityUMP, pitch_norm.x);
+        this->centricGravityDerivativeUMP1 = calculateCentricGravitySubvector(derivative_pitch, 0, this->centricGravityDerivativeUMP);
+        this->centricGravityDerivativeUMP2 = calculateCentricGravitySubvector(derivative_pitch, this->centricGravityDerivativeUMP, derivative_pitch.x);
+        qDebug() << "DerivativeCentricGravity vector " << derivative_pitch.x << LOG_DATA;
+        qDebug() << "DerivativeCentricGravity UMP " << centricGravityDerivativeUMP << LOG_DATA;
+        qDebug() << "DerivativeCentricGravity UMP 1 " << centricGravityDerivativeUMP1 << LOG_DATA;
+        qDebug() << "DerivativeCentricGravity UMP 2 " << centricGravityDerivativeUMP2 << LOG_DATA;
         this->centricGravityDerivativeUMP = norm100(this->centricGravityDerivativeUMP, derivative_pitch.x);
         this->centricGravityDerivativeUMP1 = norm100(this->centricGravityDerivativeUMP1, derivative_pitch.x);
         this->centricGravityDerivativeUMP2 = norm100(this->centricGravityDerivativeUMP2, derivative_pitch.x);
@@ -809,7 +842,7 @@ void DrawerDP::Proc(QString fname)
         this->metrics = storeMetric(
             this->metrics,
             METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_TEMPLATE_MID,
-            (this->centricGravityDerivativeUMP2 - this->centricGravityDerivativeUMP1) / 2.0
+            this->centricGravityDerivativeUMP1 + (this->centricGravityDerivativeUMP2 - this->centricGravityDerivativeUMP1) / 2.0
         );
         this->metrics = storeMetric(
             this->metrics,
@@ -1228,7 +1261,7 @@ void DrawerDP::Proc(QString fname)
         this->metrics = storeMetric(
             this->metrics,
             METRIC_CENTER_GRAVITY_UMP_RECORDED_MID,
-            (this->userCentricGravityUMP2 - this->userCentricGravityUMP1) / 2.0
+            this->userCentricGravityUMP1 + (this->userCentricGravityUMP2 - this->userCentricGravityUMP1) / 2.0
         );
         this->metrics = storeMetric(
             this->metrics,
@@ -1289,7 +1322,7 @@ void DrawerDP::Proc(QString fname)
         }
 
         derivative derivative_data = get_derivative_data(pitch_norm, sptk_settings->dp->umpSmoothValue);
-        vector derivative_pitch = derivative_data.data;
+        vector derivative_pitch = normalizev(derivative_data.data, 0.0, 1.0);
         this->secPitchDataDerivative = createMglData(derivative_data.data, this->secPitchDataDerivative, true);
         this->secPitchDataDerivativeZero = derivative_data.zero;
         qDebug() << "secPitchDataDerivative createMglData" << LOG_DATA;
@@ -1302,8 +1335,8 @@ void DrawerDP::Proc(QString fname)
         );
 
         this->userCentricGravityDerivativeUMP = calculateCentricGravity(derivative_pitch);
-        this->userCentricGravityDerivativeUMP1 = calculateCentricGravitySubvector(derivative_pitch, 0, this->centricGravityUMP);
-        this->userCentricGravityDerivativeUMP2 = calculateCentricGravitySubvector(derivative_pitch, this->centricGravityUMP, pitch_norm.x);
+        this->userCentricGravityDerivativeUMP1 = calculateCentricGravitySubvector(derivative_pitch, 0, this->userCentricGravityDerivativeUMP);
+        this->userCentricGravityDerivativeUMP2 = calculateCentricGravitySubvector(derivative_pitch, this->userCentricGravityDerivativeUMP, derivative_pitch.x);
         this->userCentricGravityDerivativeUMP = norm100(this->userCentricGravityDerivativeUMP, derivative_pitch.x);
         this->userCentricGravityDerivativeUMP1 = norm100(this->userCentricGravityDerivativeUMP1, derivative_pitch.x);
         this->userCentricGravityDerivativeUMP2 = norm100(this->userCentricGravityDerivativeUMP2, derivative_pitch.x);
@@ -1325,12 +1358,36 @@ void DrawerDP::Proc(QString fname)
         this->metrics = storeMetric(
             this->metrics,
             METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED_MID,
-            (this->userCentricGravityDerivativeUMP2 - this->userCentricGravityDerivativeUMP1) / 2.0
+            this->userCentricGravityDerivativeUMP1 + (this->userCentricGravityDerivativeUMP2 - this->userCentricGravityDerivativeUMP1) / 2.0
         );
         this->metrics = storeMetric(
             this->metrics,
             METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED_LENGHT,
             this->userCentricGravityDerivativeUMP2 - this->userCentricGravityDerivativeUMP1
+        );
+        this->metrics = generateRelativeMetric(
+            this->metrics,
+            METRIC_RELATIVE_CENTER_GRAVITY_UMP_DERIVATIVE,
+            METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED,
+            METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_TEMPLATE
+        );
+        this->metrics = generateRelativeMetric(
+            this->metrics,
+            METRIC_RELATIVE_CENTER_GRAVITY_UMP_DERIVATIVE_1,
+            METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED_1,
+            METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_TEMPLATE_1
+        );
+        this->metrics = generateRelativeMetric(
+            this->metrics,
+            METRIC_RELATIVE_CENTER_GRAVITY_UMP_DERIVATIVE_2,
+            METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED_2,
+            METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_TEMPLATE_2
+        );
+        this->metrics = generateRelativeMetric(
+            this->metrics,
+            METRIC_RELATIVE_CENTER_GRAVITY_UMP_DERIVATIVE_LENGHT,
+            METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED_LENGHT,
+            METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_TEMPLATE_LENGHT
         );
 
         freev(pitch_norm);

@@ -205,17 +205,27 @@ void GraphsEvalWindow::saveMetrics()
     }
     if (hasMetric(data, METRIC_MEAN_VALUE_UMP_TEMPLATE))
     {
-        xlsx.write(row,   1, "Mean Value of the UMP curve - Template", format_subtitle);
+        xlsx.write(row,   1, "Mean Value of the curve - Template", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_MEAN_VALUE_UMP_TEMPLATE), format_value);
     }
+//    if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_TEMPLATE_1))
+//    {
+//        xlsx.write(row,   1, "Center of the curve #1 - Template", format_subtitle);
+//        xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_TEMPLATE_1), format_value);
+//    }
+//    if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_TEMPLATE_2))
+//    {
+//        xlsx.write(row,   1, "Center of the curve #2 - Template", format_subtitle);
+//        xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_TEMPLATE_2), format_value);
+//    }
     if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_TEMPLATE_MID))
     {
-        xlsx.write(row,   1, "Center of the UMP curve - Template", format_subtitle);
+        xlsx.write(row,   1, "Center of the curve - Template", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_TEMPLATE_MID), format_value);
     }
     if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_TEMPLATE_LENGHT))
     {
-        xlsx.write(row,   1, "Width of the UMP curve - Template", format_subtitle);
+        xlsx.write(row,   1, "Width of the curve - Template", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_TEMPLATE_LENGHT), format_value);
     }
     if (hasMetric(data, METRIC_MEAN_VOLUME_TEMPLATE))
@@ -228,14 +238,24 @@ void GraphsEvalWindow::saveMetrics()
         xlsx.write(row,   1, "Voiced Sounds Duration - Template", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_TEMPO_TEMPLATE), format_value);
     }
+//    if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_TEMPLATE_1))
+//    {
+//        xlsx.write(row,   1, "Center of the Derivative curve #1 - Template", format_subtitle);
+//        xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_TEMPLATE_1), format_value);
+//    }
+//    if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_TEMPLATE_2))
+//    {
+//        xlsx.write(row,   1, "Center of the Derivative curve #2 - Template", format_subtitle);
+//        xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_TEMPLATE_2), format_value);
+//    }
     if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_TEMPLATE_MID))
     {
-        xlsx.write(row,   1, "Center of the Derivative UMP curve - Template", format_subtitle);
+        xlsx.write(row,   1, "Center of the Derivative curve - Template", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_TEMPLATE_MID), format_value);
     }
     if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_TEMPLATE_LENGHT))
     {
-        xlsx.write(row,   1, "Width of the Derivative UMP curve - Template", format_subtitle);
+        xlsx.write(row,   1, "Width of the Derivative curve - Template", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_TEMPLATE_LENGHT), format_value);
     }
     if (hasMetric(data, METRIC_RECORD_F0_MAX))
@@ -260,17 +280,27 @@ void GraphsEvalWindow::saveMetrics()
     }
     if (hasMetric(data, METRIC_MEAN_VALUE_UMP_RECORDED))
     {
-        xlsx.write(row,   1, "Mean Value of the UMP curve - Recorded", format_subtitle);
+        xlsx.write(row,   1, "Mean Value of the curve - Recorded", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_MEAN_VALUE_UMP_RECORDED), format_value);
     }
+//    if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_RECORDED_1))
+//    {
+//        xlsx.write(row,   1, "Center of the curve #1 - Recorded", format_subtitle);
+//        xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_RECORDED_1), format_value);
+//    }
+//    if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_RECORDED_2))
+//    {
+//        xlsx.write(row,   1, "Center of the curve #2 - Recorded", format_subtitle);
+//        xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_RECORDED_2), format_value);
+//    }
     if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_RECORDED_MID))
     {
-        xlsx.write(row,   1, "Center of the UMP curve - Recorded", format_subtitle);
+        xlsx.write(row,   1, "Center of the curve - Recorded", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_RECORDED_MID), format_value);
     }
     if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_RECORDED_LENGHT))
     {
-        xlsx.write(row,   1, "Width of the UMP curve - Recorded", format_subtitle);
+        xlsx.write(row,   1, "Width of the curve - Recorded", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_RECORDED_LENGHT), format_value);
     }
     if (hasMetric(data, METRIC_MEAN_VOLUME_RECORDED))
@@ -283,14 +313,24 @@ void GraphsEvalWindow::saveMetrics()
         xlsx.write(row,   1, "Voiced Sounds Duration - Recorded", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_TEMPO_RECORDED), format_value);
     }
+//    if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED_1))
+//    {
+//        xlsx.write(row,   1, "Center of the Derivative curve #1 - Recorded", format_subtitle);
+//        xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED_1), format_value);
+//    }
+//    if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED_2))
+//    {
+//        xlsx.write(row,   1, "Center of the Derivative curve #2 - Recorded", format_subtitle);
+//        xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED_2), format_value);
+//    }
     if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED_MID))
     {
-        xlsx.write(row,   1, "Center of the Derivative UMP curve - Recorded", format_subtitle);
+        xlsx.write(row,   1, "Center of the Derivative curve - Recorded", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED_MID), format_value);
     }
     if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED_LENGHT))
     {
-        xlsx.write(row,   1, "Width of the Derivative UMP curve - Recorded", format_subtitle);
+        xlsx.write(row,   1, "Width of the Derivative curve - Recorded", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED_LENGHT), format_value);
     }
 
@@ -309,22 +349,22 @@ void GraphsEvalWindow::saveMetrics()
     }
     if (hasMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_1))
     {
-        xlsx.write(row,   1, "Relative Center of Gravity UMP 1", format_subtitle);
+        xlsx.write(row,   1, "Relative Mean Value of the curve 1", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_1), format_value);
     }
     if (hasMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_2))
     {
-        xlsx.write(row,   1, "Relative Center of Gravity UMP 2", format_subtitle);
+        xlsx.write(row,   1, "Relative Mean Value of the curve 2", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_2), format_value);
     }
     if (hasMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_LENGHT))
     {
-        xlsx.write(row,   1, "Relative Center of Gravity Length UMP", format_subtitle);
+        xlsx.write(row,   1, "Relative Width of the curve", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_LENGHT), format_value);
     }
     if (hasMetric(data, METRIC_RELATIVE_MEAN_UMP))
     {
-        xlsx.write(row,   1, "Relative Mean Value UMP", format_subtitle);
+        xlsx.write(row,   1, "Relative Mean Value curve", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_MEAN_UMP), format_value);
     }
     if (hasMetric(data, METRIC_RELATEVE_MEAN_VOLUME))
@@ -336,6 +376,21 @@ void GraphsEvalWindow::saveMetrics()
     {
         xlsx.write(row,   1, "Relative Voiced Sounds Duration", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_TEMPO), format_value);
+    }
+    if (hasMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_DERIVATIVE_1))
+    {
+        xlsx.write(row,   1, "Relative Mean Value of the Derivative curve 1", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_DERIVATIVE_1), format_value);
+    }
+    if (hasMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_DERIVATIVE_2))
+    {
+        xlsx.write(row,   1, "Relative Mean Value of the Derivative curve 2", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_DERIVATIVE_2), format_value);
+    }
+    if (hasMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_DERIVATIVE_LENGHT))
+    {
+        xlsx.write(row,   1, "Relative Width of the Derivative curve", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_DERIVATIVE_LENGHT), format_value);
     }
 
     QDir templateDir(this->templatePath);
