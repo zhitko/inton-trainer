@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1106</width>
-    <height>708</height>
+    <height>733</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -398,8 +398,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>528</width>
-            <height>616</height>
+            <width>520</width>
+            <height>789</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -451,51 +451,56 @@
                     <string>Cepstrum A0+A'0</string>
                    </property>
                   </item>
+                  <item>
+                   <property name="text">
+                    <string>Custom DP</string>
+                   </property>
+                  </item>
                  </widget>
                 </item>
-                <item row="2" column="0">
+                <item row="3" column="0">
                  <widget class="QLabel" name="label_29">
                   <property name="text">
                    <string>Threshold</string>
                   </property>
                  </widget>
                 </item>
-                <item row="2" column="1">
+                <item row="3" column="1">
                  <widget class="QSpinBox" name="continiusDpLimit">
                   <property name="maximum">
                    <number>9999</number>
                   </property>
                  </widget>
                 </item>
-                <item row="3" column="0">
+                <item row="4" column="0">
                  <widget class="QLabel" name="label_30">
                   <property name="text">
                    <string>kH</string>
                   </property>
                  </widget>
                 </item>
-                <item row="4" column="0">
+                <item row="5" column="0">
                  <widget class="QLabel" name="label_31">
                   <property name="text">
                    <string>kV</string>
                   </property>
                  </widget>
                 </item>
-                <item row="5" column="0">
+                <item row="6" column="0">
                  <widget class="QLabel" name="label_32">
                   <property name="text">
                    <string>kD</string>
                   </property>
                  </widget>
                 </item>
-                <item row="6" column="0">
+                <item row="7" column="0">
                  <widget class="QLabel" name="label_33">
                   <property name="text">
                    <string>kT</string>
                   </property>
                  </widget>
                 </item>
-                <item row="3" column="1">
+                <item row="4" column="1">
                  <widget class="QDoubleSpinBox" name="continiusDpKH">
                   <property name="singleStep">
                    <double>0.100000000000000</double>
@@ -505,7 +510,7 @@
                   </property>
                  </widget>
                 </item>
-                <item row="4" column="1">
+                <item row="5" column="1">
                  <widget class="QDoubleSpinBox" name="continiusDpKV">
                   <property name="singleStep">
                    <double>0.100000000000000</double>
@@ -515,7 +520,7 @@
                   </property>
                  </widget>
                 </item>
-                <item row="5" column="1">
+                <item row="6" column="1">
                  <widget class="QDoubleSpinBox" name="continiusDpKD">
                   <property name="singleStep">
                    <double>0.100000000000000</double>
@@ -525,14 +530,14 @@
                   </property>
                  </widget>
                 </item>
-                <item row="6" column="1">
+                <item row="7" column="1">
                  <widget class="QDoubleSpinBox" name="continiusDpKT">
                   <property name="value">
                    <double>20.000000000000000</double>
                   </property>
                  </widget>
                 </item>
-                <item row="7" column="0" colspan="2">
+                <item row="8" column="0" colspan="2">
                  <layout class="QGridLayout" name="gridLayout">
                   <item row="0" column="0">
                    <widget class="QCheckBox" name="showTime">
@@ -556,37 +561,161 @@
                   </item>
                  </layout>
                 </item>
-                <item row="1" column="0" colspan="2">
+                <item row="2" column="0" colspan="2">
                  <layout class="QGridLayout" name="gridLayout_2">
-                  <item row="0" column="2">
-                   <widget class="QLabel" name="label_24">
-                    <property name="text">
-                     <string>A'0 Coeficient</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QDoubleSpinBox" name="dpA0Coeficient">
-                    <property name="value">
-                     <double>1.000000000000000</double>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="0">
-                   <widget class="QLabel" name="label_8">
-                    <property name="text">
-                     <string>A0 Coeficient</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="3">
+                  <item row="1" column="3">
                    <widget class="QDoubleSpinBox" name="dpDA0Coeficient">
                     <property name="value">
                      <double>1.000000000000000</double>
                     </property>
                    </widget>
                   </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_8">
+                    <property name="text">
+                     <string>A0 Coeficient</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QDoubleSpinBox" name="dpA0Coeficient">
+                    <property name="value">
+                     <double>1.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="2">
+                   <widget class="QLabel" name="label_24">
+                    <property name="text">
+                     <string>A'0 Coeficient</string>
+                    </property>
+                   </widget>
+                  </item>
                  </layout>
+                </item>
+                <item row="1" column="0" colspan="2">
+                 <widget class="QGroupBox" name="groupBox_8">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="title">
+                   <string>Custom DP</string>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_4">
+                   <item row="2" column="0">
+                    <widget class="QCheckBox" name="checkBox_2">
+                     <property name="text">
+                      <string>dF0</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="0">
+                    <widget class="QCheckBox" name="checkBox_3">
+                     <property name="text">
+                      <string>A0</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="7" column="0">
+                    <widget class="QCheckBox" name="checkBox_7">
+                     <property name="text">
+                      <string>NMP</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="0">
+                    <widget class="QCheckBox" name="checkBox_4">
+                     <property name="text">
+                      <string>dA0</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QCheckBox" name="checkBox">
+                     <property name="text">
+                      <string>F0</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_27">
+                     <property name="text">
+                      <string>Use</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="6" column="0">
+                    <widget class="QCheckBox" name="checkBox_6">
+                     <property name="text">
+                      <string>Cepstrum</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="0">
+                    <widget class="QCheckBox" name="checkBox_5">
+                     <property name="text">
+                      <string>Spectrum</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QLabel" name="label_28">
+                     <property name="text">
+                      <string>Coeficient</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox">
+                     <property name="value">
+                      <double>1.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
+                     <property name="value">
+                      <double>1.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="1">
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_3">
+                     <property name="value">
+                      <double>1.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="1">
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_4">
+                     <property name="value">
+                      <double>1.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="1">
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_5">
+                     <property name="value">
+                      <double>1.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="6" column="1">
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_6">
+                     <property name="value">
+                      <double>1.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="7" column="1">
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_7">
+                     <property name="value">
+                      <double>1.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
                 </item>
                </layout>
               </widget>
@@ -769,7 +898,7 @@
             <x>0</x>
             <y>0</y>
             <width>528</width>
-            <height>616</height>
+            <height>641</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_3">

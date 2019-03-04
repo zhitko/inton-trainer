@@ -29,10 +29,13 @@ GraphsEvalWindow::GraphsEvalWindow(QString path, Drawer * drawer, QWidget *paren
     this->drawer = drawer;
     this->QMGL->setDraw(this->drawer);
     this->drawFile(path);
-    this->ui->playTemplateBtn->hide();
+    this->ui->playBtn->hide();
+    this->ui->playTemplateBtn->show();
+    this->ui->playRecordBtn->hide();
     this->ui->saveMetrics->show();
     this->ui->openMetrics->hide();
     connect(this->ui->playTemplateBtn, SIGNAL(clicked()), this, SLOT(playTemplate()));
+    connect(this->ui->playRecordBtn, SIGNAL(clicked()), this, SLOT(playRecord()));
     connect(this->ui->showUMP, SIGNAL(clicked()), this, SLOT(showUMP()));
     connect(this->ui->saveMetrics, SIGNAL(clicked()), this, SLOT(saveMetrics()));
     connect(this->ui->openMetrics, SIGNAL(clicked()), this, SLOT(openMetrics()));
@@ -55,7 +58,7 @@ GraphsEvalWindow::~GraphsEvalWindow()
 Drawer * GraphsEvalWindow::createNewDrawer(QString path)
 {
     this->ui->saveMetrics->show();
-    this->ui->playTemplateBtn->show();
+    this->ui->playRecordBtn->show();
     this->ui->openMetrics->hide();
     this->drawer->Proc(path);
     this->path = path;
@@ -152,245 +155,223 @@ void GraphsEvalWindow::saveMetrics()
     xlsx.write(row++, 3, "Distance", format_title);
     if (hasMetric(data, METRIC_PROXIMITY_CURVE_CORRELATION))
     {
-        xlsx.write(row,   1, "Proximity curve correlation", format_subtitle);
+        xlsx.write(row,   1, "Proximity thru curve 'Correlation'", format_subtitle);
         xlsx.write(row,   2, getMetric(data, METRIC_PROXIMITY_CURVE_CORRELATION), format_value);
         xlsx.write(row++, 3, 100.0 - getMetric(data, METRIC_PROXIMITY_CURVE_CORRELATION), format_value);
     }
     if (hasMetric(data, METRIC_PROXIMITY_CURVE_INTEGRAL))
     {
-        xlsx.write(row,   1, "Proximity curve integral", format_subtitle);
+        xlsx.write(row,   1, "Proximity thru curve 'Integral'", format_subtitle);
         xlsx.write(row,   2, getMetric(data, METRIC_PROXIMITY_CURVE_INTEGRAL), format_value);
         xlsx.write(row++, 3, 100.0 - getMetric(data, METRIC_PROXIMITY_CURVE_INTEGRAL), format_value);
     }
     if (hasMetric(data, METRIC_PROXIMITY_CURVE_LOCAL))
     {
-        xlsx.write(row,   1, "Proximity curve local", format_subtitle);
+        xlsx.write(row,   1, "Proximity thru curve 'Local'", format_subtitle);
         xlsx.write(row,   2, getMetric(data, METRIC_PROXIMITY_CURVE_LOCAL), format_value);
         xlsx.write(row++, 3, 100.0 - getMetric(data, METRIC_PROXIMITY_CURVE_LOCAL), format_value);
     }
     if (hasMetric(data, METRIC_PROXIMITY_AVERAGE))
     {
-        xlsx.write(row,   1, "Average data on the proximity of curves", format_subtitle);
+        xlsx.write(row,   1, "Average of the three above proximities ", format_subtitle);
         xlsx.write(row,   2, getMetric(data, METRIC_PROXIMITY_AVERAGE), format_value);
         xlsx.write(row++, 3, 100.0 - getMetric(data, METRIC_PROXIMITY_AVERAGE), format_value);
     }
     if (hasMetric(data, METRIC_PROXIMITY_RANGE))
     {
-        xlsx.write(row,   1, "Proximity range", format_subtitle);
+        xlsx.write(row,   1, "Proximity thru 'Range'", format_subtitle);
         xlsx.write(row,   2, getMetric(data, METRIC_PROXIMITY_RANGE), format_value);
         xlsx.write(row++, 3, 100.0 - getMetric(data, METRIC_PROXIMITY_RANGE), format_value);
     }
 
     row++;
-    xlsx.write(row++, 1, "Reference data on templates and records", format_title);
+    xlsx.write(row++, 1, "Reference data on templates", format_title);
     if (hasMetric(data, METRIC_TEMPLATE_F0_MAX))
     {
-        xlsx.write(row,   1, "F0 max - Template", format_subtitle);
+        xlsx.write(row,   1, "F0 max [Hz]", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_TEMPLATE_F0_MAX), format_value);
     }
     if (hasMetric(data, METRIC_TEMPLATE_F0_MIN))
     {
-        xlsx.write(row,   1, "F0 min - Template", format_subtitle);
+        xlsx.write(row,   1, "F0 min  [Hz]", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_TEMPLATE_F0_MIN), format_value);
     }
     if (hasMetric(data, METRIC_DIAPASON_F0_TEMPLATE))
     {
-        xlsx.write(row,   1, "Diapason F0 - Template", format_subtitle);
+        xlsx.write(row,   1, "Diapason F0", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_DIAPASON_F0_TEMPLATE), format_value);
     }
     if (hasMetric(data, METRIC_REGISTER_F0_TEMPLATE))
     {
-        xlsx.write(row,   1, "Register F0 - Template", format_subtitle);
+        xlsx.write(row,   1, "Register F0 [Hz]", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_REGISTER_F0_TEMPLATE), format_value);
     }
     if (hasMetric(data, METRIC_MEAN_VALUE_UMP_TEMPLATE))
     {
-        xlsx.write(row,   1, "Mean Value of the curve - Template", format_subtitle);
+        xlsx.write(row,   1, "Mean Value of the  curve  NMP", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_MEAN_VALUE_UMP_TEMPLATE), format_value);
     }
-//    if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_TEMPLATE_1))
-//    {
-//        xlsx.write(row,   1, "Center of the curve #1 - Template", format_subtitle);
-//        xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_TEMPLATE_1), format_value);
-//    }
-//    if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_TEMPLATE_2))
-//    {
-//        xlsx.write(row,   1, "Center of the curve #2 - Template", format_subtitle);
-//        xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_TEMPLATE_2), format_value);
-//    }
     if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_TEMPLATE_MID))
     {
-        xlsx.write(row,   1, "Center of the curve - Template", format_subtitle);
+        xlsx.write(row,   1, "Center of the curve  NMP", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_TEMPLATE_MID), format_value);
     }
     if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_TEMPLATE_LENGHT))
     {
-        xlsx.write(row,   1, "Width of the curve - Template", format_subtitle);
+        xlsx.write(row,   1, "Width of the curve  NMP", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_TEMPLATE_LENGHT), format_value);
     }
-    if (hasMetric(data, METRIC_MEAN_VOLUME_TEMPLATE))
+    if (hasMetric(data, METRIC_MEAN_VALUE_UMP_DERIVATIVE_TEMPLATE))
     {
-        xlsx.write(row,   1, "Voiced Sounds Level - Template", format_subtitle);
-        xlsx.write(row++, 2, getMetric(data, METRIC_MEAN_VOLUME_TEMPLATE), format_value);
+        xlsx.write(row,   1, "Mean Value of the Derivative curve NMP", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_MEAN_VALUE_UMP_DERIVATIVE_TEMPLATE), format_value);
     }
-    if (hasMetric(data, METRIC_TEMPO_TEMPLATE))
-    {
-        xlsx.write(row,   1, "Voiced Sounds Duration - Template", format_subtitle);
-        xlsx.write(row++, 2, getMetric(data, METRIC_TEMPO_TEMPLATE), format_value);
-    }
-//    if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_TEMPLATE_1))
-//    {
-//        xlsx.write(row,   1, "Center of the Derivative curve #1 - Template", format_subtitle);
-//        xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_TEMPLATE_1), format_value);
-//    }
-//    if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_TEMPLATE_2))
-//    {
-//        xlsx.write(row,   1, "Center of the Derivative curve #2 - Template", format_subtitle);
-//        xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_TEMPLATE_2), format_value);
-//    }
     if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_TEMPLATE_MID))
     {
-        xlsx.write(row,   1, "Center of the Derivative curve - Template", format_subtitle);
+        xlsx.write(row,   1, "Center of the Derivative curve NMP", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_TEMPLATE_MID), format_value);
     }
     if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_TEMPLATE_LENGHT))
     {
-        xlsx.write(row,   1, "Width of the Derivative curve - Template", format_subtitle);
+        xlsx.write(row,   1, "Width of the Derivative curve NMP", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_TEMPLATE_LENGHT), format_value);
     }
+    if (hasMetric(data, METRIC_MEAN_VOLUME_TEMPLATE))
+    {
+        xlsx.write(row,   1, "Voiced Sounds Level", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_MEAN_VOLUME_TEMPLATE), format_value);
+    }
+    if (hasMetric(data, METRIC_TEMPO_TEMPLATE))
+    {
+        xlsx.write(row,   1, "Voiced Sounds Duration", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_TEMPO_TEMPLATE), format_value);
+    }
+
+    row++;
+    xlsx.write(row++, 1, "Reference data on Records", format_title);
     if (hasMetric(data, METRIC_RECORD_F0_MAX))
     {
-        xlsx.write(row,   1, "F0 max - Recorded", format_subtitle);
+        xlsx.write(row,   1, "F0 max [Hz]", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_RECORD_F0_MAX), format_value);
     }
     if (hasMetric(data, METRIC_RECORD_F0_MIN))
     {
-        xlsx.write(row,   1, "F0 min - Recorded", format_subtitle);
+        xlsx.write(row,   1, "F0 min  [Hz]", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_RECORD_F0_MIN), format_value);
     }
     if (hasMetric(data, METRIC_DIAPASON_F0_RECORDED))
     {
-        xlsx.write(row,   1, "Diapason F0 - Recorded", format_subtitle);
+        xlsx.write(row,   1, "Diapason F0", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_DIAPASON_F0_RECORDED), format_value);
     }
     if (hasMetric(data, METRIC_REGISTER_F0_RECORDED))
     {
-        xlsx.write(row,   1, "Register F0 - Recorded", format_subtitle);
+        xlsx.write(row,   1, "Register F0 [Hz]", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_REGISTER_F0_RECORDED), format_value);
     }
     if (hasMetric(data, METRIC_MEAN_VALUE_UMP_RECORDED))
     {
-        xlsx.write(row,   1, "Mean Value of the curve - Recorded", format_subtitle);
+        xlsx.write(row,   1, "Mean Value of the  curve  NMP", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_MEAN_VALUE_UMP_RECORDED), format_value);
     }
-//    if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_RECORDED_1))
-//    {
-//        xlsx.write(row,   1, "Center of the curve #1 - Recorded", format_subtitle);
-//        xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_RECORDED_1), format_value);
-//    }
-//    if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_RECORDED_2))
-//    {
-//        xlsx.write(row,   1, "Center of the curve #2 - Recorded", format_subtitle);
-//        xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_RECORDED_2), format_value);
-//    }
     if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_RECORDED_MID))
     {
-        xlsx.write(row,   1, "Center of the curve - Recorded", format_subtitle);
+        xlsx.write(row,   1, "Center of the curve  NMP", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_RECORDED_MID), format_value);
     }
     if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_RECORDED_LENGHT))
     {
-        xlsx.write(row,   1, "Width of the curve - Recorded", format_subtitle);
+        xlsx.write(row,   1, "Width of the curve  NMP", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_RECORDED_LENGHT), format_value);
     }
-    if (hasMetric(data, METRIC_MEAN_VOLUME_RECORDED))
+    if (hasMetric(data, METRIC_MEAN_VALUE_UMP_DERIVATIVE_RECORDED))
     {
-        xlsx.write(row,   1, "Voiced Souds Level - Recorded", format_subtitle);
-        xlsx.write(row++, 2, getMetric(data, METRIC_MEAN_VOLUME_RECORDED), format_value);
+        xlsx.write(row,   1, "Mean Value of the Derivative curve NMP", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_MEAN_VALUE_UMP_DERIVATIVE_RECORDED), format_value);
     }
-    if (hasMetric(data, METRIC_TEMPO_RECORDED))
-    {
-        xlsx.write(row,   1, "Voiced Sounds Duration - Recorded", format_subtitle);
-        xlsx.write(row++, 2, getMetric(data, METRIC_TEMPO_RECORDED), format_value);
-    }
-//    if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED_1))
-//    {
-//        xlsx.write(row,   1, "Center of the Derivative curve #1 - Recorded", format_subtitle);
-//        xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED_1), format_value);
-//    }
-//    if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED_2))
-//    {
-//        xlsx.write(row,   1, "Center of the Derivative curve #2 - Recorded", format_subtitle);
-//        xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED_2), format_value);
-//    }
     if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED_MID))
     {
-        xlsx.write(row,   1, "Center of the Derivative curve - Recorded", format_subtitle);
+        xlsx.write(row,   1, "Center of the Derivative curve NMP", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED_MID), format_value);
     }
     if (hasMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED_LENGHT))
     {
-        xlsx.write(row,   1, "Width of the Derivative curve - Recorded", format_subtitle);
+        xlsx.write(row,   1, "Width of the Derivative curve NMP", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED_LENGHT), format_value);
+    }
+    if (hasMetric(data, METRIC_MEAN_VOLUME_RECORDED))
+    {
+        xlsx.write(row,   1, "Voiced Sounds Level", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_MEAN_VOLUME_RECORDED), format_value);
+    }
+    if (hasMetric(data, METRIC_TEMPO_RECORDED))
+    {
+        xlsx.write(row,   1, "Voiced Sounds Duration", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_TEMPO_RECORDED), format_value);
     }
 
     row++;
     xlsx.write(row,   1, "Relative data on templates and records", format_title);
     xlsx.write(row++, 2, "Relation", format_title);
+    if (hasMetric(data, METRIC_RELATIVE_F0_MAX))
+    {
+        xlsx.write(row,   1, "F0 max [Hz]", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_F0_MAX), format_value);
+    }
+    if (hasMetric(data, METRIC_RELATIVE_F0_MIN))
+    {
+        xlsx.write(row,   1, "F0 min  [Hz]", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_F0_MIN), format_value);
+    }
     if (hasMetric(data, METRIC_RELATIVE_DIAPASON_F0))
     {
-        xlsx.write(row,   1, "Relative Diapason F0", format_subtitle);
+        xlsx.write(row,   1, "Diapason F0", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_DIAPASON_F0), format_value);
     }
     if (hasMetric(data, METRIC_RELATIVE_REGISTER_F0))
     {
-        xlsx.write(row,   1, "Relative Register F0", format_subtitle);
+        xlsx.write(row,   1, "Register F0 [Hz]", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_REGISTER_F0), format_value);
-    }
-    if (hasMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_1))
-    {
-        xlsx.write(row,   1, "Relative Mean Value of the curve 1", format_subtitle);
-        xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_1), format_value);
-    }
-    if (hasMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_2))
-    {
-        xlsx.write(row,   1, "Relative Mean Value of the curve 2", format_subtitle);
-        xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_2), format_value);
-    }
-    if (hasMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_LENGHT))
-    {
-        xlsx.write(row,   1, "Relative Width of the curve", format_subtitle);
-        xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_LENGHT), format_value);
     }
     if (hasMetric(data, METRIC_RELATIVE_MEAN_UMP))
     {
-        xlsx.write(row,   1, "Relative Mean Value curve", format_subtitle);
+        xlsx.write(row,   1, "Mean Value of the  curve  NMP", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_MEAN_UMP), format_value);
+    }
+    if (hasMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_MID))
+    {
+        xlsx.write(row,   1, "Center of the curve  NMP", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_MID), format_value);
+    }
+    if (hasMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_LENGHT))
+    {
+        xlsx.write(row,   1, "Width of the curve  NMP", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_LENGHT), format_value);
+    }
+    if (hasMetric(data, METRIC_RELATIVE_MEAN_VALUE_UMP_DERIVATIVE))
+    {
+        xlsx.write(row,   1, "Mean Value of the Derivative curve NMP", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_MEAN_VALUE_UMP_DERIVATIVE), format_value);
+    }
+    if (hasMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_DERIVATIVE_MID))
+    {
+        xlsx.write(row,   1, "Center of the Derivative curve NMP", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_DERIVATIVE_MID), format_value);
+    }
+    if (hasMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_DERIVATIVE_LENGHT))
+    {
+        xlsx.write(row,   1, "Width of the Derivative curve NMP", format_subtitle);
+        xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_DERIVATIVE_LENGHT), format_value);
     }
     if (hasMetric(data, METRIC_RELATEVE_MEAN_VOLUME))
     {
-        xlsx.write(row,   1, "Relative Voiced Sounds Level", format_subtitle);
+        xlsx.write(row,   1, "Voiced Sounds Level", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_RELATEVE_MEAN_VOLUME), format_value);
     }
     if (hasMetric(data, METRIC_RELATIVE_TEMPO))
     {
-        xlsx.write(row,   1, "Relative Voiced Sounds Duration", format_subtitle);
+        xlsx.write(row,   1, "Voiced Sounds Duration", format_subtitle);
         xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_TEMPO), format_value);
-    }
-    if (hasMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_DERIVATIVE_1))
-    {
-        xlsx.write(row,   1, "Relative Mean Value of the Derivative curve 1", format_subtitle);
-        xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_DERIVATIVE_1), format_value);
-    }
-    if (hasMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_DERIVATIVE_2))
-    {
-        xlsx.write(row,   1, "Relative Mean Value of the Derivative curve 2", format_subtitle);
-        xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_DERIVATIVE_2), format_value);
-    }
-    if (hasMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_DERIVATIVE_LENGHT))
-    {
-        xlsx.write(row,   1, "Relative Width of the Derivative curve", format_subtitle);
-        xlsx.write(row++, 2, getMetric(data, METRIC_RELATIVE_CENTER_GRAVITY_UMP_DERIVATIVE_LENGHT), format_value);
     }
 
     QDir templateDir(this->templatePath);

@@ -1135,11 +1135,25 @@ void DrawerDP::Proc(QString fname)
             this->userf0max
         );
 
+        this->metrics = generateRelativeMetric(
+            this->metrics,
+            METRIC_RELATIVE_F0_MAX,
+            METRIC_RECORD_F0_MAX,
+            METRIC_TEMPLATE_F0_MAX
+        );
+
         this->userf0min = mm.min;
         this->metrics = storeMetric(
             this->metrics,
             METRIC_RECORD_F0_MIN,
             this->userf0min
+        );
+
+        this->metrics = generateRelativeMetric(
+            this->metrics,
+            METRIC_RELATIVE_F0_MIN,
+            METRIC_RECORD_F0_MIN,
+            METRIC_TEMPLATE_F0_MIN
         );
 
         this->metrics = storeMetric(
@@ -1263,6 +1277,12 @@ void DrawerDP::Proc(QString fname)
             METRIC_CENTER_GRAVITY_UMP_RECORDED_MID,
             this->userCentricGravityUMP1 + (this->userCentricGravityUMP2 - this->userCentricGravityUMP1) / 2.0
         );
+        this->metrics = generateRelativeMetric(
+            this->metrics,
+            METRIC_RELATIVE_CENTER_GRAVITY_UMP_MID,
+            METRIC_CENTER_GRAVITY_UMP_RECORDED_MID,
+            METRIC_CENTER_GRAVITY_UMP_TEMPLATE_MID
+        );
         this->metrics = storeMetric(
             this->metrics,
             METRIC_CENTER_GRAVITY_UMP_RECORDED_LENGHT,
@@ -1334,6 +1354,13 @@ void DrawerDP::Proc(QString fname)
             this->userDerivativeMeanValueUMP
         );
 
+        this->metrics = generateRelativeMetric(
+            this->metrics,
+            METRIC_RELATIVE_MEAN_VALUE_UMP_DERIVATIVE,
+            METRIC_MEAN_VALUE_UMP_DERIVATIVE_RECORDED,
+            METRIC_MEAN_VALUE_UMP_DERIVATIVE_TEMPLATE
+        );
+
         this->userCentricGravityDerivativeUMP = calculateCentricGravity(derivative_pitch);
         this->userCentricGravityDerivativeUMP1 = calculateCentricGravitySubvector(derivative_pitch, 0, this->userCentricGravityDerivativeUMP);
         this->userCentricGravityDerivativeUMP2 = calculateCentricGravitySubvector(derivative_pitch, this->userCentricGravityDerivativeUMP, derivative_pitch.x);
@@ -1359,6 +1386,12 @@ void DrawerDP::Proc(QString fname)
             this->metrics,
             METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED_MID,
             this->userCentricGravityDerivativeUMP1 + (this->userCentricGravityDerivativeUMP2 - this->userCentricGravityDerivativeUMP1) / 2.0
+        );
+        this->metrics = generateRelativeMetric(
+            this->metrics,
+            METRIC_RELATIVE_CENTER_GRAVITY_UMP_DERIVATIVE_MID,
+            METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED_MID,
+            METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_TEMPLATE_MID
         );
         this->metrics = storeMetric(
             this->metrics,

@@ -73,7 +73,7 @@
             </font>
            </property>
            <property name="text">
-            <string>Play Record</string>
+            <string>Play Template</string>
            </property>
            <property name="icon">
             <iconset resource="icons.qrc">
@@ -114,6 +114,29 @@
            </property>
            <property name="flat">
             <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="playRecordBtn">
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Play Record</string>
+           </property>
+           <property name="icon">
+            <iconset resource="icons.qrc">
+             <normaloff>:/icons/icons/speaker-26.png</normaloff>:/icons/icons/speaker-26.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>16</width>
+             <height>32</height>
+            </size>
            </property>
           </widget>
          </item>
