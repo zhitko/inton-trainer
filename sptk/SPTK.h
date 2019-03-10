@@ -205,7 +205,17 @@ typedef struct _DP_SETTINGS {
     int auto_marking;
 
     int markoutA0limit;
+
+    int markoutType;
+    double markoutA0IntA0abs;
+    int markoutA0IntThN;
 } DP_SETTINGS;
+
+#define MARKOUT_F0 0
+#define MARKOUT_A0 1
+#define MARKOUT_F0A0 2
+#define MARKOUT_A0_INTEGRAL 3
+#define MARKOUT_A0_ENVELOPE 4
 
 typedef struct _SPEC_SETTINGS {
     int leng;

@@ -19,6 +19,8 @@ extern "C" {
 
 #include "processing/filemarkout.h"
 
+WaveFile * selectMarkoutAlgorithm(SimpleGraphData * data);
+
 MaskData getLabelsFromFile(WaveFile* waveFile, char marker)
 {
     MaskData data;
@@ -405,12 +407,46 @@ GraphData * ProcWave2Data(QString fname)
     return data;
 }
 
+vector data_get_intensive(SimpleGraphData * data)
+{
+    if (data->b_intensive == 0)
+    {
+        // TODO
+    }
+    return data->d_intensive;
+}
+
+vector data_get_intensive_norm(SimpleGraphData * data)
+{
+    if (data->b_intensive_norm == 0)
+    {
+        // TODO
+    }
+    return data->d_intensive_norm;
+}
+
+vector data_get_intensive_smooth(SimpleGraphData * data)
+{
+    if (data->b_intensive_smooth == 0)
+    {
+        SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
+        vector intensive = data_get_intensive_norm(data);
+
+        data->d_intensive_smooth = vector_smooth_lin(intensive, sptk_settings->dp->markoutA0IntThN);
+        data->b_intensive_smooth = 1;
+    }
+    return data->d_intensive_smooth;
+}
+
 SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
 {
     qDebug() << "::SimpleProcWave2Data" << LOG_DATA;
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
 
     SimpleGraphData * data = new SimpleGraphData();
+    data->b_intensive = 0;
+    data->b_intensive_norm = 0;
+    data->b_intensive_smooth = 0;
 
     QFile file(fname);
     qDebug() << "::SimpleProcWave2Data QFile" << fname << LOG_DATA;
@@ -485,32 +521,26 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
     vector intensive_mid = vector_smooth_lin(intensive, sptk_settings->plotEnergy->frame);
     qDebug() << "::SimpleProcWave2Data intensive_mid" << LOG_DATA;
     data->d_intensive = intensive_mid;
+    data->b_intensive = 1;
 
     vector intensive_norm = normalizev(intensive_mid, MASK_MIN, MASK_MAX);
     qDebug() << "::SimpleProcWave2Data normalizev" << LOG_DATA;
     data->d_intensive_norm = intensive_norm;
+    data->b_intensive_norm = 1;
 
     vector file_mask;
+    WaveFile * procFile = waveFile;
     if (sptk_settings->dp->auto_marking)
     {
-        WaveFile *newFile = markOutFileByF0A0(data);
-        file_mask = getFileMask(newFile, wave, pitch.x);
-
-        MaskData md_p = getLabelsFromFile(newFile, MARK_PRE_NUCLEUS);
-        data->md_p = md_p;
-        MaskData md_n = getLabelsFromFile(newFile, MARK_NUCLEUS);
-        data->md_n = md_n;
-        MaskData md_t = getLabelsFromFile(newFile, MARK_POST_NUCLEUS);
-        data->md_t = md_t;
-    } else {
-        file_mask = getFileMask(waveFile, wave, pitch.x);
-
-        MaskData md_p = getLabelsFromFile(waveFile, MARK_PRE_NUCLEUS);
-        data->md_p = md_p;
-        MaskData md_n = getLabelsFromFile(waveFile, MARK_NUCLEUS);
-        data->md_n = md_n;
-        MaskData md_t = getLabelsFromFile(waveFile, MARK_POST_NUCLEUS);
-        data->md_t = md_t;
+        procFile = selectMarkoutAlgorithm(data);
+    }
+    file_mask = getFileMask(procFile, wave, pitch.x);
+    data->md_p = getLabelsFromFile(procFile, MARK_PRE_NUCLEUS);
+    data->md_n = getLabelsFromFile(procFile, MARK_NUCLEUS);
+    data->md_t = getLabelsFromFile(procFile, MARK_POST_NUCLEUS);
+    if (sptk_settings->dp->auto_marking)
+    {
+        waveCloseFile(procFile);
     }
     qDebug() << "::SimpleProcWave2Data file_mask" << LOG_DATA;
 
@@ -566,6 +596,29 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
     return data;
 }
 
+WaveFile * selectMarkoutAlgorithm(SimpleGraphData * data)
+{
+    SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
+
+    if (sptk_settings->dp->markoutType == MARKOUT_F0) // F0
+    {
+        return markOutFileByF0(data);
+    } else if (sptk_settings->dp->markoutType == MARKOUT_A0) // A0
+    {
+        return markOutFileByA0(data);
+    } else if (sptk_settings->dp->markoutType == MARKOUT_F0A0) // F0 & A0
+    {
+        return markOutFileByF0A0(data);
+    } else if (sptk_settings->dp->markoutType == MARKOUT_A0_INTEGRAL) // A0 Integral
+    {
+        return markOutFileByA0Integral(data);
+    } else if (sptk_settings->dp->markoutType == MARKOUT_A0_ENVELOPE) // A0 Envelope
+    {
+        // TODO: A0Envelope
+        return markOutFileByA0Integral(data);
+    }
+}
+
 void freeGraphData(GraphData * data)
 {
     freev(data->d_intensive_original);
@@ -596,6 +649,8 @@ void freeSimpleGraphData(SimpleGraphData * data)
     freev(data->d_intensive_original);
     freev(data->d_intensive);
     freev(data->d_intensive_norm);
+    if (data->b_intensive_smooth == 1)
+        freev(data->d_intensive_smooth);
     freev(data->d_derivative_intensive_norm);
     freev(data->d_spec_proc);
     freev(data->d_spec);

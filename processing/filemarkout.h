@@ -7,5 +7,6 @@
 WaveFile * markOutFileByF0(SimpleGraphData *data);
 WaveFile * markOutFileByA0(SimpleGraphData *data);
 WaveFile * markOutFileByF0A0(SimpleGraphData *data);
+WaveFile * markOutFileByA0Integral(SimpleGraphData *data);
 
 #endif // FILEMARKOUT_H

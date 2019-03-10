@@ -63,6 +63,7 @@ private slots:
     void on_showPlane_stateChanged(int arg1);
     void on_showF0_stateChanged(int arg1);
     void on_showDerivativeF0_stateChanged(int arg1);
+    void on_markoutType_currentIndexChanged(int index);
 };
 
 #endif // SETTINGSDIALOG_H

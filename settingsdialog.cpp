@@ -91,6 +91,8 @@ void SettingsDialog::initUI()
 
     connect(this->ui->buttonBox, SIGNAL(accepted()), this, SLOT(saveSettings()));
     connect(this->ui->buttonBox, SIGNAL(clicked(QAbstractButton*)), this, SLOT(buttons(QAbstractButton*)));
+
+    this->on_markoutType_currentIndexChanged(this->ui->markoutType->currentIndex());
 }
 
 void SettingsDialog::buttons(QAbstractButton *button)
@@ -173,6 +175,10 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
 
     sptk_settings->dp->markoutA0limit = instance->ui->markoutA0limit->value();
 
+    sptk_settings->dp->markoutA0IntA0abs = instance->ui->markoutA0IntA0abs->value();
+    sptk_settings->dp->markoutA0IntThN = instance->ui->markoutA0IntThN->value();
+
+    sptk_settings->dp->markoutType = instance->ui->markoutType->currentIndex();
     sptk_settings->dp->show_marks = instance->ui->showMarks->isChecked();
     sptk_settings->dp->auto_marking = instance->ui->autoMarking->isChecked();
 
@@ -309,6 +315,12 @@ void SettingsDialog::loadSettingsFrom(QString settings_path)
     if(settings.contains("dp/markoutA0limit"))
         this->ui->markoutA0limit->setValue(settings.value("dp/markoutA0limit").toInt());
 
+    if(settings.contains("markout/markoutType"))
+        this->ui->markoutType->setCurrentIndex(settings.value("markout/markoutType").toInt());
+    if(settings.contains("markoutA0Int/markoutA0IntA0abs"))
+        this->ui->markoutA0IntA0abs->setValue(settings.value("markoutA0Int/markoutA0IntA0abs").toDouble());
+    if(settings.contains("markoutA0Int/markoutA0IntThN"))
+        this->ui->markoutA0IntThN->setValue(settings.value("markoutA0Int/markoutA0IntThN").toInt());
 }
 
 void SettingsDialog::saveSettings()
@@ -376,6 +388,10 @@ void SettingsDialog::saveSettings()
     settings.setValue("dp/autoMarking", this->ui->autoMarking->isChecked());
 
     settings.setValue("dp/markoutA0limit", this->ui->markoutA0limit->value());
+
+    settings.setValue("markout/markoutType", this->ui->markoutType->currentIndex());
+    settings.setValue("markoutA0Int/markoutA0IntA0abs", this->ui->markoutA0IntA0abs->value());
+    settings.setValue("markoutA0Int/markoutA0IntThN", this->ui->markoutA0IntThN->value());
 }
 
 void SettingsDialog::on_showPlane_stateChanged(int arg1)
@@ -400,5 +416,19 @@ void SettingsDialog::on_showDerivativeF0_stateChanged(int arg1)
     if (!arg1)
     {
         this->ui->showPlane->setChecked(arg1);
+    }
+}
+
+void SettingsDialog::on_markoutType_currentIndexChanged(int index)
+{
+    this->ui->automarkingA0->setEnabled(false);
+    this->ui->automarkingA0Integral->setEnabled(false);
+    if (index == MARKOUT_F0A0)
+    {
+        this->ui->automarkingA0->setEnabled(true);
+    }
+    if (index == MARKOUT_A0_INTEGRAL)
+    {
+        this->ui->automarkingA0Integral->setEnabled(true);
     }
 }

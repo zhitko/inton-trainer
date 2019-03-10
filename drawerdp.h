@@ -25,6 +25,7 @@ protected:
         *secIntensiveData, *umpData, *secUmpData, *umpDerivativeData, *secUmpDerivativeData, *umpMask,
         *octavData, *secOctavData, *secPlaneData;
     mglData *pSecData, *nSecData, *tSecData;
+    mglData *A0Smooth, *secA0Smooth;
     int errorMax, errorMin;
     double proximity_shape_mark, proximity_range_mark;
     double secPitchDataDerivativeZero;

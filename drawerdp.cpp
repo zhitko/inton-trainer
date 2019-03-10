@@ -76,6 +76,8 @@ DrawerDP::DrawerDP() :
     this->simple_data = NULL;
     this->userRange = 1.0;
     this->range = 1.0;
+    this->A0Smooth = NULL;
+    this->secA0Smooth = NULL;
 }
 
 DrawerDP::~DrawerDP()
@@ -117,6 +119,10 @@ DrawerDP::~DrawerDP()
     qDebug() << "DrawerDP removed secOctavData" << LOG_DATA;
     if (this->umpMask) delete this->umpMask;
     qDebug() << "DrawerDP removed umpMask" << LOG_DATA;
+    if (this->A0Smooth) delete this->A0Smooth;
+    qDebug() << "DrawerDP removed A0Smooth" << LOG_DATA;
+    if (this->secA0Smooth) delete this->secA0Smooth;
+    qDebug() << "DrawerDP removed secA0Smooth" << LOG_DATA;
 }
 
 QString DrawerDP::getMarksTitle()
@@ -174,6 +180,10 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->Line(mglPoint(-1,this->pitchDataDerivativeZero), mglPoint(1,this->pitchDataDerivativeZero), "-m2");
         }
         if(sptk_settings->dp->showA0) gr->Plot(*this->intensiveData, "-b3");
+        if(sptk_settings->dp->markoutType == MARKOUT_A0_INTEGRAL)
+        {
+            gr->Plot(*this->A0Smooth, ";b3");
+        }
         gr->Plot(*pWaveData, "q2");
         gr->Plot(*nWaveData, "k2");
         gr->Plot(*tWaveData, "c2");
@@ -321,7 +331,11 @@ int DrawerDP::Draw(mglGraph *gr)
             if(this->errorData) gr->Plot(*this->errorData, "-B3");
             if(this->timeData) gr->Plot(*this->timeData, "-R3");
             if(sptk_settings->dp->showF0) gr->Plot(*this->secPitchData, "-R4");
-            if(sptk_settings->dp->showA0) gr->Plot(*this->secIntensiveData, "-B4");
+            if(sptk_settings->dp->showA0) gr->Plot(*this->secIntensiveData, "-B4");            
+            if(sptk_settings->dp->markoutType == MARKOUT_A0_INTEGRAL)
+            {
+                gr->Plot(*this->secA0Smooth, ";B3");
+            }
             if(sptk_settings->dp->showDerivativeF0)
             {
                 gr->Plot(*this->secPitchDataDerivative, "-m4");
@@ -941,6 +955,11 @@ void DrawerDP::Proc(QString fname)
         {
             this->intensiveData = createMglData(this->simple_data->d_intensive, this->intensiveData);
             this->intensiveData->Norm();
+        }
+
+        if(sptk_settings->dp->markoutType == MARKOUT_A0_INTEGRAL)
+        {
+            this->A0Smooth = createMglData(data_get_intensive_smooth(this->simple_data), this->A0Smooth);
         }
 
         qDebug() << "intensiveData Filled" << LOG_DATA;
@@ -1594,6 +1613,14 @@ void DrawerDP::Proc(QString fname)
             freev(intensive_cutted);
 
             qDebug() << "intensiveData Filled " << this->secIntensiveData->nx << LOG_DATA;
+        }
+
+        if(sptk_settings->dp->markoutType == MARKOUT_A0_INTEGRAL)
+        {
+            vector intensive_smooth = cutv(data_get_intensive_smooth(dataSec), startPos, endPos);
+            applyMapping(&intensive_smooth, &mapping);
+            this->secA0Smooth = createMglData(intensive_smooth, this->secA0Smooth);
+            freev(intensive_smooth);
         }
 
         freeiv(mapping);

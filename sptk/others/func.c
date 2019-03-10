@@ -33,6 +33,7 @@ vector vector_intensive(vector data, int frame_length, int frame_shift)
 
 vector vector_smooth_lin(vector data, int frame)
 {
+    int shift = frame / 2;
     int resultLength = data.x;
     vector result = makev(resultLength);
 
@@ -42,7 +43,7 @@ vector vector_smooth_lin(vector data, int frame)
         middle = 0.0;
         for(int j=0; j < frame; j++)
         {
-            middle += getv(data, j + i);
+            middle += getv(data, j + i - shift);
         }
         setv(result, i, middle/frame);
     }

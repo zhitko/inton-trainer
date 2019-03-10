@@ -434,3 +434,87 @@ WaveFile * markOutFileByF0A0(SimpleGraphData *data)
                 points.pointsLabels
     );
 }
+
+WaveFile * markOutFileByA0Integral(SimpleGraphData *data)
+{
+    SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
+
+    WaveFile * waveFile = data->file_data;
+    qDebug() << "waveOpenHFile" << LOG_DATA;
+
+    int size = littleEndianBytesToUInt32(waveFile->dataChunk->chunkDataSize);
+    qDebug() << "file size " << size << LOG_DATA;
+
+    vector intensive = data_get_intensive_norm(data);
+    qDebug() << "intensive " << intensive.x << LOG_DATA;
+
+    vector intensive_smooth = data_get_intensive_smooth(data);
+    qDebug() << "intensive_smooth " << intensive_smooth.x << LOG_DATA;
+
+    double scaleFactor = 1.0 * size / CHAR_BIT_RECORD / intensive.x;
+    qDebug() << "scaleFactor " << scaleFactor << LOG_DATA;
+
+    double intensiveAbsLimit = midv(intensive) * sptk_settings->dp->markoutA0IntA0abs / 100.0;
+    qDebug() << "intensiveAbsLimit " << intensiveAbsLimit << LOG_DATA;
+
+    Points points;
+
+    uint8_t gotIt = 0;
+    double intensive_value = 0.0;
+    double smooth_value = 0.0;
+    uint32_t startPosition = 0;
+    uint32_t stopPosition = 0;
+    for (uint32_t i=0; i<intensive.x; i++)
+    {
+        intensive_value = getv(intensive, i);
+        smooth_value = getv(intensive_smooth, i);
+        if (gotIt == 0 && intensive_value > smooth_value && intensive_value > intensiveAbsLimit)
+        {
+            gotIt = 1;
+            startPosition = i;
+        } else if (gotIt == 1 && (intensive_value <= smooth_value || intensive_value <= intensiveAbsLimit))
+        {
+            gotIt = 0;
+            stopPosition = i;
+
+            points.pointsCount++;
+            points = addOffset(points, scaleFactor * startPosition);
+            points = addLenght(points, scaleFactor * (stopPosition - startPosition));
+            points = addLabel(points, points.pointsCount);
+        }
+    }
+
+    if (gotIt == 1)
+    {
+        points.pointsCount++;
+        points = addOffset(points, scaleFactor * startPosition);
+        points = addLenght(points, scaleFactor * (intensive.x - 1 - startPosition));
+        points = addLabel(points, points.pointsCount);
+    }
+
+    int waveDataSize = littleEndianBytesToUInt32(waveFile->dataChunk->chunkDataSize);
+    char* waveData = (char*) malloc(waveDataSize);
+    memcpy(waveData, waveFile->dataChunk->waveformData, waveDataSize);
+
+    qDebug() << "waveData " << waveData << LOG_DATA;
+    qDebug() << "waveDataSize " << waveDataSize << LOG_DATA;
+    qDebug() << "NUMBER_OF_CHANNELS " << NUMBER_OF_CHANNELS << LOG_DATA;
+    qDebug() << "RECORD_FREQ " << RECORD_FREQ << LOG_DATA;
+    qDebug() << "SIGNIFICANT_BITS_PER_SAMPLE " << SIGNIFICANT_BITS_PER_SAMPLE << LOG_DATA;
+    qDebug() << "pointsCount " << points.pointsCount << LOG_DATA;
+    qDebug() << "pointsOffset " << points.pointsOffset << LOG_DATA;
+    qDebug() << "pointsLenght " << points.pointsLenght << LOG_DATA;
+    qDebug() << "pointsLabel " << points.pointsLabels << LOG_DATA;
+
+    return makeWaveFileFromRawData(
+                waveData,
+                waveDataSize,
+                NUMBER_OF_CHANNELS,
+                RECORD_FREQ,
+                SIGNIFICANT_BITS_PER_SAMPLE,
+                points.pointsCount,
+                points.pointsOffset,
+                points.pointsLenght,
+                points.pointsLabels
+    );
+}
