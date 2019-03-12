@@ -64,6 +64,7 @@ private slots:
     void on_showF0_stateChanged(int arg1);
     void on_showDerivativeF0_stateChanged(int arg1);
     void on_markoutType_currentIndexChanged(int index);
+    void on_checkBox_8_stateChanged(int arg1);
 };
 
 #endif // SETTINGSDIALOG_H

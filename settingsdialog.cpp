@@ -93,6 +93,7 @@ void SettingsDialog::initUI()
     connect(this->ui->buttonBox, SIGNAL(clicked(QAbstractButton*)), this, SLOT(buttons(QAbstractButton*)));
 
     this->on_markoutType_currentIndexChanged(this->ui->markoutType->currentIndex());
+    this->on_checkBox_8_stateChanged(0);
 }
 
 void SettingsDialog::buttons(QAbstractButton *button)
@@ -430,5 +431,18 @@ void SettingsDialog::on_markoutType_currentIndexChanged(int index)
     if (index == MARKOUT_A0_INTEGRAL)
     {
         this->ui->automarkingA0Integral->setEnabled(true);
+    }
+}
+
+void SettingsDialog::on_checkBox_8_stateChanged(int arg1)
+{
+    if (!arg1) {
+        this->ui->markoutType->hide();
+        this->ui->label_34->hide();
+        this->ui->automarkingA0->hide();
+    } else {
+        this->ui->markoutType->show();
+        this->ui->label_34->show();
+        this->ui->automarkingA0->show();
     }
 }

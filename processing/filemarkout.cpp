@@ -454,7 +454,7 @@ WaveFile * markOutFileByA0Integral(SimpleGraphData *data)
     double scaleFactor = 1.0 * size / CHAR_BIT_RECORD / intensive.x;
     qDebug() << "scaleFactor " << scaleFactor << LOG_DATA;
 
-    double intensiveAbsLimit = midv(intensive) * sptk_settings->dp->markoutA0IntA0abs / 100.0;
+    double intensiveAbsLimit = midv(intensive_smooth) * sptk_settings->dp->markoutA0IntA0abs / 100.0;
     qDebug() << "intensiveAbsLimit " << intensiveAbsLimit << LOG_DATA;
 
     Points points;

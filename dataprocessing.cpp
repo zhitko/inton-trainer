@@ -407,22 +407,65 @@ GraphData * ProcWave2Data(QString fname)
     return data;
 }
 
+vector data_get_pitch_log(SimpleGraphData * data)
+{
+    if (data->b_pitch_log == 0)
+    {
+        // TODO
+    }
+    return data->d_pitch_log;
+}
+
 vector data_get_intensive(SimpleGraphData * data)
 {
     if (data->b_intensive == 0)
     {
-        // TODO
+        SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
+        data->d_intensive = vector_smooth_lin(data->d_intensive_original, sptk_settings->plotEnergy->frame);
+
+        data->b_intensive = 1;
     }
     return data->d_intensive;
+}
+
+vector data_get_intensive_cutted(SimpleGraphData * data)
+{
+    if (data->b_intensive_cutted == 0)
+    {
+        vector intensive = data_get_intensive(data);
+        vector pitch_log = data_get_pitch_log(data);
+        vector resized_pitch_log = vector_resize(pitch_log, intensive.x);
+        data->d_intensive_cutted = vector_cut_by_mask(intensive, resized_pitch_log);
+        freev(resized_pitch_log);
+
+        data->b_intensive_cutted = 1;
+    }
+    return data->d_intensive_cutted;
 }
 
 vector data_get_intensive_norm(SimpleGraphData * data)
 {
     if (data->b_intensive_norm == 0)
     {
-        // TODO
+        vector intensive = data_get_intensive_cutted(data);
+        data->d_intensive_norm = normalizev(intensive, MASK_MIN, MASK_MAX);
+        data->b_intensive_norm == 1;
     }
     return data->d_intensive_norm;
+}
+
+vector data_get_intensive_derivative(SimpleGraphData * data)
+{
+    if (data->b_derivative_intensive_norm == 0)
+    {
+        vector intensive = data_get_intensive_norm(data);
+        vector derivative_intensive = derivativev(intensive);
+        data->d_derivative_intensive_norm = normalizev(derivative_intensive, MASK_MIN, MASK_MAX);
+        freev(derivative_intensive);
+
+        data->b_derivative_intensive_norm == 1;
+    }
+    return data->d_derivative_intensive_norm;
 }
 
 vector data_get_intensive_smooth(SimpleGraphData * data)
@@ -444,9 +487,12 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
 
     SimpleGraphData * data = new SimpleGraphData();
+    data->b_pitch_log = 0;
     data->b_intensive = 0;
+    data->b_intensive_cutted = 0;
     data->b_intensive_norm = 0;
     data->b_intensive_smooth = 0;
+    data->b_derivative_intensive_norm = 0;
 
     QFile file(fname);
     qDebug() << "::SimpleProcWave2Data QFile" << fname << LOG_DATA;
@@ -517,16 +563,19 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
     vector pitch_log_norm = normalizev(pitch_log, MASK_MIN, MASK_MAX);
     qDebug() << "::SimpleProcWave2Data pitch_log" << LOG_DATA;
     data->d_pitch_log = pitch_log_norm;
+    data->b_pitch_log = 1;
 
-    vector intensive_mid = vector_smooth_lin(intensive, sptk_settings->plotEnergy->frame);
-    qDebug() << "::SimpleProcWave2Data intensive_mid" << LOG_DATA;
-    data->d_intensive = intensive_mid;
-    data->b_intensive = 1;
+//    vector intensive_mid = vector_smooth_lin(intensive, sptk_settings->plotEnergy->frame);
+//    qDebug() << "::SimpleProcWave2Data intensive_mid" << LOG_DATA;
+//    data->d_intensive = intensive_mid;
+//    data->b_intensive = 1;
+    data->d_intensive = data_get_intensive(data);
 
-    vector intensive_norm = normalizev(intensive_mid, MASK_MIN, MASK_MAX);
-    qDebug() << "::SimpleProcWave2Data normalizev" << LOG_DATA;
-    data->d_intensive_norm = intensive_norm;
-    data->b_intensive_norm = 1;
+//    vector intensive_norm = normalizev(intensive_mid, MASK_MIN, MASK_MAX);
+//    qDebug() << "::SimpleProcWave2Data normalizev" << LOG_DATA;
+//    data->d_intensive_norm = intensive_norm;
+//    data->b_intensive_norm = 1;
+    data->d_intensive_norm = data_get_intensive_norm(data);
 
     vector file_mask;
     WaveFile * procFile = waveFile;
@@ -564,10 +613,11 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
     qDebug() << "::SimpleProcWave2Data pitch_mid" << LOG_DATA;
     data->d_pitch = pitch_mid;
 
-    vector derivative_intensive = derivativev(intensive_norm);
-    vector derivative_intensive_norm = normalizev(derivative_intensive, MASK_MIN, MASK_MAX);
-    freev(derivative_intensive);
-    data->d_derivative_intensive_norm = derivative_intensive_norm;
+//    vector derivative_intensive = derivativev(intensive_norm);
+//    vector derivative_intensive_norm = normalizev(derivative_intensive, MASK_MIN, MASK_MAX);
+//    freev(derivative_intensive);
+//    data->d_derivative_intensive_norm = derivative_intensive_norm;
+    data->d_derivative_intensive_norm = data_get_intensive_derivative(data);
 
     freev(frame);
     freev(window);

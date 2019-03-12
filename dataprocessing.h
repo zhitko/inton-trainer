@@ -16,12 +16,13 @@ struct SimpleGraphData{
     vector d_full_wave;
     vector d_pitch_original;
     vector d_pitch;
-    vector d_pitch_log;
+    vector d_pitch_log;                 int b_pitch_log;
     vector d_intensive_original;
     vector d_intensive;                 int b_intensive;
+    vector d_intensive_cutted;          int b_intensive_cutted;
     vector d_intensive_norm;            int b_intensive_norm;
     vector d_intensive_smooth;          int b_intensive_smooth;
-    vector d_derivative_intensive_norm;
+    vector d_derivative_intensive_norm; int b_derivative_intensive_norm;
     vector d_spec_proc;
     vector d_spec;
     vector d_cepstrum;
@@ -34,8 +35,11 @@ struct SimpleGraphData{
     WaveFile * file_data;
 };
 
+vector data_get_pitch_log(SimpleGraphData * data);
 vector data_get_intensive(SimpleGraphData * data);
+vector data_get_intensive_cutted(SimpleGraphData * data);
 vector data_get_intensive_norm(SimpleGraphData * data);
+vector data_get_intensive_derivative(SimpleGraphData * data);
 vector data_get_intensive_smooth(SimpleGraphData * data);
 
 struct GraphData: SimpleGraphData{
