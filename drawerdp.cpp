@@ -10,6 +10,7 @@
 #include "settingsdialog.h"
 #include <QApplication>
 #include "dp/continuousdp.h"
+#include "dp/multidp.h"
 
 #include "utils.h"
 #include "defines.h"
@@ -180,9 +181,11 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->Line(mglPoint(-1,this->pitchDataDerivativeZero), mglPoint(1,this->pitchDataDerivativeZero), "-m2");
         }
         if(sptk_settings->dp->showA0) gr->Plot(*this->intensiveData, "-b3");
-        if(sptk_settings->dp->markoutType == MARKOUT_A0_INTEGRAL)
+        if(sptk_settings->dp->markoutType == MARKOUT_A0_INTEGRAL && sptk_settings->dp->showThresholds == 1)
         {
             gr->Plot(*this->A0Smooth, ";b3");
+            gr->SetRange('y', 0, 1);
+            gr->FPlot(QString::number(sptk_settings->dp->markoutA0IntA0abs/100).toLocal8Bit().data(), ";b3");
         }
         gr->Plot(*pWaveData, "q2");
         gr->Plot(*nWaveData, "k2");
@@ -663,6 +666,213 @@ int DrawerDP::getDataSeconds()
 
 }
 
+ContinuousDP * DrawerDP::getDP(SimpleGraphData * dataSec)
+{
+    SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
+    qDebug() << "sptk_settings->dp->useForDP " << sptk_settings->dp->useForDP << LOG_DATA;
+
+    if (sptk_settings->dp->useForDP != DP_USE_MULTI)
+    {
+
+        SpectrSignal * firstSignal;
+        SpectrSignal * secondSignal;        
+
+        if (sptk_settings->dp->useForDP == DP_USE_SPECTRUM)
+        {
+            int speksize = sptk_settings->spec->leng / 2 + 1;
+            qDebug() << "data->d_spec " << this->simple_data->d_spec.x << LOG_DATA;
+            qDebug() << "dataSec->d_spec " << dataSec->d_spec.x << LOG_DATA;
+            firstSignal = new SpectrSignal(copyv(this->simple_data->d_spec_proc), speksize);
+            secondSignal = new SpectrSignal(copyv(dataSec->d_spec_proc), speksize);
+        } else if (sptk_settings->dp->useForDP == DP_USE_CEPSTRUM) {
+            int speksize = sptk_settings->lpc->cepstrum_order + 1;
+            qDebug() << "data->d_cepstrum " << this->simple_data->d_cepstrum.x << LOG_DATA;
+            qDebug() << "dataSec->d_cepstrum " << dataSec->d_cepstrum.x << LOG_DATA;
+            firstSignal = new SpectrSignal(copyv(this->simple_data->d_cepstrum), speksize);
+            secondSignal = new SpectrSignal(copyv(dataSec->d_cepstrum), speksize);
+        } else if (sptk_settings->dp->useForDP == DP_USE_CEPSTRUM_A0) {
+            int speksize = sptk_settings->lpc->cepstrum_order + 1;
+            int additional_data = speksize * sptk_settings->dp->dpA0Coeficient;
+            int analysed_data = speksize + additional_data;
+            qDebug() << "speksize " << speksize << LOG_DATA;
+            qDebug() << "data->d_cepstrum " << this->simple_data->d_cepstrum.x << LOG_DATA;
+            qDebug() << "dataSec->d_cepstrum " << dataSec->d_cepstrum.x << LOG_DATA;
+            vector simple_merged_data = mergev(this->simple_data->d_cepstrum, this->simple_data->d_intensive_norm, additional_data);
+            firstSignal = new SpectrSignal(copyv(simple_merged_data), analysed_data);
+            freev(simple_merged_data);
+            vector merged_data = mergev(dataSec->d_cepstrum, dataSec->d_intensive_norm, additional_data);
+            secondSignal = new SpectrSignal(copyv(merged_data), analysed_data);
+            freev(merged_data);
+        } else if (sptk_settings->dp->useForDP == DP_USE_CEPSTRUM_LOGF0) {
+            int speksize = sptk_settings->lpc->cepstrum_order + 1;
+            int additional_data = speksize * sptk_settings->dp->dpF0Coeficient;
+            int analysed_data = speksize + additional_data;
+            qDebug() << "data->d_cepstrum " << this->simple_data->d_cepstrum.x << LOG_DATA;
+            qDebug() << "dataSec->d_cepstrum " << dataSec->d_cepstrum.x << LOG_DATA;
+            vector simple_merged_data = mergev(this->simple_data->d_cepstrum, this->simple_data->d_pitch_log, additional_data);
+            firstSignal = new SpectrSignal(copyv(simple_merged_data), analysed_data);
+            freev(simple_merged_data);
+            vector merged_data = mergev(dataSec->d_cepstrum, dataSec->d_pitch_log, additional_data);
+            secondSignal = new SpectrSignal(copyv(merged_data), analysed_data);
+            freev(merged_data);
+        } else if (sptk_settings->dp->useForDP == DP_USE_CEPSTRUM_A0_LOGF0) {
+            int speksize = sptk_settings->lpc->cepstrum_order + 1;
+            int additional_data_a0 = speksize * sptk_settings->dp->dpA0Coeficient;
+            int additional_data_f0 = speksize * sptk_settings->dp->dpF0Coeficient;
+            int analysed_data = speksize + additional_data_a0 + additional_data_f0;
+            qDebug() << "data->d_cepstrum " << this->simple_data->d_cepstrum.x << LOG_DATA;
+            qDebug() << "dataSec->d_cepstrum " << dataSec->d_cepstrum.x << LOG_DATA;
+            vector simple_merged_data = mergev(this->simple_data->d_cepstrum, this->simple_data->d_pitch_log, additional_data_f0);
+            simple_merged_data = mergev(simple_merged_data, this->simple_data->d_intensive_norm, additional_data_a0);
+            firstSignal = new SpectrSignal(copyv(simple_merged_data), analysed_data);
+            freev(simple_merged_data);
+            vector merged_data = mergev(dataSec->d_cepstrum, dataSec->d_pitch_log, additional_data_f0);
+            merged_data = mergev(merged_data, dataSec->d_intensive_norm, additional_data_a0);
+            secondSignal = new SpectrSignal(copyv(merged_data), analysed_data);
+            freev(merged_data);
+        } else if (sptk_settings->dp->useForDP == DP_USE_CEPSTRUM_DA0) {
+            int speksize = sptk_settings->lpc->cepstrum_order + 1;
+            int additional_data = speksize * sptk_settings->dp->dpDA0Coeficient;
+            int analysed_data = speksize + additional_data;
+            qDebug() << "speksize " << speksize << LOG_DATA;
+            qDebug() << "data->d_cepstrum " << this->simple_data->d_cepstrum.x << LOG_DATA;
+            qDebug() << "dataSec->d_cepstrum " << dataSec->d_cepstrum.x << LOG_DATA;
+            vector simple_merged_data = mergev(this->simple_data->d_cepstrum, this->simple_data->d_derivative_intensive_norm, additional_data);
+            firstSignal = new SpectrSignal(copyv(simple_merged_data), analysed_data);
+            freev(simple_merged_data);
+            vector merged_data = mergev(dataSec->d_cepstrum, dataSec->d_derivative_intensive_norm, additional_data);
+            secondSignal = new SpectrSignal(copyv(merged_data), analysed_data);
+            freev(merged_data);
+        } else if (sptk_settings->dp->useForDP == DP_USE_CEPSTRUM_A0_DA0) {
+            int speksize = sptk_settings->lpc->cepstrum_order + 1;
+            int additional_data_a0 = speksize * sptk_settings->dp->dpA0Coeficient;
+            int additional_data_da0 = speksize * sptk_settings->dp->dpDA0Coeficient;
+            int analysed_data = speksize + additional_data_a0 + additional_data_da0;
+            qDebug() << "data->d_cepstrum " << this->simple_data->d_cepstrum.x << LOG_DATA;
+            qDebug() << "dataSec->d_cepstrum " << dataSec->d_cepstrum.x << LOG_DATA;
+            vector simple_merged_data = mergev(this->simple_data->d_cepstrum, this->simple_data->d_derivative_intensive_norm, additional_data_da0);
+            simple_merged_data = mergev(simple_merged_data, this->simple_data->d_intensive_norm, additional_data_a0);
+            firstSignal = new SpectrSignal(copyv(simple_merged_data), analysed_data);
+            freev(simple_merged_data);
+            vector merged_data = mergev(dataSec->d_cepstrum, dataSec->d_derivative_intensive_norm, additional_data_da0);
+            merged_data = mergev(merged_data, dataSec->d_intensive_norm, additional_data_a0);
+            secondSignal = new SpectrSignal(copyv(merged_data), analysed_data);
+            freev(merged_data);
+        }
+
+        ContinuousDP *dp = new ContinuousDP(
+            firstSignal,
+            secondSignal,
+            1,
+            sptk_settings->dp->continiusLimit
+        );
+
+        dp->applySettings(
+            sptk_settings->dp->continiusKH,
+            sptk_settings->dp->continiusKV,
+            sptk_settings->dp->continiusKD,
+            sptk_settings->dp->continiusKT
+        );
+        dp->calculate();
+
+        return dp;
+    } else {
+        qDebug() << "MultiDP " << LOG_DATA;
+        MultiDP * dp = new MultiDP(
+            dataSec->d_pitch.x,
+            this->simple_data->d_pitch.x,
+            sptk_settings->dp->continiusLimit
+        );
+
+        if (sptk_settings->dp->multiUseF0)
+        {
+            qDebug() << "sptk_settings->dp->multiUseF0 " << LOG_DATA;
+            dp->addF0(
+                copyv(data_get_pitch_norm(dataSec)),
+                copyv(data_get_pitch_norm(this->simple_data)),
+                sptk_settings->dp->multiF0Coefficient
+            );
+        }
+        if (sptk_settings->dp->multiUseDF0)
+        {
+            qDebug() << "sptk_settings->dp->multiUseDF0 " << LOG_DATA;
+            dp->addDF0(
+                copyv(data_get_pitch_derivative(dataSec)),
+                copyv(data_get_pitch_derivative(this->simple_data)),
+                sptk_settings->dp->multiDF0Coefficient
+            );
+        }
+        if (sptk_settings->dp->multiUseA0)
+        {
+            qDebug() << "sptk_settings->dp->multiUseA0 " << LOG_DATA;
+            dp->addA0(
+                copyv(data_get_intensive_norm(dataSec)),
+                copyv(data_get_intensive_norm(this->simple_data)),
+                sptk_settings->dp->multiA0Coefficient
+            );
+        }
+        if (sptk_settings->dp->multiUseDA0)
+        {
+            qDebug() << "sptk_settings->dp->multiUseDA0 " << LOG_DATA;
+            dp->addDA0(
+                copyv(data_get_intensive_derivative(dataSec)),
+                copyv(data_get_intensive_derivative(this->simple_data)),
+                sptk_settings->dp->multiDA0Coefficient
+            );
+        }
+        if (sptk_settings->dp->multiUseNMP)
+        {
+            qDebug() << "sptk_settings->dp->multiUseNMP " << LOG_DATA;
+            dp->addNmp(
+                copyv(data_get_pitch_log(dataSec)),
+                copyv(data_get_pitch_log(this->simple_data)),
+                sptk_settings->dp->multiNMPCoefficient
+            );
+        }
+        if (sptk_settings->dp->multiUseSpectrum)
+        {
+            int speksize = sptk_settings->spec->leng / 2 + 1;
+            qDebug() << "sptk_settings->dp->multiUseSpectrum " << speksize << LOG_DATA;
+            dp->addSpectrum(
+                copyv(data_spectrum_norm(dataSec)),
+                copyv(data_spectrum_norm(this->simple_data)),
+                sptk_settings->dp->multiSpectrumCoefficient,
+                speksize
+            );
+        }
+        if (sptk_settings->dp->multiUseCepstrum)
+        {
+            int speksize = sptk_settings->lpc->cepstrum_order + 1;
+            qDebug() << "sptk_settings->dp->multiUseCepstrum " << speksize << LOG_DATA;
+            dp->addCepstrum(
+                copyv(data_cepstrum_norm(dataSec)),
+                copyv(data_cepstrum_norm(this->simple_data)),
+                sptk_settings->dp->multiCepstrumCoefficient,
+                speksize
+            );
+        }
+
+        dp->applySettings(
+            sptk_settings->dp->continiusKH,
+            sptk_settings->dp->continiusKV,
+            sptk_settings->dp->continiusKD,
+            sptk_settings->dp->continiusKT
+        );
+
+        dp->calculate();
+
+        qDebug() << "MultiDP maxF0 " << dp->maxF0 << LOG_DATA;
+        qDebug() << "MultiDP maxDF0 " << dp->maxDF0 << LOG_DATA;
+        qDebug() << "MultiDP maxA0 " << dp->maxA0 << LOG_DATA;
+        qDebug() << "MultiDP maxDA0 " << dp->maxDA0 << LOG_DATA;
+        qDebug() << "MultiDP maxNMP " << dp->maxNMP << LOG_DATA;
+        qDebug() << "MultiDP maxSpectrum " << dp->maxSpectrum << LOG_DATA;
+        qDebug() << "MultiDP maxCepstrum " << dp->maxCepstrum << LOG_DATA;
+
+        return dp;
+    }
+}
+
 void DrawerDP::Proc(QString fname)
 {
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
@@ -903,7 +1113,10 @@ void DrawerDP::Proc(QString fname)
             freev(origin_ump);
             qDebug() << "freev origin_ump" << LOG_DATA;
 
-            this->umpMask = createMglData(ump_mask, this->umpMask, true);
+            if (ump_mask.x > 0)
+            {
+                this->umpMask = createMglData(ump_mask, this->umpMask, true);
+            }
             qDebug() << "umpMask createMglData" << LOG_DATA;
         }
 
@@ -980,104 +1193,9 @@ void DrawerDP::Proc(QString fname)
         qDebug() << "waveData New Filled" << LOG_DATA;
 
         qDebug() << "Start DP" << LOG_DATA;
-        SpectrSignal * firstSignal;
-        SpectrSignal * secondSignal;
-        if (sptk_settings->dp->useForDP == DP_USE_SPECTRUM)
-        {
-            int speksize = sptk_settings->spec->leng / 2 + 1;
-            qDebug() << "data->d_spec " << this->simple_data->d_spec.x << LOG_DATA;
-            qDebug() << "dataSec->d_spec " << dataSec->d_spec.x << LOG_DATA;
-            firstSignal = new SpectrSignal(copyv(this->simple_data->d_spec_proc), speksize);
-            secondSignal = new SpectrSignal(copyv(dataSec->d_spec_proc), speksize);
-        } else if (sptk_settings->dp->useForDP == DP_USE_CEPSTRUM) {
-            int speksize = sptk_settings->lpc->cepstrum_order + 1;
-            qDebug() << "data->d_cepstrum " << this->simple_data->d_cepstrum.x << LOG_DATA;
-            qDebug() << "dataSec->d_cepstrum " << dataSec->d_cepstrum.x << LOG_DATA;
-            firstSignal = new SpectrSignal(copyv(this->simple_data->d_cepstrum), speksize);
-            secondSignal = new SpectrSignal(copyv(dataSec->d_cepstrum), speksize);
-        } else if (sptk_settings->dp->useForDP == DP_USE_CEPSTRUM_A0) {
-            int speksize = sptk_settings->lpc->cepstrum_order + 1;
-            int additional_data = speksize * sptk_settings->dp->dpA0Coeficient;
-            int analysed_data = speksize + additional_data;
-            qDebug() << "speksize " << speksize << LOG_DATA;
-            qDebug() << "data->d_cepstrum " << this->simple_data->d_cepstrum.x << LOG_DATA;
-            qDebug() << "dataSec->d_cepstrum " << dataSec->d_cepstrum.x << LOG_DATA;
-            vector simple_merged_data = mergev(this->simple_data->d_cepstrum, this->simple_data->d_intensive_norm, additional_data);
-            firstSignal = new SpectrSignal(copyv(simple_merged_data), analysed_data);
-            freev(simple_merged_data);
-            vector merged_data = mergev(dataSec->d_cepstrum, dataSec->d_intensive_norm, additional_data);
-            secondSignal = new SpectrSignal(copyv(merged_data), analysed_data);
-            freev(merged_data);
-        } else if (sptk_settings->dp->useForDP == DP_USE_CEPSTRUM_LOGF0) {
-            int speksize = sptk_settings->lpc->cepstrum_order + 1;
-            int additional_data = speksize * sptk_settings->dp->dpF0Coeficient;
-            int analysed_data = speksize + additional_data;
-            qDebug() << "data->d_cepstrum " << this->simple_data->d_cepstrum.x << LOG_DATA;
-            qDebug() << "dataSec->d_cepstrum " << dataSec->d_cepstrum.x << LOG_DATA;
-            vector simple_merged_data = mergev(this->simple_data->d_cepstrum, this->simple_data->d_pitch_log, additional_data);
-            firstSignal = new SpectrSignal(copyv(simple_merged_data), analysed_data);
-            freev(simple_merged_data);
-            vector merged_data = mergev(dataSec->d_cepstrum, dataSec->d_pitch_log, additional_data);
-            secondSignal = new SpectrSignal(copyv(merged_data), analysed_data);
-            freev(merged_data);
-        } else if (sptk_settings->dp->useForDP == DP_USE_CEPSTRUM_A0_LOGF0) {
-            int speksize = sptk_settings->lpc->cepstrum_order + 1;
-            int additional_data_a0 = speksize * sptk_settings->dp->dpA0Coeficient;
-            int additional_data_f0 = speksize * sptk_settings->dp->dpF0Coeficient;
-            int analysed_data = speksize + additional_data_a0 + additional_data_f0;
-            qDebug() << "data->d_cepstrum " << this->simple_data->d_cepstrum.x << LOG_DATA;
-            qDebug() << "dataSec->d_cepstrum " << dataSec->d_cepstrum.x << LOG_DATA;
-            vector simple_merged_data = mergev(this->simple_data->d_cepstrum, this->simple_data->d_pitch_log, additional_data_f0);
-            simple_merged_data = mergev(simple_merged_data, this->simple_data->d_intensive_norm, additional_data_a0);
-            firstSignal = new SpectrSignal(copyv(simple_merged_data), analysed_data);
-            freev(simple_merged_data);
-            vector merged_data = mergev(dataSec->d_cepstrum, dataSec->d_pitch_log, additional_data_f0);
-            merged_data = mergev(merged_data, dataSec->d_intensive_norm, additional_data_a0);
-            secondSignal = new SpectrSignal(copyv(merged_data), analysed_data);
-            freev(merged_data);
-        } else if (sptk_settings->dp->useForDP == DP_USE_CEPSTRUM_DA0) {
-            int speksize = sptk_settings->lpc->cepstrum_order + 1;
-            int additional_data = speksize * sptk_settings->dp->dpDA0Coeficient;
-            int analysed_data = speksize + additional_data;
-            qDebug() << "speksize " << speksize << LOG_DATA;
-            qDebug() << "data->d_cepstrum " << this->simple_data->d_cepstrum.x << LOG_DATA;
-            qDebug() << "dataSec->d_cepstrum " << dataSec->d_cepstrum.x << LOG_DATA;
-            vector simple_merged_data = mergev(this->simple_data->d_cepstrum, this->simple_data->d_derivative_intensive_norm, additional_data);
-            firstSignal = new SpectrSignal(copyv(simple_merged_data), analysed_data);
-            freev(simple_merged_data);
-            vector merged_data = mergev(dataSec->d_cepstrum, dataSec->d_derivative_intensive_norm, additional_data);
-            secondSignal = new SpectrSignal(copyv(merged_data), analysed_data);
-            freev(merged_data);
-        } else if (sptk_settings->dp->useForDP == DP_USE_CEPSTRUM_A0_DA0) {
-            int speksize = sptk_settings->lpc->cepstrum_order + 1;
-            int additional_data_a0 = speksize * sptk_settings->dp->dpA0Coeficient;
-            int additional_data_da0 = speksize * sptk_settings->dp->dpDA0Coeficient;
-            int analysed_data = speksize + additional_data_a0 + additional_data_da0;
-            qDebug() << "data->d_cepstrum " << this->simple_data->d_cepstrum.x << LOG_DATA;
-            qDebug() << "dataSec->d_cepstrum " << dataSec->d_cepstrum.x << LOG_DATA;
-            vector simple_merged_data = mergev(this->simple_data->d_cepstrum, this->simple_data->d_derivative_intensive_norm, additional_data_da0);
-            simple_merged_data = mergev(simple_merged_data, this->simple_data->d_intensive_norm, additional_data_a0);
-            firstSignal = new SpectrSignal(copyv(simple_merged_data), analysed_data);
-            freev(simple_merged_data);
-            vector merged_data = mergev(dataSec->d_cepstrum, dataSec->d_derivative_intensive_norm, additional_data_da0);
-            merged_data = mergev(merged_data, dataSec->d_intensive_norm, additional_data_a0);
-            secondSignal = new SpectrSignal(copyv(merged_data), analysed_data);
-            freev(merged_data);
-        }
 
-        ContinuousDP dp(
-            firstSignal,
-            secondSignal,
-            1,
-            sptk_settings->dp->continiusLimit
-        );
-        dp.applySettings(
-            sptk_settings->dp->continiusKH,
-            sptk_settings->dp->continiusKV,
-            sptk_settings->dp->continiusKD,
-            sptk_settings->dp->continiusKT
-        );
-        dp.calculate();
+        ContinuousDP dp = *this->getDP(dataSec);
+
         qDebug() << "Stop DP" << LOG_DATA;
         vector errorVector = dp.getErrorVector();
         int endPos = minv(errorVector);

@@ -9,6 +9,7 @@ ContinuousDP::ContinuousDP(SpectrSignal * pttrn, SpectrSignal * sig, int dpSigna
     limit(errorLimit),
     minimum(std::numeric_limits<double>::max())
 {
+    qDebug() << "ContinuousDP::ContinuousDP" << LOG_DATA;
     this->signalShift = sig->size();
     this->cacheSize = this->signalShift*dpSignalScale;
 
@@ -162,6 +163,7 @@ DPStateStack * ContinuousDP::getStateCache(const int signalPos, const int patter
 
 void ContinuousDP::reinitCache()
 {
+    qDebug() << "ContinuousDP::reinitCache" << LOG_DATA;
     if(stateCache)
     {
         for(int i=0; i<this->cacheSize; i++)

@@ -34,8 +34,11 @@ void SpectrSignal::freeSignal()
     freev(this->array);
 }
 
-double SpectrDP::calculateError(double* value1, double* value2)
+double SpectrDP::calculateError(int value1Pos, int value2Pos)
 {
+    double* value1 = this->signal->valueAt(value1Pos);
+    double* value2 = this->pattern->valueAt(value2Pos);
+
     double result = 0.0;
     for(int i=0; i<this->spectrSize; i++)
     {

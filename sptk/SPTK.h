@@ -181,13 +181,29 @@ typedef struct _DP_SETTINGS {
     int showPortr;
     int showMeanValueUMP;
     int showCenterGravityUMP;
+    int showThresholds;
 
     int errorType; // 0 - r; 1 - d
 
-    int useForDP; // 0 - Spectr; 1 - Cepstrum; 2 - Cepstrum A0;  3 - Cepstrum dA0;  4 - Cepstrum A0+dA0; 5 - Cepstrum logF0; 6 - Cepstrum A0+logF0
+    int useForDP; // 0 - Spectr; 1 - Cepstrum; 2 - Cepstrum A0;  3 - Cepstrum dA0;  4 - Cepstrum A0+dA0; 5 - Cepstrum logF0; 6 - Cepstrum A0+logF0; 7 - Multi
     double dpA0Coeficient;
     double dpF0Coeficient;
     double dpDA0Coeficient;
+
+    double multiF0Coefficient;
+    double multiDF0Coefficient;
+    double multiA0Coefficient;
+    double multiDA0Coefficient;
+    double multiNMPCoefficient;
+    double multiSpectrumCoefficient;
+    double multiCepstrumCoefficient;
+    int multiUseF0;
+    int multiUseDF0;
+    int multiUseA0;
+    int multiUseDA0;
+    int multiUseNMP;
+    int multiUseSpectrum;
+    int multiUseCepstrum;
 
     int recordingType;
     int recordingSeconds;

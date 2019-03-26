@@ -85,10 +85,7 @@ protected:
         ++iter;
 
         // Init current errors
-        double localError = this->calculateError(
-                    this->signal->valueAt(signalPos),
-                    this->pattern->valueAt(patternPos)
-                );
+        double localError = this->calculateError(signalPos, patternPos);
 //        qDebug() << "DPStateStack::localError " << localError << LOG_DATA;
 
         DPState currentState = {localLimit * localError, localError, opFirst, signalPos, patternPos, 0};
@@ -204,13 +201,13 @@ public:
         d = abs(c1-c2)/aabb;
     }
 
-    ~DP()
-    {
-        pattern->freeSignal();
-        signal->freeSignal();
-        delete pattern;
-        delete signal;
-    }
+//    ~DP()
+//    {
+//        pattern->freeSignal();
+//        signal->freeSignal();
+//        delete pattern;
+//        delete signal;
+//    }
 
     void applySettings(double kh, double kv, double kd, double kt)
     {
@@ -352,7 +349,7 @@ public:
     }
 
 protected:
-    virtual double calculateError(ValueType value1, ValueType value2) = 0;
+    virtual double calculateError(int value1Pos, int value2Pos) = 0;
 };
 
 #endif // DP_H

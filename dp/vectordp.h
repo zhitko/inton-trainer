@@ -33,7 +33,7 @@ public:
     VectorSignal * getScaledSignal() { return (VectorSignal*) DP<double>::getScaledSignal(); }
 
 protected:
-    double calculateError(double value1, double value2);
+    double calculateError(int value1Pos, int value2Pos);
 };
 
 #endif // VECTORDP_H

@@ -407,6 +407,66 @@ GraphData * ProcWave2Data(QString fname)
     return data;
 }
 
+vector data_spectrum(SimpleGraphData * data)
+{
+    if (data->b_spec == 0)
+    {
+        // TODO
+    }
+    return data->d_spec;
+}
+
+vector data_spectrum_norm(SimpleGraphData * data)
+{
+    if (data->b_spec_norm == 0)
+    {
+        vector spec = data_spectrum(data);
+        data->d_spec_norm = normalizev(spec, MASK_MIN, MASK_MAX);
+        data->b_spec_norm = 1;
+    }
+    return data->d_spec_norm;
+}
+
+vector data_cepstrum(SimpleGraphData * data)
+{
+    if (data->b_cepstrum == 0)
+    {
+        // TODO
+    }
+    return data->d_cepstrum;
+}
+
+vector data_cepstrum_norm(SimpleGraphData * data)
+{
+    if (data->b_cepstrum_norm == 0)
+    {
+        vector spec = data_cepstrum(data);
+        data->d_cepstrum_norm = normalizev(spec, MASK_MIN, MASK_MAX);
+        data->b_cepstrum_norm = 1;
+    }
+    return data->d_cepstrum_norm;
+}
+
+vector data_get_pitch(SimpleGraphData * data)
+{
+    if (data->b_pitch == 0)
+    {
+        // TODO
+    }
+    return data->d_pitch;
+}
+
+vector data_get_pitch_norm(SimpleGraphData * data)
+{
+    if (data->b_pitch_norm == 0)
+    {
+        vector pitch = data_get_pitch(data);
+        data->d_pitch_norm = normalizev(pitch, MASK_MIN, MASK_MAX);
+        data->b_pitch_norm = 1;
+    }
+    return data->d_pitch_norm;
+}
+
 vector data_get_pitch_log(SimpleGraphData * data)
 {
     if (data->b_pitch_log == 0)
@@ -414,6 +474,17 @@ vector data_get_pitch_log(SimpleGraphData * data)
         // TODO
     }
     return data->d_pitch_log;
+}
+
+vector data_get_pitch_derivative(SimpleGraphData * data)
+{
+    if (data->b_pitch_derivative == 0)
+    {
+        vector pitch = data_get_pitch_norm(data);
+        data->d_pitch_derivative = derivativev(pitch);
+        data->b_pitch_derivative == 1;
+    }
+    return data->d_pitch_derivative;
 }
 
 vector data_get_intensive(SimpleGraphData * data)
@@ -487,12 +558,17 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
 
     SimpleGraphData * data = new SimpleGraphData();
+    data->b_pitch = 0;
     data->b_pitch_log = 0;
+    data->b_pitch_derivative = 0;
     data->b_intensive = 0;
     data->b_intensive_cutted = 0;
     data->b_intensive_norm = 0;
     data->b_intensive_smooth = 0;
     data->b_derivative_intensive_norm = 0;
+    data->b_spec = 0;
+    data->b_cepstrum = 0;
+    data->b_pitch_norm = 0;
 
     QFile file(fname);
     qDebug() << "::SimpleProcWave2Data QFile" << fname << LOG_DATA;
@@ -534,10 +610,12 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
     vector lpc2c = sptk_lpc2c(lpc, sptk_settings->lpc);
     qDebug() << "::SimpleProcWave2Data lpc2c " << lpc2c.x;
     data->d_cepstrum = lpc2c;
+    data->b_cepstrum = 1;
 
     vector spec = sptk_spec(lpc, sptk_settings->spec);
     qDebug() << "::SimpleProcWave2Data spec " << maxv(spec) << LOG_DATA;
     data->d_spec = spec;
+    data->b_spec = 1;
 
     vector spec_proc;
     if (sptk_settings->spec->proc == 0){
@@ -565,16 +643,8 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
     data->d_pitch_log = pitch_log_norm;
     data->b_pitch_log = 1;
 
-//    vector intensive_mid = vector_smooth_lin(intensive, sptk_settings->plotEnergy->frame);
-//    qDebug() << "::SimpleProcWave2Data intensive_mid" << LOG_DATA;
-//    data->d_intensive = intensive_mid;
-//    data->b_intensive = 1;
     data->d_intensive = data_get_intensive(data);
 
-//    vector intensive_norm = normalizev(intensive_mid, MASK_MIN, MASK_MAX);
-//    qDebug() << "::SimpleProcWave2Data normalizev" << LOG_DATA;
-//    data->d_intensive_norm = intensive_norm;
-//    data->b_intensive_norm = 1;
     data->d_intensive_norm = data_get_intensive_norm(data);
 
     vector file_mask;
@@ -612,11 +682,8 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
     vector pitch_mid = vector_smooth_mid(pitch_interpolate, sptk_settings->plotF0->frame);
     qDebug() << "::SimpleProcWave2Data pitch_mid" << LOG_DATA;
     data->d_pitch = pitch_mid;
+    data->b_pitch = 1;
 
-//    vector derivative_intensive = derivativev(intensive_norm);
-//    vector derivative_intensive_norm = normalizev(derivative_intensive, MASK_MIN, MASK_MAX);
-//    freev(derivative_intensive);
-//    data->d_derivative_intensive_norm = derivative_intensive_norm;
     data->d_derivative_intensive_norm = data_get_intensive_derivative(data);
 
     freev(frame);

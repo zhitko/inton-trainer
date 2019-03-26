@@ -94,6 +94,8 @@ void SettingsDialog::initUI()
 
     this->on_markoutType_currentIndexChanged(this->ui->markoutType->currentIndex());
     this->on_checkBox_8_stateChanged(0);
+
+    this->resize(1050, 700);
 }
 
 void SettingsDialog::buttons(QAbstractButton *button)
@@ -165,6 +167,22 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
     sptk_settings->dp->dpDA0Coeficient = instance->ui->dpDA0Coeficient->value();
     sptk_settings->dp->showMeanValueUMP = instance->ui->showMeanValueUMP->isChecked();
     sptk_settings->dp->showCenterGravityUMP = instance->ui->showCenterGravityUMP->isChecked();
+    sptk_settings->dp->showThresholds = instance->ui->showThresholds->isChecked();
+
+    sptk_settings->dp->multiF0Coefficient = instance->ui->custom_dp_coef_f0->value();
+    sptk_settings->dp->multiDF0Coefficient = instance->ui->custom_dp_coef_df0->value();
+    sptk_settings->dp->multiA0Coefficient = instance->ui->custom_dp_coef_a0->value();
+    sptk_settings->dp->multiDA0Coefficient = instance->ui->custom_dp_coef_da0->value();
+    sptk_settings->dp->multiNMPCoefficient = instance->ui->custom_dp_coef_nmp->value();
+    sptk_settings->dp->multiSpectrumCoefficient = instance->ui->custom_dp_coef_spectrum->value();
+    sptk_settings->dp->multiCepstrumCoefficient = instance->ui->custom_dp_coef_cepstrum->value();
+    sptk_settings->dp->multiUseF0 = instance->ui->custom_dp_use_f0->isChecked();
+    sptk_settings->dp->multiUseDF0 = instance->ui->custom_dp_use_df0->isChecked();
+    sptk_settings->dp->multiUseA0 = instance->ui->custom_dp_use_a0->isChecked();
+    sptk_settings->dp->multiUseDA0 = instance->ui->custom_dp_use_da0->isChecked();
+    sptk_settings->dp->multiUseNMP = instance->ui->custom_dp_use_nmp->isChecked();
+    sptk_settings->dp->multiUseSpectrum = instance->ui->custom_dp_use_spectrum->isChecked();
+    sptk_settings->dp->multiUseCepstrum = instance->ui->custom_dp_use_cepstrum->isChecked();
 
     sptk_settings->dp->recordingSeconds = instance->ui->recordingSeconds->value();
     sptk_settings->dp->recordingMaxFiles = instance->ui->recordingMaxFiles->value();
@@ -291,6 +309,38 @@ void SettingsDialog::loadSettingsFrom(QString settings_path)
         this->ui->showMeanValueUMP->setChecked(settings.value("dp/showMeanValueUMP").toBool());
     if(settings.contains("dp/showCenterGravityUMP"))
         this->ui->showCenterGravityUMP->setChecked(settings.value("dp/showCenterGravityUMP").toBool());
+    if(settings.contains("dp/showThresholds"))
+        this->ui->showThresholds->setChecked(settings.value("dp/showThresholds").toBool());
+
+    if(settings.contains("dp/custom_dp_coef_f0"))
+        this->ui->custom_dp_coef_f0->setValue(settings.value("dp/custom_dp_coef_f0").toDouble());
+    if(settings.contains("dp/custom_dp_coef_df0"))
+        this->ui->custom_dp_coef_df0->setValue(settings.value("dp/custom_dp_coef_df0").toDouble());
+    if(settings.contains("dp/custom_dp_coef_a0"))
+        this->ui->custom_dp_coef_a0->setValue(settings.value("dp/custom_dp_coef_a0").toDouble());
+    if(settings.contains("dp/custom_dp_coef_da0"))
+        this->ui->custom_dp_coef_da0->setValue(settings.value("dp/custom_dp_coef_da0").toDouble());
+    if(settings.contains("dp/custom_dp_coef_nmp"))
+        this->ui->custom_dp_coef_nmp->setValue(settings.value("dp/custom_dp_coef_nmp").toDouble());
+    if(settings.contains("dp/custom_dp_coef_spectrum"))
+        this->ui->custom_dp_coef_spectrum->setValue(settings.value("dp/custom_dp_coef_spectrum").toDouble());
+    if(settings.contains("dp/custom_dp_coef_cepstrum"))
+        this->ui->custom_dp_coef_cepstrum->setValue(settings.value("dp/custom_dp_coef_cepstrum").toDouble());
+
+    if(settings.contains("dp/custom_dp_use_f0"))
+        this->ui->custom_dp_use_f0->setChecked(settings.value("dp/custom_dp_use_f0").toBool());
+    if(settings.contains("dp/custom_dp_use_df0"))
+        this->ui->custom_dp_use_df0->setChecked(settings.value("dp/custom_dp_use_df0").toBool());
+    if(settings.contains("dp/custom_dp_use_a0"))
+        this->ui->custom_dp_use_a0->setChecked(settings.value("dp/custom_dp_use_a0").toBool());
+    if(settings.contains("dp/custom_dp_use_da0"))
+        this->ui->custom_dp_use_da0->setChecked(settings.value("dp/custom_dp_use_da0").toBool());
+    if(settings.contains("dp/custom_dp_use_nmp"))
+        this->ui->custom_dp_use_nmp->setChecked(settings.value("dp/custom_dp_use_nmp").toBool());
+    if(settings.contains("dp/custom_dp_use_spectrum"))
+        this->ui->custom_dp_use_spectrum->setChecked(settings.value("dp/custom_dp_use_spectrum").toBool());
+    if(settings.contains("dp/custom_dp_use_cepstrum"))
+        this->ui->custom_dp_use_cepstrum->setChecked(settings.value("dp/custom_dp_use_cepstrum").toBool());
 
     if(settings.contains("frame/leng"))
         this->ui->frameSizeBox->setCurrentText(QString::number(settings.value("frame/leng").toInt()));
@@ -379,6 +429,22 @@ void SettingsDialog::saveSettings()
     settings.setValue("dp/recordingMaxFiles", this->ui->recordingMaxFiles->value());
     settings.setValue("dp/showMeanValueUMP", this->ui->showMeanValueUMP->isChecked());
     settings.setValue("dp/showCenterGravityUMP", this->ui->showCenterGravityUMP->isChecked());
+    settings.setValue("dp/showThresholds", this->ui->showThresholds->isChecked());
+
+    settings.setValue("dp/custom_dp_coef_f0", this->ui->custom_dp_coef_f0->value());
+    settings.setValue("dp/custom_dp_coef_df0", this->ui->custom_dp_coef_df0->value());
+    settings.setValue("dp/custom_dp_coef_a0", this->ui->custom_dp_coef_a0->value());
+    settings.setValue("dp/custom_dp_coef_da0", this->ui->custom_dp_coef_da0->value());
+    settings.setValue("dp/custom_dp_coef_nmp", this->ui->custom_dp_coef_nmp->value());
+    settings.setValue("dp/custom_dp_coef_cepstrum", this->ui->custom_dp_coef_cepstrum->value());
+    settings.setValue("dp/custom_dp_coef_spectrum", this->ui->custom_dp_coef_spectrum->value());
+    settings.setValue("dp/custom_dp_use_f0", this->ui->custom_dp_use_f0->isChecked());
+    settings.setValue("dp/custom_dp_use_df0", this->ui->custom_dp_use_df0->isChecked());
+    settings.setValue("dp/custom_dp_use_a0", this->ui->custom_dp_use_a0->isChecked());
+    settings.setValue("dp/custom_dp_use_da0", this->ui->custom_dp_use_da0->isChecked());
+    settings.setValue("dp/custom_dp_use_nmp", this->ui->custom_dp_use_nmp->isChecked());
+    settings.setValue("dp/custom_dp_use_spectrum", this->ui->custom_dp_use_spectrum->isChecked());
+    settings.setValue("dp/custom_dp_use_cepstrum", this->ui->custom_dp_use_cepstrum->isChecked());
 
     settings.setValue("dp/markDelimeter", this->ui->markDelimeter->value());
     settings.setValue("dp/markLimit", this->ui->markLimit->value());
@@ -440,9 +506,11 @@ void SettingsDialog::on_checkBox_8_stateChanged(int arg1)
         this->ui->markoutType->hide();
         this->ui->label_34->hide();
         this->ui->automarkingA0->hide();
+        this->ui->a0_dp_groupbox_3->hide();
     } else {
         this->ui->markoutType->show();
         this->ui->label_34->show();
         this->ui->automarkingA0->show();
+        this->ui->a0_dp_groupbox_3->show();
     }
 }

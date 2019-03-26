@@ -4,6 +4,7 @@
 #include "defines.h"
 
 #include "drawer.h"
+#include "dp/continuousdp.h"
 
 class DrawerDP : public Drawer
 {
@@ -42,6 +43,8 @@ protected:
     double centricGravityDerivativeUMP2, userCentricGravityDerivativeUMP2;
 
     SimpleGraphData * simple_data;
+
+    ContinuousDP * getDP(SimpleGraphData * dataSec);
 };
 
 #endif // DRAWERDP_H

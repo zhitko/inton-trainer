@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1106</width>
-    <height>853</height>
+    <width>1086</width>
+    <height>828</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -24,6 +24,19 @@
     <normaloff>:/icons/icons/settings-26.png</normaloff>:/icons/icons/settings-26.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QCheckBox" name="checkBox_8">
+     <property name="layoutDirection">
+      <enum>Qt::RightToLeft</enum>
+     </property>
+     <property name="text">
+      <string>experimental</string>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="enabled">
@@ -52,19 +65,6 @@
        <string>Settings</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_6">
-       <item>
-        <widget class="QCheckBox" name="checkBox_8">
-         <property name="layoutDirection">
-          <enum>Qt::RightToLeft</enum>
-         </property>
-         <property name="text">
-          <string>advanced</string>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
        <item>
         <widget class="QGroupBox" name="groupBox">
          <property name="sizePolicy">
@@ -249,6 +249,13 @@
           <string>Display</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_3">
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="showPlane">
+            <property name="text">
+             <string>Show  phase  plane</string>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="0">
            <widget class="QCheckBox" name="showPortr">
             <property name="text">
@@ -256,20 +263,6 @@
             </property>
             <property name="checked">
              <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="2">
-           <widget class="QCheckBox" name="showDerivativeF0">
-            <property name="text">
-             <string>Show derivative F0</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QCheckBox" name="showOriginalF0">
-            <property name="text">
-             <string>Show original F0</string>
             </property>
            </widget>
           </item>
@@ -283,20 +276,10 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="2">
-           <widget class="QCheckBox" name="showMeanValueUMP">
+          <item row="1" column="1">
+           <widget class="QCheckBox" name="showOriginalF0">
             <property name="text">
-             <string>Show mean value UMP</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QCheckBox" name="showPlane">
-            <property name="text">
-             <string>Show  phase  plane</string>
+             <string>Show original F0</string>
             </property>
            </widget>
           </item>
@@ -310,13 +293,37 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="2">
+          <item row="1" column="2">
+           <widget class="QCheckBox" name="showDerivativeF0">
+            <property name="text">
+             <string>Show derivative F0</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QCheckBox" name="showMeanValueUMP">
+            <property name="text">
+             <string>Show mean value UMP</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
            <widget class="QCheckBox" name="showCenterGravityUMP">
             <property name="text">
              <string>Show Center gravity UMP</string>
             </property>
             <property name="checked">
              <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="3">
+           <widget class="QCheckBox" name="showThresholds">
+            <property name="text">
+             <string>Show Thresholds</string>
             </property>
            </widget>
           </item>
@@ -336,14 +343,14 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
+          <item row="1" column="0">
            <widget class="QLabel" name="label_34">
             <property name="text">
              <string>Auto Marking Type</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
+          <item row="1" column="1">
            <widget class="QComboBox" name="markoutType">
             <property name="currentIndex">
              <number>3</number>
@@ -375,7 +382,7 @@
             </item>
            </widget>
           </item>
-          <item row="6" column="0" colspan="2">
+          <item row="2" column="0" colspan="2">
            <layout class="QGridLayout" name="gridLayout_5">
             <item row="0" column="0">
              <widget class="QGroupBox" name="automarkingA0">
@@ -486,7 +493,7 @@
           <enum>Qt::Vertical</enum>
          </property>
          <property name="sizeType">
-          <enum>QSizePolicy::Preferred</enum>
+          <enum>QSizePolicy::Expanding</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -522,6 +529,12 @@
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
         <widget class="QScrollArea" name="scrollArea">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="horizontalScrollBarPolicy">
           <enum>Qt::ScrollBarAsNeeded</enum>
          </property>
@@ -537,7 +550,7 @@
             <x>0</x>
             <y>0</y>
             <width>520</width>
-            <height>789</height>
+            <height>732</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -548,6 +561,12 @@
              </property>
              <item>
               <widget class="QGroupBox" name="groupBox_11">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="title">
                 <string>Dynamic Programming</string>
                </property>
@@ -591,54 +610,230 @@
                   </item>
                   <item>
                    <property name="text">
+                    <string>Cepstrum NMP</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Cepstrum NMP+A0</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
                     <string>Custom DP</string>
                    </property>
                   </item>
                  </widget>
                 </item>
+                <item row="1" column="0" colspan="2">
+                 <widget class="QGroupBox" name="custom_dp_groupbox">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="title">
+                   <string>Custom DP</string>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_4">
+                   <item row="1" column="0">
+                    <widget class="QCheckBox" name="custom_dp_use_f0">
+                     <property name="text">
+                      <string>F0</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="1">
+                    <widget class="QDoubleSpinBox" name="custom_dp_coef_spectrum">
+                     <property name="value">
+                      <double>1.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QLabel" name="label_28">
+                     <property name="text">
+                      <string>Coeficient</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="0">
+                    <widget class="QCheckBox" name="custom_dp_use_spectrum">
+                     <property name="text">
+                      <string>Spectrum</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="2">
+                    <widget class="QCheckBox" name="custom_dp_use_a0">
+                     <property name="text">
+                      <string>A0</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_27">
+                     <property name="text">
+                      <string>Use</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="1">
+                    <widget class="QDoubleSpinBox" name="custom_dp_coef_nmp">
+                     <property name="value">
+                      <double>1.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QCheckBox" name="custom_dp_use_df0">
+                     <property name="text">
+                      <string>dF0</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="0">
+                    <widget class="QCheckBox" name="custom_dp_use_nmp">
+                     <property name="text">
+                      <string>NMP</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="3">
+                    <widget class="QLabel" name="label_41">
+                     <property name="text">
+                      <string>Coeficient</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QDoubleSpinBox" name="custom_dp_coef_f0">
+                     <property name="value">
+                      <double>1.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QDoubleSpinBox" name="custom_dp_coef_df0">
+                     <property name="value">
+                      <double>1.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="3">
+                    <widget class="QDoubleSpinBox" name="custom_dp_coef_a0">
+                     <property name="value">
+                      <double>1.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="2">
+                    <widget class="QCheckBox" name="custom_dp_use_cepstrum">
+                     <property name="text">
+                      <string>Cepstrum</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="2">
+                    <widget class="QCheckBox" name="custom_dp_use_da0">
+                     <property name="text">
+                      <string>dA0</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="3">
+                    <widget class="QDoubleSpinBox" name="custom_dp_coef_cepstrum">
+                     <property name="value">
+                      <double>1.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="3">
+                    <widget class="QDoubleSpinBox" name="custom_dp_coef_da0">
+                     <property name="value">
+                      <double>1.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="2">
+                    <widget class="QLabel" name="label_39">
+                     <property name="text">
+                      <string>Use</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item row="2" column="0" colspan="2">
+                 <widget class="QGroupBox" name="a0_dp_groupbox_3">
+                  <property name="title">
+                   <string>Cepstrum A'0 / Cepstrum A0+A'0</string>
+                  </property>
+                  <property name="flat">
+                   <bool>false</bool>
+                  </property>
+                  <property name="checkable">
+                   <bool>false</bool>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_2">
+                   <item row="0" column="2">
+                    <widget class="QLabel" name="label_43">
+                     <property name="text">
+                      <string>A'0 Coeficient</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="3">
+                    <widget class="QDoubleSpinBox" name="dpDA0Coeficient">
+                     <property name="value">
+                      <double>1.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_42">
+                     <property name="text">
+                      <string>A0 Coeficient</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QDoubleSpinBox" name="dpA0Coeficient">
+                     <property name="value">
+                      <double>1.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
                 <item row="3" column="0">
+                 <widget class="QWidget" name="widget" native="true"/>
+                </item>
+                <item row="4" column="0">
                  <widget class="QLabel" name="label_29">
                   <property name="text">
                    <string>Threshold</string>
                   </property>
                  </widget>
                 </item>
-                <item row="3" column="1">
+                <item row="4" column="1">
                  <widget class="QSpinBox" name="continiusDpLimit">
                   <property name="maximum">
                    <number>9999</number>
                   </property>
                  </widget>
                 </item>
-                <item row="4" column="0">
+                <item row="5" column="0">
                  <widget class="QLabel" name="label_30">
                   <property name="text">
                    <string>kH</string>
                   </property>
                  </widget>
                 </item>
-                <item row="5" column="0">
-                 <widget class="QLabel" name="label_31">
-                  <property name="text">
-                   <string>kV</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="6" column="0">
-                 <widget class="QLabel" name="label_32">
-                  <property name="text">
-                   <string>kD</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="7" column="0">
-                 <widget class="QLabel" name="label_33">
-                  <property name="text">
-                   <string>kT</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="4" column="1">
+                <item row="5" column="1">
                  <widget class="QDoubleSpinBox" name="continiusDpKH">
                   <property name="singleStep">
                    <double>0.100000000000000</double>
@@ -648,7 +843,14 @@
                   </property>
                  </widget>
                 </item>
-                <item row="5" column="1">
+                <item row="6" column="0">
+                 <widget class="QLabel" name="label_31">
+                  <property name="text">
+                   <string>kV</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="6" column="1">
                  <widget class="QDoubleSpinBox" name="continiusDpKV">
                   <property name="singleStep">
                    <double>0.100000000000000</double>
@@ -658,7 +860,14 @@
                   </property>
                  </widget>
                 </item>
-                <item row="6" column="1">
+                <item row="7" column="0">
+                 <widget class="QLabel" name="label_32">
+                  <property name="text">
+                   <string>kD</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="7" column="1">
                  <widget class="QDoubleSpinBox" name="continiusDpKD">
                   <property name="singleStep">
                    <double>0.100000000000000</double>
@@ -668,14 +877,21 @@
                   </property>
                  </widget>
                 </item>
-                <item row="7" column="1">
+                <item row="8" column="0">
+                 <widget class="QLabel" name="label_33">
+                  <property name="text">
+                   <string>kT</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="8" column="1">
                  <widget class="QDoubleSpinBox" name="continiusDpKT">
                   <property name="value">
                    <double>20.000000000000000</double>
                   </property>
                  </widget>
                 </item>
-                <item row="8" column="0" colspan="2">
+                <item row="9" column="0" colspan="2">
                  <layout class="QGridLayout" name="gridLayout">
                   <item row="0" column="0">
                    <widget class="QCheckBox" name="showTime">
@@ -687,7 +903,7 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="1" column="0">
+                  <item row="0" column="1">
                    <widget class="QCheckBox" name="showError">
                     <property name="text">
                      <string>Show DP error</string>
@@ -698,162 +914,6 @@
                    </widget>
                   </item>
                  </layout>
-                </item>
-                <item row="2" column="0" colspan="2">
-                 <layout class="QGridLayout" name="gridLayout_2">
-                  <item row="1" column="3">
-                   <widget class="QDoubleSpinBox" name="dpDA0Coeficient">
-                    <property name="value">
-                     <double>1.000000000000000</double>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="0">
-                   <widget class="QLabel" name="label_8">
-                    <property name="text">
-                     <string>A0 Coeficient</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="1">
-                   <widget class="QDoubleSpinBox" name="dpA0Coeficient">
-                    <property name="value">
-                     <double>1.000000000000000</double>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="2">
-                   <widget class="QLabel" name="label_24">
-                    <property name="text">
-                     <string>A'0 Coeficient</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </item>
-                <item row="1" column="0" colspan="2">
-                 <widget class="QGroupBox" name="groupBox_8">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
-                  <property name="title">
-                   <string>Custom DP</string>
-                  </property>
-                  <layout class="QGridLayout" name="gridLayout_4">
-                   <item row="2" column="0">
-                    <widget class="QCheckBox" name="checkBox_2">
-                     <property name="text">
-                      <string>dF0</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="0">
-                    <widget class="QCheckBox" name="checkBox_3">
-                     <property name="text">
-                      <string>A0</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="7" column="0">
-                    <widget class="QCheckBox" name="checkBox_7">
-                     <property name="text">
-                      <string>NMP</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="4" column="0">
-                    <widget class="QCheckBox" name="checkBox_4">
-                     <property name="text">
-                      <string>dA0</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="0">
-                    <widget class="QCheckBox" name="checkBox">
-                     <property name="text">
-                      <string>F0</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="0">
-                    <widget class="QLabel" name="label_27">
-                     <property name="text">
-                      <string>Use</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="6" column="0">
-                    <widget class="QCheckBox" name="checkBox_6">
-                     <property name="text">
-                      <string>Cepstrum</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="5" column="0">
-                    <widget class="QCheckBox" name="checkBox_5">
-                     <property name="text">
-                      <string>Spectrum</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="1">
-                    <widget class="QLabel" name="label_28">
-                     <property name="text">
-                      <string>Coeficient</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="1">
-                    <widget class="QDoubleSpinBox" name="doubleSpinBox">
-                     <property name="value">
-                      <double>1.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="1">
-                    <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
-                     <property name="value">
-                      <double>1.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="1">
-                    <widget class="QDoubleSpinBox" name="doubleSpinBox_3">
-                     <property name="value">
-                      <double>1.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="4" column="1">
-                    <widget class="QDoubleSpinBox" name="doubleSpinBox_4">
-                     <property name="value">
-                      <double>1.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="5" column="1">
-                    <widget class="QDoubleSpinBox" name="doubleSpinBox_5">
-                     <property name="value">
-                      <double>1.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="6" column="1">
-                    <widget class="QDoubleSpinBox" name="doubleSpinBox_6">
-                     <property name="value">
-                      <double>1.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="7" column="1">
-                    <widget class="QDoubleSpinBox" name="doubleSpinBox_7">
-                     <property name="value">
-                      <double>1.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
                 </item>
                </layout>
               </widget>
@@ -1027,6 +1087,12 @@
        </item>
        <item>
         <widget class="QScrollArea" name="scrollArea_2">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="widgetResizable">
           <bool>true</bool>
          </property>
@@ -1035,8 +1101,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>528</width>
-            <height>761</height>
+            <width>518</width>
+            <height>711</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -1206,14 +1272,14 @@
                 <string>SPTK</string>
                </property>
                <layout class="QFormLayout" name="formLayout_4">
-                <item row="1" column="0">
+                <item row="0" column="0">
                  <widget class="QLabel" name="label_5">
                   <property name="text">
                    <string>Minimum fundamental frequency to search for (Hz)</string>
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="1">
+                <item row="0" column="1">
                  <widget class="QSpinBox" name="pitchMinFreqSpin">
                   <property name="maximum">
                    <number>65536</number>
@@ -1223,14 +1289,14 @@
                   </property>
                  </widget>
                 </item>
-                <item row="2" column="0">
+                <item row="1" column="0">
                  <widget class="QLabel" name="label_6">
                   <property name="text">
                    <string>Maximum fundamental frequency to search for (Hz)</string>
                   </property>
                  </widget>
                 </item>
-                <item row="2" column="1">
+                <item row="1" column="1">
                  <widget class="QSpinBox" name="pitchMaxFreqSpin">
                   <property name="maximum">
                    <number>65536</number>
@@ -1243,14 +1309,14 @@
                   </property>
                  </widget>
                 </item>
-                <item row="3" column="0">
+                <item row="2" column="0">
                  <widget class="QLabel" name="label_11">
                   <property name="text">
                    <string>Frame shift</string>
                   </property>
                  </widget>
                 </item>
-                <item row="3" column="1">
+                <item row="2" column="1">
                  <widget class="QSpinBox" name="pitchFrameShoftSpin">
                   <property name="maximum">
                    <number>65536</number>
@@ -1260,28 +1326,28 @@
                   </property>
                  </widget>
                 </item>
-                <item row="4" column="0">
+                <item row="3" column="0">
                  <widget class="QLabel" name="label_12">
                   <property name="text">
                    <string>Algorithm used for extraction of pitch. [0: RAPT, 1: SWIPE]</string>
                   </property>
                  </widget>
                 </item>
-                <item row="4" column="1">
+                <item row="3" column="1">
                  <widget class="QSpinBox" name="pitchATypeSpin">
                   <property name="maximum">
                    <number>1</number>
                   </property>
                  </widget>
                 </item>
-                <item row="5" column="0">
+                <item row="4" column="0">
                  <widget class="QLabel" name="label_13">
                   <property name="text">
                    <string>Output format. [0:pitch, 1:F0, 2:log(F0)]</string>
                   </property>
                  </widget>
                 </item>
-                <item row="5" column="1">
+                <item row="4" column="1">
                  <widget class="QSpinBox" name="pitchOTypeSpin">
                   <property name="maximum">
                    <number>2</number>
@@ -1291,24 +1357,24 @@
                   </property>
                  </widget>
                 </item>
-                <item row="6" column="0">
+                <item row="5" column="0">
                  <widget class="QLabel" name="label_14">
                   <property name="text">
                    <string>Voiced/unvoiced threhold (used only for RAPT algorithm)</string>
                   </property>
                  </widget>
                 </item>
-                <item row="6" column="1">
+                <item row="5" column="1">
                  <widget class="QDoubleSpinBox" name="pitchThreshRaptSpin"/>
                 </item>
-                <item row="7" column="0">
+                <item row="6" column="0">
                  <widget class="QLabel" name="label_15">
                   <property name="text">
                    <string>Voiced/unvoiced threhold (used only for SWIPE algorithm)</string>
                   </property>
                  </widget>
                 </item>
-                <item row="7" column="1">
+                <item row="6" column="1">
                  <widget class="QDoubleSpinBox" name="pitchThreshSwipeSpin">
                   <property name="decimals">
                    <number>2</number>

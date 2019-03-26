@@ -62,7 +62,8 @@ SOURCES += \
     analysis/ump.cpp \
     analysis/derivative.c \
     analysis/metrics.c \
-    analysis/functions.c
+    analysis/functions.c \
+    DP/multidp.cpp
 
 HEADERS  += \
     mainwindow.h \
@@ -94,7 +95,8 @@ HEADERS  += \
     analysis/mask_data.h \
     analysis/derivative.h \
     analysis/metrics.h \
-    analysis/functions.h
+    analysis/functions.h \
+    DP/multidp.h
 
 # OpenAL
 SOURCES += \
