@@ -6,7 +6,7 @@
 #include "dp.h"
 
 extern "C" {
-    #include "vector.h"
+    #include "sptk/vector.h"
 }
 
 class VectorSignal : public Signal<double>

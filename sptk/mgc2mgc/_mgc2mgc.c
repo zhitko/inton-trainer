@@ -67,7 +67,7 @@
 #if defined(WIN32)
 #  include "SPTK.h"
 #else
-#  include <SPTK.h>
+#  include "../SPTK.h"
 #endif
 
 void mgc2mgc(double *c1, const int m1, const double a1, const double g1,

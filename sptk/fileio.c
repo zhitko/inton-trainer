@@ -63,7 +63,7 @@
 #  include <io.h>
 #  include "SPTK.h"
 #else
-#  include <SPTK.h>
+#  include "./SPTK.h"
 #endif
 
 #define LINEBUFSIZE 256

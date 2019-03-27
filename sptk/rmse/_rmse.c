@@ -63,7 +63,7 @@
 #if defined(WIN32)
 #  include "SPTK.h"
 #else
-#  include <SPTK.h>
+#  include "../SPTK.h"
 #endif
 
 double rmse(double *x, double *y, const int n)

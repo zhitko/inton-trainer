@@ -3,7 +3,7 @@
 #include "buffer.h"
 
 extern "C" {
-    #include "SPTK/SPTK.h"
+    #include "sptk/SPTK.h"
 }
 
 #include <QDebug>

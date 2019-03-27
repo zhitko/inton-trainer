@@ -66,7 +66,7 @@
 #if defined(WIN32)
 #  include "SPTK.h"
 #else
-#  include <SPTK.h>
+#  include "../SPTK.h"
 #endif
 
 double dfs(double x, double *a, int m, double *b, int n, double *buf, int *bufp)

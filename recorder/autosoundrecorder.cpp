@@ -4,9 +4,9 @@
 #include "settingsdialog.h"
 
 extern "C" {
-    #include "SPTK/SPTK.h"
-    #include "SPTK/pitch/pitch.h"
-    #include "SPTK/x2x/x2x.h"
+    #include "sptk/SPTK.h"
+    #include "sptk/pitch/pitch.h"
+    #include "sptk/x2x/x2x.h"
 }
 
 #include <QDebug>

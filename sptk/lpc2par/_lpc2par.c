@@ -65,7 +65,7 @@
 #if defined(WIN32)
 #  include "SPTK.h"
 #else
-#  include <SPTK.h>
+#  include "../SPTK.h"
 #endif
 
 int lpc2par(double *a, double *k, const int m)

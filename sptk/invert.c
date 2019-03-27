@@ -64,7 +64,7 @@
 #if defined(WIN32)
 #  include "SPTK.h"
 #else
-#  include <SPTK.h>
+#  include "./SPTK.h"
 #endif
 
 double invert(double **mat, double **inv, const int n)

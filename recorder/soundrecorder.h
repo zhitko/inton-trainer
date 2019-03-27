@@ -6,7 +6,7 @@
 #include <QThread>
 
 extern "C" {
-    #include "./OpenAL/openal_wrapper.h"
+    #include "openal/openal_wrapper.h"
 }
 
 struct buffer;

@@ -6,8 +6,8 @@
 #include <QThread>
 
 extern "C" {
-    #include "./OpenAL/wavFile.h"
-    #include "./OpenAL/openal_wrapper.h"
+    #include "openal/wavFile.h"
+    #include "openal/openal_wrapper.h"
 }
 
 class SoundPlayer : public QThread

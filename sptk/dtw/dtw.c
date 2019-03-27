@@ -96,7 +96,7 @@ static char *rcs_id = "$Id: dtw.c,v 1.8 2013/12/16 09:01:55 mataki Exp $";
 #if defined(WIN32)
 #  include "SPTK.h"
 #else
-#  include <SPTK.h>
+#  include "../SPTK.h"
 #endif
 
 /*  Default Values  */

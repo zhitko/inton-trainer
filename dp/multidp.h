@@ -9,7 +9,7 @@
 #include "continuousdp.h"
 
 extern "C" {
-    #include "vector.h"
+    #include "sptk/vector.h"
 }
 
 class MultiDP : public ContinuousDP

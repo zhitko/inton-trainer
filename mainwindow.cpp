@@ -20,10 +20,10 @@
 #include <QInputDialog>
 
 #include "soundplayer.h"
-#include "Recorder/soundrecorder.h"
-#include "Recorder/autosoundrecorder.h"
-#include "Recorder/dpsoundrecorder.h"
-#include "Recorder/dpsoundrecorder.h"
+#include "recorder/soundrecorder.h"
+#include "recorder/autosoundrecorder.h"
+#include "recorder/dpsoundrecorder.h"
+#include "recorder/dpsoundrecorder.h"
 
 #include "graphswindow.h"
 #include "graphsevalwindow.h"
@@ -33,7 +33,7 @@
 #include "drawerdp.h"
 
 extern "C" {
-    #include "./SPTK/SPTK.h"
+    #include "./sptk/SPTK.h"
 }
 
 MainWindow::MainWindow(QWidget *parent)

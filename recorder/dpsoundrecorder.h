@@ -10,7 +10,7 @@ const int DP_SIGNALE_SCALE = 3;
 struct buffer;
 
 extern "C" {
-    #include "./SPTK/vector.h"
+    #include "./sptk/vector.h"
 }
 
 class ContinuousDP;

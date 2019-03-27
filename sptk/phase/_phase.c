@@ -65,7 +65,7 @@
 #if defined(WIN32)
 #  include "SPTK.h"
 #else
-#  include <SPTK.h>
+#  include "../SPTK.h"
 #endif
 
 void phase(double *p, const int mp, double *z, const int mz, double *ph,

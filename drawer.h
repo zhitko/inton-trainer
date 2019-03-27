@@ -9,15 +9,15 @@
 
 #define GRAPH_Y_VAL_MAX 10000
 
-#include "DP/vectordp.h"
-#include "DP/spectrdp.h"
+#include "dp/vectordp.h"
+#include "dp/spectrdp.h"
 #include "dataprocessing.h"
 
 extern "C" {
     #include "analysis/metrics.h"
-    #include "./OpenAL/wavFile.h"
-    #include "./SPTK/SPTK.h"
-    #include "./SPTK/vector.h"
+    #include "openal/wavFile.h"
+    #include "./sptk/SPTK.h"
+    #include "./sptk/vector.h"
 }
 
 mglData * createMglData(vector vec, mglData * data, bool nan = false);

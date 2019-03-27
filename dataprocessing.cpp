@@ -5,16 +5,16 @@
 #include "settingsdialog.h"
 
 extern "C" {
-    #include "./SPTK/SPTK.h"
-    #include "./SPTK/pitch/pitch.h"
-    #include "./SPTK/x2x/x2x.h"
-    #include "./SPTK/frame/frame.h"
-    #include "./SPTK/window/window.h"
-    #include "./SPTK/lpc/lpc.h"
-    #include "./SPTK/lpc2c/lpc2c.h"
-    #include "./SPTK/spec/spec.h"
-    #include "./others/func.h"
-    #include "./others/interpolation.h"
+    #include "sptk/SPTK.h"
+    #include "sptk/pitch/pitch.h"
+    #include "sptk/x2x/x2x.h"
+    #include "sptk/frame/frame.h"
+    #include "sptk/window/window.h"
+    #include "sptk/lpc/lpc.h"
+    #include "sptk/lpc2c/lpc2c.h"
+    #include "sptk/spec/spec.h"
+    #include "sptk/others/func.h"
+    #include "sptk/others/interpolation.h"
 }
 
 #include "processing/filemarkout.h"

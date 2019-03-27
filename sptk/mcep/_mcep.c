@@ -79,7 +79,7 @@
 #if defined(WIN32)
 #  include "SPTK.h"
 #else
-#  include <SPTK.h>
+#  include "../SPTK.h"
 #endif
 
 int mcep(double *xw, const int flng, double *mc, const int m, const double a,

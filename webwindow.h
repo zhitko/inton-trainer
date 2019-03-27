@@ -5,7 +5,7 @@
 
 #include <QMainWindow>
 #include <QUrl>
-#include <QWebFrame>
+#include <QWebEnginePage>
 
 namespace Ui {
 class WebWindow;

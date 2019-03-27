@@ -83,7 +83,7 @@ static char *rcs_id = "$Id: decimate.c,v 1.26 2013/12/17 01:49:49 mataki Exp $";
 #if defined(WIN32)
 #  include "SPTK.h"
 #else
-#  include <SPTK.h>
+#  include "../SPTK.h"
 #endif
 
 /*  Default Values  */

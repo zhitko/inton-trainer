@@ -10,8 +10,8 @@
 #define SETTINGS_DEFAULT_FILE "settings.default"
 
 extern "C" {
-    #include "./OpenAL/openal_wrapper.h"
-    #include "./SPTK.h"
+    #include "openal/openal_wrapper.h"
+    #include "./sptk/SPTK.h"
 }
 
 namespace Ui {

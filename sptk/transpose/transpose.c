@@ -90,7 +90,7 @@ static char *rcs_id = "$Id: transpose.c,v 1.6 2013/12/16 09:02:04 mataki Exp $";
 #if defined(WIN32)
 #  include "SPTK.h"
 #else
-#  include <SPTK.h>
+#  include "../SPTK.h"
 #endif
 
 /*   Command Name  */

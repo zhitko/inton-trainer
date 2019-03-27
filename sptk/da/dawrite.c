@@ -85,7 +85,7 @@ static char *rcs_id = "$Id: dawrite.c,v 1.32 2013/12/16 09:01:54 mataki Exp $";
 
 #ifndef WIN32
 #  include <unistd.h>
-#  include <SPTK.h>
+#  include "../SPTK.h"
 #  include "da.h"
 #else
 #  include "SPTK.h"
@@ -167,7 +167,7 @@ double ampgain = -1.0;
 int byteswap = 0;
 size_t abuf_size;
 
-#if defined(LINUX) || defined(FreeBSD)
+#if defined(LINUX) || defined(FreeBSD) || defined(unix)
 int org_vol, org_channels, org_precision, org_freq;
 #endif                          /* LINUX or FreeBSD */
 
@@ -402,7 +402,7 @@ void sndout(int leng)
 
 void init_audiodev(int dtype)
 {
-#if defined(LINUX) || defined(FreeBSD)
+#if defined(LINUX) || defined(FreeBSD) || defined(unix)
    int arg;
 
    adfp = getfp(AUDIO_DEV, "wb");
@@ -480,7 +480,7 @@ void change_play_gain(float volume)
 {
    int vol, arg;
 
-#if defined(LINUX) || defined(FreeBSD)
+#if defined(LINUX) || defined(FreeBSD) || defined(unix)
    vol = (int) ((MAXAMPGAIN * volume) / 100);
 
    arg = vol | (vol << 8);
@@ -507,7 +507,7 @@ void change_play_gain(float volume)
 
 void reset_audiodev(void)
 {
-#if defined(LINUX) || defined(FreeBSD)
+#if defined(LINUX) || defined(FreeBSD) || defined(unix)
    ACFD = open(MIXER_DEV, O_RDWR, 0);
    ADFD = open(AUDIO_DEV, O_RDWR, 0);
 

@@ -84,7 +84,7 @@
 #endif
 
 #if defined(__linux__)
-#  include "SPTK.h"
+#  include "../SPTK.h"
 #  include "frame.h"
 #else
 #  include "SPTK.h"

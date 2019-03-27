@@ -72,7 +72,7 @@ static char *rcs_id = "$Id: psgr.c,v 1.24 2013/12/16 09:02:02 mataki Exp $";
 #if defined(WIN32)
 #  include "SPTK.h"
 #else
-#  include <SPTK.h>
+#  include "../SPTK.h"
 #endif
 
 #include "psgr.h"

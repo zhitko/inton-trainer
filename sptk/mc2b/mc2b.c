@@ -84,7 +84,7 @@ static char *rcs_id = "$Id:";
 #if defined(WIN32)
 #  include "SPTK.h"
 #else
-#  include <SPTK.h>
+#  include "../SPTK.h"
 #endif
 
 /*  Default Values  */

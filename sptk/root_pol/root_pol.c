@@ -89,7 +89,7 @@ static char *rcs_id = "$Id: root_pol.c,v 1.25 2013/12/16 09:02:03 mataki Exp $";
 #if defined(WIN32)
 #  include "SPTK.h"
 #else
-#  include <SPTK.h>
+#  include "../SPTK.h"
 #endif
 
 /* Default Values */

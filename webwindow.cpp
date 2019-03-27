@@ -45,8 +45,8 @@ WebWindow::~WebWindow()
 
 void WebWindow::attachObject()
 {
-    QWebFrame * frame = this->ui->webView->page()->mainFrame();
-    frame->addToJavaScriptWindowObject( QString("api"), this );
+    //QWebFrame * frame = this->ui->webView->page()->mainFrame();
+    //frame->addToJavaScriptWindowObject( QString("api"), this );
 }
 
 bool WebWindow::isShowA0()
@@ -155,30 +155,30 @@ QString WebWindow::getFiles()
 
 void WebWindow::initWeb()
 {
-    QWebFrame * frame = this->ui->webView->page()->mainFrame();
-    attachObject();
-    connect(frame , SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(attachObject()) );
+//    QWebFrame * frame = this->ui->webView->page()->mainFrame();
+//    attachObject();
+//    connect(frame , SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(attachObject()) );
 
-    qDebug() << (QApplication::applicationDirPath() + "/html/index.html") << LOG_DATA;
-    this->ui->webView->load(QUrl::fromLocalFile(QApplication::applicationDirPath() + "/html/index.html"));
+//    qDebug() << (QApplication::applicationDirPath() + "/html/index.html") << LOG_DATA;
+//    this->ui->webView->load(QUrl::fromLocalFile(QApplication::applicationDirPath() + "/html/index.html"));
 
-    ui->webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-    connect(ui->webView, SIGNAL(linkClicked(QUrl)), this, SLOT(linkClickedWebView(QUrl)));
+//    ui->webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+//    connect(ui->webView, SIGNAL(linkClicked(QUrl)), this, SLOT(linkClickedWebView(QUrl)));
 }
 
 void WebWindow::linkClickedWebView(QUrl url) {
-    qDebug() << url.path() << LOG_DATA;
-    qDebug() << url.fileName() << LOG_DATA;
-    qDebug() << url.toString() << LOG_DATA;
-    if (url.toString().endsWith(".wav#dp")) {
-        this->mainWindow->evaluation(url.path(), new DrawerDP());
-    }else if (url.toString().endsWith(".wav#play")) {
-        this->mainWindow->playRecord(url.path());
-    }else if(url.fileName() == "settings.window"){
-        this->mainWindow->settingsShow();
-    }else if(url.fileName() == "main.window"){
-        this->mainWindow->show();
-    }else{
-        ui->webView->load(url);
-    }
+//    qDebug() << url.path() << LOG_DATA;
+//    qDebug() << url.fileName() << LOG_DATA;
+//    qDebug() << url.toString() << LOG_DATA;
+//    if (url.toString().endsWith(".wav#dp")) {
+//        this->mainWindow->evaluation(url.path(), new DrawerDP());
+//    }else if (url.toString().endsWith(".wav#play")) {
+//        this->mainWindow->playRecord(url.path());
+//    }else if(url.fileName() == "settings.window"){
+//        this->mainWindow->settingsShow();
+//    }else if(url.fileName() == "main.window"){
+//        this->mainWindow->show();
+//    }else{
+//        ui->webView->load(url);
+//    }
 }

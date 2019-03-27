@@ -57,7 +57,7 @@
 #if defined(WIN32)
 #  include "SPTK.h"
 #else
-#  include <SPTK.h>
+#  include "../SPTK.h"
 #endif
 
 #include "hts_engine_API/HTS_engine.h"

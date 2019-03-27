@@ -87,7 +87,7 @@
 # define M_PI (3.1415926536f)
 #endif
 #include "jkGetF0.h"
-#include "vector.h"
+#include "sptk/vector.h"
 
 int	    debug_level = 0;
 

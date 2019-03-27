@@ -52,6 +52,8 @@
 #ifndef SPTK
 #define SPTK
 
+#include <stdio.h>
+
 #ifndef FORMAT
 #define FORMAT  "float"
 #endif                          /* FORMAT */

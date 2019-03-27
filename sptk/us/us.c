@@ -97,7 +97,7 @@ static char *rcs_id = "$Id: us.c,v 1.29 2013/12/22 16:58:56 uratec Exp $";
 #if defined(WIN32)
 #  include "SPTK.h"
 #else
-#  include <SPTK.h>
+#  include "../SPTK.h"
 #endif
 
 /*  Required Functions  */

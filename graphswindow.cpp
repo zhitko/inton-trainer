@@ -10,24 +10,24 @@
 #include "settingsdialog.h"
 #include "drawer.h"
 #include "soundplayer.h"
-#include "Recorder/autosoundrecorder.h"
-#include "Recorder/timesoundrecorder.h"
+#include "recorder/autosoundrecorder.h"
+#include "recorder/timesoundrecorder.h"
 
 #include <QDebug>
 
 extern "C" {
-    #include "./OpenAL/wavFile.h"
-    #include "./OpenAL/openal_wrapper.h"
+    #include "openal/wavFile.h"
+    #include "openal/openal_wrapper.h"
 
     #include "float.h"
 
-    #include "./SPTK/SPTK.h"
-    #include "./SPTK/pitch/pitch.h"
-    #include "./SPTK/x2x/x2x.h"
-    #include "./SPTK/frame/frame.h"
-    #include "./SPTK/window/window.h"
-    #include "./SPTK/lpc/lpc.h"
-    #include "./SPTK/spec/spec.h"
+    #include "sptk/SPTK.h"
+    #include "sptk/pitch/pitch.h"
+    #include "sptk/x2x/x2x.h"
+    #include "sptk/frame/frame.h"
+    #include "sptk/window/window.h"
+    #include "sptk/lpc/lpc.h"
+    #include "sptk/spec/spec.h"
 }
 
 GraphsWindow::GraphsWindow(QWidget *parent) :

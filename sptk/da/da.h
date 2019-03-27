@@ -50,7 +50,7 @@
 #include <sys/ioctl.h>
 #endif
 
-#if defined(LINUX) || defined(FreeBSD)
+#if defined(LINUX) || defined(FreeBSD) || defined(unix)
 #  include <sys/soundcard.h>
 #  define AUDIO_DEV "/dev/dsp"
 #  define MIXER_DEV "/dev/mixer"

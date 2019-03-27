@@ -64,7 +64,7 @@
 #if defined(WIN32)
 #  include "SPTK.h"
 #else
-#  include <SPTK.h>
+#  include "../SPTK.h"
 #endif
 
 int vq(double *x, double *cb, const int l, const int cbsize)

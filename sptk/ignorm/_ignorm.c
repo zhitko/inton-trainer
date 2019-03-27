@@ -62,7 +62,7 @@
 #if defined(WIN32)
 #  include "SPTK.h"
 #else
-#  include <SPTK.h>
+#  include "../SPTK.h"
 #endif
 
 void ignorm(double *c1, double *c2, int m, const double g)

@@ -5,7 +5,7 @@
 #include "defines.h"
 
 extern "C" {
-    #include "./SPTK/others/func.h"
+    #include "./sptk/others/func.h"
 }
 
 MultiDP::MultiDP(int sigSize, int pttrnSize, int limit):

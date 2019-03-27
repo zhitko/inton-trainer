@@ -84,7 +84,7 @@
 #  endif
 #endif
 
-#  include "SPTK.h"
+#  include "../SPTK.h"
 #  include "window.h"
 
 /*  Default Values */

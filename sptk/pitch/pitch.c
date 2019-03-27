@@ -94,7 +94,7 @@
 #  endif
 #endif
 
-#  include "SPTK.h"
+#  include "../SPTK.h"
 #  include "pitch.h"
 
 typedef struct _float_list {

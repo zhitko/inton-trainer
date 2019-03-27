@@ -79,7 +79,7 @@
 #  endif
 #endif
 
-#  include "SPTK.h"
+#  include "../SPTK.h"
 #  include "lpc.h"
 
 /*  Default Values */

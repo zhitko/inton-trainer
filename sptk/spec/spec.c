@@ -92,7 +92,7 @@
 
 #include <math.h>
 
-#  include "SPTK.h"
+#  include "../SPTK.h"
 #  include "spec.h"
 
 /*  Default Values  */

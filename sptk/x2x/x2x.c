@@ -93,7 +93,7 @@
 #include <ctype.h>
 #include <limits.h>
 
-#  include "SPTK.h"
+#  include "../SPTK.h"
 #  include "x2x.h"
 
 #include <limits.h>

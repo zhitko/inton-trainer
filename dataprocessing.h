@@ -6,8 +6,8 @@
 #include <QString>
 
 extern "C" {
-    #include "./SPTK/vector.h"
-    #include "./OpenAL/wavFile.h"
+    #include "./sptk/vector.h"
+    #include "openal/wavFile.h"
     #include "./analysis/mask_data.h"
 }
 

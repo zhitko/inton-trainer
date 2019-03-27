@@ -66,7 +66,7 @@
 #if defined(WIN32)
 #  include "SPTK.h"
 #else
-#  include <SPTK.h>
+#  include "../SPTK.h"
 #endif
 
 int fftr2(double x[], double y[], const int n)

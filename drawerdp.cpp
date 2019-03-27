@@ -20,7 +20,7 @@
 #include "analysis/mask_data.h"
 
 extern "C" {
-    #include "./openal/wavFile.h"
+    #include "openal/wavFile.h"
 
     #include "analysis/functions.h"
 

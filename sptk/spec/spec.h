@@ -1,5 +1,5 @@
-#include "vector.h"
-#include "SPTK.h"
+#include "../vector.h"
+#include "../SPTK.h"
 
 #ifndef SPTK_SPEC
 #define SPTK_SPEC

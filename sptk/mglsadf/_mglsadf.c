@@ -79,7 +79,7 @@
 #if defined(WIN32)
 #  include "SPTK.h"
 #else
-#  include <SPTK.h>
+#  include "../SPTK.h"
 #endif
 
 static double mglsadff(double x, double *b, const int m, const double a,

@@ -6,8 +6,8 @@
 #include <QMainWindow>
 
 extern "C" {
-    #include "./OpenAL/openal_wrapper.h"
-    #include "./OpenAL/wavFile.h"
+    #include "openal/openal_wrapper.h"
+    #include "openal/wavFile.h"
 }
 
 #include "defines.h"

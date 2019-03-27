@@ -99,7 +99,7 @@
 #include <sndfile.h> // http://www.mega-nerd.com/libsndfile/
 #endif
 
-#include "vector.h"  // comes with release
+#include "../../vector.h"  // comes with release
 
 #define NOK     0
 

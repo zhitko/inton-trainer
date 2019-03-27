@@ -1,7 +1,7 @@
 #if defined(WIN32)
 #  include "vector.h"
 #else
-#  include <vector.h>
+#  include "../vector.h"
 #endif
 
 vector sptk_x2x(const char *fname);

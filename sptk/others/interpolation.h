@@ -1,4 +1,4 @@
-#include "vector.h"
+#include "../vector.h"
 
 #ifndef SPTK_INTERPOLATION
 #define SPTK_INTERPOLATION

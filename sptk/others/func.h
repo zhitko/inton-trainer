@@ -1,4 +1,4 @@
-#include "vector.h"
+#include "../vector.h"
 #include "defines.h"
 
 #ifndef SPTK_FUNC

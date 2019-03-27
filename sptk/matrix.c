@@ -78,7 +78,7 @@
 #if defined(WIN32)
 #  include "SPTK.h"
 #else
-#  include <SPTK.h>
+#  include "./SPTK.h"
 #endif
 
 static double *tmp;
