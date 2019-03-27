@@ -201,13 +201,13 @@ public:
         d = abs(c1-c2)/aabb;
     }
 
-//    ~DP()
-//    {
-//        pattern->freeSignal();
-//        signal->freeSignal();
-//        delete pattern;
-//        delete signal;
-//    }
+    ~DP()
+    {
+        pattern->freeSignal();
+        signal->freeSignal();
+        delete pattern;
+        delete signal;
+    }
 
     void applySettings(double kh, double kv, double kd, double kt)
     {

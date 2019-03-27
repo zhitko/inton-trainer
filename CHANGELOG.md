@@ -4,10 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [0.4.10] - 2019-03-09
+## [0.4.10] - 2019-03-28
 
 ### Add
-- New autosegmentation algorithm
+- New autosegmentation algorithm by custom vectors
+- Add keep ratio to UMP/NMP generation
 
 ## [0.4.9] - 2019-03-05
 

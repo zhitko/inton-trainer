@@ -16,9 +16,10 @@ typedef struct { int from; int len; int type; } MaskDetails;
  * @param mask_p
  * @param mask_n
  * @param mask_t
- * @param mask_scale
- * @param part_len
- * @param useStripUmp
+ * @param mask_scale Number Scale result mask
+ * @param part_len Number Segmants length
+ * @param useStripUmp Boolean Remove data between segmants
+ * @param keepRatio Boolean Keep segments ratio
  * @return
  */
 vector makeUmp(
@@ -29,7 +30,8 @@ vector makeUmp(
         MaskData mask_t,
         double mask_scale,
         int part_len,
-        int useStripUmp
+        int useStripUmp,
+        int keepRatio
 );
 
 #endif // UMP_H

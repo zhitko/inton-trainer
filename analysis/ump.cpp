@@ -21,7 +21,8 @@ vector makeUmp(
         MaskData mask_t,
         double mask_scale,
         int part_len,
-        int useStripUmp
+        int useStripUmp,
+        int keepRatio
 ) {
     const int TYPE_P = 1;
     const int TYPE_N = 2;
@@ -198,9 +199,9 @@ vector makeUmp(
     qDebug() << "strip_data " << strip_data.x << LOG_DATA;
 
     qDebug() << "clone_len " << clone_len << LOG_DATA;
-    qDebug() << "part_len " << clone_len << LOG_DATA;
+    qDebug() << "part_len " << part_len << LOG_DATA;
 
-    vector resized_data = zerov(part_len*clone_len);
+    vector result = zerov(part_len*clone_len);
 
     double scale = 1.0 * mask->x / data->x;
 
@@ -208,6 +209,11 @@ vector makeUmp(
 
     ii = 0;
     int p = 0;
+    int result_index = 0;
+    int resize_to = part_len;
+    int clone_total_len = 0;
+    for(int i=0; i<clone_len; i++) clone_total_len += clone_details[i].len/scale;
+
     for(int i=0; i<clone_len; i++)
     {
         int len = clone_details[i].len/scale;
@@ -219,11 +225,16 @@ vector makeUmp(
         }
         qDebug() << "len " << in.x << " - " << clone_details[i].from << LOG_DATA;
 
-        vector out = vector_resize(in, part_len);
+        if (keepRatio)
+        {
+            resize_to = result.x * (1.0 * len / clone_total_len);
+        }
+
+        vector out = vector_resize(in, resize_to);
         for (int j=0; j<out.x; j++)
         {
-            p = j + i*part_len;
-            setv(resized_data, p, getv(out, j));
+            setv(result, result_index, getv(out, j));
+            result_index++;
         }
         freev(in);
         freev(out);
@@ -236,8 +247,8 @@ vector makeUmp(
 
     freev(*data);
     qDebug() << "freev data " << LOG_DATA;
-    data->v = resized_data.v;
-    data->x = resized_data.x;
+    data->v = result.v;
+    data->x = result.x;
     qDebug() << "data set " << LOG_DATA;
 
     delete clone_details;

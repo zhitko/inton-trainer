@@ -1100,7 +1100,8 @@ void DrawerDP::Proc(QString fname)
                 this->simple_data->md_t,
                 mask_scale,
                 sptk_settings->dp->portLen,
-                sptk_settings->dp->useStripUmp
+                sptk_settings->dp->useStripUmp,
+                sptk_settings->dp->ump_keep_ratio
             );
 
             qDebug() << "ump_mask " << ump_mask.x << LOG_DATA;
@@ -1131,7 +1132,8 @@ void DrawerDP::Proc(QString fname)
                 this->simple_data->md_t,
                 mask_scale,
                 sptk_settings->dp->portLen,
-                sptk_settings->dp->useStripUmp
+                sptk_settings->dp->useStripUmp,
+                sptk_settings->dp->ump_keep_ratio
             );
 
             qDebug() << "derivative_ump_mask " << derivative_ump_mask.x << LOG_DATA;
@@ -1592,7 +1594,8 @@ void DrawerDP::Proc(QString fname)
                 this->simple_data->md_t,
                 mask_scale,
                 sptk_settings->dp->portLen,
-                sptk_settings->dp->useStripUmp
+                sptk_settings->dp->useStripUmp,
+                sptk_settings->dp->ump_keep_ratio
             );
 
             this->secUmpData = createMglData(sec_ump, this->secUmpData);
@@ -1659,7 +1662,8 @@ void DrawerDP::Proc(QString fname)
                 this->simple_data->md_t,
                 mask_scale,
                 sptk_settings->dp->portLen,
-                sptk_settings->dp->useStripUmp
+                sptk_settings->dp->useStripUmp,
+                sptk_settings->dp->ump_keep_ratio
             );
 
             this->secUmpDerivativeData = createMglData(derivative_sec_ump, this->secUmpDerivativeData);

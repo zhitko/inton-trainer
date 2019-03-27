@@ -116,6 +116,7 @@ DP_SETTINGS *initDpSettings()
     dp->mark_labels = "F (Failure), D (Insufficient), C (Mediocre), B (Satisfactory), A (Excellent)";
     dp->smooth_frame = 1;
     dp->show_marks = 1;
+    dp->ump_keep_ratio = 0;
     dp->auto_marking = 1;
     dp->markoutA0limit = 10;
     dp->markoutType = MARKOUT_A0_INTEGRAL;
