@@ -264,7 +264,7 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->SetTicks('x', sptk_settings->dp->portLen);
             gr->Grid("x", "W5-", "");
 
-            gr->Area(*this->umpMask, "gwwww!");
+            gr->Area(*this->umpMask, "{g9}");
 
             if (sptk_settings->dp->showF0 || !sptk_settings->dp->showDerivativeF0)
             {
@@ -428,7 +428,7 @@ int DrawerDP::Draw(mglGraph *gr)
                 gr->SetTicks('x', sptk_settings->dp->portLen);
                 gr->Grid("x", "W5-", "");
 
-                gr->Area(*this->umpMask, "gwwww!");
+                gr->Area(*this->umpMask, "{g9}");
                 if (sptk_settings->dp->showF0 || !sptk_settings->dp->showDerivativeF0)
                 {
                     gr->SetRange('x', 0, this->umpData->nx);
@@ -870,6 +870,19 @@ ContinuousDP * DrawerDP::getDP(SimpleGraphData * dataSec)
         qDebug() << "MultiDP maxCepstrum " << dp->maxCepstrum << LOG_DATA;
 
         return dp;
+    }
+}
+
+void DrawerDP::reProc()
+{
+    if (!this->first)
+    {
+        this->first = true;
+        this->Proc(this->fileName);
+    } else {
+        this->first = true;
+        this->Proc(this->fileName);
+        this->Proc(this->secFileName);
     }
 }
 

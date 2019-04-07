@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Add
 - New autosegmentation algorithm by custom vectors
 - Add keep ratio to UMP/NMP generation
+- Add automarking switch to graph window
+
+### Change
+- Change show original/nmp to 2 button switch
+- Chnage graph window buttons titles
+
+## Fix
+- Automarking issue with nmp signal zero value
 
 ## [0.4.9] - 2019-03-05
 

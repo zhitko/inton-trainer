@@ -24,9 +24,11 @@ signals:
 public slots:
     void playTemplate();
     void showUMP();
+    void showSource();
     void saveMetrics();
     void openMetrics();
-
+    void showManually();
+    void showAutomatically();
 };
 
 #endif // GRAPHSEVALWINDOW_H

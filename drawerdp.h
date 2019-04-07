@@ -14,6 +14,7 @@ public:
 
     virtual int Draw(mglGraph *gr);
     void Proc(QString fname);
+    virtual void reProc();
     virtual int getDataSeconds();
 
 private:

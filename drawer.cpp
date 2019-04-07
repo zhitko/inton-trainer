@@ -164,6 +164,11 @@ double Drawer::calcResultMark(vector v1, vector v2)
     return 100 - diff * 100;
 }
 
+void Drawer::reProc()
+{
+    this->Proc(this->fileName);
+}
+
 void Drawer::Proc(QString fname)
 {
     MathGLSettings * mathgl_settings = SettingsDialog::getMathGLSettings();

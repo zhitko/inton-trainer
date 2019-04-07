@@ -116,92 +116,97 @@ oal_device * SettingsDialog::getOutputDevice()
 
 SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
 {
-    SPTK_SETTINGS * sptk_settings = initSptkSettings();
+    static SPTK_SETTINGS * sptk_settings = initSptkSettings();
+    static bool loaded = false;
 
-    SettingsDialog * instance = getInstance();
-    instance->loadSettings();
+    if (!loaded)
+    {
+        loaded = true;
+        SettingsDialog * instance = getInstance();
+        instance->loadSettings();
 
-    sptk_settings->pitch->MAX_FREQ = instance->ui->pitchMaxFreqSpin->value();
-    sptk_settings->pitch->MIN_FREQ = instance->ui->pitchMinFreqSpin->value();
-    sptk_settings->pitch->FRAME_SHIFT = instance->ui->pitchFrameShoftSpin->value();
-    sptk_settings->pitch->ATYPE = instance->ui->pitchATypeSpin->value();
-    sptk_settings->pitch->OTYPE = instance->ui->pitchOTypeSpin->value();
-    sptk_settings->pitch->THRESH_RAPT = instance->ui->pitchThreshRaptSpin->value();
-    sptk_settings->pitch->THRESH_SWIPE = instance->ui->pitchThreshSwipeSpin->value();
+        sptk_settings->pitch->MAX_FREQ = instance->ui->pitchMaxFreqSpin->value();
+        sptk_settings->pitch->MIN_FREQ = instance->ui->pitchMinFreqSpin->value();
+        sptk_settings->pitch->FRAME_SHIFT = instance->ui->pitchFrameShoftSpin->value();
+        sptk_settings->pitch->ATYPE = instance->ui->pitchATypeSpin->value();
+        sptk_settings->pitch->OTYPE = instance->ui->pitchOTypeSpin->value();
+        sptk_settings->pitch->THRESH_RAPT = instance->ui->pitchThreshRaptSpin->value();
+        sptk_settings->pitch->THRESH_SWIPE = instance->ui->pitchThreshSwipeSpin->value();
 
-    sptk_settings->plotF0->frame = instance->ui->plotMidFrameF0Spin->value();
-    sptk_settings->plotF0->interpolation_type = instance->ui->plotInterpolationTypeF0Box->currentIndex();
-    sptk_settings->plotF0->normF0MinMax = instance->ui->normF0MinMax->isChecked();
+        sptk_settings->plotF0->frame = instance->ui->plotMidFrameF0Spin->value();
+        sptk_settings->plotF0->interpolation_type = instance->ui->plotInterpolationTypeF0Box->currentIndex();
+        sptk_settings->plotF0->normF0MinMax = instance->ui->normF0MinMax->isChecked();
 
-    sptk_settings->plotEnergy->frame = instance->ui->plotLinFrameEnergySpin->value();
-    sptk_settings->plotEnergy->interpolation_type = instance->ui->plotInterpolationTypeEnergyBox->currentIndex();
+        sptk_settings->plotEnergy->frame = instance->ui->plotLinFrameEnergySpin->value();
+        sptk_settings->plotEnergy->interpolation_type = instance->ui->plotInterpolationTypeEnergyBox->currentIndex();
 
-    sptk_settings->frame->leng = instance->ui->frameSizeBox->currentText().toInt();
-    sptk_settings->frame->shift = instance->ui->frameShiftSpin->value();
-    sptk_settings->window->leng = instance->ui->frameSizeBox->currentText().toInt();
-    sptk_settings->window->window_type = static_cast<Window>(instance->ui->windoTypeBox->currentIndex());
-    sptk_settings->lpc->leng = instance->ui->frameSizeBox->currentText().toInt();
-    sptk_settings->spec->leng = instance->ui->frameSizeBox->currentText().toInt();
+        sptk_settings->frame->leng = instance->ui->frameSizeBox->currentText().toInt();
+        sptk_settings->frame->shift = instance->ui->frameShiftSpin->value();
+        sptk_settings->window->leng = instance->ui->frameSizeBox->currentText().toInt();
+        sptk_settings->window->window_type = static_cast<Window>(instance->ui->windoTypeBox->currentIndex());
+        sptk_settings->lpc->leng = instance->ui->frameSizeBox->currentText().toInt();
+        sptk_settings->spec->leng = instance->ui->frameSizeBox->currentText().toInt();
 
-    sptk_settings->dp->continiusLimit = instance->ui->continiusDpLimit->value();
+        sptk_settings->dp->continiusLimit = instance->ui->continiusDpLimit->value();
 
-    sptk_settings->dp->continiusKD = instance->ui->continiusDpKD->value();
-    sptk_settings->dp->continiusKH = instance->ui->continiusDpKH->value();
-    sptk_settings->dp->continiusKT = instance->ui->continiusDpKT->value();
-    sptk_settings->dp->continiusKV = instance->ui->continiusDpKV->value();
+        sptk_settings->dp->continiusKD = instance->ui->continiusDpKD->value();
+        sptk_settings->dp->continiusKH = instance->ui->continiusDpKH->value();
+        sptk_settings->dp->continiusKT = instance->ui->continiusDpKT->value();
+        sptk_settings->dp->continiusKV = instance->ui->continiusDpKV->value();
 
-    sptk_settings->dp->portLen = instance->ui->portLen->value();
-    sptk_settings->dp->umpSmoothType = instance->ui->umpSmoothType->currentIndex();
-    sptk_settings->dp->umpSmoothValue = instance->ui->umpSmoothValue->value();
-    sptk_settings->dp->showA0 = instance->ui->showA0->isChecked();
-    sptk_settings->dp->showPortr = instance->ui->showPortr->isChecked();
-    sptk_settings->dp->showError = instance->ui->showError->isChecked();
-    sptk_settings->dp->showF0 = instance->ui->showF0->isChecked();
-    sptk_settings->dp->showOriginalF0 = instance->ui->showOriginalF0->isChecked();
-    sptk_settings->dp->showDerivativeF0 = instance->ui->showDerivativeF0->isChecked();
-    sptk_settings->dp->showPlane = instance->ui->showPlane->isChecked();
-    sptk_settings->dp->showTime = instance->ui->showTime->isChecked();
-    sptk_settings->dp->errorType = instance->ui->errorTypeBox->currentIndex();
-    sptk_settings->dp->useForDP = instance->ui->useForDP->currentIndex();
-    sptk_settings->dp->dpA0Coeficient = instance->ui->dpA0Coeficient->value();
-    sptk_settings->dp->dpDA0Coeficient = instance->ui->dpDA0Coeficient->value();
-    sptk_settings->dp->showMeanValueUMP = instance->ui->showMeanValueUMP->isChecked();
-    sptk_settings->dp->showCenterGravityUMP = instance->ui->showCenterGravityUMP->isChecked();
-    sptk_settings->dp->showThresholds = instance->ui->showThresholds->isChecked();
+        sptk_settings->dp->portLen = instance->ui->portLen->value();
+        sptk_settings->dp->umpSmoothType = instance->ui->umpSmoothType->currentIndex();
+        sptk_settings->dp->umpSmoothValue = instance->ui->umpSmoothValue->value();
+        sptk_settings->dp->showA0 = instance->ui->showA0->isChecked();
+        sptk_settings->dp->showPortr = instance->ui->showPortr->isChecked();
+        sptk_settings->dp->showError = instance->ui->showError->isChecked();
+        sptk_settings->dp->showF0 = instance->ui->showF0->isChecked();
+        sptk_settings->dp->showOriginalF0 = instance->ui->showOriginalF0->isChecked();
+        sptk_settings->dp->showDerivativeF0 = instance->ui->showDerivativeF0->isChecked();
+        sptk_settings->dp->showPlane = instance->ui->showPlane->isChecked();
+        sptk_settings->dp->showTime = instance->ui->showTime->isChecked();
+        sptk_settings->dp->errorType = instance->ui->errorTypeBox->currentIndex();
+        sptk_settings->dp->useForDP = instance->ui->useForDP->currentIndex();
+        sptk_settings->dp->dpA0Coeficient = instance->ui->dpA0Coeficient->value();
+        sptk_settings->dp->dpDA0Coeficient = instance->ui->dpDA0Coeficient->value();
+        sptk_settings->dp->showMeanValueUMP = instance->ui->showMeanValueUMP->isChecked();
+        sptk_settings->dp->showCenterGravityUMP = instance->ui->showCenterGravityUMP->isChecked();
+        sptk_settings->dp->showThresholds = instance->ui->showThresholds->isChecked();
 
-    sptk_settings->dp->multiF0Coefficient = instance->ui->custom_dp_coef_f0->value();
-    sptk_settings->dp->multiDF0Coefficient = instance->ui->custom_dp_coef_df0->value();
-    sptk_settings->dp->multiA0Coefficient = instance->ui->custom_dp_coef_a0->value();
-    sptk_settings->dp->multiDA0Coefficient = instance->ui->custom_dp_coef_da0->value();
-    sptk_settings->dp->multiNMPCoefficient = instance->ui->custom_dp_coef_nmp->value();
-    sptk_settings->dp->multiSpectrumCoefficient = instance->ui->custom_dp_coef_spectrum->value();
-    sptk_settings->dp->multiCepstrumCoefficient = instance->ui->custom_dp_coef_cepstrum->value();
-    sptk_settings->dp->multiUseF0 = instance->ui->custom_dp_use_f0->isChecked();
-    sptk_settings->dp->multiUseDF0 = instance->ui->custom_dp_use_df0->isChecked();
-    sptk_settings->dp->multiUseA0 = instance->ui->custom_dp_use_a0->isChecked();
-    sptk_settings->dp->multiUseDA0 = instance->ui->custom_dp_use_da0->isChecked();
-    sptk_settings->dp->multiUseNMP = instance->ui->custom_dp_use_nmp->isChecked();
-    sptk_settings->dp->multiUseSpectrum = instance->ui->custom_dp_use_spectrum->isChecked();
-    sptk_settings->dp->multiUseCepstrum = instance->ui->custom_dp_use_cepstrum->isChecked();
+        sptk_settings->dp->multiF0Coefficient = instance->ui->custom_dp_coef_f0->value();
+        sptk_settings->dp->multiDF0Coefficient = instance->ui->custom_dp_coef_df0->value();
+        sptk_settings->dp->multiA0Coefficient = instance->ui->custom_dp_coef_a0->value();
+        sptk_settings->dp->multiDA0Coefficient = instance->ui->custom_dp_coef_da0->value();
+        sptk_settings->dp->multiNMPCoefficient = instance->ui->custom_dp_coef_nmp->value();
+        sptk_settings->dp->multiSpectrumCoefficient = instance->ui->custom_dp_coef_spectrum->value();
+        sptk_settings->dp->multiCepstrumCoefficient = instance->ui->custom_dp_coef_cepstrum->value();
+        sptk_settings->dp->multiUseF0 = instance->ui->custom_dp_use_f0->isChecked();
+        sptk_settings->dp->multiUseDF0 = instance->ui->custom_dp_use_df0->isChecked();
+        sptk_settings->dp->multiUseA0 = instance->ui->custom_dp_use_a0->isChecked();
+        sptk_settings->dp->multiUseDA0 = instance->ui->custom_dp_use_da0->isChecked();
+        sptk_settings->dp->multiUseNMP = instance->ui->custom_dp_use_nmp->isChecked();
+        sptk_settings->dp->multiUseSpectrum = instance->ui->custom_dp_use_spectrum->isChecked();
+        sptk_settings->dp->multiUseCepstrum = instance->ui->custom_dp_use_cepstrum->isChecked();
 
-    sptk_settings->dp->recordingSeconds = instance->ui->recordingSeconds->value();
-    sptk_settings->dp->recordingMaxFiles = instance->ui->recordingMaxFiles->value();
+        sptk_settings->dp->recordingSeconds = instance->ui->recordingSeconds->value();
+        sptk_settings->dp->recordingMaxFiles = instance->ui->recordingMaxFiles->value();
 
-    sptk_settings->dp->mark_delimeter = instance->ui->markDelimeter->value();
-    sptk_settings->dp->mark_level = instance->ui->markLimit->value();
-    sptk_settings->dp->relative_limit = instance->ui->relativeLimit->value();
-    sptk_settings->dp->mark_labels = strdup(instance->ui->markLabels->text().toStdString().c_str());
+        sptk_settings->dp->mark_delimeter = instance->ui->markDelimeter->value();
+        sptk_settings->dp->mark_level = instance->ui->markLimit->value();
+        sptk_settings->dp->relative_limit = instance->ui->relativeLimit->value();
+        sptk_settings->dp->mark_labels = strdup(instance->ui->markLabels->text().toStdString().c_str());
 
-    sptk_settings->dp->markoutA0limit = instance->ui->markoutA0limit->value();
+        sptk_settings->dp->markoutA0limit = instance->ui->markoutA0limit->value();
 
-    sptk_settings->dp->markoutA0IntA0abs = instance->ui->markoutA0IntA0abs->value();
-    sptk_settings->dp->markoutA0IntThN = instance->ui->markoutA0IntThN->value();
+        sptk_settings->dp->markoutA0IntA0abs = instance->ui->markoutA0IntA0abs->value();
+        sptk_settings->dp->markoutA0IntThN = instance->ui->markoutA0IntThN->value();
 
-    sptk_settings->dp->markoutType = instance->ui->markoutType->currentIndex();
-    sptk_settings->dp->show_marks = instance->ui->showMarks->isChecked();
-    sptk_settings->dp->auto_marking = instance->ui->autoMarking->isChecked();
+        sptk_settings->dp->markoutType = instance->ui->markoutType->currentIndex();
+        sptk_settings->dp->show_marks = instance->ui->showMarks->isChecked();
+        sptk_settings->dp->auto_marking = instance->ui->autoMarking->isChecked();
 
-    sptk_settings->dp->ump_keep_ratio = instance->ui->umpKeepRatio->isChecked();
+        sptk_settings->dp->ump_keep_ratio = instance->ui->umpKeepRatio->isChecked();
+    }
 
     return sptk_settings;
 }

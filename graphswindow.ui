@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1175</width>
-    <height>685</height>
+    <height>748</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -53,16 +53,7 @@
         <attribute name="title">
          <string>Training</string>
         </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout_4">
-         <property name="spacing">
-          <number>25</number>
-         </property>
-         <property name="topMargin">
-          <number>20</number>
-         </property>
-         <property name="bottomMargin">
-          <number>9</number>
-         </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
           <widget class="QPushButton" name="playBtn">
            <property name="font">
@@ -73,7 +64,7 @@
             </font>
            </property>
            <property name="text">
-            <string>Play Template</string>
+            <string>Play reference sample</string>
            </property>
            <property name="icon">
             <iconset resource="icons.qrc">
@@ -100,7 +91,7 @@
             </font>
            </property>
            <property name="text">
-            <string>Play Template</string>
+            <string>Play reference sample</string>
            </property>
            <property name="icon">
             <iconset resource="icons.qrc">
@@ -126,7 +117,7 @@
             </font>
            </property>
            <property name="text">
-            <string>Play Record</string>
+            <string>Play recorded (test) file</string>
            </property>
            <property name="icon">
             <iconset resource="icons.qrc">
@@ -197,7 +188,7 @@
             </font>
            </property>
            <property name="text">
-            <string>Open Instance File</string>
+            <string>Open test file</string>
            </property>
            <property name="icon">
             <iconset resource="icons.qrc">
@@ -206,23 +197,122 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="showUMP">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>40</height>
-            </size>
+          <widget class="QGroupBox" name="groupBox">
+           <property name="title">
+            <string>Show on screen</string>
            </property>
-           <property name="font">
-            <font>
-             <pointsize>9</pointsize>
-             <weight>75</weight>
-             <bold>true</bold>
-            </font>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <widget class="QPushButton" name="showUMP">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>40</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>9</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Melodic portrait</string>
+              </property>
+              <property name="checkable">
+               <bool>false</bool>
+              </property>
+              <property name="checked">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="showSource">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>40</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>9</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Source signals</string>
+              </property>
+              <property name="checkable">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupBox_3">
+           <property name="title">
+            <string>Use signals labeled</string>
            </property>
-           <property name="text">
-            <string>Show Universal Melodic Portrait (UMP)</string>
-           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <widget class="QPushButton" name="showManually">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>40</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>9</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Manually</string>
+              </property>
+              <property name="checkable">
+               <bool>false</bool>
+              </property>
+              <property name="checked">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="showAutomatically">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>40</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>9</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Automatically</string>
+              </property>
+              <property name="checkable">
+               <bool>false</bool>
+              </property>
+              <property name="checked">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </item>
          <item>
@@ -337,7 +427,7 @@
                  </size>
                 </property>
                 <property name="text">
-                 <string>Save Metrics</string>
+                 <string>Save results</string>
                 </property>
                 <property name="icon">
                  <iconset resource="icons.qrc">

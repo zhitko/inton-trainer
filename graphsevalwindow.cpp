@@ -37,6 +37,9 @@ GraphsEvalWindow::GraphsEvalWindow(QString path, Drawer * drawer, QWidget *paren
     connect(this->ui->playTemplateBtn, SIGNAL(clicked()), this, SLOT(playTemplate()));
     connect(this->ui->playRecordBtn, SIGNAL(clicked()), this, SLOT(playRecord()));
     connect(this->ui->showUMP, SIGNAL(clicked()), this, SLOT(showUMP()));
+    connect(this->ui->showSource, SIGNAL(clicked()), this, SLOT(showSource()));
+    connect(this->ui->showAutomatically, SIGNAL(clicked()), this, SLOT(showAutomatically()));
+    connect(this->ui->showManually, SIGNAL(clicked()), this, SLOT(showManually()));
     connect(this->ui->saveMetrics, SIGNAL(clicked()), this, SLOT(saveMetrics()));
     connect(this->ui->openMetrics, SIGNAL(clicked()), this, SLOT(openMetrics()));
 
@@ -44,10 +47,12 @@ GraphsEvalWindow::GraphsEvalWindow(QString path, Drawer * drawer, QWidget *paren
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
 
     this->drawer->showUMP = sptk_settings->dp->showPortr;
-    if(this->drawer->showUMP)
-        this->ui->showUMP->setText("Show original");
-    else
-        this->ui->showUMP->setText("Show Universal Melodic Portrait (UMP)");
+
+    this->ui->showUMP->setFlat(this->drawer->showUMP);
+    this->ui->showSource->setFlat(!this->drawer->showUMP);
+
+    this->ui->showAutomatically->setFlat(sptk_settings->dp->auto_marking);
+    this->ui->showManually->setFlat(!sptk_settings->dp->auto_marking);
 }
 
 GraphsEvalWindow::~GraphsEvalWindow()
@@ -101,14 +106,52 @@ void GraphsEvalWindow::playTemplate()
     player->start();
 }
 
+void GraphsEvalWindow::showManually()
+{
+    SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
+    if (sptk_settings->dp->auto_marking)
+    {
+        sptk_settings->dp->auto_marking = false;
+        this->ui->showAutomatically->setFlat(sptk_settings->dp->auto_marking);
+        this->ui->showManually->setFlat(!sptk_settings->dp->auto_marking);
+        this->drawer->reProc();
+        this->QMGL->update();
+    }
+}
+
+void GraphsEvalWindow::showAutomatically()
+{
+    SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
+    if (!sptk_settings->dp->auto_marking)
+    {
+        sptk_settings->dp->auto_marking = true;
+        this->ui->showAutomatically->setFlat(sptk_settings->dp->auto_marking);
+        this->ui->showManually->setFlat(!sptk_settings->dp->auto_marking);
+        this->drawer->reProc();
+        this->QMGL->update();
+    }
+}
+
 void GraphsEvalWindow::showUMP()
 {
-    if(this->drawer->showUMP)
-        this->ui->showUMP->setText("Show Universal Melodic Portrait (UMP)");
-    else
-        this->ui->showUMP->setText("Show original");
-    this->drawer->showUMP = !this->drawer->showUMP;
-    this->QMGL->update();
+    if (!this->drawer->showUMP)
+    {
+        this->drawer->showUMP = true;
+        this->ui->showUMP->setFlat(this->drawer->showUMP);
+        this->ui->showSource->setFlat(!this->drawer->showUMP);
+        this->QMGL->update();
+    }
+}
+
+void GraphsEvalWindow::showSource()
+{
+    if (this->drawer->showUMP)
+    {
+        this->drawer->showUMP = false;
+        this->ui->showUMP->setFlat(this->drawer->showUMP);
+        this->ui->showSource->setFlat(!this->drawer->showUMP);
+        this->QMGL->update();
+    }
 }
 
 void GraphsEvalWindow::saveMetrics()

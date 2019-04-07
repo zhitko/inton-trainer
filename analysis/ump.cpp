@@ -138,15 +138,21 @@ vector makeUmp(
     ii = 0;
     clone_details[0] = merged_details[0];
 
+    int merged_details_total_len = 0;
+    for(int i=0; i<merge_len; i++) merged_details_total_len += merged_details[i].len;
+
+    int mask_segment_len = MASK_LEN;
+    int mask_segment_pos = 0;
+
+    if (keepRatio) mask_segment_len = clone_len * MASK_LEN * (1.0 * merged_details[0].len / merged_details_total_len);
     if(merged_details[0].type == TYPE_N)
     {
-        setv(ump_mask, 0, MASK_MIN);
-        for(int i=1; i<MASK_LEN; i++)
+        for(int i=1; i<(mask_segment_len-1); i++)
         {
             setv(ump_mask, i,MASK_MAX);
         }
-        setv(ump_mask, MASK_LEN, MASK_MIN);
     }
+    mask_segment_pos += mask_segment_len;
 
     for(int i=1; i<(merge_len-1); i++)
     {
@@ -155,6 +161,7 @@ vector makeUmp(
         int t3 = merged_details[i+1].type;
         if(t1 == TYPE_N && t3 == TYPE_N && (t2 == TYPE_P || t2 == TYPE_T))
         {
+            if (keepRatio) mask_segment_len = clone_len * MASK_LEN * (1.0 * merged_details[i].len / merged_details_total_len) / 2;
             ii++;
             clone_details[ii] = merged_details[i];
             clone_details[ii].len = merged_details[i].len / 2;
@@ -162,32 +169,32 @@ vector makeUmp(
             clone_details[ii] = merged_details[i];
             clone_details[ii].from = clone_details[ii-1].from + clone_details[ii-1].len;
             clone_details[ii].len = clone_details[ii-1].len;
+            mask_segment_pos += mask_segment_len*2;
         } else {
+            if (keepRatio) mask_segment_len = clone_len * MASK_LEN * (1.0 * merged_details[i].len / merged_details_total_len);
             ii++;
             clone_details[ii] = merged_details[i];
 
             if(clone_details[ii].type == TYPE_N)
             {
-                setv(ump_mask, ii*MASK_LEN, MASK_MIN);
-                for(int i=1; i<MASK_LEN; i++)
+                for(int i=1; i<(mask_segment_len-1); i++)
                 {
-                    setv(ump_mask, ii*MASK_LEN+i, MASK_MAX);
+                    setv(ump_mask, mask_segment_pos+i, MASK_MAX);
                 }
-                setv(ump_mask, (ii+1)*MASK_LEN, MASK_MIN);
             }
+            mask_segment_pos += mask_segment_len;
         }
     }
 
     clone_details[clone_len-1] = merged_details[merge_len-1];
     if(clone_details[clone_len-1].type == TYPE_N)
     {
+        if (keepRatio) mask_segment_len = clone_len * MASK_LEN * (1.0 * merged_details[clone_len-1].len / merged_details_total_len);
         ii++;
-        setv(ump_mask, ii*MASK_LEN, MASK_MIN);
-        for(int i=1; i<MASK_LEN; i++)
+        for(int i=1; i<(mask_segment_len-1); i++)
         {
-            setv(ump_mask, ii*MASK_LEN+i, MASK_MAX);
+            setv(ump_mask, mask_segment_pos+i, MASK_MAX);
         }
-        setv(ump_mask, (ii+1)*MASK_LEN, MASK_MIN);
     }
 
     delete merged_details;
@@ -225,10 +232,7 @@ vector makeUmp(
         }
         qDebug() << "len " << in.x << " - " << clone_details[i].from << LOG_DATA;
 
-        if (keepRatio)
-        {
-            resize_to = result.x * (1.0 * len / clone_total_len);
-        }
+        if (keepRatio) resize_to = result.x * (1.0 * len / clone_total_len) + 1;
 
         vector out = vector_resize(in, resize_to);
         for (int j=0; j<out.x; j++)
