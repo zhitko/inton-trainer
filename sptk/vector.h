@@ -86,6 +86,8 @@ vector                            divisionv(vector, vector);
 vector                            absv(vector);
 vector                            mergev(vector, vector, int);
 vector                            derivativev(vector v);
+vector                            absolutev(vector);
+vector                            addv(vector, double);
 
 double                            getv(vector, int);
 double                            setv(vector, int, double);

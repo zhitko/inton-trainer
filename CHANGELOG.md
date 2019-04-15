@@ -14,9 +14,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Change
 - Change show original/nmp to 2 button switch
 - Chnage graph window buttons titles
+- Change calculation derivative gravity center
 
 ## Fix
 - Automarking issue with nmp signal zero value
+- Settings changes apply
+- UMP segmant scale to zero
 
 ## [0.4.9] - 2019-03-05
 

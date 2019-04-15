@@ -114,12 +114,12 @@ oal_device * SettingsDialog::getOutputDevice()
     return this->currentOutputDevice;
 }
 
-SPTK_SETTINGS * SettingsDialog::getSPTKsettings()
+SPTK_SETTINGS * SettingsDialog::getSPTKsettings(bool force)
 {
     static SPTK_SETTINGS * sptk_settings = initSptkSettings();
     static bool loaded = false;
 
-    if (!loaded)
+    if (!loaded || force)
     {
         loaded = true;
         SettingsDialog * instance = getInstance();
@@ -470,6 +470,8 @@ void SettingsDialog::saveSettings()
     settings.setValue("markout/markoutType", this->ui->markoutType->currentIndex());
     settings.setValue("markoutA0Int/markoutA0IntA0abs", this->ui->markoutA0IntA0abs->value());
     settings.setValue("markoutA0Int/markoutA0IntThN", this->ui->markoutA0IntThN->value());
+
+    SettingsDialog::getSPTKsettings(true);
 }
 
 void SettingsDialog::on_showPlane_stateChanged(int arg1)

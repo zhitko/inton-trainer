@@ -224,6 +224,7 @@ vector makeUmp(
     for(int i=0; i<clone_len; i++)
     {
         int len = clone_details[i].len/scale;
+        if (len == 0) len = 1;
         vector in = zerov(len);
         for(int j=0; j<len; j++)
         {

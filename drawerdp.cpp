@@ -1051,16 +1051,20 @@ void DrawerDP::Proc(QString fname)
             this->meanDerivativeValueUMP
         );
 
-        this->centricGravityDerivativeUMP = calculateCentricGravity(derivative_pitch);
-        this->centricGravityDerivativeUMP1 = calculateCentricGravitySubvector(derivative_pitch, 0, this->centricGravityDerivativeUMP);
-        this->centricGravityDerivativeUMP2 = calculateCentricGravitySubvector(derivative_pitch, this->centricGravityDerivativeUMP, derivative_pitch.x);
-        qDebug() << "DerivativeCentricGravity vector " << derivative_pitch.x << LOG_DATA;
+        vector abs_derivative_pitch = absolutev(derivative_pitch);
+        vector add_derivative_pitch = addv(abs_derivative_pitch, -this->meanDerivativeValueUMP);
+        this->centricGravityDerivativeUMP = calculateCentricGravity(add_derivative_pitch);
+        this->centricGravityDerivativeUMP1 = calculateCentricGravitySubvector(add_derivative_pitch, 0, this->centricGravityDerivativeUMP);
+        this->centricGravityDerivativeUMP2 = calculateCentricGravitySubvector(add_derivative_pitch, this->centricGravityDerivativeUMP, derivative_pitch.x);
+        qDebug() << "DerivativeCentricGravity vector " << add_derivative_pitch.x << LOG_DATA;
         qDebug() << "DerivativeCentricGravity UMP " << centricGravityDerivativeUMP << LOG_DATA;
         qDebug() << "DerivativeCentricGravity UMP 1 " << centricGravityDerivativeUMP1 << LOG_DATA;
         qDebug() << "DerivativeCentricGravity UMP 2 " << centricGravityDerivativeUMP2 << LOG_DATA;
-        this->centricGravityDerivativeUMP = norm100(this->centricGravityDerivativeUMP, derivative_pitch.x);
-        this->centricGravityDerivativeUMP1 = norm100(this->centricGravityDerivativeUMP1, derivative_pitch.x);
-        this->centricGravityDerivativeUMP2 = norm100(this->centricGravityDerivativeUMP2, derivative_pitch.x);
+        this->centricGravityDerivativeUMP = norm100(this->centricGravityDerivativeUMP, add_derivative_pitch.x);
+        this->centricGravityDerivativeUMP1 = norm100(this->centricGravityDerivativeUMP1, add_derivative_pitch.x);
+        this->centricGravityDerivativeUMP2 = norm100(this->centricGravityDerivativeUMP2, add_derivative_pitch.x);
+        freev(abs_derivative_pitch);
+        freev(add_derivative_pitch);
         this->metrics = storeMetric(
             this->metrics,
             METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_TEMPLATE,
@@ -1513,12 +1517,16 @@ void DrawerDP::Proc(QString fname)
             METRIC_MEAN_VALUE_UMP_DERIVATIVE_TEMPLATE
         );
 
-        this->userCentricGravityDerivativeUMP = calculateCentricGravity(derivative_pitch);
-        this->userCentricGravityDerivativeUMP1 = calculateCentricGravitySubvector(derivative_pitch, 0, this->userCentricGravityDerivativeUMP);
-        this->userCentricGravityDerivativeUMP2 = calculateCentricGravitySubvector(derivative_pitch, this->userCentricGravityDerivativeUMP, derivative_pitch.x);
-        this->userCentricGravityDerivativeUMP = norm100(this->userCentricGravityDerivativeUMP, derivative_pitch.x);
-        this->userCentricGravityDerivativeUMP1 = norm100(this->userCentricGravityDerivativeUMP1, derivative_pitch.x);
-        this->userCentricGravityDerivativeUMP2 = norm100(this->userCentricGravityDerivativeUMP2, derivative_pitch.x);
+        vector abs_derivative_pitch = absolutev(derivative_pitch);
+        vector add_derivative_pitch = addv(abs_derivative_pitch, -this->userDerivativeMeanValueUMP);
+        this->userCentricGravityDerivativeUMP = calculateCentricGravity(add_derivative_pitch);
+        this->userCentricGravityDerivativeUMP1 = calculateCentricGravitySubvector(add_derivative_pitch, 0, this->userCentricGravityDerivativeUMP);
+        this->userCentricGravityDerivativeUMP2 = calculateCentricGravitySubvector(add_derivative_pitch, this->userCentricGravityDerivativeUMP, derivative_pitch.x);
+        this->userCentricGravityDerivativeUMP = norm100(this->userCentricGravityDerivativeUMP, add_derivative_pitch.x);
+        this->userCentricGravityDerivativeUMP1 = norm100(this->userCentricGravityDerivativeUMP1, add_derivative_pitch.x);
+        this->userCentricGravityDerivativeUMP2 = norm100(this->userCentricGravityDerivativeUMP2, add_derivative_pitch.x);
+        freev(abs_derivative_pitch);
+        freev(add_derivative_pitch);
         this->metrics = storeMetric(
             this->metrics,
             METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED,

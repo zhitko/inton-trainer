@@ -51,7 +51,7 @@ public:
     void loadSettings();
     oal_device * getInputDevice();
     oal_device * getOutputDevice();
-    static SPTK_SETTINGS * getSPTKsettings();
+    static SPTK_SETTINGS * getSPTKsettings(bool force = false);
     static MathGLSettings * getMathGLSettings();
 
 private slots:

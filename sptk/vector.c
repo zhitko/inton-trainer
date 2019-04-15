@@ -286,6 +286,24 @@ vector derivativev(vector v)
     return dv;
 }
 
+vector absolutev(vector v)
+{
+    vector absv = zerov(v.x);
+    for (int i=1; i<v.x; i++) {
+        setv(absv, i, abs(getv(v, i)));
+    }
+    return absv;
+}
+
+vector addv(vector v, double a)
+{
+    vector addv = zerov(v.x);
+    for (int i=1; i<v.x; i++) {
+        setv(addv, i, getv(v, i) + a);
+    }
+    return addv;
+}
+
 // free the memory associated with the vector
 void freev(vector yr_vector) {
     if (yr_vector.v)
