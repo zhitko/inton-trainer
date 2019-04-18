@@ -289,8 +289,8 @@ vector derivativev(vector v)
 vector absolutev(vector v)
 {
     vector absv = zerov(v.x);
-    for (int i=1; i<v.x; i++) {
-        setv(absv, i, abs(getv(v, i)));
+    for (int i=0; i<v.x; i++) {
+        setv(absv, i, fabs(getv(v, i)));
     }
     return absv;
 }
@@ -298,7 +298,7 @@ vector absolutev(vector v)
 vector addv(vector v, double a)
 {
     vector addv = zerov(v.x);
-    for (int i=1; i<v.x; i++) {
+    for (int i=0; i<v.x; i++) {
         setv(addv, i, getv(v, i) + a);
     }
     return addv;

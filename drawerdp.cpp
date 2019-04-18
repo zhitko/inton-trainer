@@ -1039,8 +1039,9 @@ void DrawerDP::Proc(QString fname)
         qDebug() << "pitchData createMglData" << LOG_DATA;        
 
         derivative derivative_data = get_derivative_data(pitch_norm, sptk_settings->dp->umpSmoothValue);
-        vector derivative_pitch = normalizev(derivative_data.data, 0.0, 1.0);
-        this->pitchDataDerivative = createMglData(derivative_data.data, this->pitchDataDerivative, true);
+        vector abs_derivative_pitch = absolutev(derivative_data.data);
+        vector derivative_pitch = normalizev(abs_derivative_pitch, 0.0, 1.0);
+        this->pitchDataDerivative = createMglData(abs_derivative_pitch, this->pitchDataDerivative, true);
         this->pitchDataDerivativeZero = derivative_data.zero;
         qDebug() << "pitchDataDerivative createMglData" << LOG_DATA;
 
@@ -1051,20 +1052,13 @@ void DrawerDP::Proc(QString fname)
             this->meanDerivativeValueUMP
         );
 
-        vector abs_derivative_pitch = absolutev(derivative_pitch);
-        vector add_derivative_pitch = addv(abs_derivative_pitch, -this->meanDerivativeValueUMP);
-        this->centricGravityDerivativeUMP = calculateCentricGravity(add_derivative_pitch);
-        this->centricGravityDerivativeUMP1 = calculateCentricGravitySubvector(add_derivative_pitch, 0, this->centricGravityDerivativeUMP);
-        this->centricGravityDerivativeUMP2 = calculateCentricGravitySubvector(add_derivative_pitch, this->centricGravityDerivativeUMP, derivative_pitch.x);
-        qDebug() << "DerivativeCentricGravity vector " << add_derivative_pitch.x << LOG_DATA;
-        qDebug() << "DerivativeCentricGravity UMP " << centricGravityDerivativeUMP << LOG_DATA;
-        qDebug() << "DerivativeCentricGravity UMP 1 " << centricGravityDerivativeUMP1 << LOG_DATA;
-        qDebug() << "DerivativeCentricGravity UMP 2 " << centricGravityDerivativeUMP2 << LOG_DATA;
-        this->centricGravityDerivativeUMP = norm100(this->centricGravityDerivativeUMP, add_derivative_pitch.x);
-        this->centricGravityDerivativeUMP1 = norm100(this->centricGravityDerivativeUMP1, add_derivative_pitch.x);
-        this->centricGravityDerivativeUMP2 = norm100(this->centricGravityDerivativeUMP2, add_derivative_pitch.x);
+        this->centricGravityDerivativeUMP = calculateCentricGravity(abs_derivative_pitch);
+        this->centricGravityDerivativeUMP1 = calculateCentricGravitySubvector(abs_derivative_pitch, 0, this->centricGravityDerivativeUMP);
+        this->centricGravityDerivativeUMP2 = calculateCentricGravitySubvector(abs_derivative_pitch, this->centricGravityDerivativeUMP, abs_derivative_pitch.x);
+        this->centricGravityDerivativeUMP = norm100(this->centricGravityDerivativeUMP, abs_derivative_pitch.x);
+        this->centricGravityDerivativeUMP1 = norm100(this->centricGravityDerivativeUMP1, abs_derivative_pitch.x);
+        this->centricGravityDerivativeUMP2 = norm100(this->centricGravityDerivativeUMP2, abs_derivative_pitch.x);
         freev(abs_derivative_pitch);
-        freev(add_derivative_pitch);
         this->metrics = storeMetric(
             this->metrics,
             METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_TEMPLATE,
@@ -1498,8 +1492,9 @@ void DrawerDP::Proc(QString fname)
         }
 
         derivative derivative_data = get_derivative_data(pitch_norm, sptk_settings->dp->umpSmoothValue);
-        vector derivative_pitch = normalizev(derivative_data.data, 0.0, 1.0);
-        this->secPitchDataDerivative = createMglData(derivative_data.data, this->secPitchDataDerivative, true);
+        vector abs_derivative_pitch = absolutev(derivative_data.data);
+        vector derivative_pitch = normalizev(abs_derivative_pitch, 0.0, 1.0);
+        this->secPitchDataDerivative = createMglData(derivative_pitch, this->secPitchDataDerivative, true);
         this->secPitchDataDerivativeZero = derivative_data.zero;
         qDebug() << "secPitchDataDerivative createMglData" << LOG_DATA;
 
@@ -1517,16 +1512,13 @@ void DrawerDP::Proc(QString fname)
             METRIC_MEAN_VALUE_UMP_DERIVATIVE_TEMPLATE
         );
 
-        vector abs_derivative_pitch = absolutev(derivative_pitch);
-        vector add_derivative_pitch = addv(abs_derivative_pitch, -this->userDerivativeMeanValueUMP);
-        this->userCentricGravityDerivativeUMP = calculateCentricGravity(add_derivative_pitch);
-        this->userCentricGravityDerivativeUMP1 = calculateCentricGravitySubvector(add_derivative_pitch, 0, this->userCentricGravityDerivativeUMP);
-        this->userCentricGravityDerivativeUMP2 = calculateCentricGravitySubvector(add_derivative_pitch, this->userCentricGravityDerivativeUMP, derivative_pitch.x);
-        this->userCentricGravityDerivativeUMP = norm100(this->userCentricGravityDerivativeUMP, add_derivative_pitch.x);
-        this->userCentricGravityDerivativeUMP1 = norm100(this->userCentricGravityDerivativeUMP1, add_derivative_pitch.x);
-        this->userCentricGravityDerivativeUMP2 = norm100(this->userCentricGravityDerivativeUMP2, add_derivative_pitch.x);
+        this->userCentricGravityDerivativeUMP = calculateCentricGravity(derivative_pitch);
+        this->userCentricGravityDerivativeUMP1 = calculateCentricGravitySubvector(derivative_pitch, 0, this->userCentricGravityDerivativeUMP);
+        this->userCentricGravityDerivativeUMP2 = calculateCentricGravitySubvector(derivative_pitch, this->userCentricGravityDerivativeUMP, derivative_pitch.x);
+        this->userCentricGravityDerivativeUMP = norm100(this->userCentricGravityDerivativeUMP, derivative_pitch.x);
+        this->userCentricGravityDerivativeUMP1 = norm100(this->userCentricGravityDerivativeUMP1, derivative_pitch.x);
+        this->userCentricGravityDerivativeUMP2 = norm100(this->userCentricGravityDerivativeUMP2, derivative_pitch.x);
         freev(abs_derivative_pitch);
-        freev(add_derivative_pitch);
         this->metrics = storeMetric(
             this->metrics,
             METRIC_CENTER_GRAVITY_UMP_DERIVATIVE_RECORDED,
