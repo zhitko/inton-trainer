@@ -334,8 +334,8 @@ int DrawerDP::Draw(mglGraph *gr)
             if(this->errorData) gr->Plot(*this->errorData, "-B3");
             if(this->timeData) gr->Plot(*this->timeData, "-R3");
             if(sptk_settings->dp->showF0) gr->Plot(*this->secPitchData, "-R4");
-            if(sptk_settings->dp->showA0) gr->Plot(*this->secIntensiveData, "-B4");            
-            if(sptk_settings->dp->markoutType == MARKOUT_A0_INTEGRAL)
+            if(sptk_settings->dp->showA0) gr->Plot(*this->secIntensiveData, "-B4");
+            if(sptk_settings->dp->markoutType == MARKOUT_A0_INTEGRAL && sptk_settings->dp->showThresholds == 1)
             {
                 gr->Plot(*this->secA0Smooth, ";B3");
             }
@@ -875,11 +875,13 @@ ContinuousDP * DrawerDP::getDP(SimpleGraphData * dataSec)
 
 void DrawerDP::reProc()
 {
-    if (!this->first)
+    if (this->secFileName.isEmpty())
     {
+        qDebug() << "DrawerDP::reProc first: " << this->fileName << LOG_DATA;
         this->first = true;
         this->Proc(this->fileName);
     } else {
+        qDebug() << "DrawerDP::reProc both: " << this->fileName << " " << this->secFileName << LOG_DATA;
         this->first = true;
         this->Proc(this->fileName);
         this->Proc(this->secFileName);
@@ -890,10 +892,12 @@ void DrawerDP::Proc(QString fname)
 {
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
 
-    if(first)
+    qDebug() << "DrawerDP::Proc: " << this->first << LOG_DATA;
+
+    if(this->first)
     {
-        qDebug() << "Drawer::Proc" << LOG_DATA;
-        first = false;
+        qDebug() << "DrawerDP::Proc first" << LOG_DATA;
+        this->first = false;
 
         this->fileName = fname;
 
@@ -1179,8 +1183,10 @@ void DrawerDP::Proc(QString fname)
 
         if(sptk_settings->dp->showA0)
         {
-            this->intensiveData = createMglData(this->simple_data->d_intensive, this->intensiveData);
+            vector intensive = data_get_intensive_norm(this->simple_data);
+            this->intensiveData = createMglData(intensive, this->intensiveData);
             this->intensiveData->Norm();
+            freev(intensive);
         }
 
         if(sptk_settings->dp->markoutType == MARKOUT_A0_INTEGRAL)
@@ -1197,7 +1203,7 @@ void DrawerDP::Proc(QString fname)
     }
     else
     {
-        qDebug() << "DrawerDP::Proc" << LOG_DATA;
+        qDebug() << "DrawerDP::Proc second" << LOG_DATA;
         this->secFileName = fname;
 
         SimpleGraphData * dataSec = SimpleProcWave2Data(this->secFileName);
@@ -1741,11 +1747,13 @@ void DrawerDP::Proc(QString fname)
 
         if(sptk_settings->dp->showA0)
         {
-            vector intensive_cutted = cutv(dataSec->d_intensive, startPos, endPos);
+            vector intensive = data_get_intensive_norm(dataSec);
+            vector intensive_cutted = cutv(intensive, startPos, endPos);
             applyMapping(&intensive_cutted, &mapping);
             this->secIntensiveData = createMglData(intensive_cutted, this->secIntensiveData);
             this->secIntensiveData->Norm();
             freev(intensive_cutted);
+            freev(intensive);
 
             qDebug() << "intensiveData Filled " << this->secIntensiveData->nx << LOG_DATA;
         }

@@ -43,16 +43,31 @@ GraphsEvalWindow::GraphsEvalWindow(QString path, Drawer * drawer, QWidget *paren
     connect(this->ui->saveMetrics, SIGNAL(clicked()), this, SLOT(saveMetrics()));
     connect(this->ui->openMetrics, SIGNAL(clicked()), this, SLOT(openMetrics()));
 
-
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
 
     this->drawer->showUMP = sptk_settings->dp->showPortr;
 
     this->ui->showUMP->setFlat(this->drawer->showUMP);
     this->ui->showSource->setFlat(!this->drawer->showUMP);
+    if (this->drawer->showUMP)
+    {
+        this->ui->showUMP->setIconSize(QSize(16,16));
+        this->ui->showSource->setIconSize(QSize(0,0));
+    } else {
+        this->ui->showUMP->setIconSize(QSize(0,0));
+        this->ui->showSource->setIconSize(QSize(16,16));
+    }
 
     this->ui->showAutomatically->setFlat(sptk_settings->dp->auto_marking);
     this->ui->showManually->setFlat(!sptk_settings->dp->auto_marking);
+    if (sptk_settings->dp->auto_marking)
+    {
+        this->ui->showAutomatically->setIconSize(QSize(16,16));
+        this->ui->showManually->setIconSize(QSize(0,0));
+    } else {
+        this->ui->showAutomatically->setIconSize(QSize(0,0));
+        this->ui->showManually->setIconSize(QSize(16,16));
+    }
 }
 
 GraphsEvalWindow::~GraphsEvalWindow()
@@ -67,35 +82,6 @@ Drawer * GraphsEvalWindow::createNewDrawer(QString path)
     this->ui->openMetrics->hide();
     this->drawer->Proc(path);
     this->path = path;
-
-    this->ui->totalC->setText(QString::number(this->drawer->proximity_curve_correlation));
-    this->ui->totalI->setText(QString::number(this->drawer->proximity_curve_integral));
-    this->ui->totalL->setText(QString::number(this->drawer->proximity_curve_local));
-    this->ui->totalA->setText(QString::number(this->drawer->proximity_average));
-    this->ui->totalPr->setText(QString::number(this->drawer->proximity_range));
-
-    SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
-
-    switch (sptk_settings->dp->errorType) {
-    case 0:
-        this->ui->totalC->setStyleSheet("font-weight: bold");
-        this->ui->totalCtitle->setStyleSheet("font-weight: bold");
-        break;
-    case 1:
-        this->ui->totalI->setStyleSheet("font-weight: bold");
-        this->ui->totalItitle->setStyleSheet("font-weight: bold");
-        break;
-    case 2:
-        this->ui->totalL->setStyleSheet("font-weight: bold");
-        this->ui->totalLtitle->setStyleSheet("font-weight: bold");
-        break;
-    case 3:
-        this->ui->totalA->setStyleSheet("font-weight: bold");
-        this->ui->totalAtitle->setStyleSheet("font-weight: bold");
-        break;
-    default:
-        break;
-    }
 
     return this->drawer;
 }
@@ -112,8 +98,11 @@ void GraphsEvalWindow::showManually()
     if (sptk_settings->dp->auto_marking)
     {
         sptk_settings->dp->auto_marking = false;
+        sptk_settings->dp->ump_keep_ratio = false;
         this->ui->showAutomatically->setFlat(sptk_settings->dp->auto_marking);
+        this->ui->showAutomatically->setIconSize(QSize(0,0));
         this->ui->showManually->setFlat(!sptk_settings->dp->auto_marking);
+        this->ui->showManually->setIconSize(QSize(16,16));
         this->drawer->reProc();
         this->QMGL->update();
     }
@@ -125,8 +114,11 @@ void GraphsEvalWindow::showAutomatically()
     if (!sptk_settings->dp->auto_marking)
     {
         sptk_settings->dp->auto_marking = true;
+        sptk_settings->dp->ump_keep_ratio = true;
         this->ui->showAutomatically->setFlat(sptk_settings->dp->auto_marking);
+        this->ui->showAutomatically->setIconSize(QSize(16,16));
         this->ui->showManually->setFlat(!sptk_settings->dp->auto_marking);
+        this->ui->showManually->setIconSize(QSize(0,0));
         this->drawer->reProc();
         this->QMGL->update();
     }
@@ -138,7 +130,9 @@ void GraphsEvalWindow::showUMP()
     {
         this->drawer->showUMP = true;
         this->ui->showUMP->setFlat(this->drawer->showUMP);
+        this->ui->showUMP->setIconSize(QSize(16,16));
         this->ui->showSource->setFlat(!this->drawer->showUMP);
+        this->ui->showSource->setIconSize(QSize(0,0));
         this->QMGL->update();
     }
 }
@@ -149,7 +143,9 @@ void GraphsEvalWindow::showSource()
     {
         this->drawer->showUMP = false;
         this->ui->showUMP->setFlat(this->drawer->showUMP);
+        this->ui->showUMP->setIconSize(QSize(0,0));
         this->ui->showSource->setFlat(!this->drawer->showUMP);
+        this->ui->showSource->setIconSize(QSize(16,16));
         this->QMGL->update();
     }
 }

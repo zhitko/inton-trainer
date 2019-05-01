@@ -4,6 +4,7 @@
 #include <QFileDialog>
 #include <QDesktopServices>
 #include <QDateTime>
+#include <QSizePolicy>
 
 #include "mainwindow.h"
 #include "settingsdialog.h"
@@ -64,6 +65,9 @@ GraphsWindow::GraphsWindow(QString path, QWidget *parent) :
     );
 
     this->drawFile(path);
+
+//    this->resizeTimer = new QTimer(this);
+//    connect(resizeTimer, SIGNAL(timeout()),this, SLOT(fullFit()));
 }
 
 GraphsWindow::~GraphsWindow()
@@ -93,6 +97,23 @@ void GraphsWindow::initUI()
     scrollArea->setWidget(QMGL);
 }
 
+void GraphsWindow::resizeEvent(QResizeEvent *event)
+{
+    QWidget::resizeEvent(event);
+    if(this->resizeTimer->isActive())
+    {
+        this->resizeTimer->stop();
+    }
+    this->resizeTimer->start(1000);
+}
+
+void GraphsWindow::fullFit()
+{
+    QSize size = this->scrollArea->maximumViewportSize();
+    if(!this->isVisible()) size.setHeight(GRAPH_HEIGHT);
+    this->QMGL->setSize(size.width()-5, size.height()-5);
+}
+
 void GraphsWindow::drawFile(QString path)
 {
     qDebug() << "GraphsWindow::drawFile" << LOG_DATA;
@@ -100,6 +121,9 @@ void GraphsWindow::drawFile(QString path)
     this->drawer = this->createNewDrawer(path);
     this->w_graph = this->drawer->getDataLenght();
     this->QMGL->update();
+
+    this->resizeTimer = new QTimer(this);
+    connect(resizeTimer, SIGNAL(timeout()),this, SLOT(fullFit()));
 }
 
 Drawer * GraphsWindow::createNewDrawer(QString path)
@@ -236,13 +260,6 @@ void GraphsWindow::_autoRec()
 void GraphsWindow::_rec()
 {
     emit rec();
-}
-
-void GraphsWindow::fullFit()
-{
-    QSize size = this->scrollArea->maximumViewportSize();
-    if(!this->isVisible()) size.setHeight(GRAPH_HEIGHT);
-    this->QMGL->setSize(size.width(), size.height());
 }
 
 void GraphsWindow::playRecord()

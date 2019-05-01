@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Change show original/nmp to 2 button switch
 - Chnage graph window buttons titles
 - Change calculation derivative gravity center
+- Show intensive cutted wit logF0
+- If auto-marking is ON set keep ration to ON
 
 ## Fix
 - Automarking issue with nmp signal zero value

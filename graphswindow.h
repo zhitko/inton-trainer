@@ -4,6 +4,8 @@
 #include "defines.h"
 
 #include <QWidget>
+#include <QResizeEvent>
+#include <QTimer>
 
 #include <mgl2/qmathgl.h>
 
@@ -37,9 +39,11 @@ protected:
     QString fileName, path;
     QString lastImageFile;
     SoundRecorder * recorder;
+    QTimer * resizeTimer;
     int k_graph, w_graph;
     void initUI();
     virtual Drawer * createNewDrawer(QString path);
+    void resizeEvent(QResizeEvent *event) override;
 
 signals:
     void changeSig(int by);

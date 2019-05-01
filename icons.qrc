@@ -26,6 +26,7 @@
         <file>icons/file.png</file>
         <file>icons/inton-50.png</file>
         <file>icons/save.png</file>
+        <file>icons/ok.png</file>
     </qresource>
     <qresource prefix="/splash">
         <file>icons/wave.png</file>

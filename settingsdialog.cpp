@@ -520,10 +520,17 @@ void SettingsDialog::on_checkBox_8_stateChanged(int arg1)
         this->ui->label_34->hide();
         this->ui->automarkingA0->hide();
         this->ui->a0_dp_groupbox_3->hide();
+        this->ui->autoMarking->hide();
     } else {
         this->ui->markoutType->show();
         this->ui->label_34->show();
         this->ui->automarkingA0->show();
         this->ui->a0_dp_groupbox_3->show();
+        this->ui->autoMarking->show();
     }
+}
+
+void SettingsDialog::on_autoMarking_stateChanged(int arg1)
+{
+    this->ui->umpKeepRatio->setChecked(arg1);
 }

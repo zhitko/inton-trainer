@@ -481,7 +481,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_9">
+        <widget class="QGroupBox" name="ump_nmp_groupbox">
          <property name="title">
           <string>UMP/NMP</string>
          </property>
@@ -557,7 +557,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-37</y>
+            <y>0</y>
             <width>520</width>
             <height>734</height>
            </rect>
