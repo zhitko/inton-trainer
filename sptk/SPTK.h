@@ -219,6 +219,7 @@ typedef struct _DP_SETTINGS {
     int smooth_frame;
     int show_marks;
     int auto_marking;
+    int segmentsMinLength;
     int ump_keep_ratio;
 
     int markoutA0limit;

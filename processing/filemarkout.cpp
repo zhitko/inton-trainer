@@ -457,6 +457,9 @@ WaveFile * markOutFileByA0Integral(SimpleGraphData *data)
     double intensiveAbsLimit = sptk_settings->dp->markoutA0IntA0abs / 100.0;
     qDebug() << "intensiveAbsLimit " << intensiveAbsLimit << LOG_DATA;
 
+    int segmentLimit = sptk_settings->dp->segmentsMinLength * RECORD_FREQ * CHAR_BIT_RECORD / 1000 / scaleFactor;
+    qDebug() << "segmentLimit " << segmentLimit << LOG_DATA;
+
     Points points;
 
     uint8_t gotIt = 0;
@@ -477,19 +480,25 @@ WaveFile * markOutFileByA0Integral(SimpleGraphData *data)
             gotIt = 0;
             stopPosition = i;
 
-            points.pointsCount++;
-            points = addOffset(points, scaleFactor * startPosition);
-            points = addLenght(points, scaleFactor * (stopPosition - startPosition));
-            points = addLabel(points, points.pointsCount);
+            if (segmentLimit < (stopPosition - startPosition))
+            {
+                points.pointsCount++;
+                points = addOffset(points, scaleFactor * startPosition);
+                points = addLenght(points, scaleFactor * (stopPosition - startPosition));
+                points = addLabel(points, points.pointsCount);
+            }
         }
     }
 
     if (gotIt == 1)
     {
-        points.pointsCount++;
-        points = addOffset(points, scaleFactor * startPosition);
-        points = addLenght(points, scaleFactor * (intensive.x - 1 - startPosition));
-        points = addLabel(points, points.pointsCount);
+        if (segmentLimit < (intensive.x - 1 - startPosition))
+        {
+            points.pointsCount++;
+            points = addOffset(points, scaleFactor * startPosition);
+            points = addLenght(points, scaleFactor * (intensive.x - 1 - startPosition));
+            points = addLabel(points, points.pointsCount);
+        }
     }
 
     int waveDataSize = littleEndianBytesToUInt32(waveFile->dataChunk->chunkDataSize);

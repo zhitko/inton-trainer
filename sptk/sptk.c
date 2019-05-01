@@ -118,6 +118,7 @@ DP_SETTINGS *initDpSettings()
     dp->show_marks = 1;
     dp->ump_keep_ratio = 0;
     dp->auto_marking = 1;
+    dp->segmentsMinLength = 10;
     dp->markoutA0limit = 10;
     dp->markoutType = MARKOUT_A0_INTEGRAL;
     dp->markoutA0IntA0abs = 10.0;

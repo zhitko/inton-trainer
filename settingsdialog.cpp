@@ -204,6 +204,7 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings(bool force)
         sptk_settings->dp->markoutType = instance->ui->markoutType->currentIndex();
         sptk_settings->dp->show_marks = instance->ui->showMarks->isChecked();
         sptk_settings->dp->auto_marking = instance->ui->autoMarking->isChecked();
+        sptk_settings->dp->segmentsMinLength = instance->ui->segmentsMinLength->value();
 
         sptk_settings->dp->ump_keep_ratio = instance->ui->umpKeepRatio->isChecked();
     }
@@ -371,6 +372,8 @@ void SettingsDialog::loadSettingsFrom(QString settings_path)
         this->ui->autoMarking->setChecked(settings.value("dp/autoMarking").toBool());
     if(settings.contains("dp/autoMarking"))
         this->ui->autoMarking->setChecked(settings.value("dp/autoMarking").toBool());
+    if(settings.contains("dp/segmentsMinLength"))
+        this->ui->segmentsMinLength->setValue(settings.value("dp/segmentsMinLength").toInt());
 
     if(settings.contains("dp/umpKeepRatio"))
         this->ui->umpKeepRatio->setChecked(settings.value("dp/umpKeepRatio").toBool());
@@ -462,6 +465,7 @@ void SettingsDialog::saveSettings()
 
     settings.setValue("dp/showMarks", this->ui->showMarks->isChecked());
     settings.setValue("dp/autoMarking", this->ui->autoMarking->isChecked());
+    settings.setValue("dp/segmentsMinLength", this->ui->segmentsMinLength->value());
 
     settings.setValue("dp/umpKeepRatio", this->ui->umpKeepRatio->isChecked());
 
