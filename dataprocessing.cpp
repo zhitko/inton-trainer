@@ -761,16 +761,22 @@ void freeSimpleGraphData(SimpleGraphData * data)
 {
     freev(data->d_full_wave);
     freev(data->d_pitch_original);
-    freev(data->d_pitch);
-    freev(data->d_pitch_log);
+    if (data->b_pitch == 1) freev(data->d_pitch);
+    if (data->b_pitch_norm == 1) freev(data->d_pitch_norm);
+    if (data->b_pitch_log == 1) freev(data->d_pitch_log);
+    if (data->b_pitch_derivative == 1) freev(data->d_pitch_derivative);
     freev(data->d_intensive_original);
-    freev(data->d_intensive);
-    freev(data->d_intensive_norm);
-    if (data->b_intensive_smooth == 1)
-        freev(data->d_intensive_smooth);
-    freev(data->d_derivative_intensive_norm);
+    if (data->b_intensive == 1) freev(data->d_intensive);
+    if (data->b_intensive_cutted == 1) freev(data->d_intensive_cutted);
+    if (data->b_intensive_norm == 1) freev(data->d_intensive_norm);
+    if (data->b_intensive_smooth == 1) freev(data->d_intensive_smooth);
+    if (data->b_derivative_intensive_norm == 1) freev(data->d_derivative_intensive_norm);
     freev(data->d_spec_proc);
-    freev(data->d_spec);
+    if (data->b_spec == 1) freev(data->d_spec);
+    if (data->b_spec_norm == 1) freev(data->d_spec_norm);
+    if (data->b_cepstrum == 1) freev(data->d_cepstrum);
+    if (data->b_cepstrum_norm == 1) freev(data->d_cepstrum_norm);
+    freev(data->d_mask);
 
     freeiv(data->md_p.pointsFrom);
     freeiv(data->md_p.pointsLength);

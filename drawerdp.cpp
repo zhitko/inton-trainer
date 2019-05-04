@@ -1753,7 +1753,6 @@ void DrawerDP::Proc(QString fname)
             this->secIntensiveData = createMglData(intensive_cutted, this->secIntensiveData);
             this->secIntensiveData->Norm();
             freev(intensive_cutted);
-            freev(intensive);
 
             qDebug() << "intensiveData Filled " << this->secIntensiveData->nx << LOG_DATA;
         }

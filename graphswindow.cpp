@@ -59,11 +59,6 @@ GraphsWindow::GraphsWindow(QString path, QWidget *parent) :
     setAttribute( Qt::WA_DeleteOnClose );
 
     this->fileName = path.left(path.length()-4);
-
-    this->ui->tabWidget->removeTab(
-        this->ui->tabWidget->indexOf(this->ui->tab_training)
-    );
-
     this->drawFile(path);
 
 //    this->resizeTimer = new QTimer(this);
