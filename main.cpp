@@ -33,7 +33,7 @@ void messageOutput(QtMsgType type, const QMessageLogContext &context, const QStr
 {
     QByteArray localMsg = msg.toLocal8Bit();
     QString message = QString("%1: %2").arg(
-                QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss "),
+                QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss:zzz "),
                 QString(localMsg.constData())
     );
     logToFile(message);
