@@ -4,7 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [0.4.10] - 2019-04-xx
+## [0.4.11] - 2019-07-21
+
+### Change
+- Update QT library to 5.12
+- Update MathGl to 2.4.3
+
+### Fix
+- Linux compilation
+
+## [0.4.11] - 2019-05-04
 
 ### Change
 - Improve graph window UI
