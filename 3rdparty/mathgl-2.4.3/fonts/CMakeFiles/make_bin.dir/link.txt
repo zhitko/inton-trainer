@@ -1,0 +1,1 @@
+/usr/bin/c++    -fopenmp -O3 -DNDEBUG   CMakeFiles/make_bin.dir/make_bin.cpp.o CMakeFiles/make_bin.dir/__/src/font.cpp.o  -o make_bin -rdynamic -lGLU -lGL -lpng -lz -lz -lm -pthread 

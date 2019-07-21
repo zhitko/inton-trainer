@@ -33,12 +33,12 @@ extern "C" {
 GraphsWindow::GraphsWindow(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::GraphsWindow),
-    lastImageFile(""),
-    path(""),
-    fileName(""),
-    k_graph(GRAPH_K_INIT),
     drawer(NULL),
-    recorder(NULL)
+    fileName(""),
+    path(""),
+    lastImageFile(""),
+    recorder(NULL),
+    k_graph(GRAPH_K_INIT)
 {
     this->initUI();
 

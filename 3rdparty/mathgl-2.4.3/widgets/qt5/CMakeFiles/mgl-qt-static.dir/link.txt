@@ -1,0 +1,2 @@
+/usr/bin/ar qc libmgl-qt.a  CMakeFiles/mgl-qt-static.dir/__/qt.cpp.o CMakeFiles/mgl-qt-static.dir/mgl-qt-static_automoc.cpp.o
+/usr/bin/ranlib libmgl-qt.a

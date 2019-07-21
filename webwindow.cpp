@@ -15,6 +15,21 @@
 #include <QJsonDocument>
 #include <QJsonValue>
 #include <QSettings>
+#include <QWebEngineView>
+#include <QWebChannel>
+
+//class WebClass : public QObject
+//{
+//    Q_OBJECT
+//    public slots:
+//    void show_settings()
+//    {
+//        emit this->show_settings_signal();
+//    }
+
+//    signals:
+//    void show_settings_signal();
+//};
 
 void checkLogFile()
 {
@@ -155,30 +170,29 @@ QString WebWindow::getFiles()
 
 void WebWindow::initWeb()
 {
-//    QWebFrame * frame = this->ui->webView->page()->mainFrame();
-//    attachObject();
-//    connect(frame , SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(attachObject()) );
+    QWebEngineView *webView = new QWebEngineView;
+    this->ui->verticalLayout->addWidget(webView);
 
-//    qDebug() << (QApplication::applicationDirPath() + "/html/index.html") << LOG_DATA;
-//    this->ui->webView->load(QUrl::fromLocalFile(QApplication::applicationDirPath() + "/html/index.html"));
+    qDebug() << (QApplication::applicationDirPath() + "/html/index.html") << LOG_DATA;
+    webView->load(QUrl::fromLocalFile(QApplication::applicationDirPath() + "/html/index.html"));
 
-//    ui->webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-//    connect(ui->webView, SIGNAL(linkClicked(QUrl)), this, SLOT(linkClickedWebView(QUrl)));
+    QWebChannel *channel = new QWebChannel(this);
+    channel->registerObject("jshelper", this);
+    webView->page()->setWebChannel(channel);
 }
 
-void WebWindow::linkClickedWebView(QUrl url) {
-//    qDebug() << url.path() << LOG_DATA;
-//    qDebug() << url.fileName() << LOG_DATA;
-//    qDebug() << url.toString() << LOG_DATA;
-//    if (url.toString().endsWith(".wav#dp")) {
-//        this->mainWindow->evaluation(url.path(), new DrawerDP());
-//    }else if (url.toString().endsWith(".wav#play")) {
-//        this->mainWindow->playRecord(url.path());
-//    }else if(url.fileName() == "settings.window"){
-//        this->mainWindow->settingsShow();
-//    }else if(url.fileName() == "main.window"){
-//        this->mainWindow->show();
-//    }else{
-//        ui->webView->load(url);
-//    }
+void WebWindow::showSettings() {
+    this->mainWindow->settingsShow();
+}
+
+void WebWindow::openFile(QVariant url) {
+    this->mainWindow->evaluation(url.toUrl().path(), new DrawerDP());
+}
+
+void WebWindow::playFile(QVariant url) {
+    this->mainWindow->playRecord(url.toUrl().path());
+}
+
+void WebWindow::openApp() {
+    this->mainWindow->show();
 }

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathGL2 2.4.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-02 14:41+0300\n"
+"POT-Creation-Date: 2019-03-27 13:31+0300\n"
 "PO-Revision-Date: 2018-03-24 11:08-0400\n"
 "Last-Translator: Diego Sejas Viscarra <dsejas.math@protonmail.com>\n"
 "Language-Team: \n"
@@ -17,21 +17,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.0.4\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#: mgllab/mgllab.cpp:433
-#, c-format
-msgid ""
-"\t-1 str       set str as argument $1 for script\n"
-"\t...          ...\n"
-"\t-9 str       set str as argument $9 for script\n"
-"\t-L loc       set locale to loc\n"
-"\t-h           print this message\n"
-msgstr ""
-"\t-1 str       especificar str como argumento $1 para script\n"
-"\t...          ...\n"
-"\t-9 str       especificar str como argumento $9 para script\n"
-"\t-L loc       especificar lenguaje como loc\n"
-"\t-h           imprimir este mensaje\n"
 
 #: utils/mglconv.cpp:86
 #, c-format
@@ -157,44 +142,12 @@ msgstr " - UDAV vista previa"
 msgid " - UDAV variable"
 msgstr " - UDAV variable"
 
-#. o = new Fl_Button(420, yy, 90, 25, _(" Refresh"));	o->callback(mem_update_cb,w);
-#. o->image(img_update);	o->align(FL_ALIGN_IMAGE_NEXT_TO_TEXT);
-#. o->tooltip(_("Refresh list of variables."));
-#: mgllab/help.cpp:180
-msgid " Del.all"
-msgstr " Del.all"
-
-#: mgllab/help.cpp:168
-msgid " Delete"
-msgstr " Borrar"
-
-#: mgllab/help.cpp:162
-msgid " Edit"
-msgstr " Editar"
-
-#: mgllab/help.cpp:165
-msgid " Info"
-msgstr " Info"
-
-#: mgllab/help.cpp:171
-msgid " New"
-msgstr " Nuevo"
-
-#: mgllab/help.cpp:174
-msgid " Save"
-msgstr " Guardar"
-
-#: mgllab/mgllab.cpp:242
-msgid " Yes "
-msgstr " Sí "
-
 #: udav/plot_pnl.cpp:191
 #, c-format
 msgid "%d - %d of %d"
 msgstr "%d - %d de %d"
 
-#. :
-#: udav/style_dlg.cpp:316 mgllab/dialogs.cpp:208
+#: udav/style_dlg.cpp:316
 msgid "' ' none"
 msgstr "' ' ninguno"
 
@@ -242,205 +195,153 @@ msgstr "'#v' triángulo relleno abajo"
 msgid "'#x' squared cross"
 msgstr "'#x' equis enmarcada"
 
-#. D
-#: udav/style_dlg.cpp:354 mgllab/dialogs.cpp:245
+#: udav/style_dlg.cpp:354
 msgid "'*' cross"
 msgstr "'*' cruz"
 
-#.
-#: udav/style_dlg.cpp:387 mgllab/dialogs.cpp:215
+#: udav/style_dlg.cpp:387
 msgid "'*' star"
 msgstr "'*' asterisco"
 
-#. o
-#. -
-#: udav/style_dlg.cpp:341 udav/style_dlg.cpp:385 mgllab/dialogs.cpp:217
-#: mgllab/dialogs.cpp:232
+#: udav/style_dlg.cpp:341 udav/style_dlg.cpp:385
 msgid "'+' plus"
 msgstr "'+' cruz"
 
-#.
-#: udav/style_dlg.cpp:340 mgllab/dialogs.cpp:231
+#: udav/style_dlg.cpp:340
 msgid "'-' lines"
 msgstr "'-' segmentos"
 
 #. "-|;=ji: "
-#: udav/style_dlg.cpp:309 mgllab/dialogs.cpp:201
+#: udav/style_dlg.cpp:309
 msgid "'-' solid"
 msgstr "'-' sólido"
 
-#. d
-#: udav/style_dlg.cpp:384 mgllab/dialogs.cpp:221
+#: udav/style_dlg.cpp:384
 msgid "'.' dot"
 msgstr "'.' punto"
 
-#. =
-#: udav/style_dlg.cpp:315 mgllab/dialogs.cpp:207
+#: udav/style_dlg.cpp:315
 msgid "':' dots"
 msgstr "':' puntos"
 
-#. j
-#. =
-#: udav/style_dlg.cpp:311 udav/style_dlg.cpp:343 mgllab/dialogs.cpp:204
-#: mgllab/dialogs.cpp:234
+#: udav/style_dlg.cpp:311 udav/style_dlg.cpp:343
 msgid "';' dash"
 msgstr "';' guión"
 
-#. ~
-#: udav/style_dlg.cpp:349 mgllab/dialogs.cpp:241
+#: udav/style_dlg.cpp:349
 msgid "'<' left sign"
 msgstr "'<' signo izq."
 
-#. v
-#: udav/style_dlg.cpp:392 mgllab/dialogs.cpp:224
+#: udav/style_dlg.cpp:392
 msgid "'<' triangle left"
 msgstr "'<' triángulo izq."
 
-#. +
-#: udav/style_dlg.cpp:342 mgllab/dialogs.cpp:233
+#: udav/style_dlg.cpp:342
 msgid "'=' double lines"
 msgstr "'=' guión doble"
 
-#. i
-#: udav/style_dlg.cpp:312 mgllab/dialogs.cpp:206
+#: udav/style_dlg.cpp:312
 msgid "'=' small dash"
 msgstr "'=' guión pequeño"
 
-#. <
-#: udav/style_dlg.cpp:350 mgllab/dialogs.cpp:242
+#: udav/style_dlg.cpp:350
 msgid "'>' right sign"
 msgstr "'>' signo der."
 
-#. <
-#: udav/style_dlg.cpp:393 mgllab/dialogs.cpp:225
+#: udav/style_dlg.cpp:393
 msgid "'>' triangle right"
 msgstr "'>' triángulo derecha"
 
-#. _
-#: udav/style_dlg.cpp:265 udav/style_dlg.cpp:288 mgllab/dialogs.cpp:188
+#: udav/style_dlg.cpp:265 udav/style_dlg.cpp:288
 msgid "'A' arrow"
 msgstr "'A' flecha"
 
-#. S
-#: udav/style_dlg.cpp:271 udav/style_dlg.cpp:294 mgllab/dialogs.cpp:194
+#: udav/style_dlg.cpp:271 udav/style_dlg.cpp:294
 msgid "'D' rhomb"
 msgstr "'D' rombo"
 
-#. d
-#: udav/style_dlg.cpp:353 mgllab/dialogs.cpp:244
+#: udav/style_dlg.cpp:353
 msgid "'D' solid rhomb"
 msgstr "'D' rombo relleno"
 
-#. V
-#: udav/style_dlg.cpp:267 udav/style_dlg.cpp:290 mgllab/dialogs.cpp:191
+#: udav/style_dlg.cpp:267 udav/style_dlg.cpp:290
 msgid "'I' stop"
 msgstr "'I' truncado"
 
-#. A
-#: udav/style_dlg.cpp:268 udav/style_dlg.cpp:291 mgllab/dialogs.cpp:189
+#: udav/style_dlg.cpp:268 udav/style_dlg.cpp:291
 msgid "'K' size"
 msgstr "'K' tamaño"
 
-#. D
-#: udav/style_dlg.cpp:272 udav/style_dlg.cpp:295 mgllab/dialogs.cpp:195
+#: udav/style_dlg.cpp:272 udav/style_dlg.cpp:295
 msgid "'O' circle"
 msgstr "'O' círculo"
 
-#. o
-#: udav/style_dlg.cpp:345 mgllab/dialogs.cpp:237
+#: udav/style_dlg.cpp:345
 msgid "'O' solid circle"
 msgstr "'O' círculo relleno"
 
-#. s
-#: udav/style_dlg.cpp:347 mgllab/dialogs.cpp:239
+#: udav/style_dlg.cpp:347
 msgid "'S' solid square"
 msgstr "'S' cuadrado relleno"
 
-#. T
-#: udav/style_dlg.cpp:270 udav/style_dlg.cpp:293 mgllab/dialogs.cpp:193
+#: udav/style_dlg.cpp:270 udav/style_dlg.cpp:293
 msgid "'S' square"
 msgstr "'S' cuadrado"
 
-#. I
-#: udav/style_dlg.cpp:269 udav/style_dlg.cpp:292 mgllab/dialogs.cpp:192
+#: udav/style_dlg.cpp:269 udav/style_dlg.cpp:292
 msgid "'T' triangle"
 msgstr "'T' triángulo"
 
-#. K
-#: udav/style_dlg.cpp:266 udav/style_dlg.cpp:289 mgllab/dialogs.cpp:190
+#: udav/style_dlg.cpp:266 udav/style_dlg.cpp:289
 msgid "'V' back arrow"
 msgstr "'V' flecha atras"
 
-#. O
-#: mgllab/dialogs.cpp:196
-msgid "'X' cross"
-msgstr "'X' equis"
-
-#. *
-#: udav/style_dlg.cpp:355 mgllab/dialogs.cpp:246
+#: udav/style_dlg.cpp:355
 msgid "'^' hats"
 msgstr "'^' sombrero"
 
-#. .
-#: udav/style_dlg.cpp:391 mgllab/dialogs.cpp:222
+#: udav/style_dlg.cpp:391
 msgid "'^' triangle up"
 msgstr "'^' triángulo arriba"
 
 #. "AVIKTSDO"
-#: udav/style_dlg.cpp:264 udav/style_dlg.cpp:287 mgllab/dialogs.cpp:187
+#: udav/style_dlg.cpp:264 udav/style_dlg.cpp:287
 msgid "'_' none"
 msgstr "'_' ninguno"
 
-#. s
-#. >
-#: udav/style_dlg.cpp:352 udav/style_dlg.cpp:389 mgllab/dialogs.cpp:220
-#: mgllab/dialogs.cpp:243
+#: udav/style_dlg.cpp:352 udav/style_dlg.cpp:389
 msgid "'d' rhomb"
 msgstr "'d' rombo"
 
-#. ;
-#: udav/style_dlg.cpp:314 mgllab/dialogs.cpp:205
+#: udav/style_dlg.cpp:314
 msgid "'i' small dash dot"
 msgstr "'i' guión corto y punto"
 
-#. |
-#. ;
-#: udav/style_dlg.cpp:313 udav/style_dlg.cpp:351 mgllab/dialogs.cpp:203
-#: mgllab/dialogs.cpp:235
+#: udav/style_dlg.cpp:313 udav/style_dlg.cpp:351
 msgid "'j' dash dot"
 msgstr "'j' guión y punto"
 
-#. *
-#. j
-#: udav/style_dlg.cpp:344 udav/style_dlg.cpp:394 mgllab/dialogs.cpp:216
-#: mgllab/dialogs.cpp:236
+#: udav/style_dlg.cpp:344 udav/style_dlg.cpp:394
 msgid "'o' circle"
 msgstr "'o' círculo"
 
-#. x
-#. O
-#: udav/style_dlg.cpp:346 udav/style_dlg.cpp:388 mgllab/dialogs.cpp:219
-#: mgllab/dialogs.cpp:238
+#: udav/style_dlg.cpp:346 udav/style_dlg.cpp:388
 msgid "'s' square"
 msgstr "'s' cuadrado"
 
-#. ^
-#: udav/style_dlg.cpp:390 mgllab/dialogs.cpp:223
+#: udav/style_dlg.cpp:390
 msgid "'v' triangle down"
 msgstr "'v' triángulo abajo"
 
-#. +
-#: udav/style_dlg.cpp:386 mgllab/dialogs.cpp:218
+#: udav/style_dlg.cpp:386
 msgid "'x' skew cross"
 msgstr "'x' equis"
 
-#. -
-#: udav/style_dlg.cpp:310 mgllab/dialogs.cpp:202
+#: udav/style_dlg.cpp:310
 msgid "'|' long dash"
 msgstr "'|' guión largo"
 
-#. S
-#: udav/style_dlg.cpp:348 mgllab/dialogs.cpp:240
+#: udav/style_dlg.cpp:348
 msgid "'~' waves"
 msgstr "'~' ondas"
 
@@ -484,13 +385,9 @@ msgstr "16 - transformar datos"
 msgid "1D plot"
 msgstr "Gráfico 1D"
 
-#: udav/newcmd_dlg.cpp:166 mgllab/dialogs.cpp:707
+#: udav/newcmd_dlg.cpp:166
 msgid "1D plots"
 msgstr "Gráficos 1D"
-
-#: mgllab/help.cpp:341
-msgid "1D view"
-msgstr "Vista 1D"
 
 #: src/parser.cpp:51
 msgid "2 - setup"
@@ -500,13 +397,9 @@ msgstr "2 - configuración"
 msgid "2D plot"
 msgstr "Gráfico 2D"
 
-#: udav/newcmd_dlg.cpp:167 mgllab/dialogs.cpp:708
+#: udav/newcmd_dlg.cpp:167
 msgid "2D plots"
 msgstr "Gráficos 2D"
-
-#: mgllab/help.cpp:343
-msgid "2D view"
-msgstr "Vista 2D"
 
 #: src/parser.cpp:51
 msgid "3 - data handle"
@@ -516,13 +409,9 @@ msgstr "3 - referencia a datos"
 msgid "3D data with sizes from file"
 msgstr "Datos 3D con tamaños de archivo"
 
-#: udav/newcmd_dlg.cpp:168 mgllab/dialogs.cpp:709
+#: udav/newcmd_dlg.cpp:168
 msgid "3D plots"
 msgstr "Gráficos 3D"
-
-#: mgllab/help.cpp:345
-msgid "3D view"
-msgstr "Vista 3D"
 
 #: src/parser.cpp:51
 msgid "4 - data create"
@@ -556,11 +445,7 @@ msgstr ""
 "<br>(c) Alexey Balakin, 2007-presente<br><br><a href='http://www.gnu.org/"
 "copyleft/gpl.html'>Bajo licencia GPL v.2 o posterior.</a>"
 
-#: mgllab/help.cpp:285
-msgid "@<-  Prev"
-msgstr "@<-  Prev."
-
-#: widgets/qt.cpp:1290 udav/udav_wnd.cpp:331 mgllab/mgllab.cpp:347
+#: widgets/qt.cpp:1290 udav/udav_wnd.cpp:331
 msgid "About"
 msgstr "Acerca de"
 
@@ -577,10 +462,6 @@ msgstr "Añadir arco"
 #: widgets/qt.cpp:1172 udav/plot_pnl.cpp:375
 msgid "Add arc which properties can be changed later by mouse."
 msgstr "Añadir arco configurable por el mouse."
-
-#: mgllab/dialogs.cpp:84
-msgid "Add command option(s)"
-msgstr "Añadir opción(es) de comando"
 
 #: widgets/qt.cpp:1174 udav/plot_pnl.cpp:378
 msgid "Add curve"
@@ -602,18 +483,10 @@ msgstr "Añadir elipse"
 msgid "Add ellipse which properties can be changed later by mouse."
 msgstr "Añadir elipse configurable por el mouse."
 
-#: mgllab/dialogs.cpp:1229
-msgid "Add inplot"
-msgstr "Añadir gráfico interno"
-
 # Anadir a la leyenda?
 #: src/exec_set.cpp:792
 msgid "Add legend entry"
 msgstr "Añadir entrada a leyenda"
-
-#: mgllab/dialogs.cpp:119
-msgid "Add legend entry for the plot"
-msgstr "Añadir entrada a leyenda del gráfico"
 
 #: widgets/qt.cpp:1164 udav/plot_pnl.cpp:366
 msgid "Add line"
@@ -639,10 +512,6 @@ msgstr "Añadir polígono"
 #: widgets/qt.cpp:1197
 msgid "Add polygon which properties can be changed later by mouse."
 msgstr "Añadir polígono configurable por el mouse."
-
-#: mgllab/dialogs.cpp:1453
-msgid "Add primitive"
-msgstr "Añadir primitiva"
 
 # rect?
 #: widgets/qt.cpp:1179 udav/plot_pnl.cpp:384
@@ -672,10 +541,6 @@ msgstr "Añadir texto configurable por el mouse."
 #: src/exec_prm.cpp:658
 msgid "Add title for current subplot/inplot"
 msgstr "Añadir titulo al subgráfica/gráfica interna"
-
-#: mgllab/table.cpp:796
-msgid "Add to"
-msgstr "Añadir a"
 
 # user-defined
 #: src/exec_set.cpp:793
@@ -707,20 +572,15 @@ msgstr ""
 
 #. graphics menu
 #: widgets/qt.cpp:1111 udav/opt_dlg.cpp:51 udav/setup_dlg.cpp:109
-#: udav/plot_pnl.cpp:290 mgllab/dialogs.cpp:109
+#: udav/plot_pnl.cpp:290
 msgid "Alpha"
 msgstr "Alfa"
 
-#: mgllab/dialogs.cpp:110
-msgid "Alpha value (transparency) of surface or cloud"
-msgstr "Valor alfa (transparencia) de superficie o nube"
-
-#: udav/setup_dlg.cpp:93 mgllab/dialogs.cpp:1003
+#: udav/setup_dlg.cpp:93
 msgid "AlphaDef"
 msgstr "Def. alfa"
 
-#: udav/opt_dlg.cpp:56 udav/setup_dlg.cpp:95 mgllab/dialogs.cpp:111
-#: mgllab/dialogs.cpp:1004
+#: udav/opt_dlg.cpp:56 udav/setup_dlg.cpp:95
 msgid "Ambient"
 msgstr "Ambiente"
 
@@ -734,41 +594,19 @@ msgstr "Ángulo alrededor del eje z (en grados)"
 
 #. animation menu
 #: widgets/qt.cpp:1257 widgets/qt.cpp:1258 udav/plot_pnl.cpp:559
-#: mgllab/mathgl.cpp:185
 msgid "Animation"
 msgstr "Animación"
-
-#: mgllab/table.cpp:788
-msgid "Another"
-msgstr "Otro"
-
-#: mgllab/table.cpp:854
-msgid "Apply operator (smoothing, integration, difference ...) to data"
-msgstr "Aplicar operador (suavizado, integración, diferencia ...) a datos"
-
-# Mesh=malla or mesh=grilla depending on context
-#: mgllab/dialogs.cpp:103
-msgid "Approximate number of mesh lines in plot"
-msgstr "Número aprox. de líneas de malla en gráfica"
-
-#: mgllab/help.cpp:135
-msgid "Are you sure that you want to delete ALL data arrays?"
-msgstr "¿Está seguro que desea borrar TODOS los datos?"
 
 #: udav/newcmd_dlg.cpp:67
 msgid "Argument"
 msgstr "Argumento"
 
-#: mgllab/dialogs.cpp:738
-msgid "Arguments"
-msgstr "Argumentos"
-
-#: udav/style_dlg.cpp:63 mgllab/dialogs.cpp:321
+#: udav/style_dlg.cpp:63
 msgid "Arrow at end"
 msgstr "Flecha al final"
 
 #. g->setColStretch(0, 1);	g->setColStretch(1, 1);	g->setColStretch(2, 1);
-#: udav/style_dlg.cpp:61 mgllab/dialogs.cpp:315
+#: udav/style_dlg.cpp:61
 msgid "Arrow at start"
 msgstr "Flecha al principio"
 
@@ -788,10 +626,6 @@ msgstr "Proporción de escala x a escala z"
 #: udav/subplot_dlg.cpp:182
 msgid "Aspect ratio of y-scale to z-scale"
 msgstr "Proporción de escala y a escala z"
-
-#: mgllab/dialogs.cpp:1298
-msgid "Aspect x/z"
-msgstr "Aspecto x/z"
 
 #: src/exec_set.cpp:800
 msgid "Attach light settings to inplot"
@@ -826,7 +660,7 @@ msgstr ""
 "Promedios:\n"
 "<a> = %g\t<x> = %g\t<y> = %g\t<z> = %g\n"
 
-#: udav/style_dlg.cpp:122 mgllab/dialogs.cpp:340
+#: udav/style_dlg.cpp:122
 msgid "Axial direction"
 msgstr "Dirección del eje"
 
@@ -834,20 +668,15 @@ msgstr "Dirección del eje"
 msgid "AxialDir"
 msgstr "Dir. axial"
 
-#: mgllab/dialogs.cpp:1008
-msgid "Axis"
-msgstr "Eje"
-
-#: udav/newcmd_dlg.cpp:176 mgllab/dialogs.cpp:717
+#: udav/newcmd_dlg.cpp:176
 msgid "Axis and colorbar"
 msgstr "Eje y barra de color"
 
-#: udav/newcmd_dlg.cpp:177 mgllab/dialogs.cpp:718 mgllab/dialogs.cpp:949
+#: udav/newcmd_dlg.cpp:177
 msgid "Axis setup"
 msgstr "Configurar eje"
 
-#. W
-#: udav/style_dlg.cpp:237 mgllab/dialogs.cpp:45
+#: udav/style_dlg.cpp:237
 msgid "B - navy"
 msgstr "B - azul marino"
 
@@ -873,10 +702,6 @@ msgstr "BaseWidth"
 msgid "Basic"
 msgstr "Básicas"
 
-#: mgllab/dialogs.cpp:1461
-msgid "Begin"
-msgstr "Inicio"
-
 #: src/parser.cpp:1483
 msgid "Begin of do-while loop"
 msgstr "Inicio de bucle \"do while\""
@@ -885,7 +710,7 @@ msgstr "Inicio de bucle \"do while\""
 msgid "Bessel"
 msgstr "Bessel"
 
-#: udav/style_dlg.cpp:157 mgllab/dialogs.cpp:368
+#: udav/style_dlg.cpp:157
 msgid "Bold style"
 msgstr "Negrilla"
 
@@ -909,28 +734,19 @@ msgstr "zrange requiere dos valores"
 msgid "Break for-loop"
 msgstr "Salir de bucle \"for\""
 
-#: udav/setup_dlg.cpp:122 mgllab/dialogs.cpp:1069
+#: udav/setup_dlg.cpp:122
 msgid "Brightness"
 msgstr "Luminosidad"
 
-#: mgllab/dialogs.cpp:401
-msgid "Brightness of i-th color"
-msgstr "Luminosidad del i-ésimo color"
-
-#: mgllab/table.cpp:768
-msgid "By formula"
-msgstr "Por fórmula"
-
-#. R
-#: udav/style_dlg.cpp:240 mgllab/dialogs.cpp:48
+#: udav/style_dlg.cpp:240
 msgid "C - teal"
 msgstr "C - verde azulado"
 
-#: udav/setup_dlg.cpp:51 mgllab/dialogs.cpp:989
+#: udav/setup_dlg.cpp:51
 msgid "C axis"
 msgstr "Eje c"
 
-#: udav/opt_dlg.cpp:47 mgllab/dialogs.cpp:97
+#: udav/opt_dlg.cpp:47
 msgid "C-range"
 msgstr "Rango c"
 
@@ -940,8 +756,7 @@ msgstr "Cálculos"
 
 #. TODO
 #. connect(hidden,SIGNAL(cursorPositionChanged()),this,SLOT(hiddenClicked()));
-#: udav/udav_wnd.cpp:194 udav/udav_wnd.cpp:206 mgllab/mgllab.cpp:341
-#: mgllab/mgllab.cpp:572
+#: udav/udav_wnd.cpp:194 udav/udav_wnd.cpp:206
 msgid "Calculator"
 msgstr "Calculadora"
 
@@ -950,12 +765,6 @@ msgstr "Calculadora"
 #: udav/dat_pnl.cpp:510 udav/dat_pnl.cpp:552 udav/dat_pnl.cpp:629
 #: udav/opt_dlg.cpp:78 udav/setup_dlg.cpp:145 udav/files_dlg.cpp:58
 #: udav/style_dlg.cpp:206 udav/data_dlg.cpp:90 udav/subplot_dlg.cpp:219
-#: mgllab/editor.cpp:282 mgllab/mathgl.cpp:166 mgllab/mathgl.cpp:197
-#: mgllab/dialogs.cpp:120 mgllab/dialogs.cpp:164 mgllab/dialogs.cpp:410
-#: mgllab/dialogs.cpp:584 mgllab/dialogs.cpp:749 mgllab/dialogs.cpp:1071
-#: mgllab/dialogs.cpp:1318 mgllab/dialogs.cpp:1473 mgllab/mgllab.cpp:497
-#: mgllab/table.cpp:101 mgllab/table.cpp:179 mgllab/table.cpp:353
-#: mgllab/table.cpp:556 mgllab/table.cpp:619 mgllab/table.cpp:675
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -964,7 +773,7 @@ msgid "Cannot triangulate this set!"
 msgstr "¡Imposible triangular conjunto!"
 
 # Area de imagen? Area de figura?
-#: udav/udav_wnd.cpp:226 mgllab/mgllab.cpp:370 mgllab/mgllab.cpp:371
+#: udav/udav_wnd.cpp:226
 msgid "Canvas"
 msgstr "Área de dibujo"
 
@@ -973,14 +782,6 @@ msgstr "Área de dibujo"
 msgid "Cell index"
 msgstr "Índice de celda"
 
-#: mgllab/table.cpp:103 mgllab/table.cpp:558 mgllab/table.cpp:772
-msgid "Change"
-msgstr "Cambiar"
-
-#: mgllab/table.cpp:104
-msgid "Change (resize) data"
-msgstr "Cambiar (tamaño de) datos"
-
 #: widgets/qt.cpp:1154 udav/plot_pnl.cpp:339
 msgid "Change canvas size to fill whole region (F6)."
 msgstr "Maximizar el área de dibujo (F6)."
@@ -988,18 +789,6 @@ msgstr "Maximizar el área de dibujo (F6)."
 #: src/exec_set.cpp:804
 msgid "Change current directory"
 msgstr "Cambiar directorio actual"
-
-#: mgllab/table.cpp:168
-msgid "Change data"
-msgstr "Modificar datos"
-
-#: mgllab/table.cpp:91
-msgid "Change data sizes"
-msgstr "Modificar tamaño de datos"
-
-#: mgllab/table.cpp:559 mgllab/table.cpp:622 mgllab/table.cpp:678
-msgid "Change data values and close this window"
-msgstr "Cambiar valores y cerrar esta ventana"
 
 #: udav/prop_dlg.cpp:71
 msgid "Change font"
@@ -1026,10 +815,8 @@ msgstr "Borrar entradas de leyenda"
 msgid "Clear picture"
 msgstr "Borrar imagen"
 
-#. o = new Fl_Button(180, 130, 25, 25);o->image(img_save);	o->tooltip("img_save");
 #: widgets/fltk.cpp:1102 widgets/qt.cpp:1104 udav/find_dlg.cpp:52
-#: udav/hint_dlg.cpp:52 mgllab/editor.cpp:566 mgllab/help.cpp:289
-#: mgllab/help.cpp:349 mgllab/help.cpp:465
+#: udav/hint_dlg.cpp:52
 msgid "Close"
 msgstr "Cerrar"
 
@@ -1041,8 +828,7 @@ msgstr "Cerrar pestaña"
 msgid "Close this data tab."
 msgstr "Cerrar esta pestaña de datos."
 
-#: udav/setup_dlg.cpp:121 udav/style_dlg.cpp:67 mgllab/dialogs.cpp:1068
-#: mgllab/dialogs.cpp:1459
+#: udav/setup_dlg.cpp:121 udav/style_dlg.cpp:67
 msgid "Color"
 msgstr "Color"
 
@@ -1051,35 +837,11 @@ msgstr "Color"
 msgid "Color order"
 msgstr "Orden de color"
 
-#: udav/style_dlg.cpp:150 mgllab/dialogs.cpp:339
+#: udav/style_dlg.cpp:150
 msgid "Color scheme"
 msgstr "Esquema de color"
 
-#: mgllab/dialogs.cpp:384
-msgid "Color(s) or color scheme"
-msgstr "Color(es) o esquema de color"
-
-#: mgllab/dialogs.cpp:1002
-msgid "Colors"
-msgstr "Colores"
-
-#: mgllab/table.cpp:881
-msgid ""
-"Colors denote values: magenta - local max, cyan - local min,\n"
-"\tred - Re(v)>0, blue - Re(v)<0, purple - Im(v)>0, teal - Im(v)<0."
-msgstr ""
-"Colores denotan valores: magenta -  máx. local, cyan -  min. local,\n"
-"\trojo - Re(v)>0, azul - Re(v)<0, púrpura - Im(v)>0, verde azulado - Im(v)<0."
-
-#: mgllab/dialogs.cpp:577
-msgid "Column expr"
-msgstr "Exp. de columna"
-
-#: mgllab/dialogs.cpp:724 mgllab/mgllab.cpp:320
-msgid "Command"
-msgstr "Comando"
-
-#: udav/newcmd_dlg.cpp:64 mgllab/dialogs.cpp:740
+#: udav/newcmd_dlg.cpp:64
 msgid ""
 "Command arguments. Bold ones are required arguments.\n"
 "Other are optional arguments but its order is required.\n"
@@ -1164,17 +926,9 @@ msgstr "Copiar rango de números a memoria (Ctrl+Shift+C)."
 msgid "Copy selected text or data to clipboard (Ctrl+C)."
 msgstr "Copiar texto seleccionado o datos a memoria (Ctrl+C)."
 
-#: mgllab/editor.cpp:512
-msgid "Copy selection to clipboard"
-msgstr "Copiar selección a memoria"
-
-#: udav/text_pnl.cpp:533 mgllab/mgllab.cpp:310
+#: udav/text_pnl.cpp:533
 msgid "Copy text"
 msgstr "Copiar texto"
-
-#: mgllab/table.cpp:780
-msgid "Cos FFT"
-msgstr "Cos-FFT"
 
 #: udav/dat_pnl.cpp:621
 msgid "Cos-Fourier transform along direction(s)"
@@ -1183,10 +937,6 @@ msgstr "Cos-transformada de Fourier en dirrección(es)"
 #: src/exec_dat.cpp:1642
 msgid "Cos-Fourier transform at some direction"
 msgstr "Cos-transformada de Fourier en una dirección"
-
-#: mgllab/table.cpp:165
-msgid "Cosine FFT"
-msgstr "Coseno FFT"
 
 #: udav/text_pnl.cpp:365 udav/text_pnl.cpp:482
 msgid "Could not write to %1"
@@ -1204,24 +954,15 @@ msgstr "No se puede ir a directorio "
 msgid "Couldn't open file "
 msgstr "No se pudo abrir archivo "
 
-#: mgllab/dialogs.cpp:1190
-#, c-format
-msgid "Couldn't open file %s"
-msgstr "No se pudo abrir archivo %s"
-
 #: udav/newcmd_dlg.cpp:173
 msgid "Create data and I/O"
-msgstr "Crear datos e I/O"
-
-#: mgllab/dialogs.cpp:714
-msgid "Create data and IO"
 msgstr "Crear datos e I/O"
 
 #: src/exec_dat.cpp:1667
 msgid "Create histogram (distribution) of data values"
 msgstr "Crear histograma (distribución) de valores de datos"
 
-#: udav/dat_pnl.cpp:766 mgllab/table.cpp:760
+#: udav/dat_pnl.cpp:766
 msgid "Create new"
 msgstr "Crear nuevo"
 
@@ -1237,10 +978,6 @@ msgstr "Crear nuevos datos"
 msgid "Create new data array"
 msgstr "Crear nuevo arreglo de datos"
 
-#: mgllab/table.cpp:838
-msgid "Create new data with zero filling"
-msgstr "Crear arreglo y llenarlo con ceros"
-
 #: udav/udav_wnd.cpp:284
 msgid "Create new empty script window (Ctrl+N)."
 msgstr "Crear ventana para nuevo script (Ctrl+N)."
@@ -1249,17 +986,9 @@ msgstr "Crear ventana para nuevo script (Ctrl+N)."
 msgid "Creates new variable from list of numbers or data"
 msgstr "Crear nueva variable de una lista de números o datos"
 
-#: udav/dat_pnl.cpp:784 mgllab/table.cpp:763
+#: udav/dat_pnl.cpp:784
 msgid "Crop"
 msgstr "Cortar"
-
-#: mgllab/table.cpp:860
-msgid "Crop (cut off edges) data"
-msgstr "Cortar (bordes) de datos"
-
-#: mgllab/table.cpp:607
-msgid "Crop data"
-msgstr "Cortar datos"
 
 #: src/exec_dat.cpp:1643
 msgid "Crop edge of data"
@@ -1268,10 +997,6 @@ msgstr "Cortar borde de datos"
 #: udav/dat_pnl.cpp:786
 msgid "Crop the data edges. Useful to cut off the zero-filled area."
 msgstr "Cortar bordes de datos. Útil para cortar área con ceros."
-
-#: mgllab/table.cpp:163 mgllab/table.cpp:774
-msgid "CumSum"
-msgstr "SumCum"
 
 #: src/exec_dat.cpp:1644
 msgid "Cumulative summation along direction(s)"
@@ -1289,27 +1014,15 @@ msgstr "Fuente actual"
 msgid "Cut selected text to clipboard (Ctrl+X)."
 msgstr "Cortar texto seleccionado a memoria (Ctrl+X)."
 
-#: udav/text_pnl.cpp:528 mgllab/mgllab.cpp:309
+#: udav/text_pnl.cpp:528
 msgid "Cut text"
 msgstr "Cortar texto"
 
-#: udav/opt_dlg.cpp:61 mgllab/dialogs.cpp:106
+#: udav/opt_dlg.cpp:61
 msgid "Cutting"
 msgstr "Recortado"
 
-#: mgllab/help.cpp:255 mgllab/table.cpp:428 mgllab/table.cpp:457
-msgid ""
-"DAT Files \t*.{dat,csv}\n"
-"HDF Files \t*.{h5,hdf}"
-msgstr ""
-"Archivos DAT \t*.{dat,csv}\n"
-"Archivos HDF \t*.{h5,hdf}"
-
-#: mgllab/dialogs.cpp:1465
-msgid "Dash"
-msgstr "Guión"
-
-#: udav/style_dlg.cpp:62 mgllab/dialogs.cpp:318
+#: udav/style_dlg.cpp:62
 msgid "Dashing"
 msgstr "Guiones"
 
@@ -1329,15 +1042,11 @@ msgstr ""
 "Archivos PNG (*.png)\n"
 "Todos los archivos (*.*)"
 
-#: udav/newcmd_dlg.cpp:175 mgllab/dialogs.cpp:716
+#: udav/newcmd_dlg.cpp:175
 msgid "Data handling"
 msgstr "Manipulación de datos"
 
-#: mgllab/help.cpp:167 mgllab/table.cpp:851
-msgid "Data information and preview."
-msgstr "Información sobre datos y vista previa."
-
-#: udav/open_dlg.cpp:56 udav/data_dlg.cpp:42 mgllab/dialogs.cpp:566
+#: udav/open_dlg.cpp:56 udav/data_dlg.cpp:42
 msgid "Data name"
 msgstr "Nombre de datos"
 
@@ -1349,7 +1058,7 @@ msgstr "Vista previa de datos"
 msgid "Data preview for current slice."
 msgstr "Vista previa de datos para porción actual."
 
-#: udav/newcmd_dlg.cpp:174 mgllab/dialogs.cpp:715
+#: udav/newcmd_dlg.cpp:174
 msgid "Data transform"
 msgstr "Transformar datos"
 
@@ -1360,10 +1069,6 @@ msgstr "Decrementar ángulo \\phi en 10 grados."
 #: udav/plot_pnl.cpp:548
 msgid "Decrease \\theta angle by 10 degrees."
 msgstr "Decrementar ángulo \\theta en 10 grados."
-
-#: mgllab/help.cpp:105
-msgid "Decrease font size"
-msgstr "Reducir tamaño de fuente"
 
 #: src/parser.cpp:1485
 msgid "Define constant or parameter"
@@ -1385,14 +1090,6 @@ msgstr "Definir parámetro de input del usuario"
 msgid "Delay (in ms)"
 msgstr "Retraso (en ms)"
 
-#: mgllab/mathgl.cpp:204
-msgid "Delay (in sec)"
-msgstr "Retraso (en seg)"
-
-#: mgllab/help.cpp:182
-msgid "Delete @b all@. data arrays."
-msgstr "Borrar @b todos@. los datos."
-
 #: udav/mem_pnl.cpp:64
 msgid "Delete ALL data arrays"
 msgstr "Borrar TODOS los datos"
@@ -1409,31 +1106,19 @@ msgstr "Borrar seleccion"
 msgid "Delete selected data array"
 msgstr "Borrar datos seleccionados"
 
-#: mgllab/help.cpp:170
-msgid "Delete selected data."
-msgstr "Borrar datos seleccionados."
-
 #: udav/plot_pnl.cpp:428
 msgid "Delete selected plot."
 msgstr "Borrar gráfico seleccionado."
-
-#: mgllab/dialogs.cpp:734
-msgid "Description"
-msgstr "Descripción"
 
 #: src/exec_dat.cpp:1648
 msgid "Detect curves for maximums of data array"
 msgstr "Analizar curvas en busca de máximos"
 
-#: mgllab/table.cpp:164 mgllab/table.cpp:776
-msgid "Difference"
-msgstr "Diferencia"
-
 #: udav/dat_pnl.cpp:616
 msgid "Differentiate data along direction(s)"
 msgstr "Diferenciar datos en la(s) dirección(es)"
 
-#: udav/opt_dlg.cpp:58 mgllab/dialogs.cpp:113 mgllab/dialogs.cpp:1005
+#: udav/opt_dlg.cpp:58
 msgid "Diffuse"
 msgstr "Difuso"
 
@@ -1446,29 +1131,16 @@ msgid "Direct multiplication of arrays"
 msgstr "Multiplicación directa de arreglos"
 
 #: udav/dat_pnl.cpp:351 udav/dat_pnl.cpp:377 udav/dat_pnl.cpp:424
-#: mgllab/dialogs.cpp:161 mgllab/table.cpp:549
 msgid "Direction"
 msgstr "Dirección"
-
-#: mgllab/table.cpp:551
-msgid "Direction along which data will be filled"
-msgstr "Dirección para llenar los datos"
 
 #: udav/subplot_dlg.cpp:105 udav/subplot_dlg.cpp:122
 msgid "Distance between cells"
 msgstr "Distancia entre celdas"
 
-#: mgllab/table.cpp:799
-msgid "Divide by"
-msgstr "Dividir por"
-
 #: src/exec_dat.cpp:1653
 msgid "Divide by data or number"
 msgstr "Dividir por datos o número"
-
-#: mgllab/table.cpp:180 mgllab/table.cpp:354 mgllab/table.cpp:677
-msgid "Do"
-msgstr "Hacer"
 
 #: src/exec_dat.cpp:1716
 msgid "Do STFA transform"
@@ -1478,11 +1150,6 @@ msgstr "Transformada STFA"
 msgid "Do integral transform of data"
 msgstr "Transformada integral de datos"
 
-#: mgllab/table.cpp:102 mgllab/table.cpp:557 mgllab/table.cpp:620
-#: mgllab/table.cpp:676
-msgid "Do nothing and close this window"
-msgstr "Cerrar esta ventana sin hacer nada"
-
 #: udav/mem_pnl.cpp:122
 msgid "Do you want to delete all data?"
 msgstr "¿Desea borrar todos los datos?"
@@ -1490,14 +1157,6 @@ msgstr "¿Desea borrar todos los datos?"
 #: udav/udav_wnd.cpp:341 udav/udav_wnd.cpp:580 udav/udav_wnd.cpp:622
 msgid "Do you want to save the changes to the document?"
 msgstr "¿Desea guardar los cambios del documento?"
-
-#: mgllab/editor.cpp:282
-msgid "Don't Save"
-msgstr "No guardar"
-
-#: mgllab/table.cpp:164
-msgid "Double diff."
-msgstr "Doble dif."
 
 #: src/exec_gr.cpp:1135
 msgid "Draw Bifurcation diagram"
@@ -1943,20 +1602,15 @@ msgstr "Gráfica de cascadas"
 msgid "Drawing time %1 ms"
 msgstr "Tiempo de graficación %1 ms"
 
-#: udav/newcmd_dlg.cpp:169 mgllab/dialogs.cpp:710
+#: udav/newcmd_dlg.cpp:169
 msgid "Dual plots"
 msgstr "Gráficas duales"
 
-#. L
-#: udav/style_dlg.cpp:244 mgllab/dialogs.cpp:52
+#: udav/style_dlg.cpp:244
 msgid "E - darklawn"
 msgstr "E - verde pasto oscuro"
 
-#: mgllab/dialogs.cpp:1469
-msgid "Edges"
-msgstr "Bordes"
-
-#: udav/text_pnl.cpp:84 mgllab/mgllab.cpp:307
+#: udav/text_pnl.cpp:84
 msgid "Edit"
 msgstr "Editar"
 
@@ -1968,27 +1622,21 @@ msgstr "Editor arreglo de datos seleccionado"
 msgid "Elliptic"
 msgstr "Elíptico"
 
-#: udav/prop_dlg.cpp:171 mgllab/mgllab.cpp:489
+#: udav/prop_dlg.cpp:171
 msgid "Enable keywords completion"
 msgstr "Completar palabras clave"
 
 #. pure = new QCheckBox(_("Disable face drawing (faster) for mouse rotation/shift/zoom."), this);
 #. pure->setChecked(mglAutoPure);	v->addWidget(pure);	pure->setEnabled(false);
-#: udav/prop_dlg.cpp:169 mgllab/mgllab.cpp:491
+#: udav/prop_dlg.cpp:169
 msgid "Enable mouse wheel for zooming"
 msgstr "Rueda del mouse para el zoom"
-
-#: mgllab/dialogs.cpp:1463
-msgid "End"
-msgstr "Fin"
 
 #: udav/prop_dlg.cpp:141
 msgid "English"
 msgstr "Inglés"
 
-#. TODO show dialog for color scheme
-#: udav/dat_pnl.cpp:255 udav/dat_pnl.cpp:277 mgllab/table.cpp:477
-#: mgllab/table.cpp:490
+#: udav/dat_pnl.cpp:255 udav/dat_pnl.cpp:277
 msgid "Enter color scheme"
 msgstr "Ingresar esquema de colores"
 
@@ -1996,43 +1644,13 @@ msgstr "Ingresar esquema de colores"
 msgid "Enter data name"
 msgstr "Ingresar nombre de datos"
 
-#: mgllab/table.cpp:523
-msgid ""
-"Enter formula for data modification\n"
-"Here x, y, z in range [0,1], u is data value"
-msgstr ""
-"Ingresar fórmula para modificar datos\n"
-"Aquí, x, y, z están en [0,1], u es valor de dato"
-
-#: udav/mem_pnl.cpp:85 mgllab/help.cpp:246
+#: udav/mem_pnl.cpp:85
 msgid "Enter name for new variable"
 msgstr "Ingresar nombre para nueva variable"
-
-#. this is HDF file
-#. TODO add dialog with choice of HDF names
-#: mgllab/table.cpp:436
-msgid "Enter name of data"
-msgstr "Ingresar nombre de datos"
 
 #: udav/dat_pnl.cpp:388 udav/dat_pnl.cpp:402 udav/dat_pnl.cpp:436
 msgid "Enter new data sizes"
 msgstr "Nuevo tamaño para datos"
-
-#: mgllab/table.cpp:28
-msgid "Enter number for addition to data values"
-msgstr "Número para sumar a valores"
-
-#: mgllab/table.cpp:58
-msgid "Enter number for division of data values"
-msgstr "Número para división de valores"
-
-#: mgllab/table.cpp:48
-msgid "Enter number for multiplication of data values"
-msgstr "Número para multiplicación por valores"
-
-#: mgllab/table.cpp:38
-msgid "Enter number for subtraction from data values"
-msgstr "Número para restar de valores"
 
 #: widgets/qt.cpp:949
 msgid "Enter number of vertexes"
@@ -2066,42 +1684,15 @@ msgstr ""
 msgid "Enter text"
 msgstr "Ingresar texto"
 
-#: mgllab/dialogs.cpp:860 mgllab/dialogs.cpp:866
-#, c-format
-msgid "Enter value for %s argument"
-msgstr "Ingresar valor para argumento %s"
-
-#: mgllab/table.cpp:166 mgllab/table.cpp:786
-msgid "Envelop"
-msgstr "Envoltura"
-
 #: src/exec_dat.cpp:1656
 msgid "Erode data larger val"
 msgstr "Erosionar datos"
-
-#: mgllab/editor.cpp:348
-#, c-format
-msgid ""
-"Error reading from file '%s':\n"
-"%s."
-msgstr ""
-"Error al leer archivo \"%s\":\n"
-"%s."
 
 # Viewer=visor?
 #: src/export.cpp:629 src/export.cpp:638 src/export.cpp:645
 #, c-format
 msgid "Error to call external viewer\n"
 msgstr "Error al ejecutar visor externo\n"
-
-#: mgllab/editor.cpp:359
-#, c-format
-msgid ""
-"Error writing to file '%s':\n"
-"%s."
-msgstr ""
-"Error al escribir al archivo \"%s\"s:\n"
-"%s."
 
 #: src/exec_dat.cpp:1657
 msgid ""
@@ -2115,10 +1706,6 @@ msgstr ""
 msgid "Execute if condition is false"
 msgstr "Ejecutar si condición es falsa"
 
-#: mgllab/mgllab.cpp:487
-msgid "Execute script after loading"
-msgstr "Ejecutar script al cargarlo"
-
 #: widgets/qt.cpp:1145 udav/plot_pnl.cpp:333
 msgid "Execute script and redraw graphics (F5)."
 msgstr "Ejecutar script y volver a graficar (F5)."
@@ -2127,14 +1714,6 @@ msgstr "Ejecutar script y volver a graficar (F5)."
 msgid "Execute script in external file"
 msgstr "Ejecutar script de archivo externo"
 
-#: mgllab/help.cpp:148
-msgid "Existing data arrays"
-msgstr "Arreglos de datos existentes"
-
-#: mgllab/mgllab.cpp:305
-msgid "Exit"
-msgstr "Salir"
-
 #: udav/calc_dlg.cpp:192
 msgid "Exp and log"
 msgstr "Exp y log"
@@ -2142,10 +1721,6 @@ msgstr "Exp y log"
 #: udav/calc_dlg.cpp:194
 msgid "Exp-integrals"
 msgstr "Integrales exp"
-
-#: mgllab/table.cpp:473
-msgid "Export Data?"
-msgstr "¿Exportar datos?"
 
 #: widgets/fltk.cpp:811
 msgid "Export as ..."
@@ -2159,7 +1734,7 @@ msgstr "Exportar como 2D ..."
 msgid "Export as 3D ..."
 msgstr "Exportar como 3D ..."
 
-#: src/exec_dat.cpp:1658 mgllab/table.cpp:846
+#: src/exec_dat.cpp:1658
 msgid "Export data to PNG file"
 msgstr "Exportar a PNG"
 
@@ -2168,17 +1743,9 @@ msgstr "Exportar a PNG"
 msgid "Export to GIF"
 msgstr "Exportar a GIF"
 
-#: mgllab/table.cpp:754
-msgid "Export to PNG"
-msgstr "Exportar a PNG"
-
 #: src/exec_dat.cpp:1659
 msgid "Extend data array"
 msgstr "Extender arreglo de datos"
-
-#: mgllab/table.cpp:343
-msgid "Extract data"
-msgstr "Extraer datos"
 
 #: src/exec_dat.cpp:1717
 msgid "Extract sub-array"
@@ -2188,13 +1755,8 @@ msgstr "Extraer subarreglo"
 msgid "Extract sub-array between values"
 msgstr "Extraer subarreglo entre valores"
 
-#: mgllab/dialogs.cpp:962
-msgid "Factor"
-msgstr "Factorizar"
-
 #. file menu
 #: widgets/qt.cpp:1079 udav/udav_wnd.cpp:281 udav/dat_pnl.cpp:681
-#: mgllab/mgllab.cpp:292 mgllab/table.cpp:750
 msgid "File"
 msgstr "Archivo"
 
@@ -2202,31 +1764,11 @@ msgstr "Archivo"
 msgid "File %1 saved"
 msgstr "Archivo %1 guardado"
 
-#: mgllab/mgllab.cpp:242
-msgid "File exist. Overwrite it?"
-msgstr "¿Sobreescribir archivo existente?"
-
 #: udav/text_pnl.cpp:583
 msgid "File name"
 msgstr "Nombre de archivo"
 
-#: mgllab/mgllab.cpp:318
-msgid "File path"
-msgstr "Ubicación de archivo"
-
-#: mgllab/dialogs.cpp:1073
-msgid "File to export"
-msgstr "Archivo a exportar"
-
-#: mgllab/editor.cpp:267 mgllab/mgllab.cpp:412
-msgid "File/Recent files"
-msgstr "Archivo/Archivos recientes"
-
-#: mgllab/table.cpp:767
-msgid "Fill"
-msgstr "Llenar"
-
-#: udav/dat_pnl.cpp:611 mgllab/table.cpp:856
+#: udav/dat_pnl.cpp:611
 msgid "Fill data by formula"
 msgstr "Llenar datos por fórmula"
 
@@ -2246,15 +1788,11 @@ msgstr "Llenar datos con valores triángulados"
 msgid "Fill data linearly in range [v1, v2]"
 msgstr "Llenar datos linealmente en rango [v1, v2]"
 
-#: mgllab/table.cpp:578 mgllab/table.cpp:592
-msgid "Fill in range"
-msgstr "Llenar en rango"
-
 #: src/exec_dat.cpp:1661
 msgid "Fill x-,k-samples for transforms"
 msgstr "Llenar muestreo x o k para transformada"
 
-#: udav/find_dlg.cpp:48 mgllab/editor.cpp:560
+#: udav/find_dlg.cpp:48
 msgid "Find"
 msgstr "Buscar"
 
@@ -2282,13 +1820,9 @@ msgstr "Valor maximal en una dirección"
 msgid "Find minimal value over direction"
 msgstr "Valor minimal en una dirección"
 
-#: udav/text_pnl.cpp:551 mgllab/mgllab.cpp:316
+#: udav/text_pnl.cpp:551
 msgid "Find next"
 msgstr "Buscar siguiente"
-
-#: mgllab/editor.cpp:516
-msgid "Find or replace text"
-msgstr "Buscar o reemplazar texto"
 
 #: src/exec_dat.cpp:1713
 msgid "Find root Dat[i,j,k]=val (inverse evaluate)"
@@ -2306,27 +1840,19 @@ msgstr "Suma en una dirección"
 msgid "Find triangles of randomly placed points"
 msgstr "Triangulación de puntos arbitrarios"
 
-#: udav/find_dlg.cpp:36 mgllab/editor.cpp:559
+#: udav/find_dlg.cpp:36
 msgid "Find what:"
 msgstr "Buscar:"
 
-#: udav/text_pnl.cpp:546 mgllab/editor.cpp:558
+#: udav/text_pnl.cpp:546
 msgid "Find/Replace"
 msgstr "Buscar/Reemplazar"
-
-#: mgllab/mgllab.cpp:315
-msgid "Find|Replace"
-msgstr "Buscar|Reemplazar"
 
 #: src/parser.cpp:1490
 msgid "Finish if/else block"
 msgstr "Terminar bloque \"if/else\""
 
-#: mgllab/table.cpp:806
-msgid "First cell"
-msgstr "Primera celda"
-
-#: udav/dat_pnl.cpp:721 mgllab/table.cpp:802
+#: udav/dat_pnl.cpp:721
 msgid "First slice"
 msgstr "Primera sección"
 
@@ -2334,7 +1860,7 @@ msgstr "Primera sección"
 msgid "Fit data to formula"
 msgstr "Ajustar datos a fórmula"
 
-#: udav/text_pnl.cpp:567 mgllab/mgllab.cpp:322
+#: udav/text_pnl.cpp:567
 msgid "Fitted formula"
 msgstr "Fórmula ajustada"
 
@@ -2342,41 +1868,17 @@ msgstr "Fórmula ajustada"
 msgid "FlowKey"
 msgstr "FlowKey"
 
-#: mgllab/dialogs.cpp:1009
-msgid "Fog"
-msgstr "Niebla"
-
-#: mgllab/dialogs.cpp:1010
-msgid "Fog dist."
-msgstr "Dist. niebla"
-
-#: mgllab/mgllab.cpp:548
-msgid "Folder for help files"
-msgstr "Fólder de archivos de ayuda"
-
-#: udav/text_pnl.cpp:587 mgllab/mgllab.cpp:319
+#: udav/text_pnl.cpp:587
 msgid "Folder path"
 msgstr "Ubicación de directorio"
 
-#: udav/setup_dlg.cpp:105 mgllab/dialogs.cpp:1007
+#: udav/setup_dlg.cpp:105
 msgid "Font"
 msgstr "Fuente"
-
-#: mgllab/mgllab.cpp:539
-msgid "Font file name"
-msgstr "Nombre de archivo de fuente"
 
 #: udav/prop_dlg.cpp:199
 msgid "Font files (*.vfm)"
 msgstr "Archivos de fuente (*.vfm)"
-
-#: mgllab/mgllab.cpp:478
-msgid "Font kind"
-msgstr "Tipo de fuente"
-
-#: mgllab/mgllab.cpp:480
-msgid "Font size"
-msgstr "Tamaño de fuente"
 
 #: udav/style_dlg.cpp:183
 msgid "Font style"
@@ -2399,16 +1901,11 @@ msgid "Frame %1 of %2"
 msgstr "Cuadro %1 de %2"
 
 #: udav/dat_pnl.cpp:351 udav/dat_pnl.cpp:366 udav/dat_pnl.cpp:377
-#: udav/dat_pnl.cpp:424 udav/dat_pnl.cpp:452 mgllab/table.cpp:608
+#: udav/dat_pnl.cpp:424 udav/dat_pnl.cpp:452
 msgid "From"
 msgstr "Desde"
 
-#: mgllab/mgllab.cpp:607
-msgid "Function"
-msgstr "Función"
-
-#. B
-#: udav/style_dlg.cpp:238 mgllab/dialogs.cpp:46
+#: udav/style_dlg.cpp:238
 msgid "G - green"
 msgstr "G - verde"
 
@@ -2416,8 +1913,7 @@ msgstr "G - verde"
 msgid "GIF support was disabled. Please, enable it and rebuild MathGL."
 msgstr "Formato GIF deshabilitado. Habilítelo y recompile MathGL."
 
-#: udav/newcmd_dlg.cpp:178 udav/setup_dlg.cpp:112 mgllab/dialogs.cpp:719
-#: mgllab/dialogs.cpp:1001
+#: udav/newcmd_dlg.cpp:178 udav/setup_dlg.cpp:112
 msgid "General setup"
 msgstr "Config. general"
 
@@ -2450,11 +1946,11 @@ msgstr "Obtener la traza de un arreglo"
 msgid "Global message - %s\n"
 msgstr "Mensaje global - %s\n"
 
-#: udav/dat_pnl.cpp:723 mgllab/table.cpp:867
+#: udav/dat_pnl.cpp:723
 msgid "Go to first slice for 3D data (Ctrl-F1)."
 msgstr "Ir a primera sección de datos 3D (Ctrl-F1)."
 
-#: udav/dat_pnl.cpp:753 mgllab/table.cpp:871
+#: udav/dat_pnl.cpp:753
 msgid "Go to last slice for 3D data (Ctrl-F4)."
 msgstr "Ir a última sección de datos 3D (Ctrl-F4)."
 
@@ -2475,7 +1971,6 @@ msgid "Go to the specified slice for 3D data."
 msgstr "Ir a la sección especificada de datos 3D."
 
 #: widgets/qt.cpp:1108 widgets/qt.cpp:1110 udav/plot_pnl.cpp:66
-#: mgllab/mgllab.cpp:334
 msgid "Graphics"
 msgstr "Gráfica"
 
@@ -2504,10 +1999,6 @@ msgstr "Gráfica/Animación/Sgte. cuadro"
 #: widgets/fltk.cpp:990
 msgid "Graphics/Animation/Prev frame"
 msgstr "Gráfica/Animación/Ant. cuadro"
-
-#: mgllab/mgllab.cpp:386
-msgid "Graphics/Animation/Setup animation"
-msgstr "Gráfica/Animación/Animación"
 
 #. / Toggle slideshow button
 #: widgets/fltk.cpp:988 include/mgl2/Fl_MathGL.h:168
@@ -2589,13 +2080,9 @@ msgid "Graphics/Light"
 msgstr "Gráfica/Luz"
 
 #. / Toggle pause calculation button
-#: widgets/fltk.cpp:965 include/mgl2/Fl_MathGL.h:182 mgllab/mgllab.cpp:387
+#: widgets/fltk.cpp:965 include/mgl2/Fl_MathGL.h:182
 msgid "Graphics/Pause calc"
 msgstr "Gráfica/Pausar calc."
-
-#: mgllab/mgllab.cpp:385
-msgid "Graphics/Primitive"
-msgstr "Gráfica/Primitiva"
 
 #: widgets/fltk.cpp:959
 msgid "Graphics/Redraw"
@@ -2641,12 +2128,11 @@ msgstr "Gráfica/Transformar/Alejar"
 msgid "Grid"
 msgstr "Grilla"
 
-#: udav/newcmd_dlg.cpp:50 mgllab/dialogs.cpp:705
+#: udav/newcmd_dlg.cpp:50
 msgid "Groups of MGL commands"
 msgstr "Grupos de comandos de MGL"
 
-#. P
-#: udav/style_dlg.cpp:249 mgllab/dialogs.cpp:57
+#: udav/style_dlg.cpp:249
 msgid "H - darkgray"
 msgstr "H - gris oscuro"
 
@@ -2658,10 +2144,6 @@ msgstr "Formato HDF4 deshabilitado. Habilítelo y recompile MathGL."
 #: src/data_io.cpp:1193 src/data_io.cpp:1195 src/data_io.cpp:1197
 msgid "HDF5 support was disabled. Please, enable it and rebuild MathGL."
 msgstr "Formato HDF5 deshabilitado. Habilítelo y recompile MathGL."
-
-#: mgllab/table.cpp:165 mgllab/table.cpp:781
-msgid "Hankel"
-msgstr "Hankel"
 
 #: udav/dat_pnl.cpp:622
 msgid "Hankel transform along direction(s)"
@@ -2676,8 +2158,7 @@ msgid "Height of selected cells"
 msgstr "Altura de celdas seleccionadas"
 
 #: widgets/qt.cpp:1289 udav/help_pnl.cpp:57 udav/udav_wnd.cpp:231
-#: udav/udav_wnd.cpp:323 mgllab/mgllab.cpp:344 mgllab/mgllab.cpp:345
-#: mgllab/mgllab.cpp:373
+#: udav/udav_wnd.cpp:323
 msgid "Help"
 msgstr "Ayuda"
 
@@ -2689,7 +2170,7 @@ msgstr ""
 "Aquí puede especificar opciones de comando.\n"
 "Úselas para configuración adicional del gráfico."
 
-#: udav/udav_wnd.cpp:186 mgllab/mgllab.cpp:313
+#: udav/udav_wnd.cpp:186
 msgid "Hidden plots"
 msgstr "Gráficos ocultos"
 
@@ -2701,11 +2182,11 @@ msgstr "Ocultar seleccionados"
 msgid "Hide selected plots."
 msgstr "Ocultar gráficos seleccionados."
 
-#: udav/prop_dlg.cpp:173 mgllab/mgllab.cpp:490
+#: udav/prop_dlg.cpp:173
 msgid "Highlight current object(s)"
 msgstr "Resaltar objeto(s) actuales"
 
-#: udav/udav_wnd.cpp:328 mgllab/mgllab.cpp:346
+#: udav/udav_wnd.cpp:328
 msgid "Hints"
 msgstr "Consejos"
 
@@ -2725,14 +2206,6 @@ msgstr "Hiperbólicas"
 msgid "ID"
 msgstr "ID"
 
-#: mgllab/mgllab.cpp:348
-msgid "Icon list"
-msgstr "Lista de íconos"
-
-#: mgllab/table.cpp:869
-msgid "Id of slice on third (z-) dimension"
-msgstr "Id de sección en la tercera dimensión (z)"
-
 #: udav/prop_dlg.cpp:154
 msgid "Image size"
 msgstr "Tamaño de imagen"
@@ -2745,33 +2218,13 @@ msgstr "Mostrar inmediatamente el progreso de cálculo"
 msgid "Immediately print the message"
 msgstr "Mostrar inmediatamente el mensaje"
 
-#: mgllab/table.cpp:485
-msgid "Import Data?"
-msgstr "¿Importar datos?"
-
-#: src/exec_dat.cpp:1669 mgllab/table.cpp:842
+#: src/exec_dat.cpp:1669
 msgid "Import data from PNG file"
 msgstr "Importar datos de archivo PNG"
-
-#: mgllab/table.cpp:752
-msgid "Import from PNG"
-msgstr "Importar de PNG"
-
-#: mgllab/table.cpp:769
-msgid "In range"
-msgstr "En rango"
 
 #: src/exec_dat.cpp:1664
 msgid "In-place Fourier transform"
 msgstr "Transformada de Gabor"
-
-#: mgllab/mathgl.cpp:247
-msgid "Incompatible loop parameters!"
-msgstr "¡Parámetros de bucle incompatibles!"
-
-#: mgllab/table.cpp:503
-msgid "Incorrect type of base data"
-msgstr "Tipo incorrecto de datos base"
 
 #: udav/plot_pnl.cpp:552
 msgid "Increase \\phi angle by 10 degrees."
@@ -2781,50 +2234,18 @@ msgstr "Incrementar ángulo \\phi en 10 grados."
 msgid "Increase \\theta angle by 10 degrees."
 msgstr "Incrementar ángulo \\theta en 10 grados."
 
-#: mgllab/help.cpp:103
-msgid "Increase font size"
-msgstr "Aumentar tamaño de fuente"
-
 #: udav/udav_wnd.cpp:229
 msgid "Info"
 msgstr "Info"
 
-#: udav/info_dlg.cpp:55 mgllab/help.cpp:335
+#: udav/info_dlg.cpp:55
 msgid "Information"
 msgstr "Información"
 
-#: mgllab/mgllab.cpp:321
-msgid "Inplot"
-msgstr "Gráfica interna"
-
 #. insert menu
-#: udav/text_pnl.cpp:557 mgllab/mgllab.cpp:317
+#: udav/text_pnl.cpp:557
 msgid "Insert"
 msgstr "Insertar"
-
-#: mgllab/editor.cpp:519
-msgid "Insert MGL command"
-msgstr "Insertar comando de MGL"
-
-#: mgllab/table.cpp:755
-msgid "Insert as 'list'"
-msgstr "Insertar como \"list\""
-
-#: mgllab/editor.cpp:487
-msgid "Insert file content?"
-msgstr "¿Insertar contenido de archivo?"
-
-#: mgllab/mgllab.cpp:158
-msgid "Insert file name?"
-msgstr "¿Insertar nombre de archivo?"
-
-#: mgllab/editor.cpp:521
-msgid "Insert filename"
-msgstr "Insertar nombre de archivo"
-
-#: mgllab/editor.cpp:523
-msgid "Insert inplot command"
-msgstr "Insertar comando de gráfica interna"
 
 #: udav/text_pnl.cpp:569
 msgid "Insert last fitted formula with found coefficients."
@@ -2834,23 +2255,11 @@ msgstr "Insertar última fórmula ajustada con coeficientes encontrados."
 msgid "Insert slice of data"
 msgstr "Insertar sección de datos"
 
-#: mgllab/table.cpp:849
-msgid "Insert to script as 'list' command"
-msgstr "Insertar al script como comando 'list'"
-
-#: mgllab/table.cpp:163 mgllab/table.cpp:775
-msgid "Integrate"
-msgstr "Integrar"
-
 #: src/exec_dat.cpp:1672 udav/dat_pnl.cpp:615
 msgid "Integrate data along direction(s)"
 msgstr "Integrar datos en una(s) dirección(es)"
 
-#: mgllab/dialogs.cpp:114
-msgid "Intensity of diffuse light"
-msgstr "Intensidad de luz difusa"
-
-#: udav/style_dlg.cpp:158 mgllab/dialogs.cpp:369
+#: udav/style_dlg.cpp:158
 msgid "Italic style"
 msgstr "Estilo itálico"
 
@@ -2870,25 +2279,13 @@ msgstr "Jacobi"
 msgid "Join data arrays"
 msgstr "Juntar arreglos de datos"
 
-#: mgllab/dialogs.cpp:1075
-msgid "Keep empty to put at beginning of main script."
-msgstr "Mantener vacío para poner al principio del script principal."
-
 #: udav/dat_pnl.cpp:780
 msgid "Keep only each n-th element of the data array."
 msgstr "Mantener solo cada n-ésimo elemento del arreglo."
 
-#: mgllab/mathgl.cpp:200
-msgid "Keep slides in memory (faster animation but require more memory)"
-msgstr "Mantener cuadros en memoria (animación rápida, ocupa mas memoria)"
-
 #: udav/prop_dlg.cpp:88
 msgid "Keywords"
 msgstr "Palabras clave"
-
-#: mgllab/dialogs.cpp:354 mgllab/dialogs.cpp:704 mgllab/dialogs.cpp:1457
-msgid "Kind"
-msgstr "Tipo"
 
 #: udav/newcmd_dlg.cpp:58
 msgid ""
@@ -2908,8 +2305,7 @@ msgstr ""
 msgid "Kind of plots: lines for 1D, density for 2D."
 msgstr "Tipo de gráficos: líneas para 1D, densidad para 2D."
 
-#. Y
-#: udav/style_dlg.cpp:243 mgllab/dialogs.cpp:51
+#: udav/style_dlg.cpp:243
 msgid "L - seagreen"
 msgstr "L - verde marino"
 
@@ -2917,7 +2313,7 @@ msgstr "L - verde marino"
 msgid "LaTeX"
 msgstr "LaTeX"
 
-#: udav/setup_dlg.cpp:66 mgllab/dialogs.cpp:954
+#: udav/setup_dlg.cpp:66
 msgid "Label"
 msgstr "Etiqueta"
 
@@ -2925,19 +2321,11 @@ msgstr "Etiqueta"
 msgid "Language for UDAV"
 msgstr "Lenguaje para UDAV"
 
-#: mgllab/mgllab.cpp:493
-msgid "Language for mgllab"
-msgstr "Lenguaje para mgllab"
-
 #: udav/dat_pnl.cpp:617
 msgid "Laplace transform along direction(s)"
 msgstr "Transformada de Laplace an alguna(s) dirección(es)"
 
-#: mgllab/table.cpp:777
-msgid "Laplacian"
-msgstr "Laplaciano"
-
-#: udav/dat_pnl.cpp:751 mgllab/table.cpp:805
+#: udav/dat_pnl.cpp:751
 msgid "Last slice"
 msgstr "Última sección"
 
@@ -2949,12 +2337,12 @@ msgstr "Esquina inferior izq."
 msgid "Left top edge"
 msgstr "Esquina superior izq."
 
-#: udav/opt_dlg.cpp:74 mgllab/dialogs.cpp:118
+#: udav/opt_dlg.cpp:74
 msgid "Legend"
 msgstr "Leyenda"
 
 #: widgets/qt.cpp:1117 udav/opt_dlg.cpp:64 udav/setup_dlg.cpp:110
-#: udav/plot_pnl.cpp:297 mgllab/dialogs.cpp:115
+#: udav/plot_pnl.cpp:297
 msgid "Light"
 msgstr "Luz"
 
@@ -2962,7 +2350,7 @@ msgstr "Luz"
 msgid "Light position should be filled. Ignore it."
 msgstr "Posición de luz no indicada. Ignorar."
 
-#: udav/setup_dlg.cpp:136 mgllab/dialogs.cpp:1053
+#: udav/setup_dlg.cpp:136
 msgid "Light settings"
 msgstr "Config. de luz"
 
@@ -2970,29 +2358,13 @@ msgstr "Config. de luz"
 msgid "Limit data to be inside [-v,v]"
 msgstr "Limitar datos al rango [-v,v]"
 
-#: udav/style_dlg.cpp:99 mgllab/dialogs.cpp:314
+#: udav/style_dlg.cpp:99
 msgid "Line style"
 msgstr "Estilo de línea"
 
 #: udav/style_dlg.cpp:78
 msgid "Line width"
 msgstr "Ancho de línea"
-
-#: mgllab/table.cpp:167
-msgid "Linear *3"
-msgstr "Lineal *3"
-
-#: mgllab/table.cpp:167
-msgid "Linear *5"
-msgstr "Lineal *5"
-
-#: mgllab/help.cpp:159
-msgid "List of available data."
-msgstr "Lista de datos disponibles."
-
-#: mgllab/table.cpp:427
-msgid "Load Data?"
-msgstr "¿Cargar datos?"
 
 #: src/exec_set.cpp:821
 msgid "Load commands from external DLL"
@@ -3001,10 +2373,6 @@ msgstr "Cargar comandos de librería externa"
 #: udav/dat_pnl.cpp:682
 msgid "Load data"
 msgstr "Cargar datos"
-
-#: mgllab/table.cpp:840
-msgid "Load data from file"
-msgstr "Cargar datos de archivo"
 
 #: udav/dat_pnl.cpp:684
 msgid ""
@@ -3017,10 +2385,6 @@ msgstr ""
 #: src/exec_set.cpp:822
 msgid "Load fontfaces"
 msgstr "Cargar fuentes"
-
-#: mgllab/table.cpp:751
-msgid "Load from file"
-msgstr "Cargar de archivo"
 
 #: src/exec_prm.cpp:626
 msgid "Load image for background"
@@ -3042,12 +2406,7 @@ msgstr "Se cargo documento %1"
 msgid "Loading aborted"
 msgstr "Cargado abortado"
 
-#: mgllab/dialogs.cpp:98
-msgid "Low border for determining color or alpha"
-msgstr "Borde inferior para determinar color o alfa"
-
-#. C
-#: udav/style_dlg.cpp:241 mgllab/dialogs.cpp:49
+#: udav/style_dlg.cpp:241
 msgid "M - purple"
 msgstr "M - púrpura"
 
@@ -3055,21 +2414,9 @@ msgstr "M - púrpura"
 msgid "MGL Parser"
 msgstr "Intérprete MGL"
 
-#: udav/newcmd_dlg.cpp:53 mgllab/dialogs.cpp:725
+#: udav/newcmd_dlg.cpp:53
 msgid "MGL commands for selected group"
 msgstr "Comandos de MGL para grupo seleccionado"
-
-#: mgllab/mgllab.cpp:229
-msgid "MGL files \t*.mgl"
-msgstr "Archivos MGL \t*.mgl"
-
-#: mgllab/mgllab.cpp:182
-msgid ""
-"MGL files \t*.mgl\n"
-"DAT files \t*.{dat,csv}"
-msgstr ""
-"Archivos MGL \t*.mgl\n"
-"Archivos DAT \t*.{dat,csv}"
 
 #: udav/open_dlg.cpp:102
 msgid "MGL files (*.mgl)"
@@ -3078,14 +2425,6 @@ msgstr "Archivos MGL (*.mgl)"
 #: udav/udav_wnd.cpp:324
 msgid "MGL help"
 msgstr "Ayuda de MGL"
-
-#: mgllab/mathgl.cpp:397
-msgid "MGL messages"
-msgstr "Mensaje de MGL"
-
-#: mgllab/help.cpp:101
-msgid "MGL samples and hints"
-msgstr "Ejemplos y sugerencias de MGL"
 
 #: udav/udav_wnd.cpp:670
 msgid ""
@@ -3123,7 +2462,7 @@ msgstr "Crear otros datos."
 msgid "Make new (Ctrl+Shift+M)"
 msgstr "Crear nuevo (Ctrl+Shift+M)"
 
-#: udav/style_dlg.cpp:83 mgllab/dialogs.cpp:336
+#: udav/style_dlg.cpp:83
 msgid "Manual dashing"
 msgstr "Guiones peronalizados"
 
@@ -3131,21 +2470,13 @@ msgstr "Guiones peronalizados"
 msgid "Manual mask"
 msgstr "Máscaras personalozadas"
 
-#: udav/text_pnl.cpp:591 mgllab/mgllab.cpp:323
+#: udav/text_pnl.cpp:591
 msgid "Manual primitives"
 msgstr "Primitivas personalizadas"
 
-#: mgllab/dialogs.cpp:1467
-msgid "Mark"
-msgstr "Marca"
-
-#: udav/style_dlg.cpp:76 mgllab/dialogs.cpp:324
+#: udav/style_dlg.cpp:76
 msgid "Marks"
 msgstr "Marcas"
-
-#: mgllab/dialogs.cpp:352
-msgid "Mask"
-msgstr "Máscara"
 
 #: udav/style_dlg.cpp:124
 msgid "Mask for bitmap coloring"
@@ -3159,7 +2490,7 @@ msgstr "Ángulo de rotacion de máscara"
 msgid "Mask size"
 msgstr "Tamaño de máscara"
 
-#: udav/find_dlg.cpp:42 mgllab/editor.cpp:563
+#: udav/find_dlg.cpp:42
 msgid "Match case"
 msgstr "Match case"
 
@@ -3184,40 +2515,16 @@ msgstr "Matriz con tamaño de archivo"
 msgid "Max along direction(s)"
 msgstr "Max en dirección(es)"
 
-#: udav/setup_dlg.cpp:57 mgllab/dialogs.cpp:952
+#: udav/setup_dlg.cpp:57
 msgid "Maximal"
 msgstr "Maximal"
-
-#: mgllab/table.cpp:546
-msgid "Maximal value (v2)"
-msgstr "Valor maximal (v2)"
-
-#: mgllab/table.cpp:548
-msgid "Maximal value for resulting data values"
-msgstr "Valor maximal para valores resultantes"
-
-#: mgllab/dialogs.cpp:88
-msgid "Maximal value of X for cutting or for coordinate filling"
-msgstr "Valor maximal de X para corte o para llenado de coord."
-
-#: mgllab/dialogs.cpp:92
-msgid "Maximal value of Y for cutting or for coordinate filling"
-msgstr "Valor maximal de Y para o para llenado de coord."
-
-#: mgllab/dialogs.cpp:96
-msgid "Maximal value of Z for cutting or for coordinate filling"
-msgstr "Valor maximal de Z para corte o para llenado de coord."
 
 #: src/data.cpp:1480
 #, c-format
 msgid "Maximum is %g\t at x = %ld\ty = %ld\tz = %ld\n"
 msgstr "Maximo es %g\t en x = %ld\ty = %ld\tz = %ld\n"
 
-#: mgllab/table.cpp:342 mgllab/table.cpp:791
-msgid "Maximum of"
-msgstr "Maximo de"
-
-#: udav/mem_pnl.cpp:68 udav/mem_pnl.cpp:73 mgllab/mgllab.cpp:375
+#: udav/mem_pnl.cpp:68 udav/mem_pnl.cpp:73
 msgid "Memory"
 msgstr "Memoria"
 
@@ -3225,13 +2532,9 @@ msgstr "Memoria"
 msgid "Mesh num"
 msgstr "Mesh num"
 
-#: udav/setup_dlg.cpp:99 mgllab/dialogs.cpp:102
+#: udav/setup_dlg.cpp:99
 msgid "MeshNum"
 msgstr "MeshNum"
-
-#: mgllab/mgllab.cpp:342
-msgid "Messages"
-msgstr "Mensajes"
 
 #: udav/udav_wnd.cpp:178
 msgid "Messages and warnings"
@@ -3241,43 +2544,14 @@ msgstr "Mansajes y advertencias"
 msgid "Min along direction(s)"
 msgstr "Min la(s) dirección(es)"
 
-#: udav/setup_dlg.cpp:52 mgllab/dialogs.cpp:951
+#: udav/setup_dlg.cpp:52
 msgid "Minimal"
 msgstr "Minimal"
-
-#: mgllab/table.cpp:543
-msgid "Minimal value (v1)"
-msgstr "Valor minimal (v1)"
-
-#: mgllab/table.cpp:545
-msgid "Minimal value for resulting data values"
-msgstr "Valor minimal para datos resultantes"
-
-#: mgllab/dialogs.cpp:86
-msgid "Minimal value of X for cutting or for coordinate filling"
-msgstr "Valor minimal de X para corte o para llenado de coord."
-
-#: mgllab/dialogs.cpp:90
-msgid "Minimal value of Y for cutting or for coordinate filling"
-msgstr "Valor minimal de Y para corte o para llenado de coord."
-
-#: mgllab/dialogs.cpp:94
-msgid "Minimal value of Z for cutting or for coordinate filling"
-msgstr "Valor minimal de Z para corte o para llenado de coord."
 
 #: src/data.cpp:1483
 #, c-format
 msgid "Minimum is %g\t at x = %ld\ty = %ld\tz = %ld\n"
 msgstr "Minimo es %g\t en x = %ld\ty = %ld\tz = %ld\n"
-
-#: mgllab/table.cpp:342 mgllab/table.cpp:792
-msgid "Minimum of"
-msgstr "Minimo de"
-
-#. { _("Wavelet"),	0, wavelet_cb },
-#: mgllab/table.cpp:166 mgllab/table.cpp:783
-msgid "Mirror"
-msgstr "Reflejar"
 
 #: udav/dat_pnl.cpp:619
 msgid "Mirror data along direction(s)"
@@ -3355,16 +2629,11 @@ msgstr "Mover gráfica seleccionada al subgráfica arriba."
 msgid "Move up"
 msgstr "Mover arriba"
 
-#: mgllab/table.cpp:798
-msgid "Multiply by"
-msgstr "Multiplicar por"
-
 #: src/exec_dat.cpp:1681
 msgid "Multiply by data or number"
 msgstr "Multiplicar por datos o número"
 
-#. E
-#: udav/style_dlg.cpp:245 mgllab/dialogs.cpp:53
+#: udav/style_dlg.cpp:245
 msgid "N - darkskyblue"
 msgstr "N - azul cielo oscuro"
 
@@ -3376,19 +2645,15 @@ msgstr "NOTA: ¡Todos los campos deben llenarse!"
 msgid "Name"
 msgstr "Nombre"
 
-#: mgllab/table.cpp:349
-msgid "Name for output"
-msgstr "Nombre para salida"
-
 #. navigation menu
-#: udav/dat_pnl.cpp:720 mgllab/table.cpp:801
+#: udav/dat_pnl.cpp:720
 msgid "Navigation"
 msgstr "Navegacion"
 
 #: udav/newcmd_dlg.cpp:101 udav/newcmd_dlg.cpp:308 udav/newcmd_dlg.cpp:336
 #: udav/newcmd_dlg.cpp:340 udav/newcmd_dlg.cpp:354 udav/newcmd_dlg.cpp:367
 #: udav/newcmd_dlg.cpp:375 udav/newcmd_dlg.cpp:379 udav/newcmd_dlg.cpp:383
-#: udav/text_pnl.cpp:558 udav/plot_pnl.cpp:439 mgllab/dialogs.cpp:702
+#: udav/text_pnl.cpp:558 udav/plot_pnl.cpp:439
 msgid "New command"
 msgstr "Nuevo comando"
 
@@ -3406,45 +2671,21 @@ msgstr ""
 msgid "New inplot"
 msgstr "Nuevo gráfico interno"
 
-#: mgllab/table.cpp:672
-msgid "New order of dimensions"
-msgstr "Nuevo orden de dimensiones"
-
-#: udav/udav_wnd.cpp:282 mgllab/mgllab.cpp:293
+#: udav/udav_wnd.cpp:282
 msgid "New script"
 msgstr "Nuevo script"
-
-#: mgllab/table.cpp:95
-msgid "New size of data on 1st dimension (x-direction)"
-msgstr "Nuevo tamaño de datos en la 1ra dimension (dirección x)"
-
-#: mgllab/table.cpp:97
-msgid "New size of data on 2nd dimension (y-direction)"
-msgstr "Nuevo tamaño de datos en la 2da dimension (dirección y)"
-
-#: mgllab/table.cpp:99
-msgid "New size of data on 3d dimension (z-direction)"
-msgstr "Nuevo tamaño de datos en la 3ra dimension (dirección z)"
 
 #: udav/hint_dlg.cpp:50
 msgid "Next"
 msgstr "Siguiente"
 
-#: mgllab/help.cpp:287
-msgid "Next @->"
-msgstr "Sgte. @->"
-
-#: udav/dat_pnl.cpp:745 mgllab/table.cpp:804
+#: udav/dat_pnl.cpp:745
 msgid "Next slice"
 msgstr "Siguiente sección"
 
 #: widgets/qt.cpp:1260 udav/plot_pnl.cpp:560
 msgid "Next slide"
 msgstr "Siguiente cuadro"
-
-#: mgllab/help.cpp:135 mgllab/mgllab.cpp:242
-msgid "No"
-msgstr "No"
 
 #: udav/dat_pnl.cpp:567 udav/dat_pnl.cpp:644
 msgid "No action is selected. Do nothing."
@@ -3465,15 +2706,6 @@ msgstr "No se ingreso dirección/fórmula. No proceder."
 msgid "No filename."
 msgstr "No se ingreso nombre de archivo."
 
-#: mgllab/editor.cpp:585 mgllab/editor.cpp:607 mgllab/editor.cpp:632
-#, c-format
-msgid "No occurrences of '%s' found!"
-msgstr "¡No se encontró ningun '%s'!"
-
-#: mgllab/mathgl.cpp:262
-msgid "No selection. So nothing to do"
-msgstr "No se seleccinó nada. No proceder."
-
 #: udav/text_pnl.cpp:202
 msgid "No string occurrence is found"
 msgstr "No se encontró el texto"
@@ -3486,10 +2718,6 @@ msgstr "No hay ángulo para texto"
 msgid "Normal view"
 msgstr "Vista normal"
 
-#: mgllab/table.cpp:770
-msgid "Normalize"
-msgstr "Normalizar"
-
 #: src/exec_dat.cpp:1683
 msgid "Normalize data"
 msgstr "Normalizar datos"
@@ -3497,10 +2725,6 @@ msgstr "Normalizar datos"
 #: src/exec_dat.cpp:1684
 msgid "Normalize data slice by slice"
 msgstr "Normalizar datos sección por sección"
-
-#: mgllab/table.cpp:553
-msgid "Normalize in symmetrical range: -max(|v1|,|v2|) ... max(|v1|,|v2|)"
-msgstr "Normalizar en rango simétrico: -máx(|v1|,|v2|) ... máx(|v1|,|v2|)"
 
 #: udav/udav_wnd.cpp:444
 msgid "Not recognized"
@@ -3513,10 +2737,6 @@ msgstr "Número de puntos"
 #: udav/prop_dlg.cpp:97
 msgid "Numbers"
 msgstr "Números"
-
-#: mgllab/table.cpp:176
-msgid "Numeric parameter"
-msgstr "Parámetro numérico"
 
 #: udav/text_pnl.cpp:579
 msgid "Numeric value"
@@ -3550,21 +2770,9 @@ msgstr "OBJ"
 #: udav/newcmd_dlg.cpp:80 udav/open_dlg.cpp:92 udav/dat_pnl.cpp:462
 #: udav/dat_pnl.cpp:512 udav/dat_pnl.cpp:554 udav/dat_pnl.cpp:631
 #: udav/opt_dlg.cpp:80 udav/files_dlg.cpp:60 udav/style_dlg.cpp:208
-#: udav/data_dlg.cpp:92 udav/subplot_dlg.cpp:221 mgllab/mathgl.cpp:198
-#: mgllab/dialogs.cpp:121 mgllab/dialogs.cpp:165 mgllab/dialogs.cpp:411
-#: mgllab/dialogs.cpp:585 mgllab/dialogs.cpp:750 mgllab/dialogs.cpp:1072
-#: mgllab/dialogs.cpp:1319 mgllab/dialogs.cpp:1474 mgllab/mgllab.cpp:498
-#: mgllab/table.cpp:621
+#: udav/data_dlg.cpp:92 udav/subplot_dlg.cpp:221
 msgid "OK"
 msgstr "OK"
-
-#: mgllab/table.cpp:504
-msgid "Only current slice will be inserted"
-msgstr "Solo la sección actual sera insertada"
-
-#: mgllab/mgllab.cpp:181
-msgid "Open File?"
-msgstr "¿Abrir archivo?"
 
 #: src/exec_dat.cpp:1686
 msgid "Open all data arrays from HDF file"
@@ -3578,70 +2786,35 @@ msgstr ""
 "Abrir y ejecutar/mostrar script o datos de archivo (Ctrl+O).\n"
 "Puede desactivar ejecucion automatica en propiedades de UDAV."
 
-#: mgllab/help.cpp:173
-msgid "Open dialog for new data creation."
-msgstr "Abrir dialogo de creacion de datos nuevos."
-
 #: udav/udav_wnd.cpp:196
 msgid "Open file"
 msgstr "Abrir archivo"
-
-#: mgllab/mgllab.cpp:294
-msgid "Open file ..."
-msgstr "Abrir archivo ..."
 
 #: widgets/qt.cpp:1101 udav/udav_wnd.cpp:298
 msgid "Open printer dialog and print graphics (Ctrl+P)"
 msgstr "Abrir dialogo de impresion e imprimir gráfica (Ctrl+P)"
 
-#: mgllab/editor.cpp:507
-msgid "Open script or data file"
-msgstr "Abrir script o archivo de datos"
-
-#: mgllab/help.cpp:164
-msgid "Open table with selected data for editing."
-msgstr "Abrir tabla con datos seleccionados para edicion."
-
-#: udav/data_dlg.cpp:65 mgllab/dialogs.cpp:578
+#: udav/data_dlg.cpp:65
 msgid "Operation"
 msgstr "Operacion"
 
-#: mgllab/table.cpp:231
-msgid "Operation is not supported for this type of data."
-msgstr "Operacion no soportada para tipo de datos actual."
-
-#: mgllab/table.cpp:795
-msgid "Operations"
-msgstr "Operaciones"
-
-#: udav/prop_dlg.cpp:91 udav/newcmd_dlg.cpp:72 mgllab/dialogs.cpp:746
-#: mgllab/mgllab.cpp:325
+#: udav/prop_dlg.cpp:91 udav/newcmd_dlg.cpp:72
 msgid "Options"
 msgstr "Opciones"
 
-#: udav/setup_dlg.cpp:62 mgllab/dialogs.cpp:953
+#: udav/setup_dlg.cpp:62
 msgid "Origin"
 msgstr "Origen"
 
-#: udav/newcmd_dlg.cpp:171 mgllab/dialogs.cpp:712
+#: udav/newcmd_dlg.cpp:171
 msgid "Other plots"
 msgstr "Otras gráficas"
 
-#: mgllab/dialogs.cpp:1025
-msgid "Others"
-msgstr "Otros"
-
-#: udav/style_dlg.cpp:161 mgllab/dialogs.cpp:372
+#: udav/style_dlg.cpp:161
 msgid "Overline"
 msgstr "Sobrerraya"
 
-# brightness=luminosidad?
-#: mgllab/dialogs.cpp:112
-msgid "Own brightness of the surface"
-msgstr "Brillo propio de la superficie"
-
-#. Q
-#: udav/style_dlg.cpp:248 mgllab/dialogs.cpp:56
+#: udav/style_dlg.cpp:248
 msgid "P - darkpink"
 msgstr "P - rosado oscuro"
 
@@ -3653,10 +2826,6 @@ msgstr "Formato PDF deshabilitado. Habilítelo y recompile MathGL."
 msgid "PNG"
 msgstr "PNG"
 
-#: mgllab/table.cpp:474 mgllab/table.cpp:486
-msgid "PNG Files \t*.png"
-msgstr "Archivos PNG \t*.png"
-
 #: src/canvas_cf.cpp:502 src/canvas_cf.cpp:504 src/data_png.cpp:118
 #: src/export.cpp:75 src/export.cpp:109
 msgid "PNG support was disabled. Please, enable it and rebuild MathGL."
@@ -3666,14 +2835,6 @@ msgstr "Formato PNG deshabilitado. Habilítelo y recompile MathGL."
 msgid "PRC"
 msgstr "PRC"
 
-#: mgllab/dialogs.cpp:1006
-msgid "Palette"
-msgstr "Paleta"
-
-#: mgllab/table.cpp:167
-msgid "Parabolic *5"
-msgstr "Parabolica *5"
-
 #: udav/dat_pnl.cpp:713
 msgid "Paste data"
 msgstr "Pegar datos"
@@ -3682,23 +2843,15 @@ msgstr "Pegar datos"
 msgid "Paste range of numbers from clipboard (Ctrl+Shift+P)."
 msgstr "Pegar rango de números desde memoria (Ctrl+Shift+P)."
 
-#: udav/text_pnl.cpp:538 mgllab/mgllab.cpp:311
+#: udav/text_pnl.cpp:538
 msgid "Paste text"
 msgstr "Pegar texto"
-
-#: mgllab/editor.cpp:514
-msgid "Paste text from clipboard"
-msgstr "Pegar texto desde memoria"
 
 #: udav/text_pnl.cpp:540
 msgid "Paste text or data from clipboard (Ctrl+V)."
 msgstr "Pegar texto o datos desde memoria (Ctrl+V)."
 
-#: mgllab/mgllab.cpp:484
-msgid "Path for MathGL font (without extension)"
-msgstr "Dirreccion de fuentes de MathGL (sin extension)"
-
-#: udav/prop_dlg.cpp:110 mgllab/mgllab.cpp:481
+#: udav/prop_dlg.cpp:110
 msgid "Path for help files"
 msgstr "Direccion de archivos de ayuda"
 
@@ -3727,10 +2880,6 @@ msgstr "Ángulo phi (rotar en plano xy)"
 msgid "Place editor at top"
 msgstr "Mover editor arriba"
 
-#: mgllab/dialogs.cpp:1050
-msgid "Plot ID"
-msgstr "ID del gráfico"
-
 #: src/exec_prm.cpp:643
 msgid "Plot curve by formula"
 msgstr "Gráficar curva por fórmula"
@@ -3752,11 +2901,7 @@ msgstr ""
 "Graficar datos en ventana nueva de script. Puede elejir\n"
 "el tipo de gráfica, estilo, etc."
 
-#: mgllab/mgllab.cpp:340
-msgid "Plot setup"
-msgstr "Gráfica"
-
-#: udav/text_pnl.cpp:571 mgllab/dialogs.cpp:312 mgllab/mgllab.cpp:324
+#: udav/text_pnl.cpp:571
 msgid "Plot style"
 msgstr "Estilo de gráfica"
 
@@ -3764,15 +2909,11 @@ msgstr "Estilo de gráfica"
 msgid "Plot surface by formula"
 msgstr "Graficar superficie por fórmula"
 
-#: mgllab/dialogs.cpp:386
-msgid "Popular color schemes"
-msgstr "Esquemas de colores populares"
-
 #: udav/hint_dlg.cpp:48
 msgid "Prev"
 msgstr "Prev"
 
-#: udav/dat_pnl.cpp:727 mgllab/table.cpp:803
+#: udav/dat_pnl.cpp:727
 msgid "Prev slice"
 msgstr "Seccion prev."
 
@@ -3784,11 +2925,7 @@ msgstr "Seccion prev."
 msgid "Preview"
 msgstr "Vista previa"
 
-#: mgllab/mgllab.cpp:581
-msgid "Previous expressions"
-msgstr "Expresiones previas"
-
-#: udav/newcmd_dlg.cpp:181 mgllab/dialogs.cpp:722
+#: udav/newcmd_dlg.cpp:181
 msgid "Primitives"
 msgstr "Primitivas"
 
@@ -3820,10 +2957,6 @@ msgstr "Imprimir lista de nombres de datos de archivo HDF"
 msgid "Print message or information about the data"
 msgstr "Imprimir mensaje o información acerca de datos"
 
-#: mgllab/mgllab.cpp:297
-msgid "Print plot"
-msgstr "Imprimir gráfica"
-
 #: udav/udav_wnd.cpp:295
 msgid "Print script"
 msgstr "Imprimir script"
@@ -3844,7 +2977,7 @@ msgstr "Impresión completa"
 msgid "Printing..."
 msgstr "Imprimiendo..."
 
-#: udav/newcmd_dlg.cpp:180 mgllab/dialogs.cpp:721
+#: udav/newcmd_dlg.cpp:180
 msgid "Program flow"
 msgstr "Flujo de programa"
 
@@ -3852,7 +2985,7 @@ msgstr "Flujo de programa"
 msgid "Project periodical data in [v1,v2]"
 msgstr "Proyectar datos periódicos en [v1,v2]"
 
-#: udav/udav_wnd.cpp:312 mgllab/mgllab.cpp:337 mgllab/mgllab.cpp:476
+#: udav/udav_wnd.cpp:312
 msgid "Properties"
 msgstr "Propiedades"
 
@@ -3860,11 +2993,7 @@ msgstr "Propiedades"
 msgid "Properties of selected data array"
 msgstr "Propiedades del arreglo seleccionado"
 
-#: mgllab/table.cpp:342 mgllab/table.cpp:793
-msgid "Pulse prop."
-msgstr "Prop. de pulso"
-
-#: udav/calc_dlg.cpp:127 mgllab/mgllab.cpp:615
+#: udav/calc_dlg.cpp:127
 msgid "Put function"
 msgstr "Usar función"
 
@@ -3876,7 +3005,7 @@ msgstr "Poner en variable"
 msgid "Put into this data array"
 msgstr "Poner en el arreglo actual"
 
-#: udav/anim_dlg.cpp:74 mgllab/mathgl.cpp:203
+#: udav/anim_dlg.cpp:74
 msgid "Put to script"
 msgstr "Poner en script"
 
@@ -3884,8 +3013,7 @@ msgstr "Poner en script"
 msgid "Put value (numeric or array) to given data element"
 msgstr "Poner valor (numérico o arreglo) al elemento dado"
 
-#. U
-#: udav/style_dlg.cpp:247 mgllab/dialogs.cpp:55
+#: udav/style_dlg.cpp:247
 msgid "Q - brown"
 msgstr "Q - café"
 
@@ -3893,8 +3021,7 @@ msgstr "Q - café"
 msgid "Quit"
 msgstr "Salir"
 
-#. G
-#: udav/style_dlg.cpp:239 mgllab/dialogs.cpp:47
+#: udav/style_dlg.cpp:239
 msgid "R - maroon"
 msgstr "R - carmesí"
 
@@ -3918,7 +3045,7 @@ msgstr "Leer datos de archivo con tamaño indicado en la 1ra fila"
 msgid "Read data with name 'id' from HDF file"
 msgstr "Leer datos con nombre 'id' de archivo HDF"
 
-#: udav/udav_wnd.cpp:268 mgllab/mgllab.cpp:382
+#: udav/udav_wnd.cpp:268
 msgid "Ready"
 msgstr "Listo"
 
@@ -3926,7 +3053,7 @@ msgstr "Listo"
 msgid "Rearrange data dimensions"
 msgstr "Reordenar dimensiones de datos"
 
-#: udav/udav_wnd.cpp:301 mgllab/mgllab.cpp:298
+#: udav/udav_wnd.cpp:301
 msgid "Recent files"
 msgstr "Archivos recientes"
 
@@ -3947,7 +3074,7 @@ msgstr "Rehacer cambios de editor (Ctrl+Shift+Z)."
 msgid "Redraw"
 msgstr "Volver a graficar"
 
-#: udav/anim_dlg.cpp:41 mgllab/mathgl.cpp:186
+#: udav/anim_dlg.cpp:41
 msgid "Redraw picture for $0 equal to"
 msgstr "Volver a graficar para $0 igual a"
 
@@ -3955,17 +3082,9 @@ msgstr "Volver a graficar para $0 igual a"
 msgid "Redraw plot"
 msgstr "Volver a graficar"
 
-#: mgllab/dialogs.cpp:1320
-msgid "Refresh"
-msgstr "Actualizar"
-
 #: widgets/fltk.cpp:869
 msgid "Refresh the picture"
 msgstr "Actualizar la imagen"
-
-#: mgllab/dialogs.cpp:404
-msgid "Relative position of i-th color"
-msgstr "Posición relativa al i-ésimo color"
 
 #: udav/plot_pnl.cpp:342
 msgid "Reload"
@@ -3987,15 +3106,11 @@ msgstr "Borrar filas duplicadas"
 msgid "Remove jump into the data, like phase jumps"
 msgstr "Remover saltos en datos, como saltos de fase"
 
-#: udav/find_dlg.cpp:50 mgllab/editor.cpp:562
+#: udav/find_dlg.cpp:50
 msgid "Replace"
 msgstr "Reemplazar"
 
-#: mgllab/editor.cpp:565
-msgid "Replace all"
-msgstr "Reemplazar todo"
-
-#: udav/find_dlg.cpp:39 mgllab/editor.cpp:561
+#: udav/find_dlg.cpp:39
 msgid "Replace by:"
 msgstr "Reemplazar con:"
 
@@ -4003,23 +3118,9 @@ msgstr "Reemplazar con:"
 msgid "Replace expression by its numerical value."
 msgstr "Reemplazar expresiones con sus valore numericos."
 
-#: mgllab/editor.cpp:631
-#, c-format
-msgid "Replaced %ld occurrences."
-msgstr "%ld ocurrencias reemplazadas."
-
-#: mgllab/dialogs.cpp:891
-#, c-format
-msgid "Required argument %s is not specified!"
-msgstr "¡Argumento obligatorio %s no especificado!"
-
 #: udav/subplot_dlg.cpp:186
 msgid "Reserve at"
 msgstr "Reservar en"
-
-#: mgllab/dialogs.cpp:1303
-msgid "Reserve at:"
-msgstr "Reservar en:"
 
 #: udav/subplot_dlg.cpp:190
 msgid "Reserve space for labels at bottom side (style '_')"
@@ -4041,7 +3142,7 @@ msgstr "Reservar espacio para etiquetas arriba (estilo '^')"
 msgid "Reset settings and clear picture"
 msgstr "Reestablecer config. y limpiar imagen"
 
-#: udav/dat_pnl.cpp:772 mgllab/table.cpp:761
+#: udav/dat_pnl.cpp:772
 msgid "Resize"
 msgstr "Reescalar"
 
@@ -4052,10 +3153,6 @@ msgstr "Reescalar (interpolar) datos a tamaño especificado (Ctrl+Shift+R)."
 #: src/exec_dat.cpp:1702
 msgid "Resize data array"
 msgstr "Reescalar datos"
-
-#: mgllab/table.cpp:858
-msgid "Resize data with smoothing"
-msgstr "Reescalar datos con suavizado"
 
 #: widgets/qt.cpp:1136 udav/plot_pnl.cpp:325
 msgid "Restore"
@@ -4078,7 +3175,7 @@ msgid "Restore status for 'once' command and reload data (F9)."
 msgstr "Reestablecer estado para comando 'once' y recargar datos (F9)."
 
 #: udav/calc_dlg.cpp:63 udav/data_dlg.cpp:85 udav/data_dlg.cpp:143
-#: udav/subplot_dlg.cpp:212 mgllab/dialogs.cpp:1315
+#: udav/subplot_dlg.cpp:212
 msgid "Result"
 msgstr "Resultado"
 
@@ -4086,7 +3183,7 @@ msgstr "Resultado"
 msgid "Result (will have sizes "
 msgstr "Resulto (tendra tamaño "
 
-#: udav/style_dlg.cpp:201 udav/subplot_dlg.cpp:214 mgllab/dialogs.cpp:408
+#: udav/style_dlg.cpp:201 udav/subplot_dlg.cpp:214
 msgid "Resulting string"
 msgstr "Texto resultante"
 
@@ -4101,10 +3198,6 @@ msgstr "Equina inferior der."
 #: udav/subplot_dlg.cpp:156
 msgid "Right top edge"
 msgstr "Esquina superior der."
-
-#: mgllab/table.cpp:166 mgllab/table.cpp:784
-msgid "Roll"
-msgstr "Roll"
 
 #: src/exec_dat.cpp:1704
 msgid "Roll data along direction(s)"
@@ -4127,7 +3220,7 @@ msgstr "Rotar abajo"
 msgid "Rotate left"
 msgstr "Rotar a la izq."
 
-#: udav/subplot_dlg.cpp:164 mgllab/dialogs.cpp:1294
+#: udav/subplot_dlg.cpp:164
 msgid "Rotate on"
 msgstr "Rotate on"
 
@@ -4146,10 +3239,6 @@ msgstr "Rotar a la der."
 #: udav/plot_pnl.cpp:541
 msgid "Rotate up"
 msgstr "Rotar arriba"
-
-#: mgllab/dialogs.cpp:356
-msgid "Rotation"
-msgstr "Rotacion"
 
 #: widgets/qt.cpp:1267
 msgid "Run slideshow (CTRl+F5)."
@@ -4183,15 +3272,11 @@ msgstr "SVG"
 msgid "Saturation"
 msgstr "Saturacion"
 
-#: udav/setup_dlg.cpp:143 mgllab/editor.cpp:282
+#: udav/setup_dlg.cpp:143
 msgid "Save"
 msgstr "Guardar"
 
-#: mgllab/help.cpp:254 mgllab/table.cpp:456
-msgid "Save Data?"
-msgstr "¿Guardar datos?"
-
-#: widgets/fltk.cpp:591 mgllab/mgllab.cpp:229
+#: widgets/fltk.cpp:591
 msgid "Save File As?"
 msgstr "Guardar archivo como"
 
@@ -4199,7 +3284,7 @@ msgstr "Guardar archivo como"
 msgid "Save JPEG frames"
 msgstr "Guardar cuadros JPEG"
 
-#: udav/udav_wnd.cpp:290 mgllab/mgllab.cpp:296
+#: udav/udav_wnd.cpp:290
 msgid "Save as ..."
 msgstr "Guardar como ..."
 
@@ -4215,17 +3300,9 @@ msgstr "Guardar datos a archivo HDF5"
 msgid "Save data to a file (Ctrl+Shift+S)."
 msgstr "Guardar datos a archivo (Ctrl+Shift+S)."
 
-#: src/exec_dat.cpp:1706 mgllab/table.cpp:844
+#: src/exec_dat.cpp:1706
 msgid "Save data to file"
 msgstr "Guardar datos a archivo"
-
-#: mgllab/mgllab.cpp:295
-msgid "Save file"
-msgstr "Guardar archivo"
-
-#: mgllab/mgllab.cpp:488
-msgid "Save file before redrawing"
-msgstr "Guardar archivo antes de volver a graficar"
 
 #: udav/udav_wnd.cpp:201
 msgid "Save script"
@@ -4235,23 +3312,11 @@ msgstr "Guardar script"
 msgid "Save script to a file (Ctrl+S)"
 msgstr "Guardar script a archivo (Ctrl+S)"
 
-#: mgllab/editor.cpp:509
-msgid "Save script to file"
-msgstr "Guardar script a archivo"
-
-#: mgllab/help.cpp:176
-msgid "Save selected data to file."
-msgstr "Guardar datos seleccionados a archivo."
-
-#: mgllab/table.cpp:753
-msgid "Save to file"
-msgstr "Guardar a archivo"
-
 #: udav/udav_wnd.cpp:672
 msgid "Saving aborted"
 msgstr "Guardado abortado"
 
-#: udav/newcmd_dlg.cpp:179 mgllab/dialogs.cpp:720
+#: udav/newcmd_dlg.cpp:179
 msgid "Scale and rotate"
 msgstr "Escalar y rotar"
 
@@ -4259,11 +3324,11 @@ msgstr "Escalar y rotar"
 msgid "Script"
 msgstr "Script"
 
-#: udav/find_dlg.cpp:43 mgllab/editor.cpp:564
+#: udav/find_dlg.cpp:43
 msgid "Search backward"
 msgstr "Buscar atras"
 
-#: udav/text_pnl.cpp:543 mgllab/mgllab.cpp:312
+#: udav/text_pnl.cpp:543
 msgid "Select all"
 msgstr "Seleccionar todo"
 
@@ -4275,25 +3340,9 @@ msgstr "Seleccionar e insertar nombre de archivo."
 msgid "Select and insert folder name."
 msgstr "Seleccionar e insertar nombre de directorio."
 
-#: mgllab/dialogs.cpp:565
-msgid "Select data argument"
-msgstr "Seleccionar argumento de datos"
-
-#: mgllab/dialogs.cpp:160
-msgid "Select direction"
-msgstr "Seleccionar dirección"
-
-#: mgllab/editor.cpp:654
-msgid "Select file name"
-msgstr "Seleccionar nombre de archivo"
-
 #: udav/newcmd_dlg.cpp:337 udav/newcmd_dlg.cpp:355
 msgid "Select first the proper kind of arguments"
 msgstr "Seleccione primero los tipos adecuados de argumentos"
-
-#: mgllab/editor.cpp:667
-msgid "Select folder name"
-msgstr "Seleccionar nombre de directorio"
 
 #: udav/info_dlg.cpp:39
 msgid "Select kind of plot"
@@ -4302,10 +3351,6 @@ msgstr "Seleccionar tipo de gráfica"
 #: src/exec_set.cpp:853
 msgid "Select variant of plot style(s)"
 msgstr "Seleccionar variante de estilo(s) de gráfica"
-
-#: mgllab/mathgl.cpp:168
-msgid "Set"
-msgstr "Especificar"
 
 #: src/exec_set.cpp:849
 msgid "Set additional tick and axis labels shift"
@@ -4319,7 +3364,7 @@ msgstr "Especificar brillo de luz ambiental"
 msgid "Set arbitrary position of plot in picture"
 msgstr "Especificar posición arbitraria de gráfica en imagen"
 
-#: udav/udav_wnd.cpp:315 mgllab/mgllab.cpp:338
+#: udav/udav_wnd.cpp:315
 msgid "Set arguments"
 msgstr "Argumentos"
 
@@ -4358,10 +3403,6 @@ msgstr "Especificar rango de colores"
 #: src/exec_dat.cpp:1668
 msgid "Set column id for data"
 msgstr "Especificar id de columna para datos"
-
-#: mgllab/dialogs.cpp:108
-msgid "Set cutting off/on for particular plot"
-msgstr "Activar/desactivar cortado para gráfica particular"
 
 #: udav/open_dlg.cpp:62
 msgid "Set data sizes manually"
@@ -4402,10 +3443,6 @@ msgstr "Establecer area de dibujo como celdas de matriz nx*ny."
 #: udav/subplot_dlg.cpp:127
 msgid "Set drawing area as cells of stick."
 msgstr "Especificar area de dibujo como celda de barra."
-
-#: mgllab/dialogs.cpp:117
-msgid "Set lighting off/on for particular plot"
-msgstr "Activar/desactivar luz para gráfica particular"
 
 #: src/exec_set.cpp:825
 msgid "Set number of lines in mesh/fall/vect and so on"
@@ -4478,14 +3515,6 @@ msgstr "Set scale text in relative subplots too"
 #: src/exec_set.cpp:841
 msgid "Set scaling factor for further setsize"
 msgstr "Especificar factor de escala para \"setsize\""
-
-#: mgllab/mathgl.cpp:145
-msgid "Set script arguments"
-msgstr "Especificar argumentos de script"
-
-#: mgllab/dialogs.cpp:105
-msgid "Set size for text, marks and others"
-msgstr "Especificar tamaño de texto, marcas y otros"
 
 #: src/exec_set.cpp:798
 msgid "Set size of arrows"
@@ -4571,14 +3600,6 @@ msgstr ""
 msgid "Settings"
 msgstr "Ajustes"
 
-#: mgllab/mgllab.cpp:336
-msgid "Setup"
-msgstr "Configurar"
-
-#: mgllab/mgllab.cpp:339
-msgid "Setup animation"
-msgstr "Animación"
-
 #: udav/prop_dlg.cpp:80
 msgid "Setup colors for:"
 msgstr "Config. colores para:"
@@ -4599,10 +3620,6 @@ msgstr "Config. o graficar eje"
 msgid "Setup plot points cutting"
 msgstr "Config. cortado de gráfica"
 
-#: mgllab/dialogs.cpp:947
-msgid "Setup script"
-msgstr "Config. script"
-
 #: udav/plot_pnl.cpp:573
 msgid "Setup show"
 msgstr "Config. animación"
@@ -4610,14 +3627,6 @@ msgstr "Config. animación"
 #: udav/dat_pnl.cpp:623
 msgid "Sew data along direction(s)"
 msgstr "Eliminar saltos de datos en dirección(es)"
-
-#: mgllab/table.cpp:166 mgllab/table.cpp:785
-msgid "Sew phase"
-msgstr "Sew phase"
-
-#: mgllab/dialogs.cpp:350
-msgid "Sharp colors"
-msgstr "Colores fuertes"
 
 #: src/exec_set.cpp:843
 msgid "Shear plot"
@@ -4639,7 +3648,7 @@ msgstr "Mover la imagen a la der."
 msgid "Shift the picture up"
 msgstr "Mover la imagen arriba"
 
-#: udav/newcmd_dlg.cpp:56 mgllab/dialogs.cpp:737
+#: udav/newcmd_dlg.cpp:56
 msgid "Short description of selected command"
 msgstr "Descripción corta del comando seleccionado"
 
@@ -4658,10 +3667,6 @@ msgid ""
 msgstr ""
 "Mostrar calculadora que escribe y evalua formulas textuales.\n"
 "Las formulas textuales pueden contener variables también."
-
-#: mgllab/editor.cpp:526 mgllab/editor.cpp:528
-msgid "Show calculator window"
-msgstr "Mostrar ventana de calculadora"
 
 #: widgets/fltk.cpp:912
 msgid "Show custom dialog for plot setup"
@@ -4716,10 +3721,6 @@ msgstr "Mostrar ayuda de comandos de MGL (F1)."
 msgid "Show hidden plots"
 msgstr "Mostrar gráficos ocultos"
 
-#: mgllab/help.cpp:284
-msgid "Show hint on startup"
-msgstr "Mostrar sugerencias al iniciar"
-
 #: udav/udav_wnd.cpp:330
 msgid "Show hints of MGL usage."
 msgstr "Mostrar sugerencias de uso de MGL."
@@ -4727,10 +3728,6 @@ msgstr "Mostrar sugerencias de uso de MGL."
 #: udav/udav_wnd.cpp:213
 msgid "Show info"
 msgstr "Mostrar info."
-
-#: mgllab/mgllab.cpp:314
-msgid "Show lines"
-msgstr "Mostrar líneas"
 
 #: widgets/fltk.cpp:909
 msgid "Show next frame in slideshow"
@@ -4748,10 +3745,6 @@ msgstr "Mostrar cuadro previo de la animación"
 msgid "Show previous slide (Ctrl+,)."
 msgstr "Mostrar cuadro previo (Ctrl+,)."
 
-#: mgllab/table.cpp:779
-msgid "Sin FFT"
-msgstr "Sin FFT"
-
 #: udav/dat_pnl.cpp:620
 msgid "Sin-Fourier transform along direction(s)"
 msgstr "Transformada Sin-Fourier en dirección(es)"
@@ -4760,11 +3753,7 @@ msgstr "Transformada Sin-Fourier en dirección(es)"
 msgid "Sin-Fourier transform at some direction"
 msgstr "Transformada Sin-Fourier en alguna dirección"
 
-#: mgllab/table.cpp:165
-msgid "Sinus FFT"
-msgstr "Sin-FFT"
-
-#: udav/opt_dlg.cpp:70 mgllab/dialogs.cpp:104 mgllab/dialogs.cpp:359
+#: udav/opt_dlg.cpp:70
 msgid "Size"
 msgstr "Tamaño"
 
@@ -4777,8 +3766,7 @@ msgid "Size of stick"
 msgstr "Tamaño de barra"
 
 #. size menu
-#: udav/mem_pnl.cpp:68 udav/dat_pnl.cpp:765 mgllab/dialogs.cpp:1015
-#: mgllab/table.cpp:759
+#: udav/mem_pnl.cpp:68 udav/dat_pnl.cpp:765
 msgid "Sizes"
 msgstr "Tamaños"
 
@@ -4789,10 +3777,6 @@ msgstr "Saltar comandos e iterar bucle \"for\" nuevamente"
 #: widgets/qt.cpp:1264 udav/plot_pnl.cpp:566
 msgid "Slideshow"
 msgstr "Animación"
-
-#: mgllab/table.cpp:163 mgllab/table.cpp:773
-msgid "Smooth"
-msgstr "Suavizado"
 
 #: src/exec_dat.cpp:1712
 msgid "Smooth data"
@@ -4843,31 +3827,7 @@ msgstr "Español"
 msgid "Special"
 msgstr "Especial"
 
-#: mgllab/table.cpp:129
-msgid ""
-"Specify new data size\n"
-"Data will be interpolated"
-msgstr ""
-"Especificar nuevo tamaño de datos.\n"
-"Los datos serán interpolados"
-
-#: mgllab/table.cpp:114
-msgid ""
-"Specify new data size\n"
-"Data will be zero filled"
-msgstr ""
-"Especificar nuevo tamaño de datos\n"
-"Los datos serán llenados con ceros"
-
-#: mgllab/table.cpp:144
-msgid ""
-"Specify the skipping step\n"
-"Each m-th point will be saved only"
-msgstr ""
-"Especificar el paso de salto.\n"
-"Solo cada m-ésimo punto sera guardado"
-
-#: udav/dat_pnl.cpp:778 mgllab/table.cpp:762
+#: udav/dat_pnl.cpp:778
 msgid "Squeeze"
 msgstr "Comprimir"
 
@@ -4919,43 +3879,43 @@ msgstr "Detener ejecución"
 msgid "Stop script execution (F7)."
 msgstr "Detener ejecución de script (F7)."
 
-#: udav/args_dlg.cpp:59 mgllab/mathgl.cpp:164
+#: udav/args_dlg.cpp:59
 msgid "String for $0"
 msgstr "Texto para $0"
 
-#: udav/args_dlg.cpp:41 mgllab/mathgl.cpp:146
+#: udav/args_dlg.cpp:41
 msgid "String for $1"
 msgstr "Testo para $1"
 
-#: udav/args_dlg.cpp:43 mgllab/mathgl.cpp:148
+#: udav/args_dlg.cpp:43
 msgid "String for $2"
 msgstr "Texto para $2"
 
-#: udav/args_dlg.cpp:45 mgllab/mathgl.cpp:150
+#: udav/args_dlg.cpp:45
 msgid "String for $3"
 msgstr "Texto para $3"
 
-#: udav/args_dlg.cpp:47 mgllab/mathgl.cpp:152
+#: udav/args_dlg.cpp:47
 msgid "String for $4"
 msgstr "Texto para $4"
 
-#: udav/args_dlg.cpp:49 mgllab/mathgl.cpp:154
+#: udav/args_dlg.cpp:49
 msgid "String for $5"
 msgstr "Texto para $5"
 
-#: udav/args_dlg.cpp:51 mgllab/mathgl.cpp:156
+#: udav/args_dlg.cpp:51
 msgid "String for $6"
 msgstr "Texto para $6"
 
-#: udav/args_dlg.cpp:53 mgllab/mathgl.cpp:158
+#: udav/args_dlg.cpp:53
 msgid "String for $7"
 msgstr "Texto para $7"
 
-#: udav/args_dlg.cpp:55 mgllab/mathgl.cpp:160
+#: udav/args_dlg.cpp:55
 msgid "String for $8"
 msgstr "Texto para $8"
 
-#: udav/args_dlg.cpp:57 mgllab/mathgl.cpp:162
+#: udav/args_dlg.cpp:57
 msgid "String for $9"
 msgstr "Texto para $9"
 
@@ -4999,7 +3959,7 @@ msgstr "Texto para %9"
 msgid "Strings"
 msgstr "Texto"
 
-#: udav/subplot_dlg.cpp:208 mgllab/dialogs.cpp:1314
+#: udav/subplot_dlg.cpp:208
 msgid "Style"
 msgstr "Estilo"
 
@@ -5007,17 +3967,9 @@ msgstr "Estilo"
 msgid "SubTicks"
 msgstr "Subescala"
 
-#: mgllab/dialogs.cpp:959
-msgid "Subticks"
-msgstr "Subescala"
-
 #: src/exec_dat.cpp:1718
 msgid "Subtract data or number"
 msgstr "Restar datos o número"
-
-#: mgllab/table.cpp:797
-msgid "Subtract to"
-msgstr "Restar a"
 
 #: udav/prop_dlg.cpp:94
 msgid "Suffixes"
@@ -5031,12 +3983,6 @@ msgstr "Sumar en alguna(s) dirección(es)"
 msgid "Summarize data along direction(s)"
 msgstr "Sumar datos en una(s) dirección(es)"
 
-# Suma or sumatoria?
-#. { _("Histogram of"),	0, hist_cb },
-#: mgllab/table.cpp:342 mgllab/table.cpp:790
-msgid "Summation of"
-msgstr "Suma de"
-
 #: src/exec_dat.cpp:1720
 msgid "Swap data (useful after Fourier transform)"
 msgstr "Invertir orden de datos (útil luego de la Tranformada de Fourier)"
@@ -5044,10 +3990,6 @@ msgstr "Invertir orden de datos (útil luego de la Tranformada de Fourier)"
 #: udav/dat_pnl.cpp:618
 msgid "Swap data along direction(s)"
 msgstr "Invertir orden de datos en dirección(es)"
-
-#: mgllab/table.cpp:164 mgllab/table.cpp:778
-msgid "Swap parts"
-msgstr "Intercambiar partes"
 
 #: src/exec_set.cpp:814
 msgid "Switch on/off fog"
@@ -5111,10 +4053,6 @@ msgstr "Activar/desactivar transparencia para gráfica (Alt+T)."
 msgid "Switch on/off transparency in the picture"
 msgstr "Activar/desactivar transparencia en la imagen"
 
-#: mgllab/table.cpp:552
-msgid "Symmetrical range"
-msgstr "Rango simétrico"
-
 #: udav/dat_pnl.cpp:366
 msgid "Symmetrical?"
 msgstr "¿Simétrico?"
@@ -5124,7 +4062,7 @@ msgstr "¿Simétrico?"
 msgid "TEST: %s\n"
 msgstr "TEST: %s\n"
 
-#: udav/open_dlg.cpp:82 udav/setup_dlg.cpp:88 mgllab/dialogs.cpp:961
+#: udav/open_dlg.cpp:82 udav/setup_dlg.cpp:88
 msgid "Template"
 msgstr "Plantilla"
 
@@ -5136,19 +4074,11 @@ msgstr "Nombre de plantilla"
 msgid "Template saved"
 msgstr "Plantilla guardada"
 
-#: mgllab/dialogs.cpp:1038
-msgid "Ternary"
-msgstr "Ternario"
-
-#: mgllab/dialogs.cpp:1472
-msgid "Text"
-msgstr "Texto"
-
-#: udav/style_dlg.cpp:167 mgllab/dialogs.cpp:376
+#: udav/style_dlg.cpp:167
 msgid "Text align"
 msgstr "Alineación de texto"
 
-#: udav/newcmd_dlg.cpp:172 mgllab/dialogs.cpp:713
+#: udav/newcmd_dlg.cpp:172
 msgid "Text and legend"
 msgstr "Texto y leyenda"
 
@@ -5156,13 +4086,9 @@ msgstr "Texto y leyenda"
 msgid "Text color"
 msgstr "Color del texto"
 
-#: udav/style_dlg.cpp:123 mgllab/dialogs.cpp:343
+#: udav/style_dlg.cpp:123
 msgid "Text on contours"
 msgstr "Texto en contornos"
-
-#: mgllab/dialogs.cpp:367
-msgid "Text style"
-msgstr "Estilo de texto"
 
 #: src/window.cpp:400
 msgid ""
@@ -5173,14 +4099,6 @@ msgstr ""
 "La calculadora puede ayudar a añadir expresiones complejas en el script. "
 "Solo escriba la expresión (que puede depender de las coordenadas x,y,z, "
 "etc.) y añádala al script."
-
-#: mgllab/editor.cpp:280
-msgid ""
-"The current file has not been saved.\n"
-"Would you like to save it now?"
-msgstr ""
-"El archivo actual no se ha guardado.\n"
-"¿Desea guardarlo ahora?"
 
 #: src/window.cpp:402
 msgid ""
@@ -5209,7 +4127,7 @@ msgstr "Hay primitivas del usuario."
 msgid "There is no 'fmt' argument for this command"
 msgstr "No hay argumento \"fmt\" para este comando"
 
-#: udav/text_pnl.cpp:137 mgllab/editor.cpp:681
+#: udav/text_pnl.cpp:137
 msgid "There is no fitted formula."
 msgstr "No hay fórmula ajustada."
 
@@ -5260,23 +4178,11 @@ msgstr "Ángulo theta (inclinación del eje z)"
 msgid "This is for parameter "
 msgstr "Esto es para parámetro "
 
-#: mgllab/table.cpp:494
-msgid "This operation is not supported for this kind of data."
-msgstr "Operación no soportada para este tipo de datos."
-
-#: udav/setup_dlg.cpp:76 mgllab/dialogs.cpp:955
+#: udav/setup_dlg.cpp:76
 msgid "Ticks"
 msgstr "Escala"
 
-#: mgllab/dialogs.cpp:960
-msgid "Ticks start"
-msgstr "Inicio de escala"
-
-#: mgllab/dialogs.cpp:1031
-msgid "Time ticks"
-msgstr "Escala de tiempo"
-
-#: udav/subplot_dlg.cpp:204 mgllab/dialogs.cpp:1313
+#: udav/subplot_dlg.cpp:204
 msgid "Title"
 msgstr "Titulo"
 
@@ -5285,7 +4191,7 @@ msgid "Title for plot. Can be used in SubPlot or MultiPlot only."
 msgstr "Titulo para gráfica. Se puede usar solo en subgráfica y multigráfica."
 
 #: udav/dat_pnl.cpp:351 udav/dat_pnl.cpp:366 udav/dat_pnl.cpp:377
-#: udav/dat_pnl.cpp:424 udav/dat_pnl.cpp:453 mgllab/table.cpp:609
+#: udav/dat_pnl.cpp:424 udav/dat_pnl.cpp:453
 msgid "To"
 msgstr "A"
 
@@ -5301,29 +4207,9 @@ msgstr "Transformar"
 msgid "Transform data along dimension(s) (Ctrl+Shift+T)."
 msgstr "Transformar datos en la(s) dirección(es) (Ctrl+Shift+T)."
 
-#: mgllab/dialogs.cpp:346
-msgid "Transparency"
-msgstr "Transparencia"
-
-#: mgllab/dialogs.cpp:1043
-msgid "Transparency type"
-msgstr "Tipo de transparencia"
-
-#: mgllab/table.cpp:764
-msgid "Transpose"
-msgstr "Transponer"
-
-#: mgllab/table.cpp:671
-msgid "Transpose data"
-msgstr "Transponer datos"
-
 #: src/exec_dat.cpp:1724
 msgid "Transpose data array"
 msgstr "Transponer arreglo de datos"
-
-#: mgllab/table.cpp:862
-msgid "Transpose data dimensions"
-msgstr "Transponer dimensiones de datos"
 
 #: udav/dat_pnl.cpp:612
 msgid "Transpose data with new dimensions"
@@ -5333,20 +4219,7 @@ msgstr "Transponer datos con nuevas dimensiones"
 msgid "Trigonometric"
 msgstr "Trigonometricas"
 
-#: mgllab/dialogs.cpp:1034
-msgid "Tune ticks"
-msgstr "Afinar escala"
-
-#: mgllab/table.cpp:169 mgllab/table.cpp:344
-msgid "Type of operation"
-msgstr "Tipo de operacion"
-
-#: mgllab/table.cpp:174
-msgid "Type of smoothing"
-msgstr "Tipo de suavizado"
-
-#. N
-#: udav/style_dlg.cpp:246 mgllab/dialogs.cpp:54
+#: udav/style_dlg.cpp:246
 msgid "U - indigo"
 msgstr "U - indigo"
 
@@ -5527,26 +4400,18 @@ msgstr "UDAV - Guardar actual"
 msgid "UDAV - save file"
 msgstr "UDAV - Guardar archivo"
 
-#: udav/style_dlg.cpp:160 mgllab/dialogs.cpp:371
+#: udav/style_dlg.cpp:160
 msgid "Underline"
 msgstr "Subrayado"
 
 #. edit menu
-#: udav/text_pnl.cpp:516 mgllab/mgllab.cpp:308
+#: udav/text_pnl.cpp:516
 msgid "Undo"
 msgstr "Deshacer"
 
 #: udav/text_pnl.cpp:518
 msgid "Undo editor change (Ctrl+Z)."
 msgstr "Deshacer cambios de editor (Ctrl+Z)."
-
-#: mgllab/mgllab.cpp:137
-msgid "Untitled"
-msgstr "Sin nombre"
-
-#: mgllab/mgllab.cpp:360 mgllab/mgllab.cpp:364
-msgid "Untitled - mgllab"
-msgstr "Sin nombre - mgllab"
 
 #: widgets/fltk.cpp:1104
 msgid "Update"
@@ -5556,19 +4421,10 @@ msgstr "Actualizar"
 msgid "Update list of data arrays"
 msgstr "Actualizar lista de arreglos de datos"
 
-#: mgllab/dialogs.cpp:100
-msgid "Upper border for determining color or alpha"
-msgstr "Limite superior para determinar color o alfa"
-
 #: utils/mglconv.cpp:84
 #, c-format
 msgid "Usage:\tmglconv [parameter(s)] scriptfile\n"
 msgstr "Uso:\tmglconv [parámetro(s)] script\n"
-
-#: mgllab/mgllab.cpp:432
-#, c-format
-msgid "Usage:\tmgllab [parameter(s)] scriptfile\n"
-msgstr "Uso:\tmgllab [parámetro(s)] script\n"
 
 #: utils/mglview.cpp:83
 #, c-format
@@ -5614,51 +4470,19 @@ msgstr "Usar esquema de colores"
 msgid "Use dots plot for preview"
 msgstr "Usar gráfica de puntos para vista previa"
 
-# Thread=hilo?
-#: mgllab/mgllab.cpp:492
-msgid "Use multi-threading for drawing"
-msgstr "Usar múltiples subprocesos para graficar"
-
-#: udav/newcmd_dlg.cpp:67 udav/opt_dlg.cpp:68 mgllab/dialogs.cpp:101
+#: udav/newcmd_dlg.cpp:67 udav/opt_dlg.cpp:68
 msgid "Value"
 msgstr "Valor"
 
-#: mgllab/dialogs.cpp:398
-msgid "Value for i-th color"
-msgstr "Valor para el i-ésimo color"
-
-#: mgllab/dialogs.cpp:727 mgllab/dialogs.cpp:1047
-msgid "Variant"
-msgstr "Variante"
-
-#: mgllab/dialogs.cpp:728
-msgid ""
-"Variant of command argument order. The notation is:\n"
-" * Capital arguments are data (like, Ydat);\n"
-" * Argument in '' are strings (like, 'fmt');\n"
-" * Other arguments are numbers (like, zval);\n"
-" * Arguments in [] are optional arguments."
-msgstr ""
-"Tipo de argumentos de comando. La notación es:\n"
-" * mayusculas denotan datos (ej.: Ydat);\n"
-" * argumentos en '' son texto (ej.: 'fmt');\n"
-" * otros argumentos son números (ej.: zval);\n"
-" * argumento en [] son opcionales."
-
-#: udav/newcmd_dlg.cpp:170 mgllab/dialogs.cpp:711
+#: udav/newcmd_dlg.cpp:170
 msgid "Vector plots"
 msgstr "Gráfica vectorial"
-
-#: mgllab/dialogs.cpp:379
-msgid "Vertical align"
-msgstr "Alineación vertical"
 
 #: udav/subplot_dlg.cpp:55 udav/subplot_dlg.cpp:72 udav/subplot_dlg.cpp:97
 msgid "Vertical size"
 msgstr "Tamaño vertical"
 
-#. k
-#: udav/style_dlg.cpp:236 mgllab/dialogs.cpp:44
+#: udav/style_dlg.cpp:236
 msgid "W - lightgray"
 msgstr "W - gris claro"
 
@@ -5669,14 +4493,6 @@ msgstr "Transformada wavelet en alguna dirección"
 #: udav/subplot_dlg.cpp:195
 msgid "Whole area"
 msgstr "Área completa"
-
-#: mgllab/mgllab.cpp:495
-msgid "Widget scheme"
-msgstr "Esquema del widget"
-
-#: mgllab/dialogs.cpp:329
-msgid "Width"
-msgstr "Ancho"
 
 #: udav/subplot_dlg.cpp:80
 msgid "Width of selected cells"
@@ -5691,15 +4507,11 @@ msgstr ""
 "Los anchos son:\n"
 "Wa = %g\tWx = %g\tWy = %g\tWz = %g\n"
 
-#: mgllab/dialogs.cpp:348
-msgid "Wire or mesh"
-msgstr "Alambre o grilla"
-
 #: udav/style_dlg.cpp:120
 msgid "Wire or mesh plot"
 msgstr "Gráfica de cables o grilla"
 
-#: udav/style_dlg.cpp:159 mgllab/dialogs.cpp:370
+#: udav/style_dlg.cpp:159
 msgid "Wire style"
 msgstr "Estilo de alambre"
 
@@ -5707,7 +4519,7 @@ msgstr "Estilo de alambre"
 msgid "Write current image to graphical file"
 msgstr "Guardar imagen actual a archivo gráfico"
 
-#: udav/setup_dlg.cpp:48 mgllab/dialogs.cpp:950
+#: udav/setup_dlg.cpp:48
 msgid "X axis"
 msgstr "Eje x"
 
@@ -5715,25 +4527,17 @@ msgstr "Eje x"
 msgid "X pos"
 msgstr "Pos. x"
 
-#: mgllab/dialogs.cpp:1065
-msgid "X position"
-msgstr "Posición x"
-
 #: udav/dat_pnl.cpp:413
 msgid "X-direction"
 msgstr "Dirección x"
 
-#: udav/opt_dlg.cpp:38 mgllab/dialogs.cpp:85
+#: udav/opt_dlg.cpp:38
 msgid "X-range"
 msgstr "Rango x"
 
 #: udav/dat_pnl.cpp:388 udav/dat_pnl.cpp:402 udav/dat_pnl.cpp:436
 msgid "X-size"
 msgstr "Tamaño x"
-
-#: mgllab/dialogs.cpp:568
-msgid "X-slice from"
-msgstr "Sección x desde"
 
 #: udav/subplot_dlg.cpp:176
 msgid "X/Z"
@@ -5743,12 +4547,11 @@ msgstr "X/Z"
 msgid "XYZ"
 msgstr "XYZ"
 
-#. M
-#: udav/style_dlg.cpp:242 mgllab/dialogs.cpp:50
+#: udav/style_dlg.cpp:242
 msgid "Y - olive"
 msgstr "Y - verde oliva"
 
-#: udav/setup_dlg.cpp:49 mgllab/dialogs.cpp:963
+#: udav/setup_dlg.cpp:49
 msgid "Y axis"
 msgstr "Eje y"
 
@@ -5756,15 +4559,11 @@ msgstr "Eje y"
 msgid "Y pos"
 msgstr "Pos. y"
 
-#: mgllab/dialogs.cpp:1066
-msgid "Y position"
-msgstr "Posición y"
-
 #: udav/dat_pnl.cpp:413
 msgid "Y-direction"
 msgstr "Dirección y"
 
-#: udav/opt_dlg.cpp:41 mgllab/dialogs.cpp:89
+#: udav/opt_dlg.cpp:41
 msgid "Y-range"
 msgstr "Rango y"
 
@@ -5772,17 +4571,9 @@ msgstr "Rango y"
 msgid "Y-size"
 msgstr "Tamaño y"
 
-#: mgllab/dialogs.cpp:571
-msgid "Y-slice from"
-msgstr "Sección y desde"
-
 #: udav/subplot_dlg.cpp:180
 msgid "Y/Z"
 msgstr "Y/Z"
-
-#: mgllab/help.cpp:135
-msgid "Yes"
-msgstr "Sí"
 
 #: src/window.cpp:404
 msgid ""
@@ -5918,30 +4709,9 @@ msgstr ""
 "Puede graficar rápidamente los datos de un archivo. Solo escriba \"mgllab "
 "'archivo.dat'\" en la línea de comandos."
 
-#: mgllab/dialogs.cpp:1529
-msgid "You need to enter text!"
-msgstr "¡Debe ingresar texto!"
-
-#: mgllab/table.cpp:367
-msgid "You need to provide output name"
-msgstr "Debe indicar un nombre para el archivo"
-
 #: udav/prop_dlg.cpp:285
 msgid "You need to restart UDAV for applying the changes."
 msgstr "Debe reiniciar UDAV para aplicar los cambios."
-
-#: mgllab/dialogs.cpp:592
-msgid "You need to select data array"
-msgstr "Debe seleccionar un arreglo de datos"
-
-# marker=marca?
-#: mgllab/dialogs.cpp:1489
-msgid "You need to select marker!"
-msgstr "¡Debe seleccionar un marcador!"
-
-#: mgllab/table.cpp:190 mgllab/table.cpp:364
-msgid "You need to specify direction(s)"
-msgstr "Debe especificar dirección(es)"
 
 #: udav/newcmd_dlg.cpp:376 udav/newcmd_dlg.cpp:380
 msgid "You should put text inside ' ' for argument "
@@ -5959,7 +4729,7 @@ msgstr "Debe especificar todos los argumentos opcionales primero "
 msgid "You should specify required argument "
 msgstr "Debe especificar el argumento requerido "
 
-#: udav/setup_dlg.cpp:50 mgllab/dialogs.cpp:976
+#: udav/setup_dlg.cpp:50
 msgid "Z axis"
 msgstr "Eje z"
 
@@ -5967,25 +4737,17 @@ msgstr "Eje z"
 msgid "Z pos"
 msgstr "Pos. z"
 
-#: mgllab/dialogs.cpp:1067
-msgid "Z position"
-msgstr "Posición z"
-
 #: udav/dat_pnl.cpp:413
 msgid "Z-direction"
 msgstr "Dirección z"
 
-#: udav/opt_dlg.cpp:44 mgllab/dialogs.cpp:93
+#: udav/opt_dlg.cpp:44
 msgid "Z-range"
 msgstr "Rango z"
 
 #: udav/dat_pnl.cpp:388 udav/dat_pnl.cpp:402 udav/dat_pnl.cpp:436
 msgid "Z-size"
 msgstr "Tamaño z"
-
-#: mgllab/dialogs.cpp:574
-msgid "Z-slice from"
-msgstr "Sección z para"
 
 #: src/exec_set.cpp:862
 msgid "Zoom axis range"
@@ -6051,42 +4813,6 @@ msgstr "Zoom/mover"
 msgid "above"
 msgstr "arriba"
 
-#: mgllab/dialogs.cpp:570 mgllab/dialogs.cpp:573 mgllab/dialogs.cpp:576
-msgid "all"
-msgstr "todo"
-
-#: mgllab/dialogs.cpp:581
-msgid "along"
-msgstr "a lo largo de"
-
-#: mgllab/table.cpp:171 mgllab/table.cpp:346
-msgid "along x"
-msgstr "a lo largo de x"
-
-#: mgllab/table.cpp:172 mgllab/table.cpp:347
-msgid "along y"
-msgstr "a lo largo de y"
-
-#: mgllab/table.cpp:173 mgllab/table.cpp:348
-msgid "along z"
-msgstr "a lo largo de z"
-
-#: mgllab/dialogs.cpp:1012
-msgid "alpha"
-msgstr "alfa"
-
-#: mgllab/dialogs.cpp:1296
-msgid "and"
-msgstr "y"
-
-#: mgllab/dialogs.cpp:1456
-msgid "arc"
-msgstr "arco"
-
-#: mgllab/dialogs.cpp:1018
-msgid "arrows"
-msgstr "flechas"
-
 #: udav/setup_dlg.cpp:72 udav/style_dlg.cpp:170
 msgid "at center"
 msgstr "en el centro"
@@ -6099,49 +4825,30 @@ msgstr "en el máximo"
 msgid "at minimum"
 msgstr "en el minimo"
 
-#: udav/setup_dlg.cpp:70 mgllab/dialogs.cpp:956
+#: udav/setup_dlg.cpp:70
 msgid "at position"
 msgstr "en la posición"
-
-#: mgllab/dialogs.cpp:1027
-msgid "attach light"
-msgstr "vincular luz"
 
 #. mglWarnFmt
 #: src/base.cpp:244
 msgid "axis ranges are incompatible"
 msgstr "rangos de ejes incompletos"
 
-#. w
-#: udav/style_dlg.cpp:222 mgllab/dialogs.cpp:29
+#: udav/style_dlg.cpp:222
 msgid "b - blue"
 msgstr "b - azul"
-
-#: mgllab/dialogs.cpp:1019
-msgid "bars"
-msgstr "barras"
 
 #: widgets/qt.cpp:1084 udav/plot_pnl.cpp:478
 msgid "bitmap EPS"
 msgstr "mapa de bits EPS"
 
-#: mgllab/dialogs.cpp:1036
-msgid "both"
-msgstr "ambos"
-
-#: udav/subplot_dlg.cpp:189 mgllab/dialogs.cpp:1306
+#: udav/subplot_dlg.cpp:189
 msgid "bottom"
 msgstr "fondo"
 
-#. r
-#: udav/style_dlg.cpp:225 mgllab/dialogs.cpp:32
+#: udav/style_dlg.cpp:225
 msgid "c - cyan"
 msgstr "c - cian"
-
-#: mgllab/dialogs.cpp:957 mgllab/dialogs.cpp:970 mgllab/dialogs.cpp:983
-#: mgllab/dialogs.cpp:996
-msgid "center"
-msgstr "centro"
 
 #: widgets/fltk.cpp:790
 #, c-format
@@ -6152,14 +4859,6 @@ msgstr "clic en %g, %g, %g"
 #: src/base.cpp:240
 msgid "couldn't open file"
 msgstr "no se pudo abrir archivo"
-
-#: mgllab/dialogs.cpp:1455
-msgid "curve"
-msgstr "curva"
-
-#: mgllab/dialogs.cpp:1026
-msgid "cutting"
-msgstr "cortado"
 
 #. -----------------------------------------------------------------------------
 #: src/base.cpp:231
@@ -6177,31 +4876,13 @@ msgid "data values are zero"
 msgstr "valores nulos"
 
 #: udav/open_dlg.cpp:85 udav/open_dlg.cpp:144 udav/opt_dlg.cpp:63
-#: udav/opt_dlg.cpp:66 mgllab/dialogs.cpp:107 mgllab/dialogs.cpp:116
-#: mgllab/dialogs.cpp:1044
+#: udav/opt_dlg.cpp:66
 msgid "default"
 msgstr "por defecto"
 
-#: mgllab/help.cpp:151
-msgid "dimensions"
-msgstr "dimensiones"
-
-#. l
-#: udav/style_dlg.cpp:229 mgllab/dialogs.cpp:36
+#: udav/style_dlg.cpp:229
 msgid "e - lawngreen"
 msgstr "E - verde pasto oscuro"
-
-#: mgllab/dialogs.cpp:1455
-msgid "ellipse"
-msgstr "elipse"
-
-#: mgllab/dialogs.cpp:1017
-msgid "facenum"
-msgstr "facenum"
-
-#: mgllab/dialogs.cpp:1035
-msgid "factor"
-msgstr "factor"
 
 #. mglWarnSize
 #: src/base.cpp:243
@@ -6212,25 +4893,15 @@ msgstr "formato no soportado"
 msgid "frame"
 msgstr "cuadro"
 
-#: udav/anim_dlg.cpp:55 mgllab/mathgl.cpp:192
+#: udav/anim_dlg.cpp:55
 msgid "from"
 msgstr "desde"
 
-#. b
-#: udav/style_dlg.cpp:223 mgllab/dialogs.cpp:30
+#: udav/style_dlg.cpp:223
 msgid "g - lime"
 msgstr "g - lima"
 
-#: mgllab/dialogs.cpp:1044
-msgid "glass-like"
-msgstr "vidrioso"
-
-#: mgllab/dialogs.cpp:1011
-msgid "grayscale"
-msgstr "escala de grises"
-
-#. p
-#: udav/style_dlg.cpp:234 mgllab/dialogs.cpp:41
+#: udav/style_dlg.cpp:234
 msgid "h - gray"
 msgstr "h - gris"
 
@@ -6239,33 +4910,16 @@ msgstr "h - gris"
 msgid "in line %ld"
 msgstr "en línea %ld"
 
-#: mgllab/dialogs.cpp:1036
-msgid "increment"
-msgstr "incrementar"
-
-#: mgllab/dialogs.cpp:1236 mgllab/dialogs.cpp:1249 mgllab/dialogs.cpp:1262
-#: mgllab/dialogs.cpp:1271 mgllab/dialogs.cpp:1280
-msgid "ind"
-msgstr "ind"
-
-#. h
-#: udav/style_dlg.cpp:235 mgllab/dialogs.cpp:43
+#: udav/style_dlg.cpp:235
 msgid "k - black"
 msgstr "k - negro"
 
-#. y
-#: udav/style_dlg.cpp:228 mgllab/dialogs.cpp:35
+#: udav/style_dlg.cpp:228
 msgid "l - springgreen"
 msgstr "l - verde primavera"
 
-#: mgllab/dialogs.cpp:1045
-msgid "lamp-like"
-msgstr "lamp-like"
-
 #. vv->addSpacing(11);
-#: udav/style_dlg.cpp:169 udav/subplot_dlg.cpp:187 mgllab/dialogs.cpp:957
-#: mgllab/dialogs.cpp:970 mgllab/dialogs.cpp:983 mgllab/dialogs.cpp:996
-#: mgllab/dialogs.cpp:1304
+#: udav/style_dlg.cpp:169 udav/subplot_dlg.cpp:187
 msgid "left"
 msgstr "izquierda"
 
@@ -6274,46 +4928,17 @@ msgstr "izquierda"
 msgid "light: ID is out of range"
 msgstr "luz: ID fuera de rango"
 
-#: mgllab/dialogs.cpp:1013
-msgid "lighting"
-msgstr "iluminacion"
-
-#: mgllab/dialogs.cpp:1454
-msgid "line"
-msgstr "línea"
-
-#. c
-#: udav/style_dlg.cpp:226 mgllab/dialogs.cpp:33
+#: udav/style_dlg.cpp:226
 msgid "m - magenta"
 msgstr "m - magenta"
 
-#.
-#. ^
-#: udav/style_dlg.cpp:317 udav/style_dlg.cpp:356 mgllab/dialogs.cpp:209
-#: mgllab/dialogs.cpp:247
+#: udav/style_dlg.cpp:317 udav/style_dlg.cpp:356
 msgid "manual"
 msgstr "manual"
-
-# marker=marca or marcador?
-#: mgllab/dialogs.cpp:1454
-msgid "marker"
-msgstr "marcador"
-
-#: mgllab/dialogs.cpp:1020
-msgid "markers"
-msgstr "marcadores"
 
 #: udav/data_dlg.cpp:68
 msgid "max"
 msgstr "máx"
-
-#: mgllab/help.cpp:153
-msgid "mem. usage"
-msgstr "uso de mem."
-
-#: mgllab/dialogs.cpp:1016
-msgid "meshnum"
-msgstr "meshnum"
 
 #: udav/newcmd_dlg.cpp:247
 msgid "mgl_en"
@@ -6327,26 +4952,6 @@ msgid ""
 msgstr ""
 "mglconv convierte scripts MGL a archivos de imagen (PNG por defecto).\n"
 "La version actual es 2.%g\n"
-
-#: mgllab/mgllab.cpp:431
-#, c-format
-msgid ""
-"mgllab draw mgl script interactively.\n"
-"Current version is 2.%g\n"
-msgstr ""
-"mgllab gráfica scripts MGL de manera interactiva.\n"
-"La version actual es 2.%g\n"
-
-#: mgllab/help.cpp:78
-#, c-format
-msgid ""
-"mgllab v. 2.%g\n"
-"(c) Alexey Balakin, 2017\n"
-"http://mathgl.sf.net/"
-msgstr ""
-"mgllab v. 2.%g\n"
-"(c) Alexey Balakin, 2017\n"
-"http://mathgl.sf.net/"
 
 #: utils/mglview.cpp:82
 #, c-format
@@ -6366,14 +4971,9 @@ msgstr "min"
 msgid "minimal data value is negative"
 msgstr "valor minimal de datos es negativo"
 
-#. e
-#: udav/style_dlg.cpp:230 mgllab/dialogs.cpp:37
+#: udav/style_dlg.cpp:230
 msgid "n - skyblue"
 msgstr "n - azul cielo"
-
-#: mgllab/help.cpp:149
-msgid "name"
-msgstr "nombre"
 
 #. mglWarnNeg
 #: src/base.cpp:234
@@ -6385,16 +4985,10 @@ msgstr "archivo no existe o las dimensiones de datos son incorrectas"
 msgid "no legend entries"
 msgstr "leyenda vacia"
 
-#: mgllab/dialogs.cpp:1028
-msgid "no origin tick"
-msgstr "no hay marca del origen"
-
 #. "-+=;oOsS~<>jdD*^"
 #. ".+x*sdv^<>o.*+xsdv^<>o" : nf = 10
 #: udav/style_dlg.cpp:128 udav/style_dlg.cpp:131 udav/style_dlg.cpp:134
 #: udav/style_dlg.cpp:339 udav/style_dlg.cpp:383 udav/data_dlg.cpp:67
-#: mgllab/dialogs.cpp:214 mgllab/dialogs.cpp:230 mgllab/dialogs.cpp:1035
-#: mgllab/dialogs.cpp:1039
 msgid "none"
 msgstr "ninguno"
 
@@ -6411,10 +5005,6 @@ msgstr "no hay suficiente memoria"
 #: src/base.cpp:246
 msgid "not enough space for plot"
 msgstr "no hay suficiente espacio para gráfica"
-
-#: mgllab/table.cpp:85
-msgid "not used"
-msgstr "no usado"
 
 #. mglWarnSlc
 #: src/base.cpp:239
@@ -6434,73 +5024,26 @@ msgid "or enter name for new variable"
 msgstr "o ingrese nombre para nueva variable"
 
 # rosado fuerte?
-#. q
-#: udav/style_dlg.cpp:233 mgllab/dialogs.cpp:40
+#: udav/style_dlg.cpp:233
 msgid "p - deeppink"
 msgstr "p - rosado profundo"
-
-#: mgllab/dialogs.cpp:1023
-msgid "pen blur"
-msgstr "difuminacion del trazo"
-
-#: mgllab/dialogs.cpp:392
-msgid "plain"
-msgstr "plano"
 
 #. mglWarnTern
 #: src/base.cpp:245
 msgid "pointer is NULL"
 msgstr "puntero es NULL"
 
-#: mgllab/dialogs.cpp:1456
-msgid "polygon"
-msgstr "poligono"
-
-#: mgllab/dialogs.cpp:1040
-msgid "projection"
-msgstr "proyeccion"
-
-#. u
-#: udav/style_dlg.cpp:232 mgllab/dialogs.cpp:39
+#: udav/style_dlg.cpp:232
 msgid "q - orange"
 msgstr "q - naranja"
 
-# cuadruple?
-#: mgllab/dialogs.cpp:1040
-msgid "quaternary"
-msgstr "cuaternario"
-
-#: mgllab/dialogs.cpp:1041
-msgid "quaternary proj"
-msgstr "proy. cuaternaria"
-
-#. g
-#: udav/style_dlg.cpp:224 mgllab/dialogs.cpp:31
+#: udav/style_dlg.cpp:224
 msgid "r - red"
 msgstr "r - rojo"
 
-#: mgllab/dialogs.cpp:1454
-msgid "rectangle"
-msgstr "rectangulo"
-
-#: mgllab/dialogs.cpp:1455
-msgid "rhomb"
-msgstr "rombo"
-
-#: udav/style_dlg.cpp:172 udav/subplot_dlg.cpp:193 mgllab/dialogs.cpp:958
-#: mgllab/dialogs.cpp:971 mgllab/dialogs.cpp:984 mgllab/dialogs.cpp:997
-#: mgllab/dialogs.cpp:1310
+#: udav/style_dlg.cpp:172 udav/subplot_dlg.cpp:193
 msgid "right"
 msgstr "derecha"
-
-#: mgllab/dialogs.cpp:1029
-msgid "rotate text"
-msgstr "rotar texto"
-
-# guardar animacion?
-#: mgllab/mathgl.cpp:199
-msgid "save slides"
-msgstr "guardar cuadros"
 
 #. mglWarnLId
 #: src/base.cpp:242
@@ -6512,19 +5055,11 @@ msgstr "tamaño(s) nulo(s) o negativo(s)"
 msgid "slice value is out of range"
 msgstr "valor de sección fuera de rango"
 
-#: mgllab/table.cpp:144
-msgid "smoothed"
-msgstr "suavizado"
-
-#: mgllab/dialogs.cpp:326
-msgid "solid"
-msgstr "sólido"
-
 #: widgets/qt.cpp:1082 udav/plot_pnl.cpp:476
 msgid "solid PNG"
 msgstr "PNG sólido"
 
-#: udav/anim_dlg.cpp:45 mgllab/mathgl.cpp:187
+#: udav/anim_dlg.cpp:45
 msgid "strings"
 msgstr "texto"
 
@@ -6532,38 +5067,15 @@ msgstr "texto"
 msgid "sum"
 msgstr "suma"
 
-# triple?
-#: mgllab/dialogs.cpp:1039
-msgid "ternary"
-msgstr "ternario"
-
-#: mgllab/dialogs.cpp:1041
-msgid "ternary proj"
-msgstr "proy. ternaria"
-
-#: mgllab/dialogs.cpp:1021 mgllab/dialogs.cpp:1456
-msgid "text"
-msgstr "texto"
-
-#: mgllab/dialogs.cpp:1022
-msgid "ticks"
-msgstr "escala"
-
-#: udav/anim_dlg.cpp:59 mgllab/mathgl.cpp:193 mgllab/dialogs.cpp:569
-#: mgllab/dialogs.cpp:572 mgllab/dialogs.cpp:575
+#: udav/anim_dlg.cpp:59
 msgid "to"
 msgstr "hacia"
 
-#: mgllab/mgllab.cpp:579
-msgid "to script"
-msgstr "al script"
-
-#: udav/subplot_dlg.cpp:191 mgllab/dialogs.cpp:1308
+#: udav/subplot_dlg.cpp:191
 msgid "top"
 msgstr "arriba"
 
-#. n
-#: udav/style_dlg.cpp:231 mgllab/dialogs.cpp:38
+#: udav/style_dlg.cpp:231
 msgid "u - blueviolet"
 msgstr "u - azul violeta"
 
@@ -6571,7 +5083,7 @@ msgstr "u - azul violeta"
 msgid "under"
 msgstr "abajo"
 
-#: udav/mem_pnl.cpp:168 mgllab/help.cpp:203
+#: udav/mem_pnl.cpp:168
 msgid "unknown"
 msgstr "desconocido"
 
@@ -6583,11 +5095,7 @@ msgstr "sin nombre - UDAV"
 msgid "untitled* - UDAV"
 msgstr "sin nombre* - UDAV"
 
-#: mgllab/dialogs.cpp:327
-msgid "user"
-msgstr "usuario"
-
-#: udav/anim_dlg.cpp:52 mgllab/mathgl.cpp:189
+#: udav/anim_dlg.cpp:52
 msgid "values"
 msgstr "valores"
 
@@ -6595,27 +5103,1063 @@ msgstr "valores"
 msgid "vector EPS"
 msgstr "EPS vectorial"
 
-#.
-#: udav/style_dlg.cpp:221 mgllab/dialogs.cpp:28
+#: udav/style_dlg.cpp:221
 msgid "w - white"
 msgstr "w - blanco"
 
-#: mgllab/dialogs.cpp:1312
-msgid "whole area"
-msgstr "toda el area"
-
-#: mgllab/dialogs.cpp:1471
-msgid "wire"
-msgstr "cable"
-
-#: udav/anim_dlg.cpp:63 mgllab/mathgl.cpp:194
+#: udav/anim_dlg.cpp:63
 msgid "with step"
 msgstr "con paso"
 
-#. m
-#: udav/style_dlg.cpp:227 mgllab/dialogs.cpp:34
+#: udav/style_dlg.cpp:227
 msgid "y - yellow"
 msgstr "y - amarillo"
+
+#~ msgid ""
+#~ "\t-1 str       set str as argument $1 for script\n"
+#~ "\t...          ...\n"
+#~ "\t-9 str       set str as argument $9 for script\n"
+#~ "\t-L loc       set locale to loc\n"
+#~ "\t-h           print this message\n"
+#~ msgstr ""
+#~ "\t-1 str       especificar str como argumento $1 para script\n"
+#~ "\t...          ...\n"
+#~ "\t-9 str       especificar str como argumento $9 para script\n"
+#~ "\t-L loc       especificar lenguaje como loc\n"
+#~ "\t-h           imprimir este mensaje\n"
+
+#~ msgid " Del.all"
+#~ msgstr " Del.all"
+
+#~ msgid " Delete"
+#~ msgstr " Borrar"
+
+#~ msgid " Edit"
+#~ msgstr " Editar"
+
+#~ msgid " Info"
+#~ msgstr " Info"
+
+#~ msgid " New"
+#~ msgstr " Nuevo"
+
+#~ msgid " Save"
+#~ msgstr " Guardar"
+
+#~ msgid " Yes "
+#~ msgstr " Sí "
+
+#~ msgid "'X' cross"
+#~ msgstr "'X' equis"
+
+#~ msgid "1D view"
+#~ msgstr "Vista 1D"
+
+#~ msgid "2D view"
+#~ msgstr "Vista 2D"
+
+#~ msgid "3D view"
+#~ msgstr "Vista 3D"
+
+#~ msgid "@<-  Prev"
+#~ msgstr "@<-  Prev."
+
+#~ msgid "Add command option(s)"
+#~ msgstr "Añadir opción(es) de comando"
+
+#~ msgid "Add inplot"
+#~ msgstr "Añadir gráfico interno"
+
+#~ msgid "Add legend entry for the plot"
+#~ msgstr "Añadir entrada a leyenda del gráfico"
+
+#~ msgid "Add primitive"
+#~ msgstr "Añadir primitiva"
+
+#~ msgid "Add to"
+#~ msgstr "Añadir a"
+
+#~ msgid "Alpha value (transparency) of surface or cloud"
+#~ msgstr "Valor alfa (transparencia) de superficie o nube"
+
+#~ msgid "Another"
+#~ msgstr "Otro"
+
+#~ msgid "Apply operator (smoothing, integration, difference ...) to data"
+#~ msgstr "Aplicar operador (suavizado, integración, diferencia ...) a datos"
+
+# Mesh=malla or mesh=grilla depending on context
+#~ msgid "Approximate number of mesh lines in plot"
+#~ msgstr "Número aprox. de líneas de malla en gráfica"
+
+#~ msgid "Are you sure that you want to delete ALL data arrays?"
+#~ msgstr "¿Está seguro que desea borrar TODOS los datos?"
+
+#~ msgid "Arguments"
+#~ msgstr "Argumentos"
+
+#~ msgid "Aspect x/z"
+#~ msgstr "Aspecto x/z"
+
+#~ msgid "Axis"
+#~ msgstr "Eje"
+
+#~ msgid "Begin"
+#~ msgstr "Inicio"
+
+#~ msgid "Brightness of i-th color"
+#~ msgstr "Luminosidad del i-ésimo color"
+
+#~ msgid "By formula"
+#~ msgstr "Por fórmula"
+
+#~ msgid "Change"
+#~ msgstr "Cambiar"
+
+#~ msgid "Change (resize) data"
+#~ msgstr "Cambiar (tamaño de) datos"
+
+#~ msgid "Change data"
+#~ msgstr "Modificar datos"
+
+#~ msgid "Change data sizes"
+#~ msgstr "Modificar tamaño de datos"
+
+#~ msgid "Change data values and close this window"
+#~ msgstr "Cambiar valores y cerrar esta ventana"
+
+#~ msgid "Color(s) or color scheme"
+#~ msgstr "Color(es) o esquema de color"
+
+#~ msgid "Colors"
+#~ msgstr "Colores"
+
+#~ msgid ""
+#~ "Colors denote values: magenta - local max, cyan - local min,\n"
+#~ "\tred - Re(v)>0, blue - Re(v)<0, purple - Im(v)>0, teal - Im(v)<0."
+#~ msgstr ""
+#~ "Colores denotan valores: magenta -  máx. local, cyan -  min. local,\n"
+#~ "\trojo - Re(v)>0, azul - Re(v)<0, púrpura - Im(v)>0, verde azulado - "
+#~ "Im(v)<0."
+
+#~ msgid "Column expr"
+#~ msgstr "Exp. de columna"
+
+#~ msgid "Command"
+#~ msgstr "Comando"
+
+#~ msgid "Copy selection to clipboard"
+#~ msgstr "Copiar selección a memoria"
+
+#~ msgid "Cos FFT"
+#~ msgstr "Cos-FFT"
+
+#~ msgid "Cosine FFT"
+#~ msgstr "Coseno FFT"
+
+#~ msgid "Couldn't open file %s"
+#~ msgstr "No se pudo abrir archivo %s"
+
+#~ msgid "Create data and IO"
+#~ msgstr "Crear datos e I/O"
+
+#~ msgid "Create new data with zero filling"
+#~ msgstr "Crear arreglo y llenarlo con ceros"
+
+#~ msgid "Crop (cut off edges) data"
+#~ msgstr "Cortar (bordes) de datos"
+
+#~ msgid "Crop data"
+#~ msgstr "Cortar datos"
+
+#~ msgid "CumSum"
+#~ msgstr "SumCum"
+
+#~ msgid ""
+#~ "DAT Files \t*.{dat,csv}\n"
+#~ "HDF Files \t*.{h5,hdf}"
+#~ msgstr ""
+#~ "Archivos DAT \t*.{dat,csv}\n"
+#~ "Archivos HDF \t*.{h5,hdf}"
+
+#~ msgid "Dash"
+#~ msgstr "Guión"
+
+#~ msgid "Data information and preview."
+#~ msgstr "Información sobre datos y vista previa."
+
+#~ msgid "Decrease font size"
+#~ msgstr "Reducir tamaño de fuente"
+
+#~ msgid "Delay (in sec)"
+#~ msgstr "Retraso (en seg)"
+
+#~ msgid "Delete @b all@. data arrays."
+#~ msgstr "Borrar @b todos@. los datos."
+
+#~ msgid "Delete selected data."
+#~ msgstr "Borrar datos seleccionados."
+
+#~ msgid "Description"
+#~ msgstr "Descripción"
+
+#~ msgid "Difference"
+#~ msgstr "Diferencia"
+
+#~ msgid "Direction along which data will be filled"
+#~ msgstr "Dirección para llenar los datos"
+
+#~ msgid "Divide by"
+#~ msgstr "Dividir por"
+
+#~ msgid "Do"
+#~ msgstr "Hacer"
+
+#~ msgid "Do nothing and close this window"
+#~ msgstr "Cerrar esta ventana sin hacer nada"
+
+#~ msgid "Don't Save"
+#~ msgstr "No guardar"
+
+#~ msgid "Double diff."
+#~ msgstr "Doble dif."
+
+#~ msgid "Edges"
+#~ msgstr "Bordes"
+
+#~ msgid "End"
+#~ msgstr "Fin"
+
+#~ msgid ""
+#~ "Enter formula for data modification\n"
+#~ "Here x, y, z in range [0,1], u is data value"
+#~ msgstr ""
+#~ "Ingresar fórmula para modificar datos\n"
+#~ "Aquí, x, y, z están en [0,1], u es valor de dato"
+
+#~ msgid "Enter name of data"
+#~ msgstr "Ingresar nombre de datos"
+
+#~ msgid "Enter number for addition to data values"
+#~ msgstr "Número para sumar a valores"
+
+#~ msgid "Enter number for division of data values"
+#~ msgstr "Número para división de valores"
+
+#~ msgid "Enter number for multiplication of data values"
+#~ msgstr "Número para multiplicación por valores"
+
+#~ msgid "Enter number for subtraction from data values"
+#~ msgstr "Número para restar de valores"
+
+#~ msgid "Enter value for %s argument"
+#~ msgstr "Ingresar valor para argumento %s"
+
+#~ msgid "Envelop"
+#~ msgstr "Envoltura"
+
+#~ msgid ""
+#~ "Error reading from file '%s':\n"
+#~ "%s."
+#~ msgstr ""
+#~ "Error al leer archivo \"%s\":\n"
+#~ "%s."
+
+#~ msgid ""
+#~ "Error writing to file '%s':\n"
+#~ "%s."
+#~ msgstr ""
+#~ "Error al escribir al archivo \"%s\"s:\n"
+#~ "%s."
+
+#~ msgid "Execute script after loading"
+#~ msgstr "Ejecutar script al cargarlo"
+
+#~ msgid "Existing data arrays"
+#~ msgstr "Arreglos de datos existentes"
+
+#~ msgid "Exit"
+#~ msgstr "Salir"
+
+#~ msgid "Export Data?"
+#~ msgstr "¿Exportar datos?"
+
+#~ msgid "Export to PNG"
+#~ msgstr "Exportar a PNG"
+
+#~ msgid "Extract data"
+#~ msgstr "Extraer datos"
+
+#~ msgid "Factor"
+#~ msgstr "Factorizar"
+
+#~ msgid "File exist. Overwrite it?"
+#~ msgstr "¿Sobreescribir archivo existente?"
+
+#~ msgid "File path"
+#~ msgstr "Ubicación de archivo"
+
+#~ msgid "File to export"
+#~ msgstr "Archivo a exportar"
+
+#~ msgid "File/Recent files"
+#~ msgstr "Archivo/Archivos recientes"
+
+#~ msgid "Fill"
+#~ msgstr "Llenar"
+
+#~ msgid "Fill in range"
+#~ msgstr "Llenar en rango"
+
+#~ msgid "Find or replace text"
+#~ msgstr "Buscar o reemplazar texto"
+
+#~ msgid "Find|Replace"
+#~ msgstr "Buscar|Reemplazar"
+
+#~ msgid "First cell"
+#~ msgstr "Primera celda"
+
+#~ msgid "Fog"
+#~ msgstr "Niebla"
+
+#~ msgid "Fog dist."
+#~ msgstr "Dist. niebla"
+
+#~ msgid "Folder for help files"
+#~ msgstr "Fólder de archivos de ayuda"
+
+#~ msgid "Font file name"
+#~ msgstr "Nombre de archivo de fuente"
+
+#~ msgid "Font kind"
+#~ msgstr "Tipo de fuente"
+
+#~ msgid "Font size"
+#~ msgstr "Tamaño de fuente"
+
+#~ msgid "Function"
+#~ msgstr "Función"
+
+#~ msgid "Graphics/Animation/Setup animation"
+#~ msgstr "Gráfica/Animación/Animación"
+
+#~ msgid "Graphics/Primitive"
+#~ msgstr "Gráfica/Primitiva"
+
+#~ msgid "Hankel"
+#~ msgstr "Hankel"
+
+#~ msgid "Icon list"
+#~ msgstr "Lista de íconos"
+
+#~ msgid "Id of slice on third (z-) dimension"
+#~ msgstr "Id de sección en la tercera dimensión (z)"
+
+#~ msgid "Import Data?"
+#~ msgstr "¿Importar datos?"
+
+#~ msgid "Import from PNG"
+#~ msgstr "Importar de PNG"
+
+#~ msgid "In range"
+#~ msgstr "En rango"
+
+#~ msgid "Incompatible loop parameters!"
+#~ msgstr "¡Parámetros de bucle incompatibles!"
+
+#~ msgid "Incorrect type of base data"
+#~ msgstr "Tipo incorrecto de datos base"
+
+#~ msgid "Increase font size"
+#~ msgstr "Aumentar tamaño de fuente"
+
+#~ msgid "Inplot"
+#~ msgstr "Gráfica interna"
+
+#~ msgid "Insert MGL command"
+#~ msgstr "Insertar comando de MGL"
+
+#~ msgid "Insert as 'list'"
+#~ msgstr "Insertar como \"list\""
+
+#~ msgid "Insert file content?"
+#~ msgstr "¿Insertar contenido de archivo?"
+
+#~ msgid "Insert file name?"
+#~ msgstr "¿Insertar nombre de archivo?"
+
+#~ msgid "Insert filename"
+#~ msgstr "Insertar nombre de archivo"
+
+#~ msgid "Insert inplot command"
+#~ msgstr "Insertar comando de gráfica interna"
+
+#~ msgid "Insert to script as 'list' command"
+#~ msgstr "Insertar al script como comando 'list'"
+
+#~ msgid "Integrate"
+#~ msgstr "Integrar"
+
+#~ msgid "Intensity of diffuse light"
+#~ msgstr "Intensidad de luz difusa"
+
+#~ msgid "Keep empty to put at beginning of main script."
+#~ msgstr "Mantener vacío para poner al principio del script principal."
+
+#~ msgid "Keep slides in memory (faster animation but require more memory)"
+#~ msgstr "Mantener cuadros en memoria (animación rápida, ocupa mas memoria)"
+
+#~ msgid "Kind"
+#~ msgstr "Tipo"
+
+#~ msgid "Language for mgllab"
+#~ msgstr "Lenguaje para mgllab"
+
+#~ msgid "Laplacian"
+#~ msgstr "Laplaciano"
+
+#~ msgid "Linear *3"
+#~ msgstr "Lineal *3"
+
+#~ msgid "Linear *5"
+#~ msgstr "Lineal *5"
+
+#~ msgid "List of available data."
+#~ msgstr "Lista de datos disponibles."
+
+#~ msgid "Load Data?"
+#~ msgstr "¿Cargar datos?"
+
+#~ msgid "Load data from file"
+#~ msgstr "Cargar datos de archivo"
+
+#~ msgid "Load from file"
+#~ msgstr "Cargar de archivo"
+
+#~ msgid "Low border for determining color or alpha"
+#~ msgstr "Borde inferior para determinar color o alfa"
+
+#~ msgid "MGL files \t*.mgl"
+#~ msgstr "Archivos MGL \t*.mgl"
+
+#~ msgid ""
+#~ "MGL files \t*.mgl\n"
+#~ "DAT files \t*.{dat,csv}"
+#~ msgstr ""
+#~ "Archivos MGL \t*.mgl\n"
+#~ "Archivos DAT \t*.{dat,csv}"
+
+#~ msgid "MGL messages"
+#~ msgstr "Mensaje de MGL"
+
+#~ msgid "MGL samples and hints"
+#~ msgstr "Ejemplos y sugerencias de MGL"
+
+#~ msgid "Mark"
+#~ msgstr "Marca"
+
+#~ msgid "Mask"
+#~ msgstr "Máscara"
+
+#~ msgid "Maximal value (v2)"
+#~ msgstr "Valor maximal (v2)"
+
+#~ msgid "Maximal value for resulting data values"
+#~ msgstr "Valor maximal para valores resultantes"
+
+#~ msgid "Maximal value of X for cutting or for coordinate filling"
+#~ msgstr "Valor maximal de X para corte o para llenado de coord."
+
+#~ msgid "Maximal value of Y for cutting or for coordinate filling"
+#~ msgstr "Valor maximal de Y para o para llenado de coord."
+
+#~ msgid "Maximal value of Z for cutting or for coordinate filling"
+#~ msgstr "Valor maximal de Z para corte o para llenado de coord."
+
+#~ msgid "Maximum of"
+#~ msgstr "Maximo de"
+
+#~ msgid "Messages"
+#~ msgstr "Mensajes"
+
+#~ msgid "Minimal value (v1)"
+#~ msgstr "Valor minimal (v1)"
+
+#~ msgid "Minimal value for resulting data values"
+#~ msgstr "Valor minimal para datos resultantes"
+
+#~ msgid "Minimal value of X for cutting or for coordinate filling"
+#~ msgstr "Valor minimal de X para corte o para llenado de coord."
+
+#~ msgid "Minimal value of Y for cutting or for coordinate filling"
+#~ msgstr "Valor minimal de Y para corte o para llenado de coord."
+
+#~ msgid "Minimal value of Z for cutting or for coordinate filling"
+#~ msgstr "Valor minimal de Z para corte o para llenado de coord."
+
+#~ msgid "Minimum of"
+#~ msgstr "Minimo de"
+
+#~ msgid "Mirror"
+#~ msgstr "Reflejar"
+
+#~ msgid "Multiply by"
+#~ msgstr "Multiplicar por"
+
+#~ msgid "Name for output"
+#~ msgstr "Nombre para salida"
+
+#~ msgid "New order of dimensions"
+#~ msgstr "Nuevo orden de dimensiones"
+
+#~ msgid "New size of data on 1st dimension (x-direction)"
+#~ msgstr "Nuevo tamaño de datos en la 1ra dimension (dirección x)"
+
+#~ msgid "New size of data on 2nd dimension (y-direction)"
+#~ msgstr "Nuevo tamaño de datos en la 2da dimension (dirección y)"
+
+#~ msgid "New size of data on 3d dimension (z-direction)"
+#~ msgstr "Nuevo tamaño de datos en la 3ra dimension (dirección z)"
+
+#~ msgid "Next @->"
+#~ msgstr "Sgte. @->"
+
+#~ msgid "No"
+#~ msgstr "No"
+
+#~ msgid "No occurrences of '%s' found!"
+#~ msgstr "¡No se encontró ningun '%s'!"
+
+#~ msgid "No selection. So nothing to do"
+#~ msgstr "No se seleccinó nada. No proceder."
+
+#~ msgid "Normalize"
+#~ msgstr "Normalizar"
+
+#~ msgid "Normalize in symmetrical range: -max(|v1|,|v2|) ... max(|v1|,|v2|)"
+#~ msgstr "Normalizar en rango simétrico: -máx(|v1|,|v2|) ... máx(|v1|,|v2|)"
+
+#~ msgid "Numeric parameter"
+#~ msgstr "Parámetro numérico"
+
+#~ msgid "Only current slice will be inserted"
+#~ msgstr "Solo la sección actual sera insertada"
+
+#~ msgid "Open File?"
+#~ msgstr "¿Abrir archivo?"
+
+#~ msgid "Open dialog for new data creation."
+#~ msgstr "Abrir dialogo de creacion de datos nuevos."
+
+#~ msgid "Open file ..."
+#~ msgstr "Abrir archivo ..."
+
+#~ msgid "Open script or data file"
+#~ msgstr "Abrir script o archivo de datos"
+
+#~ msgid "Open table with selected data for editing."
+#~ msgstr "Abrir tabla con datos seleccionados para edicion."
+
+#~ msgid "Operation is not supported for this type of data."
+#~ msgstr "Operacion no soportada para tipo de datos actual."
+
+#~ msgid "Operations"
+#~ msgstr "Operaciones"
+
+#~ msgid "Others"
+#~ msgstr "Otros"
+
+# brightness=luminosidad?
+#~ msgid "Own brightness of the surface"
+#~ msgstr "Brillo propio de la superficie"
+
+#~ msgid "PNG Files \t*.png"
+#~ msgstr "Archivos PNG \t*.png"
+
+#~ msgid "Palette"
+#~ msgstr "Paleta"
+
+#~ msgid "Parabolic *5"
+#~ msgstr "Parabolica *5"
+
+#~ msgid "Paste text from clipboard"
+#~ msgstr "Pegar texto desde memoria"
+
+#~ msgid "Path for MathGL font (without extension)"
+#~ msgstr "Dirreccion de fuentes de MathGL (sin extension)"
+
+#~ msgid "Plot ID"
+#~ msgstr "ID del gráfico"
+
+#~ msgid "Plot setup"
+#~ msgstr "Gráfica"
+
+#~ msgid "Popular color schemes"
+#~ msgstr "Esquemas de colores populares"
+
+#~ msgid "Previous expressions"
+#~ msgstr "Expresiones previas"
+
+#~ msgid "Print plot"
+#~ msgstr "Imprimir gráfica"
+
+#~ msgid "Pulse prop."
+#~ msgstr "Prop. de pulso"
+
+#~ msgid "Refresh"
+#~ msgstr "Actualizar"
+
+#~ msgid "Relative position of i-th color"
+#~ msgstr "Posición relativa al i-ésimo color"
+
+#~ msgid "Replace all"
+#~ msgstr "Reemplazar todo"
+
+#~ msgid "Replaced %ld occurrences."
+#~ msgstr "%ld ocurrencias reemplazadas."
+
+#~ msgid "Required argument %s is not specified!"
+#~ msgstr "¡Argumento obligatorio %s no especificado!"
+
+#~ msgid "Reserve at:"
+#~ msgstr "Reservar en:"
+
+#~ msgid "Resize data with smoothing"
+#~ msgstr "Reescalar datos con suavizado"
+
+#~ msgid "Roll"
+#~ msgstr "Roll"
+
+#~ msgid "Rotation"
+#~ msgstr "Rotacion"
+
+#~ msgid "Save Data?"
+#~ msgstr "¿Guardar datos?"
+
+#~ msgid "Save file"
+#~ msgstr "Guardar archivo"
+
+#~ msgid "Save file before redrawing"
+#~ msgstr "Guardar archivo antes de volver a graficar"
+
+#~ msgid "Save script to file"
+#~ msgstr "Guardar script a archivo"
+
+#~ msgid "Save selected data to file."
+#~ msgstr "Guardar datos seleccionados a archivo."
+
+#~ msgid "Save to file"
+#~ msgstr "Guardar a archivo"
+
+#~ msgid "Select data argument"
+#~ msgstr "Seleccionar argumento de datos"
+
+#~ msgid "Select direction"
+#~ msgstr "Seleccionar dirección"
+
+#~ msgid "Select file name"
+#~ msgstr "Seleccionar nombre de archivo"
+
+#~ msgid "Select folder name"
+#~ msgstr "Seleccionar nombre de directorio"
+
+#~ msgid "Set"
+#~ msgstr "Especificar"
+
+#~ msgid "Set cutting off/on for particular plot"
+#~ msgstr "Activar/desactivar cortado para gráfica particular"
+
+#~ msgid "Set lighting off/on for particular plot"
+#~ msgstr "Activar/desactivar luz para gráfica particular"
+
+#~ msgid "Set script arguments"
+#~ msgstr "Especificar argumentos de script"
+
+#~ msgid "Set size for text, marks and others"
+#~ msgstr "Especificar tamaño de texto, marcas y otros"
+
+#~ msgid "Setup"
+#~ msgstr "Configurar"
+
+#~ msgid "Setup animation"
+#~ msgstr "Animación"
+
+#~ msgid "Setup script"
+#~ msgstr "Config. script"
+
+#~ msgid "Sew phase"
+#~ msgstr "Sew phase"
+
+#~ msgid "Sharp colors"
+#~ msgstr "Colores fuertes"
+
+#~ msgid "Show calculator window"
+#~ msgstr "Mostrar ventana de calculadora"
+
+#~ msgid "Show hint on startup"
+#~ msgstr "Mostrar sugerencias al iniciar"
+
+#~ msgid "Show lines"
+#~ msgstr "Mostrar líneas"
+
+#~ msgid "Sin FFT"
+#~ msgstr "Sin FFT"
+
+#~ msgid "Sinus FFT"
+#~ msgstr "Sin-FFT"
+
+#~ msgid "Smooth"
+#~ msgstr "Suavizado"
+
+#~ msgid ""
+#~ "Specify new data size\n"
+#~ "Data will be interpolated"
+#~ msgstr ""
+#~ "Especificar nuevo tamaño de datos.\n"
+#~ "Los datos serán interpolados"
+
+#~ msgid ""
+#~ "Specify new data size\n"
+#~ "Data will be zero filled"
+#~ msgstr ""
+#~ "Especificar nuevo tamaño de datos\n"
+#~ "Los datos serán llenados con ceros"
+
+#~ msgid ""
+#~ "Specify the skipping step\n"
+#~ "Each m-th point will be saved only"
+#~ msgstr ""
+#~ "Especificar el paso de salto.\n"
+#~ "Solo cada m-ésimo punto sera guardado"
+
+#~ msgid "Subticks"
+#~ msgstr "Subescala"
+
+#~ msgid "Subtract to"
+#~ msgstr "Restar a"
+
+# Suma or sumatoria?
+#~ msgid "Summation of"
+#~ msgstr "Suma de"
+
+#~ msgid "Swap parts"
+#~ msgstr "Intercambiar partes"
+
+#~ msgid "Symmetrical range"
+#~ msgstr "Rango simétrico"
+
+#~ msgid "Ternary"
+#~ msgstr "Ternario"
+
+#~ msgid "Text"
+#~ msgstr "Texto"
+
+#~ msgid "Text style"
+#~ msgstr "Estilo de texto"
+
+#~ msgid ""
+#~ "The current file has not been saved.\n"
+#~ "Would you like to save it now?"
+#~ msgstr ""
+#~ "El archivo actual no se ha guardado.\n"
+#~ "¿Desea guardarlo ahora?"
+
+#~ msgid "This operation is not supported for this kind of data."
+#~ msgstr "Operación no soportada para este tipo de datos."
+
+#~ msgid "Ticks start"
+#~ msgstr "Inicio de escala"
+
+#~ msgid "Time ticks"
+#~ msgstr "Escala de tiempo"
+
+#~ msgid "Transparency"
+#~ msgstr "Transparencia"
+
+#~ msgid "Transparency type"
+#~ msgstr "Tipo de transparencia"
+
+#~ msgid "Transpose"
+#~ msgstr "Transponer"
+
+#~ msgid "Transpose data"
+#~ msgstr "Transponer datos"
+
+#~ msgid "Transpose data dimensions"
+#~ msgstr "Transponer dimensiones de datos"
+
+#~ msgid "Tune ticks"
+#~ msgstr "Afinar escala"
+
+#~ msgid "Type of operation"
+#~ msgstr "Tipo de operacion"
+
+#~ msgid "Type of smoothing"
+#~ msgstr "Tipo de suavizado"
+
+#~ msgid "Untitled"
+#~ msgstr "Sin nombre"
+
+#~ msgid "Untitled - mgllab"
+#~ msgstr "Sin nombre - mgllab"
+
+#~ msgid "Upper border for determining color or alpha"
+#~ msgstr "Limite superior para determinar color o alfa"
+
+#~ msgid "Usage:\tmgllab [parameter(s)] scriptfile\n"
+#~ msgstr "Uso:\tmgllab [parámetro(s)] script\n"
+
+# Thread=hilo?
+#~ msgid "Use multi-threading for drawing"
+#~ msgstr "Usar múltiples subprocesos para graficar"
+
+#~ msgid "Value for i-th color"
+#~ msgstr "Valor para el i-ésimo color"
+
+#~ msgid "Variant"
+#~ msgstr "Variante"
+
+#~ msgid ""
+#~ "Variant of command argument order. The notation is:\n"
+#~ " * Capital arguments are data (like, Ydat);\n"
+#~ " * Argument in '' are strings (like, 'fmt');\n"
+#~ " * Other arguments are numbers (like, zval);\n"
+#~ " * Arguments in [] are optional arguments."
+#~ msgstr ""
+#~ "Tipo de argumentos de comando. La notación es:\n"
+#~ " * mayusculas denotan datos (ej.: Ydat);\n"
+#~ " * argumentos en '' son texto (ej.: 'fmt');\n"
+#~ " * otros argumentos son números (ej.: zval);\n"
+#~ " * argumento en [] son opcionales."
+
+#~ msgid "Vertical align"
+#~ msgstr "Alineación vertical"
+
+#~ msgid "Widget scheme"
+#~ msgstr "Esquema del widget"
+
+#~ msgid "Width"
+#~ msgstr "Ancho"
+
+#~ msgid "Wire or mesh"
+#~ msgstr "Alambre o grilla"
+
+#~ msgid "X position"
+#~ msgstr "Posición x"
+
+#~ msgid "X-slice from"
+#~ msgstr "Sección x desde"
+
+#~ msgid "Y position"
+#~ msgstr "Posición y"
+
+#~ msgid "Y-slice from"
+#~ msgstr "Sección y desde"
+
+#~ msgid "Yes"
+#~ msgstr "Sí"
+
+#~ msgid "You need to enter text!"
+#~ msgstr "¡Debe ingresar texto!"
+
+#~ msgid "You need to provide output name"
+#~ msgstr "Debe indicar un nombre para el archivo"
+
+#~ msgid "You need to select data array"
+#~ msgstr "Debe seleccionar un arreglo de datos"
+
+# marker=marca?
+#~ msgid "You need to select marker!"
+#~ msgstr "¡Debe seleccionar un marcador!"
+
+#~ msgid "You need to specify direction(s)"
+#~ msgstr "Debe especificar dirección(es)"
+
+#~ msgid "Z position"
+#~ msgstr "Posición z"
+
+#~ msgid "Z-slice from"
+#~ msgstr "Sección z para"
+
+#~ msgid "all"
+#~ msgstr "todo"
+
+#~ msgid "along"
+#~ msgstr "a lo largo de"
+
+#~ msgid "along x"
+#~ msgstr "a lo largo de x"
+
+#~ msgid "along y"
+#~ msgstr "a lo largo de y"
+
+#~ msgid "along z"
+#~ msgstr "a lo largo de z"
+
+#~ msgid "alpha"
+#~ msgstr "alfa"
+
+#~ msgid "and"
+#~ msgstr "y"
+
+#~ msgid "arc"
+#~ msgstr "arco"
+
+#~ msgid "arrows"
+#~ msgstr "flechas"
+
+#~ msgid "attach light"
+#~ msgstr "vincular luz"
+
+#~ msgid "bars"
+#~ msgstr "barras"
+
+#~ msgid "both"
+#~ msgstr "ambos"
+
+#~ msgid "center"
+#~ msgstr "centro"
+
+#~ msgid "curve"
+#~ msgstr "curva"
+
+#~ msgid "cutting"
+#~ msgstr "cortado"
+
+#~ msgid "dimensions"
+#~ msgstr "dimensiones"
+
+#~ msgid "ellipse"
+#~ msgstr "elipse"
+
+#~ msgid "facenum"
+#~ msgstr "facenum"
+
+#~ msgid "factor"
+#~ msgstr "factor"
+
+#~ msgid "glass-like"
+#~ msgstr "vidrioso"
+
+#~ msgid "grayscale"
+#~ msgstr "escala de grises"
+
+#~ msgid "increment"
+#~ msgstr "incrementar"
+
+#~ msgid "ind"
+#~ msgstr "ind"
+
+#~ msgid "lamp-like"
+#~ msgstr "lamp-like"
+
+#~ msgid "lighting"
+#~ msgstr "iluminacion"
+
+#~ msgid "line"
+#~ msgstr "línea"
+
+# marker=marca or marcador?
+#~ msgid "marker"
+#~ msgstr "marcador"
+
+#~ msgid "markers"
+#~ msgstr "marcadores"
+
+#~ msgid "mem. usage"
+#~ msgstr "uso de mem."
+
+#~ msgid "meshnum"
+#~ msgstr "meshnum"
+
+#~ msgid ""
+#~ "mgllab draw mgl script interactively.\n"
+#~ "Current version is 2.%g\n"
+#~ msgstr ""
+#~ "mgllab gráfica scripts MGL de manera interactiva.\n"
+#~ "La version actual es 2.%g\n"
+
+#~ msgid ""
+#~ "mgllab v. 2.%g\n"
+#~ "(c) Alexey Balakin, 2017\n"
+#~ "http://mathgl.sf.net/"
+#~ msgstr ""
+#~ "mgllab v. 2.%g\n"
+#~ "(c) Alexey Balakin, 2017\n"
+#~ "http://mathgl.sf.net/"
+
+#~ msgid "name"
+#~ msgstr "nombre"
+
+#~ msgid "no origin tick"
+#~ msgstr "no hay marca del origen"
+
+#~ msgid "not used"
+#~ msgstr "no usado"
+
+#~ msgid "pen blur"
+#~ msgstr "difuminacion del trazo"
+
+#~ msgid "plain"
+#~ msgstr "plano"
+
+#~ msgid "polygon"
+#~ msgstr "poligono"
+
+#~ msgid "projection"
+#~ msgstr "proyeccion"
+
+# cuadruple?
+#~ msgid "quaternary"
+#~ msgstr "cuaternario"
+
+#~ msgid "quaternary proj"
+#~ msgstr "proy. cuaternaria"
+
+#~ msgid "rectangle"
+#~ msgstr "rectangulo"
+
+#~ msgid "rhomb"
+#~ msgstr "rombo"
+
+#~ msgid "rotate text"
+#~ msgstr "rotar texto"
+
+# guardar animacion?
+#~ msgid "save slides"
+#~ msgstr "guardar cuadros"
+
+#~ msgid "smoothed"
+#~ msgstr "suavizado"
+
+#~ msgid "solid"
+#~ msgstr "sólido"
+
+# triple?
+#~ msgid "ternary"
+#~ msgstr "ternario"
+
+#~ msgid "ternary proj"
+#~ msgstr "proy. ternaria"
+
+#~ msgid "text"
+#~ msgstr "texto"
+
+#~ msgid "ticks"
+#~ msgstr "escala"
+
+#~ msgid "to script"
+#~ msgstr "al script"
+
+#~ msgid "user"
+#~ msgstr "usuario"
+
+#~ msgid "whole area"
+#~ msgstr "toda el area"
+
+#~ msgid "wire"
+#~ msgstr "cable"
 
 #~ msgid ""
 #~ "You may quickly draw the data from file. Just use: udav 'filename.dat' in "

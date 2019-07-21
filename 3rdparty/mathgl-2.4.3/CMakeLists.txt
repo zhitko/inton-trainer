@@ -205,7 +205,7 @@ CMAKE_DEPENDENT_OPTION(enable-fltk "Enable fltk widget" OFF "NOT enable-all-widg
 CMAKE_DEPENDENT_OPTION(enable-wx "Enable wxWidget widget" OFF "NOT enable-all-widgets" ON)
 CMAKE_DEPENDENT_OPTION(enable-qt4 "Enable Qt4 widget" OFF "NOT enable-all-widgets" ON)
 CMAKE_DEPENDENT_OPTION(enable-qt4asqt "Set Qt4 as default libmgl-qt" OFF "enable-qt4" OFF)
-CMAKE_DEPENDENT_OPTION(enable-qt5 "Enable Qt5 widget" OFF "NOT enable-all-widgets" ON)
+CMAKE_DEPENDENT_OPTION(enable-qt5 "Enable Qt5 widget" ON "NOT enable-all-widgets" ON)
 CMAKE_DEPENDENT_OPTION(enable-qt5asqt "Set Qt5 as default libmgl-qt" OFF "enable-qt5" OFF)
 
 # msvc fwprintf print char* for the specifier of "%s" format

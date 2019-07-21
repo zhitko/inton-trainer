@@ -9,7 +9,7 @@ QMAKE_CXXFLAGS += -O2 -fPIC -ltcg
 
 include(3rdparty/qtxlsx/src/xlsx/qtxlsx.pri)
 
-QT       += core gui webenginewidgets multimedia
+QT       += core gui webenginewidgets multimedia webchannel
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -31,8 +31,10 @@ unix:!mac {
     QMAKE_CFLAGS += -U__STRICT_ANSI__
 
     INCLUDEPATH += "/usr/include/AL"
+    INCLUDEPATH += "/usr/local/include/mgl2/"
 
     LIBS += `pkg-config --libs gsl openal`
+    LIBS += -L"/usr/local/lib" -lmgl -lmgl-qt5
 }
 
 SOURCES += \

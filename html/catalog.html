@@ -31,12 +31,7 @@
       });
     </script>
 
-    <script type="text/javascript">
-      var files = JSON.parse(api.getFiles());
-    </script>    
-
     <script type="text/babel">
-
       var ListFiles = React.createClass({
         render: function() {
           var fileNodes = this.props.data.map(function(node) {
@@ -62,7 +57,14 @@
       });
 
       var ListFileElement = React.createClass({
+          openFile: function() {
+              window.jshelper.openFile(this.props.data.path);
+          },
+          playFile: function() {
+              window.jshelper.playFile(this.props.data.path);
+          },
         render: function() {
+            console.error(this.props.data.path);
           var links = "\
             <span> \
               <a href='"+this.props.data.path+"#dp'>ДП</a> \
@@ -77,10 +79,11 @@
 
           return (
             <li>
-              <FileLink data={this.props.data} type='#play'>
+              <a ref="#" onClick={this.playFile}>
                 <img height="20px" src="./images/play.png"></img>
-              </FileLink>
-              <a href={this.props.data.path + "#dp"}
+              </a>
+              <a href="#"
+                    onClick={this.openFile}
                     title={this.props.data.title} 
                     data-content={links} >
                 {this.props.data.text}
@@ -118,10 +121,35 @@
         }
       });
 
-      ReactDOM.render(
-        <SectionsList data={files} />,
-        document.getElementById('container')
-      );
+      window.renderApp = function(data) {
+          ReactDOM.render(
+            <SectionsList data={data} />,
+            document.getElementById('container')
+          );
+      }
+    </script>
+
+    <script type="text/javascript" src="qrc:///qtwebchannel/qwebchannel.js"></script>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            new QWebChannel(qt.webChannelTransport, function (channel) {
+                window.jshelper = channel.objects.jshelper;
+                window.jshelper.getFiles(function(data){
+                    window.renderApp(JSON.parse(data));
+                });
+            });
+        });
+    </script>
+    <script>
+        function showSettings() {
+            window.jshelper.showSettings();
+        }
+        function openApp() {
+            window.jshelper.openApp();
+        }
+        function getFiles() {
+            window.jshelper.getFiles();
+        }
     </script>
 
   </head>
@@ -132,9 +160,9 @@
       <div class="header clearfix">
         <nav>
           <ul class="nav nav-pills pull-right">
-            <li role="presentation" class="active"><a href="index.html">Начало</a></li>
-            <li role="presentation"><a href="settings.window">Настройки</a></li>
-            <li role="presentation"><a href="main.window">Режим разработчика</a></li>
+          <li role="presentation" class="active"><a href="index.html">Начало</a></li>
+          <li role="presentation"><a href="#" onclick="showSettings()">Настройки</a></li>
+          <li role="presentation"><a href="#" onclick="openApp()">Режим разработчика</a></li>
           </ul>
         </nav>
         <h3 class="text-muted">IntonTrainer<span class="top-text">@</span></h3>

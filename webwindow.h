@@ -5,7 +5,7 @@
 
 #include <QMainWindow>
 #include <QUrl>
-#include <QWebEnginePage>
+#include <QVariant>
 
 namespace Ui {
 class WebWindow;
@@ -27,9 +27,6 @@ private:
 
     void initWeb();
 
-private slots:
-    void linkClickedWebView(QUrl);
-
 public slots:
     void attachObject();
     QString getFiles();
@@ -41,6 +38,10 @@ public slots:
     void setShowF0(QVariant);
     void setShowError(QVariant);
     void setShowTime(QVariant);
+    void showSettings();
+    void openFile(QVariant);
+    void playFile(QVariant);
+    void openApp();
 };
 
 #endif // WEBWINDOW_H

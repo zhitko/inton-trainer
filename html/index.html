@@ -13,6 +13,24 @@
     <link href="./css/bootstrap.min.css" rel="stylesheet">
     <link href="./css/into-trainer.css" rel="stylesheet">
 
+    <script type="text/javascript" src="qrc:///qtwebchannel/qwebchannel.js"></script>
+    <script type="text/javascript">
+        <!-- it's a good idea to initialize webchannel after DOM ready, if your code is going to manipulate the DOM -->
+        document.addEventListener("DOMContentLoaded", function () {
+            new QWebChannel(qt.webChannelTransport, function (channel) {
+                window.jshelper = channel.objects.jshelper;
+            });
+        });
+    </script>
+    <script>
+        function showSettings() {
+            window.jshelper.showSettings();
+        }
+        function openApp() {
+            window.jshelper.openApp();
+        }
+    </script>
+
   </head>
 
   <body>
@@ -22,8 +40,8 @@
         <nav>
           <ul class="nav nav-pills pull-right">
             <li role="presentation" class="active"><a href="index.html">Начало</a></li>
-            <li role="presentation"><a href="settings.window">Настройки</a></li>
-            <li role="presentation"><a href="main.window">Режим разработчика</a></li>
+            <li role="presentation"><a href="#" onclick="showSettings()">Настройки</a></li>
+            <li role="presentation"><a href="#" onclick="openApp()">Режим разработчика</a></li>
           </ul>
         </nav>
         <h3 class="text-muted">IntonTrainer<span class="top-text">@</span></h3>

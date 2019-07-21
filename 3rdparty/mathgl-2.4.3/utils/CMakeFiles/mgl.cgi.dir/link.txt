@@ -1,0 +1,1 @@
+/usr/bin/c++    -fopenmp -O3 -DNDEBUG   CMakeFiles/mgl.cgi.dir/mglcgi.cpp.o  -o mgl.cgi -rdynamic ../src/libmgl.a -lGLU -lGL -lpng -lz -pthread -lm 

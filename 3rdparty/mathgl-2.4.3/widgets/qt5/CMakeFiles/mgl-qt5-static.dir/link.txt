@@ -1,0 +1,2 @@
+/usr/bin/ar qc libmgl-qt5.a  CMakeFiles/mgl-qt5-static.dir/__/qt.cpp.o CMakeFiles/mgl-qt5-static.dir/mgl-qt5-static_automoc.cpp.o
+/usr/bin/ranlib libmgl-qt5.a

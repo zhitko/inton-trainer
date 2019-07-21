@@ -1,0 +1,1 @@
+/usr/bin/c++    -fopenmp -O3 -DNDEBUG   CMakeFiles/make_pas.dir/make_pas.cpp.o  -o make_pas -rdynamic 
