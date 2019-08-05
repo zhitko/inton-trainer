@@ -23,6 +23,7 @@ private:
 protected:
     bool first;
     QString secFileName;
+    QList<double> umpSectors;
     mglData *dpData, *secWaveData, *errorData, *timeData, *secPitchData, *secPitchDataDerivative,
         *secIntensiveData, *umpData, *secUmpData, *umpDerivativeData, *secUmpDerivativeData, *umpMask,
         *octavData, *secOctavData, *secPlaneData;

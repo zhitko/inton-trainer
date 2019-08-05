@@ -265,6 +265,10 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->Grid("x", "W5-", "");
 
             gr->Area(*this->umpMask, "{g9}");
+            gr->SetRange('x', 0, 1);
+            foreach (double p, this->umpSectors) {
+                gr->Line(mglPoint(p, 0), mglPoint(p, 1), "B2");
+            }
 
             if (sptk_settings->dp->showF0 || !sptk_settings->dp->showDerivativeF0)
             {
@@ -429,6 +433,11 @@ int DrawerDP::Draw(mglGraph *gr)
                 gr->Grid("x", "W5-", "");
 
                 gr->Area(*this->umpMask, "{g9}");
+                gr->SetRange('x', 0, 1);
+                foreach (double p, this->umpSectors) {
+                    gr->Line(mglPoint(p, 0), mglPoint(p, 1), "B2");
+                }
+
                 if (sptk_settings->dp->showF0 || !sptk_settings->dp->showDerivativeF0)
                 {
                     gr->SetRange('x', 0, this->umpData->nx);
@@ -1118,6 +1127,25 @@ void DrawerDP::Proc(QString fname)
                 sptk_settings->dp->useStripUmp,
                 sptk_settings->dp->ump_keep_ratio
             );
+
+            this->umpSectors.clear();
+            int sectorStart = -1;
+            bool findSector = false;
+            for (int i=1; i<ump_mask.x; i++)
+            {
+                int val = getv(ump_mask, i);
+                if (val == 0 && findSector == false)
+                {
+                    sectorStart = i;
+                    findSector = true;
+                } else if (val != 0 && findSector == true)
+                {
+                    this->umpSectors.append(1.0*(sectorStart + (i-sectorStart)/2)/ump_mask.x);
+                    sectorStart = -1;
+                    findSector = false;
+                    qDebug() << "ump_mask 0" << i << LOG_DATA;
+                }
+            }
 
             qDebug() << "ump_mask " << ump_mask.x << LOG_DATA;
             qDebug() << "origin_ump " << origin_ump.x << LOG_DATA;

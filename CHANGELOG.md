@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.4.10] - 2019-04-xx
 
+### Add
+- Add split line to UMP segments
+
 ### Change
 - Improve graph window UI
 - Move autosegmentation settings to advanced tab
