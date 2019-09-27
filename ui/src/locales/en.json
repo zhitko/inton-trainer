@@ -1,0 +1,32 @@
+{
+  "app-title": "Inton@Trainer",
+  "side-menu": {
+    "title": "Navigation",
+    "home": "Home",
+    "catalog": "Catalog",
+    "settings": "Settings",
+    "about": "About"
+  },
+  "locale-changer": {
+    "language": "Language"
+  },
+  "home-page": {
+    "welcome-message": "Intonation Learning",
+    "records-count": "{count} records",
+    "start": "Start",
+    "my-records": "My Records"
+  },
+  "about-page": {
+    "title": "About",
+    "sub-title": "Personalized. Friendly. Quality Training.",
+    "message": "IntonTraner is a software system under OS Windows and Linux designed for learning the intonation of oral speech. The learning is based on comparing the melodic portraits of a pattern and pronounce phrase by a learner. The acoustic data base includes large set of pattern phrases which cover most intonation samples of the language. The system is based on interactive auditory and visual contacts with a learner and also provides quantitative evaluation of intonation fidelity. Currently the system is prepared for Russian and English intonation training. The localization for other languages could be easily realized by creation of proper acoustic data bases. The system could be useful for persons who would like to improve their intonation abilities in native language and also the languages of other countries."
+  },
+  "training-record": {
+    "options": "Options",
+    "auto-marking": "Automatically signals labeled",
+    "manual-marking": "Manually signals labeled",
+    "pitch-mode": "Source signals",
+    "source-mode": "Melodic portrait",
+    "show-legend": "Show legend"
+  }
+}

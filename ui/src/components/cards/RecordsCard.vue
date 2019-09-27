@@ -1,0 +1,47 @@
+<template>
+  <md-card md-ratio="16:9">
+    <md-card-media>
+      <img src="@/assets/wave_long.svg" alt="Inton@trainer">
+    </md-card-media>
+
+    <md-card-area>
+      <md-card-header>
+        <span class="md-title">{{ $t('home-page.my-records') }}</span>
+        <span class="md-subhead">
+          {{ $t('home-page.records-count', {count: records_count}) }}
+        </span>
+      </md-card-header>
+
+      <md-card-actions>
+        <md-button to="/records">
+          {{ $t('home-page.start') }}
+        </md-button>
+      </md-card-actions>
+    </md-card-area>
+  </md-card>
+</template>
+
+<style lang="scss" scoped>
+  .md-card-media img {
+    height: 100px;
+  }
+  .md-card {
+    width: 400px;
+    margin: 4px;
+    padding: 10px;
+    display: inline-block;
+    vertical-align: top;
+  }
+</style>
+
+<script>
+
+export default {
+  name: 'RecordsCard',
+  data: () => ({
+    records_count: 15,
+  }),
+  components: {
+  },
+};
+</script>
