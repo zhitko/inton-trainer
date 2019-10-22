@@ -3,10 +3,12 @@
 #include "ui_webwindow.h"
 #include "qdebug.h"
 
-#include "drawer.h"
-#include "drawerdp.h"
+//#include "drawer.h"
+//#include "drawerdp.h"
 #include "settingsdialog.h"
 #include "utils.h"
+#include "define.h"
+#include "webapi.h"
 
 #include <QDir>
 #include <QDirIterator>
@@ -17,19 +19,7 @@
 #include <QSettings>
 #include <QWebEngineView>
 #include <QWebChannel>
-
-//class WebClass : public QObject
-//{
-//    Q_OBJECT
-//    public slots:
-//    void show_settings()
-//    {
-//        emit this->show_settings_signal();
-//    }
-
-//    signals:
-//    void show_settings_signal();
-//};
+#include <QUuid>
 
 void checkLogFile()
 {
@@ -120,64 +110,21 @@ void WebWindow::setShowTime(QVariant value)
     qDebug() << "setShowTime " << value.toBool() << LOG_DATA;
 }
 
-QString WebWindow::getFiles()
-{
-    QStringList files = scanDirItems(QApplication::applicationDirPath() + DATA_PATH_TRAINING, WAVE_TYPE, QApplication::applicationDirPath() + DATA_PATH);
-    files.sort();
-    QString lastPath = "";
-
-    QJsonArray jResult;
-    QJsonObject jSection;
-    QJsonArray jList;
-    for(int i=0; i<files.size();i++)
-    {
-        QString file = files.at(i);
-        int lastIndex = file.lastIndexOf("/");
-        int firstIndex = file.indexOf("/", 1);
-
-        QString filePath = file.left(lastIndex).replace("/", " ");
-        QString fileTitle = filePath.mid(firstIndex).replace("/", " ");
-        QString fileName = file.mid(lastIndex).replace("/", " ");
-
-        if (lastPath == "") lastPath = fileTitle;
-
-        if (lastPath != fileTitle)
-        {
-            jSection["title"] = lastPath;
-            jSection["files"] = jList;
-            jResult.append(jSection);
-
-            QJsonObject jNewSection;
-            jSection = jNewSection;
-            lastPath = fileTitle;
-            QJsonArray jNewList;
-            jList = jNewList;
-        }
-
-        QJsonObject jItem;
-        jItem["title"] = fileName;
-        jItem["text"] = fileName;
-        jItem["path"] = file;
-        jList.append(jItem);
-    }
-    jSection["title"] = lastPath;
-    jSection["files"] = jList;
-    jResult.append(jSection);
-
-    QJsonDocument jDoc(jResult);
-    return QString(jDoc.toJson(QJsonDocument::Compact));
-}
-
 void WebWindow::initWeb()
 {
     QWebEngineView *webView = new QWebEngineView;
     this->ui->verticalLayout->addWidget(webView);
 
-    qDebug() << (QApplication::applicationDirPath() + "/html/index.html") << LOG_DATA;
-    webView->load(QUrl::fromLocalFile(QApplication::applicationDirPath() + "/html/index.html"));
+    qDebug() << (QApplication::applicationDirPath() + HTML_UI) << LOG_DATA;
+    if ((new QString(HTML_UI))->startsWith("http"))
+        webView->load(QUrl(HTML_UI));
+    else {
+        webView->load(QUrl::fromLocalFile(QApplication::applicationDirPath() + HTML_UI));
+    }
 
+    this->webApi = new WebApi(this);
     QWebChannel *channel = new QWebChannel(this);
-    channel->registerObject("jshelper", this);
+    channel->registerObject("jshelper", this->webApi);
     webView->page()->setWebChannel(channel);
 }
 
@@ -186,7 +133,7 @@ void WebWindow::showSettings() {
 }
 
 void WebWindow::openFile(QVariant url) {
-    this->mainWindow->evaluation(url.toUrl().path(), new DrawerDP());
+    //this->mainWindow->evaluation(url.toUrl().path(), new DrawerDP());
 }
 
 void WebWindow::playFile(QVariant url) {

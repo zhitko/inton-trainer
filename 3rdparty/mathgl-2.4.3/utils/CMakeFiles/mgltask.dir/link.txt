@@ -1,1 +1,0 @@
-/usr/bin/c++    -fopenmp -O3 -DNDEBUG   CMakeFiles/mgltask.dir/mgltask.cpp.o  -o mgltask -rdynamic 

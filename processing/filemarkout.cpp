@@ -262,18 +262,18 @@ Points getPoints(int dataSize, vector data, double scaleFactor, double limit, in
 
 WaveFile * markOutFileByF0(SimpleGraphData *data)
 {
-    WaveFile * waveFile = data->file_data;
+    WaveFile * waveFile = data_get_data_file(data);
     qDebug() << "waveOpenHFile" << LOG_DATA;
 
     int size = littleEndianBytesToUInt32(waveFile->dataChunk->chunkDataSize);
     qDebug() << "file size " << size << LOG_DATA;
 
-    int pitchLogSize = data->d_pitch_log.x;
+    int pitchLogSize = data_get_pitch_log(data).x;
     qDebug() << "pitch size " << pitchLogSize << LOG_DATA;
 
     double scaleFactor = 1.0 * size / CHAR_BIT_RECORD / pitchLogSize;
 
-    Points points = getPoints(pitchLogSize, data->d_pitch_log, scaleFactor, MASK_LIMIT);
+    Points points = getPoints(pitchLogSize, data_get_pitch_log(data), scaleFactor, MASK_LIMIT);
 
     int waveDataSize = littleEndianBytesToUInt32(waveFile->dataChunk->chunkDataSize);
     char* waveData = (char*) malloc(waveDataSize);
@@ -306,13 +306,13 @@ WaveFile * markOutFileByA0(SimpleGraphData *data)
 {
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
 
-    WaveFile * waveFile = data->file_data;
+    WaveFile * waveFile = data_get_data_file(data);
     qDebug() << "waveOpenHFile" << LOG_DATA;
 
     int size = littleEndianBytesToUInt32(waveFile->dataChunk->chunkDataSize);
     qDebug() << "file size " << size << LOG_DATA;
 
-    int intensiveSize = data->d_intensive_norm.x;
+    int intensiveSize = data_get_intensive_norm(data).x;
     qDebug() << "intensive size " << intensiveSize << LOG_DATA;
 
     double scaleFactor = 1.0 * size / CHAR_BIT_RECORD / intensiveSize;
@@ -323,7 +323,7 @@ WaveFile * markOutFileByA0(SimpleGraphData *data)
 
     Points points = getPoints(
                 intensiveSize,
-                data->d_intensive_norm,
+                data_get_intensive_norm(data),
                 scaleFactor,
                 intensiveLimit,
                 sptk_settings->dp->relative_limit
@@ -360,16 +360,16 @@ WaveFile * markOutFileByF0A0(SimpleGraphData *data)
 {
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
 
-    WaveFile * waveFile = data->file_data;
+    WaveFile * waveFile = data_get_data_file(data);
     qDebug() << "waveOpenHFile" << LOG_DATA;
 
     int size = littleEndianBytesToUInt32(waveFile->dataChunk->chunkDataSize);
     qDebug() << "file size " << size << LOG_DATA;
 
-    int pitchLogSize = data->d_pitch_log.x;
+    int pitchLogSize = data_get_pitch_log(data).x;
     qDebug() << "pitch size " << pitchLogSize << LOG_DATA;
 
-    int intensiveSize = data->d_intensive_norm.x;
+    int intensiveSize = data_get_intensive_norm(data).x;
     qDebug() << "intensive size " << intensiveSize << LOG_DATA;
 
     double intensiveScaleFactor = 1.0 * size / CHAR_BIT_RECORD / intensiveSize;
@@ -383,14 +383,14 @@ WaveFile * markOutFileByF0A0(SimpleGraphData *data)
 
     Points intensivePoints = getPoints(
                 intensiveSize,
-                data->d_intensive_norm,
+                data_get_intensive_norm(data),
                 intensiveScaleFactor,
                 intensiveLimit,
                 sptk_settings->dp->relative_limit
     );
     Points pitchLogPoints = getPoints(
                 pitchLogSize,
-                data->d_pitch_log,
+                data_get_pitch_log(data),
                 pitchLogScaleFactor,
                 MASK_LIMIT
     );
@@ -439,7 +439,7 @@ WaveFile * markOutFileByA0Integral(SimpleGraphData *data)
 {
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
 
-    WaveFile * waveFile = data->file_data;
+    WaveFile * waveFile = data_get_data_file(data);
     qDebug() << "waveOpenHFile" << LOG_DATA;
 
     int size = littleEndianBytesToUInt32(waveFile->dataChunk->chunkDataSize);

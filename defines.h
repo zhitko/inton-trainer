@@ -8,6 +8,10 @@
 #define TESTING false
 #define TEST(code) if (TESTING) { code; }
 
+//#define HTML_UI "/html/index.html"
+//#define HTML_UI "/ui/index.html"
+#define HTML_UI "http://localhost:8080/#/home"
+
 #define DATA_PATH "/data"
 #define DATA_PATH_TRAINING "/data/PATTERNS"
 #define DATA_PATH_TEST "/data/TEST"
@@ -23,6 +27,7 @@
 #define NUMBER_OF_CHANNELS 1
 #define CHAR_BIT_RECORD 2
 
+#define OCTAVE_RANGE 2.5
 #define OCTAVE_MAX_1 2.5
 #define OCTAVE_MAX_2 5.0
 

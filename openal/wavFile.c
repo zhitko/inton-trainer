@@ -1,6 +1,6 @@
 #include "wavFile.h"
 
-#define LOG_LEVEL 4
+#define LOG_LEVEL 0
 #define _fe(...) fprintf(stdout, __VA_ARGS__)
 #define _fo(...) fprintf(stdout, __VA_ARGS__)
 #define _if(level) if (LOG_LEVEL > level)

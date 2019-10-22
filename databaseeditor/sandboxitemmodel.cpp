@@ -325,10 +325,10 @@ QModelIndex SandBoxItemModel::markOutFile(QModelIndex index, int mode)
         newWaveFile = markOutFileByF0A0(data);
         newFileName = MARKOUT_PREFIX_F0A0 + fileName;
     } else if (mode == MARKOUT_MODE_TEST) {
-        newWaveFile = waveCloneFile(data->file_data);
+        newWaveFile = waveCloneFile(data->data_file);
         newFileName = "_TEST_" + fileName;
     }else if (mode == MARKOUT_MODE_TEST_SAVE) {
-        newWaveFile = data->file_data;
+        newWaveFile = data->data_file;
         newFileName = "_SAVE_" + fileName;
     }
 

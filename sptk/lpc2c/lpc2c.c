@@ -72,13 +72,10 @@ static char *rcs_id = "$Id: lpc2c.c,v 1.23 2013/12/16 09:01:59 mataki Exp $";
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifdef HAVE_STRING_H
-#  include <string.h>
+#ifdef defined(__linux__)
+#include <strings.h>
 #else
-#  include <strings.h>
-#  ifndef HAVE_STRRCHR
-#     define strrchr rindex
-#  endif
+#include <string.h>
 #endif
 
 

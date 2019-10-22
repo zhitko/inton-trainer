@@ -23,8 +23,9 @@ typedef struct { int from; int len; int type; } MaskDetails;
  * @return
  */
 vector makeUmp(
-        vector * data,
-        vector * mask,
+        MaskData *ump_mask,
+        vector data,
+        vector mask,
         MaskData mask_p,
         MaskData mask_n,
         MaskData mask_t,

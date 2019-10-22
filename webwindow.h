@@ -12,6 +12,7 @@ class WebWindow;
 }
 
 class MainWindow;
+class WebApi;
 
 class WebWindow : public QMainWindow
 {
@@ -24,12 +25,12 @@ public:
 private:
     Ui::WebWindow *ui;
     MainWindow *mainWindow;
+    WebApi *webApi;
 
     void initWeb();
 
 public slots:
     void attachObject();
-    QString getFiles();
     bool isShowA0();
     bool isShowF0();
     bool isShowError();

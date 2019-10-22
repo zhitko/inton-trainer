@@ -132,9 +132,9 @@ double log2(double x) { // A base-2 log function
 #endif
 
 #ifndef round
-double round(double x) { // Rounds a double to the nearest integer value
-    return(x >= 0. ? floor(x + .5) : floor(x - .5));
-}
+//double round(double x) { // Rounds a double to the nearest integer value
+//    return(x >= 0. ? floor(x + .5) : floor(x - .5));
+//}
 #endif
 
 double hz2mel(double hz) { // Converts from hertz to Mel frequency

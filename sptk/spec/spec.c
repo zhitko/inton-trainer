@@ -81,13 +81,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifdef HAVE_STRING_H
-#  include <string.h>
+#ifdef defined(__linux__)
+#include <strings.h>
 #else
-#  include <strings.h>
-#  ifndef HAVE_STRRCHR
-#     define strrchr rindex
-#  endif
+#include <string.h>
 #endif
 
 #include <math.h>

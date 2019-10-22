@@ -1,1 +1,0 @@
-/usr/bin/c++    -fopenmp -O3 -DNDEBUG   CMakeFiles/mglconv.dir/mglconv.cpp.o  -o mglconv -Wl,-rpath,/home/vzhitko/Dev/UIIP/inton-trainer/3rdparty/mathgl-2.4.3/src: -rdynamic ../src/libmgl.so.7.5.0 -lGLU -lGL -lpng -lz -pthread -lm 

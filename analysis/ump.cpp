@@ -14,8 +14,9 @@ int compare_mask_details (const void * a, const void * b)
 }
 
 vector makeUmp(
-        vector * data,
-        vector * mask,
+        MaskData *ump_mask,
+        vector data,
+        vector mask,
         MaskData mask_p,
         MaskData mask_n,
         MaskData mask_t,
@@ -27,6 +28,12 @@ vector makeUmp(
     const int TYPE_P = 1;
     const int TYPE_N = 2;
     const int TYPE_T = 3;
+
+    ump_mask->pointsFrom.x = 0;
+    ump_mask->pointsLength.x = 0;
+    ump_mask->pointsFrom.v = nullptr;
+    ump_mask->pointsLength.v = nullptr;
+
     int len_p = mask_p.pointsFrom.x;
     int len_n = mask_n.pointsFrom.x;
     int len_t = mask_t.pointsFrom.x;
@@ -36,8 +43,8 @@ vector makeUmp(
     for(int i=0; i<len_p; i++)
     {
         details[i] = MaskDetails{
-                getiv(mask_p.pointsFrom, i)/mask_scale,
-                getiv(mask_p.pointsLength, i)/mask_scale,
+                (int)(getiv(mask_p.pointsFrom, i)/mask_scale),
+                (int)(getiv(mask_p.pointsLength, i)/mask_scale),
                 TYPE_P
         };
         qDebug() << "details P from " << details[i].from << LOG_DATA;
@@ -46,8 +53,8 @@ vector makeUmp(
     for(int i=0; i<len_n; i++)
     {
         details[len_p + i] = MaskDetails{
-                getiv(mask_n.pointsFrom, i)/mask_scale,
-                getiv(mask_n.pointsLength, i)/mask_scale,
+                (int)(getiv(mask_n.pointsFrom, i)/mask_scale),
+                (int)(getiv(mask_n.pointsLength, i)/mask_scale),
                 TYPE_N
         };
         qDebug() << "details N from " << details[len_p + i].from << LOG_DATA;
@@ -56,8 +63,8 @@ vector makeUmp(
     for(int i=0; i<len_t; i++)
     {
         details[len_p + len_n + i] = MaskDetails{
-                getiv(mask_t.pointsFrom, i)/mask_scale,
-                getiv(mask_t.pointsLength, i)/mask_scale,
+                (int)(getiv(mask_t.pointsFrom, i)/mask_scale),
+                (int)(getiv(mask_t.pointsLength, i)/mask_scale),
                 TYPE_T
         };
         qDebug() << "details T from " << details[len_p + len_n + i].from << LOG_DATA;
@@ -129,9 +136,13 @@ vector makeUmp(
 
     int clone_len = merge_len + clone;
 
-    vector ump_mask = zerov(clone_len*MASK_LEN);
+    if (clone_len < 1) {
+        return zerov(part_len);
+    }
 
-    if (clone_len < 1) return ump_mask;
+    ump_mask->pointsFrom = zeroiv(clone_len);
+    ump_mask->pointsLength = zeroiv(clone_len);
+    ump_mask->length = clone_len*MASK_LEN;
 
     MaskDetails * clone_details = new MaskDetails[clone_len];
 
@@ -147,10 +158,8 @@ vector makeUmp(
     if (keepRatio) mask_segment_len = clone_len * MASK_LEN * (1.0 * merged_details[0].len / merged_details_total_len);
     if(merged_details[0].type == TYPE_N)
     {
-        for(int i=1; i<(mask_segment_len-1); i++)
-        {
-            setv(ump_mask, i,MASK_MAX);
-        }
+        setiv(ump_mask->pointsFrom, 0, 1);
+        setiv(ump_mask->pointsLength, 0, mask_segment_len);
     }
     mask_segment_pos += mask_segment_len;
 
@@ -165,22 +174,23 @@ vector makeUmp(
             ii++;
             clone_details[ii] = merged_details[i];
             clone_details[ii].len = merged_details[i].len / 2;
+            setiv(ump_mask->pointsFrom, ii, mask_segment_pos);
             ii++;
             clone_details[ii] = merged_details[i];
             clone_details[ii].from = clone_details[ii-1].from + clone_details[ii-1].len;
             clone_details[ii].len = clone_details[ii-1].len;
+            setiv(ump_mask->pointsFrom, ii, mask_segment_pos + mask_segment_len);
+
             mask_segment_pos += mask_segment_len*2;
         } else {
             if (keepRatio) mask_segment_len = clone_len * MASK_LEN * (1.0 * merged_details[i].len / merged_details_total_len);
             ii++;
             clone_details[ii] = merged_details[i];
 
+            setiv(ump_mask->pointsFrom, ii, mask_segment_pos);
             if(clone_details[ii].type == TYPE_N)
             {
-                for(int i=1; i<(mask_segment_len-1); i++)
-                {
-                    setv(ump_mask, mask_segment_pos+i, MASK_MAX);
-                }
+                setiv(ump_mask->pointsLength, ii, mask_segment_len);
             }
             mask_segment_pos += mask_segment_len;
         }
@@ -191,18 +201,16 @@ vector makeUmp(
     {
         if (keepRatio) mask_segment_len = clone_len * MASK_LEN * (1.0 * merged_details[clone_len-1].len / merged_details_total_len);
         ii++;
-        for(int i=1; i<(mask_segment_len-1); i++)
-        {
-            setv(ump_mask, mask_segment_pos+i, MASK_MAX);
-        }
+        setiv(ump_mask->pointsFrom, clone_len-1, mask_segment_pos);
+        setiv(ump_mask->pointsLength, clone_len-1, mask_segment_len);
     }
 
     delete merged_details;
 
-    qDebug() << "data " << data->x << LOG_DATA;
-    qDebug() << "mask " << mask->x << LOG_DATA;
+    qDebug() << "data " << data.x << LOG_DATA;
+    qDebug() << "mask " << mask.x << LOG_DATA;
     vector strip_data;
-    strip_data = copyv(*data);
+    strip_data = copyv(data);
     qDebug() << "strip_data " << strip_data.x << LOG_DATA;
 
     qDebug() << "clone_len " << clone_len << LOG_DATA;
@@ -210,7 +218,7 @@ vector makeUmp(
 
     vector result = zerov(part_len*clone_len);
 
-    double scale = 1.0 * mask->x / data->x;
+    double scale = 1.0 * mask.x / data.x;
 
     qDebug() << "scale " << scale << LOG_DATA;
 
@@ -250,14 +258,8 @@ vector makeUmp(
     freev(strip_data);
     qDebug() << "freev strip_data " << LOG_DATA;
 
-    freev(*data);
-    qDebug() << "freev data " << LOG_DATA;
-    data->v = result.v;
-    data->x = result.x;
-    qDebug() << "data set " << LOG_DATA;
-
     delete clone_details;
     qDebug() << "delete clone_details " << LOG_DATA;
 
-    return ump_mask;
+    return result;
 }

@@ -25,12 +25,12 @@
 #include "recorder/dpsoundrecorder.h"
 #include "recorder/dpsoundrecorder.h"
 
-#include "graphswindow.h"
-#include "graphsevalwindow.h"
+//#include "graphswindow.h"
+//#include "graphsevalwindow.h"
 #include "settingsdialog.h"
 
-#include "drawer.h"
-#include "drawerdp.h"
+//#include "drawer.h"
+//#include "drawerdp.h"
 
 extern "C" {
     #include "./sptk/SPTK.h"
@@ -265,9 +265,9 @@ void MainWindow::recordFinished(SoundRecorder * recorder)
 
     if(SettingsDialog::getInstance()->getMathGLSettings()->autoOpen)
     {
-        GraphsWindow * graph = this->showGraph(path);
-        graph->show();
-        graph->fullFit();
+//        GraphsWindow * graph = this->showGraph(path);
+//        graph->show();
+//        graph->fullFit();
     }
 }
 
@@ -319,104 +319,104 @@ void MainWindow::cleanRecordFiles()
     }
 }
 
-void MainWindow::compare()
-{
-    QStringList items;
-    for(int i=0;i<this->ui->filesList->count();i++)
-        items.append(this->ui->filesList->item(i)->text());
+//void MainWindow::compare()
+//{
+//    QStringList items;
+//    for(int i=0;i<this->ui->filesList->count();i++)
+//        items.append(this->ui->filesList->item(i)->text());
 
-    QListWidgetItem* item = ui->filesList->currentItem();
-    QString path = QApplication::applicationDirPath() + DATA_PATH;
-    QString path1 = path + item->text();
+//    QListWidgetItem* item = ui->filesList->currentItem();
+//    QString path = QApplication::applicationDirPath() + DATA_PATH;
+//    QString path1 = path + item->text();
 
-    items.removeAll(item->text());
-    bool ok;
-    QString path2 = path + QInputDialog::getItem(this, tr("Compare with"), tr("Record"), items, 0, false, &ok);
-    if (ok && !path2.isEmpty()){
-        qDebug() << "Draw graphs for " << path1 << " and " << path2 << LOG_DATA;
-        QWidget * window = new QWidget();
-        QVBoxLayout *layout = new QVBoxLayout(window);
-        GraphsWindow * first = this->showGraph(path1);
-        GraphsWindow * second = this->showGraph(path2);
+//    items.removeAll(item->text());
+//    bool ok;
+//    QString path2 = path + QInputDialog::getItem(this, tr("Compare with"), tr("Record"), items, 0, false, &ok);
+//    if (ok && !path2.isEmpty()){
+//        qDebug() << "Draw graphs for " << path1 << " and " << path2 << LOG_DATA;
+//        QWidget * window = new QWidget();
+//        QVBoxLayout *layout = new QVBoxLayout(window);
+//        GraphsWindow * first = this->showGraph(path1);
+//        GraphsWindow * second = this->showGraph(path2);
 
-        connect(first, SIGNAL(changeSig(int)), second, SLOT(setK(int)));
-        connect(second, SIGNAL(changeSig(int)), first, SLOT(setK(int)));
+//        connect(first, SIGNAL(changeSig(int)), second, SLOT(setK(int)));
+//        connect(second, SIGNAL(changeSig(int)), first, SLOT(setK(int)));
 
-        layout->addWidget(first);
-        layout->addWidget(second);
-        window->show();
-        first->fullFit();
-        second->fullFit();
-    }
-}
-void MainWindow::evaluationDP()
-{
-    evaluation(new DrawerDP());
-}
+//        layout->addWidget(first);
+//        layout->addWidget(second);
+//        window->show();
+//        first->fullFit();
+//        second->fullFit();
+//    }
+//}
+//void MainWindow::evaluationDP()
+//{
+//    evaluation(new DrawerDP());
+//}
 
-void MainWindow::evaluation(Drawer * drawer)
-{
-    QString path = QApplication::applicationDirPath() + DATA_PATH;
+//void MainWindow::evaluation(Drawer * drawer)
+//{
+//    QString path = QApplication::applicationDirPath() + DATA_PATH;
 
-    QList<QListWidgetItem*> items = ui->filesList->selectedItems();
-    if(items.size() > 0)
-    {
-        QString file = items.at(0)->text();
+//    QList<QListWidgetItem*> items = ui->filesList->selectedItems();
+//    if(items.size() > 0)
+//    {
+//        QString file = items.at(0)->text();
 
-        GraphsEvalWindow * window = this->evaluation(file, drawer);
+//        GraphsEvalWindow * window = this->evaluation(file, drawer);
 
-        if(items.size() > 1)
-        {
-            QString file2 = path + items.at(1)->text();
-            window->drawFile(file2);
-        }
-    }
-}
+//        if(items.size() > 1)
+//        {
+//            QString file2 = path + items.at(1)->text();
+//            window->drawFile(file2);
+//        }
+//    }
+//}
 
-GraphsEvalWindow * MainWindow::evaluation(QString filePath, Drawer * drawer)
-{
-    QString path = QApplication::applicationDirPath() + DATA_PATH;
+//GraphsEvalWindow * MainWindow::evaluation(QString filePath, Drawer * drawer)
+//{
+//    QString path = QApplication::applicationDirPath() + DATA_PATH;
 
-    QString file = path + filePath;
-    qDebug() << "Draw graphs for evaluation " << file << LOG_DATA;
-    GraphsEvalWindow * window = new GraphsEvalWindow(file, drawer);
+//    QString file = path + filePath;
+//    qDebug() << "Draw graphs for evaluation " << file << LOG_DATA;
+//    GraphsEvalWindow * window = new GraphsEvalWindow(file, drawer);
 
-    connect(window, SIGNAL(autoRec()), this, SLOT(autoRecording()));
-    connect(window, SIGNAL(rec()), this, SLOT(manualRecording()));
+//    connect(window, SIGNAL(autoRec()), this, SLOT(autoRecording()));
+//    connect(window, SIGNAL(rec()), this, SLOT(manualRecording()));
 
-    connect(window, SIGNAL(recFinish()), this, SLOT(updateFileList()));
+//    connect(window, SIGNAL(recFinish()), this, SLOT(updateFileList()));
 
-    window->show();
-    window->fullFit();
-    return window;
-}
+//    window->show();
+//    window->fullFit();
+//    return window;
+//}
 
-void MainWindow::plotting()
-{
-    QString path = QApplication::applicationDirPath() + DATA_PATH;
-    QList<QListWidgetItem*> items = ui->filesList->selectedItems();
-    if(items.size() > 0)
-    {
-        QString file = path + items.at(0)->text();
-        qDebug() << "Draw graphs for " << path << LOG_DATA;
-        GraphsWindow * graph = this->showGraph(file);
-        graph->show();
-        graph->fullFit();
-    }
-}
+//void MainWindow::plotting()
+//{
+//    QString path = QApplication::applicationDirPath() + DATA_PATH;
+//    QList<QListWidgetItem*> items = ui->filesList->selectedItems();
+//    if(items.size() > 0)
+//    {
+//        QString file = path + items.at(0)->text();
+//        qDebug() << "Draw graphs for " << path << LOG_DATA;
+//        GraphsWindow * graph = this->showGraph(file);
+//        graph->show();
+//        graph->fullFit();
+//    }
+//}
 
-void MainWindow::plottingGraph(QListWidgetItem*)
-{
-    this->plotting();
-}
+//void MainWindow::plottingGraph(QListWidgetItem*)
+//{
+//    this->plotting();
+//}
 
-GraphsWindow * MainWindow::showGraph(QString path)
-{
-    GraphsWindow * graph = new GraphsWindow(path);
-    connect(graph, SIGNAL(autoRec()), this, SLOT(autoRecording()));
-    connect(graph, SIGNAL(rec()), this, SLOT(manualRecording()));
-    return graph;
-}
+//GraphsWindow * MainWindow::showGraph(QString path)
+//{
+//    GraphsWindow * graph = new GraphsWindow(path);
+//    connect(graph, SIGNAL(autoRec()), this, SLOT(autoRecording()));
+//    connect(graph, SIGNAL(rec()), this, SLOT(manualRecording()));
+//    return graph;
+//}
 
 void MainWindow::updateVolume()
 {

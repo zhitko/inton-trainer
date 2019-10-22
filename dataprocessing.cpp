@@ -3,6 +3,7 @@
 #include <QDebug>
 
 #include "settingsdialog.h"
+#include "analysis/ump.h"
 
 extern "C" {
     #include "sptk/SPTK.h"
@@ -126,6 +127,7 @@ MaskData getLabelsFromFile(WaveFile* waveFile, char marker)
     data.pointsFrom.v = pointsFrom;
     data.pointsLength.v = pointsLength;
 
+    qDebug() << "getLabelsFromFile return " << LOG_DATA;
     return data;
 }
 
@@ -247,166 +249,6 @@ vector processZeros(vector data)
     return data;
 }
 
-GraphData * ProcWave2Data(QString fname)
-{
-    SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
-
-    QFile file(fname);
-    file.open(QIODevice::ReadOnly);
-    WaveFile * waveFile = waveOpenHFile(file.handle());
-    qDebug() << "waveOpenFile" << LOG_DATA;
-
-    int size = littleEndianBytesToUInt32(waveFile->dataChunk->chunkDataSize);
-    qDebug() << "chunkDataSize" << LOG_DATA;
-    short int bits = littleEndianBytesToUInt16(waveFile->formatChunk->significantBitsPerSample);
-    qDebug() << "significantBitsPerSample" << LOG_DATA;
-
-    vector wave = sptk_v2v(waveFile->dataChunk->waveformData, size, bits);
-    qDebug() << "wave" << LOG_DATA;
-
-    vector frame = sptk_frame(wave, sptk_settings->frame);
-    qDebug() << "frame" << LOG_DATA;
-
-    vector intensive = vector_intensive(frame, sptk_settings->frame->leng, sptk_settings->frame->shift);
-    qDebug() << "intensive" << LOG_DATA;
-
-    vector window = sptk_window(frame, sptk_settings->window);
-    qDebug() << "window" << LOG_DATA;
-
-    vector lpc = sptk_lpc(frame, sptk_settings->lpc);
-    qDebug() << "lpc" << LOG_DATA;
-
-    vector spec = sptk_spec(lpc, sptk_settings->spec);
-    qDebug() << "spec " << maxv(spec) << LOG_DATA;
-
-    vector spec_proc;
-    if (sptk_settings->spec->proc == 0){
-        spec_proc = vector_pow_log(spec, sptk_settings->spec->factor, sptk_settings->spec->min);
-        qDebug() << "spec_log" << LOG_DATA;
-    } else if (sptk_settings->spec->proc == 1){
-        spec_proc = vector_pow_exp(spec, sptk_settings->spec->factor, sptk_settings->spec->min);
-        qDebug() << "spec_exp" << LOG_DATA;
-    }
-    qDebug() << "spec_proc " << maxv(spec_proc) << LOG_DATA;
-
-    vector pitch = processZeros(sptk_pitch_spec(wave, sptk_settings->pitch, intensive.x));
-    qDebug() << "pitch" << LOG_DATA;
-
-    vector mask = getFileMask(waveFile, wave, pitch.x);
-    qDebug() << "mask" << LOG_DATA;
-
-    vector pitch_cutted = processZeros(vector_cut_by_mask(pitch, mask));
-    qDebug() << "pitch_cutted" << LOG_DATA;
-    double pitch_min = getv(pitch_cutted, minv(pitch_cutted));
-    double pitch_max = getv(pitch_cutted, maxv(pitch_cutted));
-
-    vector intensive_cutted = vector_cut_by_mask(intensive, mask);
-    qDebug() << "intensive_cutted" << LOG_DATA;
-
-    vector inverted_mask = vector_invert_mask(mask);
-    qDebug() << "inverted_mask" << LOG_DATA;
-
-    vector pitch_interpolate = vector_interpolate_by_mask(
-                pitch_cutted,
-                inverted_mask,
-                0,
-                sptk_settings->plotF0->interpolation_type
-                );
-    qDebug() << "pitch_interpolate" << LOG_DATA;
-
-    vector intensive_interpolate = vector_interpolate_by_mask(
-                intensive_cutted,
-                inverted_mask,
-                0,
-                sptk_settings->plotEnergy->interpolation_type
-                );
-    qDebug() << "intensive_interpolate" << LOG_DATA;
-
-    vector pitch_mid = vector_smooth_mid(pitch_interpolate, sptk_settings->plotF0->frame);
-    qDebug() << "pitch_mid" << LOG_DATA;
-
-    vector intensive_mid = vector_smooth_lin(intensive_interpolate, sptk_settings->plotEnergy->frame);
-    qDebug() << "intensive_mid" << LOG_DATA;
-
-    vector norm_wave = normalizev(wave, 0.0, 1.0);
-
-    MaskData md_p = getLabelsFromFile(waveFile, MARK_PRE_NUCLEUS);
-    MaskData md_n = getLabelsFromFile(waveFile, MARK_NUCLEUS);
-    MaskData md_t = getLabelsFromFile(waveFile, MARK_POST_NUCLEUS);
-
-    vector p_mask = readMaskFromFile(waveFile, wave.x, MARK_PRE_NUCLEUS);
-    qDebug() << "p_mask" << LOG_DATA;
-
-    vector n_mask = readMaskFromFile(waveFile, wave.x, MARK_NUCLEUS);
-    qDebug() << "n_mask" << LOG_DATA;
-
-    vector t_mask = readMaskFromFile(waveFile, wave.x, MARK_POST_NUCLEUS);
-    qDebug() << "t_mask" << LOG_DATA;
-
-    vector p_wave = zero_to_nan(vector_cut_by_mask(norm_wave, p_mask));
-    qDebug() << "p_mask" << LOG_DATA;
-
-    vector n_wave = zero_to_nan(vector_cut_by_mask(norm_wave, n_mask));
-    qDebug() << "n_mask" << LOG_DATA;
-
-    vector t_wave = zero_to_nan(vector_cut_by_mask(norm_wave, t_mask));
-    qDebug() << "t_mask" << LOG_DATA;
-
-    vector pnt_mask = onesv(norm_wave.x);
-    for (int i=0; i<p_mask.x && i<n_mask.x && i<t_mask.x && i<norm_wave.x; i++) {
-        if (getv(p_mask, i) == 1 || getv(n_mask, i) == 1 || getv(t_mask, i) == 1)
-        {
-            setv(pnt_mask, i, 0);
-        } else {
-            setv(pnt_mask, i, 1);
-        }
-    }
-
-    vector display_wave = zero_to_nan(vector_cut_by_mask(norm_wave, pnt_mask));
-
-    freev(frame);
-    freev(window);
-    freev(lpc);
-    freev(pitch_cutted);
-    freev(intensive_cutted);
-    freev(inverted_mask);
-    freev(pitch_interpolate);
-    freev(intensive_interpolate);
-    freev(wave);
-    qDebug() << "freev" << LOG_DATA;
-
-    file.close();
-    waveCloseFile(waveFile);
-    qDebug() << "waveCloseFile" << LOG_DATA;
-
-    GraphData * data = new GraphData();
-
-    data->d_full_wave = norm_wave;
-    data->d_wave = display_wave;
-    data->d_p_wave = p_wave;
-    data->d_n_wave = n_wave;
-    data->d_t_wave = t_wave;
-    data->d_pitch_original = pitch;
-    data->d_pitch = pitch_mid;
-    data->pitch_max = pitch_max;
-    data->pitch_min = pitch_min;
-    data->d_intensive_original = intensive;
-    data->d_intensive = intensive_mid;
-    data->d_spec_proc = spec_proc;
-    data->d_spec = spec;
-    data->d_mask = mask;
-    data->p_mask = p_mask;
-    data->n_mask = n_mask;
-    data->t_mask = t_mask;
-    data->pnt_mask = pnt_mask;
-
-    data->md_p = md_p;
-    data->md_t = md_t;
-    data->md_n = md_n;
-
-    return data;
-}
-
 vector data_spectrum(SimpleGraphData * data)
 {
     if (data->b_spec == 0)
@@ -447,6 +289,28 @@ vector data_cepstrum_norm(SimpleGraphData * data)
     return data->d_cepstrum_norm;
 }
 
+vector data_get_mask(SimpleGraphData * data)
+{
+    if (data->b_mask == 0)
+    {
+        // TODO
+    }
+    return data->d_mask;
+}
+
+vector data_get_full_wave(SimpleGraphData * data)
+{
+    if (data->b_full_wave == 0)
+    {
+        WaveFile * file = data_get_data_file(data);
+        int size = littleEndianBytesToUInt32(file->dataChunk->chunkDataSize);
+        short int bits = littleEndianBytesToUInt16(file->formatChunk->significantBitsPerSample);
+        vector wave = sptk_v2v(file->dataChunk->waveformData, size, bits);
+        data->d_full_wave = normalizev(wave, 0.0, 1.0);
+    }
+    return data->d_full_wave;
+}
+
 vector data_get_pitch(SimpleGraphData * data)
 {
     if (data->b_pitch == 0)
@@ -456,15 +320,142 @@ vector data_get_pitch(SimpleGraphData * data)
     return data->d_pitch;
 }
 
+vector interpolate_vector(vector data)
+{
+    SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
+
+    qDebug() << "pitch_mid" << LOG_DATA;
+    vector newDataNorm = vector_normalize_optional_zeros(data, NORM_FROM, NORM_TO, !sptk_settings->plotF0->normF0MinMax);
+    qDebug() << "newDataNorm" << LOG_DATA;
+    vector dataInterpolate = copyv(newDataNorm);
+    qDebug() << "dataInterpolate " << dataInterpolate.x << LOG_DATA;
+
+    int start = first_fromv(dataInterpolate, 0, 0.0);
+    int end = first_greater_fromv(dataInterpolate, start, 0.0);
+
+    if (start == 0)
+    {
+        qDebug() << "vector_interpolate_part_first(" << &dataInterpolate << ", " << start << ", " << end << ", " << sptk_settings->plotF0->interpolation_type << ")" << LOG_DATA;
+        vector_interpolate_part(
+                    &dataInterpolate,
+                    start,
+                    end,
+                    sptk_settings->plotF0->interpolation_type
+        );
+
+        start = first_fromv(dataInterpolate, end, 0.0);
+        end = first_greater_fromv(dataInterpolate, start, 0.0);
+    }
+
+    do
+    {
+        qDebug() << "vector_interpolate_part(" << &dataInterpolate << ", " << start-1 << ", " << end << ", " << sptk_settings->plotF0->interpolation_type << ")" << LOG_DATA;
+        vector_interpolate_part(
+                    &dataInterpolate,
+                    start-1,
+                    end,
+                    sptk_settings->plotF0->interpolation_type
+        );
+        start = first_fromv(dataInterpolate, end, 0.0);
+        end = first_greater_fromv(dataInterpolate, start, 0.0);
+    } while (end != start && end != dataInterpolate.x);
+
+    qDebug() << "vector_interpolate_part_last(" << &dataInterpolate << ", " << start-1 << ", " << dataInterpolate.x - 1 << ", " << sptk_settings->plotF0->interpolation_type << ")" << LOG_DATA;
+    vector_interpolate_part(
+                &dataInterpolate,
+                start-1,
+                dataInterpolate.x - 1,
+                sptk_settings->plotF0->interpolation_type
+    );
+
+    freev(newDataNorm);
+    qDebug() << "finish applyMask" << LOG_DATA;
+    return dataInterpolate;
+}
+
+vector data_get_pitch_cutted(SimpleGraphData * data)
+{
+    if (data->b_pitch_cutted == 0)
+    {
+        SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
+
+        vector mask = data_get_mask(data);
+        vector pitch = data_get_pitch(data);
+        vector scaledMask = vector_resize(mask, pitch.x);
+        vector cuttedData = vector_cut_by_mask(pitch, scaledMask);
+        data->d_pitch_cutted = vector_mid(cuttedData, sptk_settings->plotF0->frame, 1);
+        data->b_pitch_cutted = 1;
+
+        freev(scaledMask);
+        freev(cuttedData);
+    }
+    return data->d_pitch_cutted;
+}
+
+double data_get_pitch_min(SimpleGraphData * data)
+{
+    if (data->b_pitch_min == 0)
+    {
+        vector pitch = data_get_pitch_cutted(data);
+        data->d_pitch_min = getv(pitch, min_greaterv(pitch, 0.0));
+        data->b_pitch_min = 1;
+    }
+    return data->d_pitch_min;
+}
+
+double data_get_pitch_max(SimpleGraphData * data)
+{
+    if (data->b_pitch_max == 0)
+    {
+        vector pitch = data_get_pitch_cutted(data);
+        data->d_pitch_max = getv(pitch, maxv(pitch));
+        data->b_pitch_max = 1;
+    }
+    return data->d_pitch_max;
+}
+
+
+vector data_get_pitch_interpolated(SimpleGraphData * data)
+{
+    if (data->b_pitch_interpolated == 0)
+    {
+        vector pitch = data_get_pitch_cutted(data);
+        data->d_pitch_interpolated = interpolate_vector(pitch);
+        data->b_pitch_interpolated = 1;
+    }
+    return data->d_pitch_interpolated;
+}
+
 vector data_get_pitch_norm(SimpleGraphData * data)
 {
     if (data->b_pitch_norm == 0)
     {
-        vector pitch = data_get_pitch(data);
+        vector pitch = data_get_pitch_interpolated(data);
         data->d_pitch_norm = normalizev(pitch, MASK_MIN, MASK_MAX);
         data->b_pitch_norm = 1;
     }
     return data->d_pitch_norm;
+}
+
+vector data_get_pitch_smooth(SimpleGraphData * data)
+{
+    if (data->b_pitch_smooth == 0)
+    {
+        SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
+
+        vector pitch = data_get_pitch_norm(data);
+        if (sptk_settings->dp->umpSmoothType == 0)
+        {
+            data->d_pitch_smooth = vector_smooth_lin(pitch, sptk_settings->dp->umpSmoothValue);
+        } else if (sptk_settings->dp->umpSmoothType == 1) {
+            data->d_pitch_smooth = vector_smooth_mid(pitch, sptk_settings->dp->umpSmoothValue);
+        } else {
+            data->d_pitch_smooth = copyv(pitch);
+        }
+
+        data->b_pitch_smooth = 1;
+    }
+    return data->d_pitch_smooth;
 }
 
 vector data_get_pitch_log(SimpleGraphData * data)
@@ -482,9 +473,43 @@ vector data_get_pitch_derivative(SimpleGraphData * data)
     {
         vector pitch = data_get_pitch_norm(data);
         data->d_pitch_derivative = derivativev(pitch);
-        data->b_pitch_derivative == 1;
+        data->b_pitch_derivative = 1;
     }
     return data->d_pitch_derivative;
+}
+
+vector data_get_ump(SimpleGraphData * data, bool manual)
+{
+    if (data->b_ump == 0)
+    {
+        SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
+        vector pitch = data_get_pitch_smooth(data);
+
+        double mask_scale = 1.0 * data_get_full_wave(data).x / data_get_mask(data).x;
+        data->d_ump = makeUmp(
+            &data->d_ump_mask,
+            pitch,
+            data_get_mask(data),
+            data_get_p(data),
+            data_get_n(data),
+            data_get_t(data),
+            mask_scale,
+            sptk_settings->dp->portLen,
+            sptk_settings->dp->useStripUmp,
+            sptk_settings->dp->ump_keep_ratio && !manual
+        );
+        data->b_ump = 1;
+    }
+    return data->d_ump;
+}
+
+MaskData data_get_ump_mask(SimpleGraphData * data, bool manual)
+{
+    if (data->b_ump == 0)
+    {
+        data_get_ump(data, manual);
+    }
+    return data->d_ump_mask;
 }
 
 vector data_get_intensive(SimpleGraphData * data)
@@ -520,7 +545,7 @@ vector data_get_intensive_norm(SimpleGraphData * data)
     {
         vector intensive = data_get_intensive_cutted(data);
         data->d_intensive_norm = normalizev(intensive, MASK_MIN, MASK_MAX);
-        data->b_intensive_norm == 1;
+        data->b_intensive_norm = 1;
     }
     return data->d_intensive_norm;
 }
@@ -534,7 +559,7 @@ vector data_get_intensive_derivative(SimpleGraphData * data)
         data->d_derivative_intensive_norm = normalizev(derivative_intensive, MASK_MIN, MASK_MAX);
         freev(derivative_intensive);
 
-        data->b_derivative_intensive_norm == 1;
+        data->b_derivative_intensive_norm = 1;
     }
     return data->d_derivative_intensive_norm;
 }
@@ -552,13 +577,57 @@ vector data_get_intensive_smooth(SimpleGraphData * data)
     return data->d_intensive_smooth;
 }
 
-SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
+WaveFile* data_get_data_file(SimpleGraphData * data)
 {
-    qDebug() << "::SimpleProcWave2Data" << LOG_DATA;
+    return data->data_file;
+}
+
+MaskData data_get_p(SimpleGraphData * data)
+{
+    if (data->b_file_p == 0)
+    {
+        WaveFile * file = data_get_data_file(data);
+        data->d_file_p = getLabelsFromFile(file, MARK_PRE_NUCLEUS);
+        data->d_file_p.length = data_get_full_wave(data).x;
+        data->b_file_p = 1;
+    }
+    return data->d_file_p;
+}
+
+MaskData data_get_t(SimpleGraphData * data)
+{
+    if (data->b_file_t == 0)
+    {
+        WaveFile * file = data_get_data_file(data);
+        data->d_file_t = getLabelsFromFile(file, MARK_POST_NUCLEUS);
+        data->d_file_t.length = data_get_full_wave(data).x;
+        data->b_file_t = 1;
+    }
+    return data->d_file_t;
+}
+
+MaskData data_get_n(SimpleGraphData * data)
+{
+    if (data->b_file_n == 0)
+    {
+        WaveFile * file = data_get_data_file(data);
+        data->d_file_n = getLabelsFromFile(file, MARK_NUCLEUS);
+        data->d_file_n.length = data_get_full_wave(data).x;
+        data->b_file_n = 1;
+    }
+    return data->d_file_n;
+}
+
+SimpleGraphData * SimpleProcWave2Data(QString fname, bool manual)
+{
+    qDebug() << "::SimpleProcWave2Data " << manual << LOG_DATA;
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
 
     SimpleGraphData * data = new SimpleGraphData();
+    data->b_full_wave = 0;
     data->b_pitch = 0;
+    data->b_pitch_cutted = 0;
+    data->b_pitch_smooth = 0;
     data->b_pitch_log = 0;
     data->b_pitch_derivative = 0;
     data->b_intensive = 0;
@@ -569,30 +638,31 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
     data->b_spec = 0;
     data->b_cepstrum = 0;
     data->b_pitch_norm = 0;
+    data->b_file_p = 0;
+    data->b_file_t = 0;
+    data->b_file_n = 0;
+    data->b_mask = 0;
+    data->b_ump = 0;
 
     QFile file(fname);
     qDebug() << "::SimpleProcWave2Data QFile" << fname << LOG_DATA;
     file.open(QIODevice::ReadOnly);
     qDebug() << "::SimpleProcWave2Data file.open " << file.isOpen() << LOG_DATA;
-    WaveFile * waveFile = waveOpenHFile(file.handle());
-    qDebug() << "::SimpleProcWave2Data waveOpenFile" << LOG_DATA;
-    data->file_data = waveFile;
+    data->data_file = waveOpenHFile(file.handle());
 
-    int size = littleEndianBytesToUInt32(waveFile->dataChunk->chunkDataSize);
+    qDebug() << "::SimpleProcWave2Data waveOpenFile" << LOG_DATA;
+
+    int size = littleEndianBytesToUInt32(data->data_file->dataChunk->chunkDataSize);
     qDebug() << "::SimpleProcWave2Data chunkDataSize " << size << LOG_DATA;
-    short int bits = littleEndianBytesToUInt16(waveFile->formatChunk->significantBitsPerSample);
+    short int bits = littleEndianBytesToUInt16(data->data_file->formatChunk->significantBitsPerSample);
     qDebug() << "::SimpleProcWave2Data significantBitsPerSample " << bits << LOG_DATA;
 
     double seconds = 1.0 * size / RECORD_FREQ / bits * CHAR_BIT;
     qDebug() << "::SimpleProcWave2Data seconds=" << seconds << LOG_DATA;
     data->seconds = seconds;
 
-    vector wave = sptk_v2v(waveFile->dataChunk->waveformData, size, bits);
+    vector wave = sptk_v2v(data->data_file->dataChunk->waveformData, size, bits);
     qDebug() << "::SimpleProcWave2Data wave" << LOG_DATA;
-
-    vector norm_wave = normalizev(wave, 0.0, 1.0);
-    qDebug() << "::SimpleProcWave2Data norm_wave" << LOG_DATA;
-    data->d_full_wave = norm_wave;
 
     vector frame = sptk_frame(wave, sptk_settings->frame);
     qDebug() << "::SimpleProcWave2Data frame" << LOG_DATA;
@@ -647,28 +717,24 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
 
     data->d_intensive_norm = data_get_intensive_norm(data);
 
+    if (!manual)
+    {
+        data->data_file = selectMarkoutAlgorithm(data);
+    }
+
     vector file_mask;
-    WaveFile * procFile = waveFile;
-    if (sptk_settings->dp->auto_marking)
-    {
-        procFile = selectMarkoutAlgorithm(data);
-    }
-    file_mask = getFileMask(procFile, wave, pitch.x);
-    data->md_p = getLabelsFromFile(procFile, MARK_PRE_NUCLEUS);
-    data->md_n = getLabelsFromFile(procFile, MARK_NUCLEUS);
-    data->md_t = getLabelsFromFile(procFile, MARK_POST_NUCLEUS);
-    if (sptk_settings->dp->auto_marking)
-    {
-        waveCloseFile(procFile);
-    }
+    file_mask = getFileMask(data->data_file, wave, pitch.x);
     qDebug() << "::SimpleProcWave2Data file_mask" << LOG_DATA;
 
     vector mask_and = vector_mask_and(pitch_log_norm, file_mask);
     vector mask = vector_smooth_mid(mask_and, 10);
     qDebug() << "::SimpleProcWave2Data mask" << LOG_DATA;
     data->d_mask = mask;
+    data->b_mask = 1;
+    freev(mask_and);
+    freev(file_mask);
 
-    vector inverted_mask = vector_invert_mask(mask);
+    vector inverted_mask = vector_invert_mask(data->d_mask);
     qDebug() << "::SimpleProcWave2Data inverted_mask" << LOG_DATA;
 
     vector pitch_interpolate = vector_interpolate_by_mask(
@@ -694,21 +760,10 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
     freev(inverted_mask);
     freev(smooth_wave);
     freev(pitch_log);
-    freev(file_mask);
-    freev(mask_and);
     qDebug() << "::SimpleProcWave2Data freev" << LOG_DATA;
 
     file.close();
     qDebug() << "::SimpleProcWave2Data file.close" << LOG_DATA;
-
-    if (keepWaveData)
-    {
-        waveFile->file = NULL;
-    } else {
-        data->file_data = NULL;
-        waveCloseFile(waveFile);
-        qDebug() << "::SimpleProcWave2Data waveCloseFile" << LOG_DATA;
-    }
 
     return data;
 }
@@ -719,43 +774,48 @@ WaveFile * selectMarkoutAlgorithm(SimpleGraphData * data)
 
     if (sptk_settings->dp->markoutType == MARKOUT_F0) // F0
     {
+        qDebug() << "::selectMarkoutAlgorithm markOutFileByF0" << LOG_DATA;
         return markOutFileByF0(data);
     } else if (sptk_settings->dp->markoutType == MARKOUT_A0) // A0
     {
+        qDebug() << "::selectMarkoutAlgorithm markOutFileByA0" << LOG_DATA;
         return markOutFileByA0(data);
     } else if (sptk_settings->dp->markoutType == MARKOUT_F0A0) // F0 & A0
     {
+        qDebug() << "::selectMarkoutAlgorithm markOutFileByF0A0" << LOG_DATA;
         return markOutFileByF0A0(data);
     } else if (sptk_settings->dp->markoutType == MARKOUT_A0_INTEGRAL) // A0 Integral
     {
+        qDebug() << "::selectMarkoutAlgorithm markOutFileByA0Integral" << LOG_DATA;
         return markOutFileByA0Integral(data);
     } else if (sptk_settings->dp->markoutType == MARKOUT_A0_ENVELOPE) // A0 Envelope
     {
+        qDebug() << "::selectMarkoutAlgorithm markOutFileByA0Integral" << LOG_DATA;
         // TODO: A0Envelope
         return markOutFileByA0Integral(data);
     }
 }
 
-void freeGraphData(GraphData * data)
-{
-    freev(data->d_intensive_original);
-    freev(data->d_intensive);
-    freev(data->d_pitch_original);
-    freev(data->d_pitch);
-    freev(data->d_pitch_log);
-    freev(data->d_spec);
-    freev(data->d_spec_proc);
-    freev(data->d_wave);
-    freev(data->d_full_wave);
-    freev(data->d_mask);
-    freev(data->d_p_wave);
-    freev(data->d_t_wave);
-    freev(data->d_n_wave);
-    freev(data->p_mask);
-    freev(data->n_mask);
-    freev(data->t_mask);
-    freev(data->pnt_mask);
-}
+//void freeGraphData(GraphData * data)
+//{
+//    freev(data->d_intensive_original);
+//    freev(data->d_intensive);
+//    freev(data->d_pitch_original);
+//    freev(data->d_pitch);
+//    freev(data->d_pitch_log);
+//    freev(data->d_spec);
+//    freev(data->d_spec_proc);
+//    freev(data->d_wave);
+//    freev(data->d_full_wave);
+//    freev(data->d_mask);
+//    freev(data->d_p_wave);
+//    freev(data->d_t_wave);
+//    freev(data->d_n_wave);
+//    freev(data->p_mask);
+//    freev(data->n_mask);
+//    freev(data->t_mask);
+//    freev(data->pnt_mask);
+//}
 
 void freeSimpleGraphData(SimpleGraphData * data)
 {
@@ -776,17 +836,27 @@ void freeSimpleGraphData(SimpleGraphData * data)
     if (data->b_spec_norm == 1) freev(data->d_spec_norm);
     if (data->b_cepstrum == 1) freev(data->d_cepstrum);
     if (data->b_cepstrum_norm == 1) freev(data->d_cepstrum_norm);
-    freev(data->d_mask);
+    if (data->b_mask) freev(data->d_mask);
+    if (data->b_ump) freev(data->d_ump);
 
-    freeiv(data->md_p.pointsFrom);
-    freeiv(data->md_p.pointsLength);
-    freeiv(data->md_t.pointsFrom);
-    freeiv(data->md_t.pointsLength);
-    freeiv(data->md_n.pointsFrom);
-    freeiv(data->md_n.pointsLength);
-
-    if (data->file_data)
+    if (data->b_file_p == 1)
     {
-        waveCloseFile(data->file_data);
+        freeiv(data->d_file_p.pointsFrom);
+        freeiv(data->d_file_p.pointsLength);
+    }
+    if (data->b_file_t == 1)
+    {
+        freeiv(data->d_file_t.pointsFrom);
+        freeiv(data->d_file_t.pointsLength);
+    }
+    if (data->b_file_n == 1)
+    {
+        freeiv(data->d_file_n.pointsFrom);
+        freeiv(data->d_file_n.pointsLength);
+    }
+
+    if (data->data_file)
+    {
+        waveCloseFile(data->data_file);
     }
 }

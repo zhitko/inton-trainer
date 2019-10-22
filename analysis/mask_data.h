@@ -8,6 +8,7 @@ extern "C" {
 typedef struct {
     intvector pointsFrom;
     intvector pointsLength;
+    int length;
 } MaskData;
 
 #endif // MASK_DATA_H

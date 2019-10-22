@@ -625,4 +625,13 @@ export default {
   getSegmentsN: function(uuid, manual, f) {
     f(JSON.stringify({"data":[{"length":1248,"position":2656},{"length":1392,"position":10480},{"length":168,"position":6376}],"length":14512}));
   },
+  getUPM: function(uuid, manual, f) {
+    f(JSON.stringify([]));
+  },
+  getUPMMask: function(uuid, manual, f) {
+    f(JSON.stringify({"data":[{"length":100,"position":1},{"length":0,"position":100},{"length":0,"position":200},{"length":100,"position":300},{"length":0,"position":0},{"length":0,"position":0},{"length":100,"position":600}],"length":700}));
+  },
+  getRecordOctavesRange: function(uuid, manual, f) {
+    f(JSON.stringify({"max":136.4107666015625,"min":88.12582397460938,"range":2.5,"value":0.5479091195886563}))
+  },
 };

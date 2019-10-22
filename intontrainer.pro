@@ -17,14 +17,14 @@ TARGET = intontrainer
 TEMPLATE = app
 
 win32{
-    INCLUDEPATH += "c:/Dev/MathGL/include"
-    LIBS += -L"c:/Dev/MathGL/lib" -llibmgl -llibmgl-qt5
+    #INCLUDEPATH += "c:/Dev/Libs/mathgl-2.4.3/include"
+    #LIBS += -L"c:/Dev/Libs/mathgl-2.4.3/lib" -lmgl -lmgl-qt5
 
-    INCLUDEPATH += "c:/Dev/openal-soft-1.17.2-bin/include"
-    LIBS += -L"c:/Dev/openal-soft-1.17.2-bin/lib/Win32" -llibOpenAL32
+    INCLUDEPATH += "c:/Dev/Libs/openal-soft-1.17.2-bin/include"
+    LIBS += -L"c:/Dev/Libs/openal-soft-1.17.2-bin/lib/Win32" -lOpenAL32
 
-    INCLUDEPATH += "c:/Dev/Libs/gsl-2.1-bin/include"
-    LIBS += -L"c:/Dev/Libs/gsl-2.1-bin/lib" -llibgsl -llibgslcblas
+    INCLUDEPATH += "c:/Dev/Libs/gsl-2.5-bin/include"
+    LIBS += -L"c:/Dev/Libs/gsl-2.5-bin/lib" -lgsl -lgslcblas
 }
 
 unix:!mac {
@@ -41,20 +41,21 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     recorder/soundrecorder.cpp \
-    graphswindow.cpp \
+#    graphswindow.cpp \
     settingsdialog.cpp \
     recorder/autosoundrecorder.cpp \
     recorder/timesoundrecorder.cpp \
     recorder/buffer.cpp \
-    drawer.cpp \
+#    drawer.cpp \
     soundplayer.cpp \
-    graphsevalwindow.cpp \
+#    graphsevalwindow.cpp \
     dp/vectordp.cpp \
     dp/spectrdp.cpp \
+    webapi.cpp \
     webwindow.cpp \
     recorder/dpsoundrecorder.cpp \
     dp/continuousdp.cpp \
-    drawerdp.cpp \
+#    drawerdp.cpp \
     dataprocessing.cpp \
     utils.cpp \
     databaseeditor/databasemanager.cpp \
@@ -70,22 +71,23 @@ SOURCES += \
 HEADERS  += \
     mainwindow.h \
     recorder/soundrecorder.h \
-    graphswindow.h \
+#    graphswindow.h \
     settingsdialog.h \
     recorder/autosoundrecorder.h \
     recorder/timesoundrecorder.h \
     recorder/buffer.h \
-    drawer.h \
+#    drawer.h \
     soundplayer.h \
-    graphsevalwindow.h \
-    abstractdrawer.h \
+#    graphsevalwindow.h \
+#    abstractdrawer.h \
     dp/dp.h \
     dp/vectordp.h \
     dp/spectrdp.h \
+    webapi.h \
     webwindow.h \
     recorder/dpsoundrecorder.h \
     dp/continuousdp.h \
-    drawerdp.h \
+#    drawerdp.h \
     dataprocessing.h \
     defines.h \
     utils.h \
@@ -372,7 +374,6 @@ RESOURCES += \
     sounds.qrc
 
 DISTFILES += \
-    html/rus.html \
     3rdparty/qtxlsx/src/xlsx/qtxlsx.pri \
     3rdparty/qtxlsx/examples/xlsx/demo/doc/images/xlsx_demo.gif \
     3rdparty/qtxlsx/examples/xlsx/documentproperty/doc/images/doc_property.png \
@@ -417,18 +418,25 @@ win32{
     }
 
     CONFIG(release, debug|release) {
+        data-ui.commands = $(COPY_DIR) $$quote($$PWD_WIN\\ui\\dist\\) $$quote($$DESTDIR_WIN\\release\\ui)
+    } else {
+        data-ui.commands = $(COPY_DIR) $$quote($$PWD_WIN\\ui\\dist\\) $$quote($$DESTDIR_WIN\\debug\\ui)
+    }
+
+    CONFIG(release, debug|release) {
         data-wav.commands = $(COPY_DIR) $$quote($$PWD_WIN\\data) $$quote($$DESTDIR_WIN\\release\\data)
     } else {
         data-wav.commands = $(COPY_DIR) $$quote($$PWD_WIN\\data) $$quote($$DESTDIR_WIN\\debug\\data)
     }
 }
 unix{
+    data-ui.commands = $(COPY_DIR) $$quote($$PWD/ui/dist/*) $$quote($$OUT_PWD/ui)
     data-html.commands = $(COPY_DIR) $$quote($$PWD/html) $$quote($$OUT_PWD)
     data-wav.commands = $(COPY_DIR) $$quote($$PWD/data) $$quote($$OUT_PWD)
 }
 
-QMAKE_EXTRA_TARGETS += data-html data-wav
-POST_TARGETDEPS += data-html data-wav
+QMAKE_EXTRA_TARGETS += data-html data-wav data-ui
+POST_TARGETDEPS += data-html data-wav data-ui
 
 SUBDIRS += \
     3rdparty/qtxlsx/examples/xlsx/calendar/calendar.pro \
