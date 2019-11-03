@@ -26,9 +26,12 @@ protected:
     QList<double> umpSectors;
     mglData *dpData, *secWaveData, *errorData, *timeData, *secPitchData, *secPitchDataDerivative,
         *secIntensiveData, *umpData, *secUmpData, *umpDerivativeData, *secUmpDerivativeData, *umpMask,
-        *octavData, *secOctavData, *secPlaneData;
+        *octavData, *secOctavData, *secOctavesData, *secOctavesLastData, *secPlaneData;
     mglData *pSecData, *nSecData, *tSecData;
     mglData *A0Smooth, *secA0Smooth;
+    QList<mglData> umpDataHistory;
+    QList<vector> umpHistory;
+    QList<double> secOctaves;
     int errorMax, errorMin;
     double proximity_shape_mark, proximity_range_mark;
     double secPitchDataDerivativeZero;

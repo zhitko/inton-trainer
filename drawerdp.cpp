@@ -47,6 +47,7 @@ DrawerDP::DrawerDP() :
     secFileName(""),
     first(true)
 {
+    qDebug() << "DrawerDP::DrawerDP" << LOG_DATA;
     this->dpData = NULL;
     this->secWaveData = NULL;
     this->errorData = NULL;
@@ -63,6 +64,8 @@ DrawerDP::DrawerDP() :
     this->secUmpDerivativeData = NULL;
     this->octavData = NULL;
     this->secOctavData = NULL;
+    this->secOctavesData = NULL;
+    this->secOctavesLastData = NULL;
     this->umpMask = NULL;
     this->errorMax = 0;
     this->errorMin = 0;
@@ -117,6 +120,10 @@ DrawerDP::~DrawerDP()
     if (this->octavData) delete this->octavData;
     qDebug() << "DrawerDP removed octavData" << LOG_DATA;
     if (this->secOctavData) delete this->secOctavData;
+    qDebug() << "DrawerDP removed secOctavesLastData" << LOG_DATA;
+    if (this->secOctavesLastData) delete this->secOctavesLastData;
+    qDebug() << "DrawerDP removed secOctavesData" << LOG_DATA;
+    if (this->secOctavesData) delete this->secOctavesData;
     qDebug() << "DrawerDP removed secOctavData" << LOG_DATA;
     if (this->umpMask) delete this->umpMask;
     qDebug() << "DrawerDP removed umpMask" << LOG_DATA;
@@ -402,8 +409,12 @@ int DrawerDP::Draw(mglGraph *gr)
             }
             gr->Axis("Y", "");
             gr->Grid("y", "W", "");
-            gr->Bars(*this->secOctavData, "R");
             gr->Bars(*this->octavData, "r");
+            gr->Bars(*this->secOctavData, "R");
+
+            gr->MultiPlot(22, 12, 48, 2, 8, "#");
+            gr->Bars(*this->secOctavesData, "b");
+            gr->Bars(*this->secOctavesLastData, "k");
 
             if (sptk_settings->dp->showPlane) {
                 gr->MultiPlot(20, 12, 48, 8, 8, "#");
@@ -441,6 +452,13 @@ int DrawerDP::Draw(mglGraph *gr)
                 if (sptk_settings->dp->showF0 || !sptk_settings->dp->showDerivativeF0)
                 {
                     gr->SetRange('x', 0, this->umpData->nx);
+
+                    for (int i; i<this->umpDataHistory.size(); i++)
+                    {
+                        gr->Plot(this->umpDataHistory.at(i), "-n2");
+                    }
+                    gr->Plot(this->umpDataHistory.last(), "-k2");
+
                     gr->Plot(*this->secUmpData, "-R5");
                     gr->Plot(*this->umpData, "-r4");
                 }
@@ -1131,19 +1149,22 @@ void DrawerDP::Proc(QString fname)
             this->umpSectors.clear();
             int sectorStart = -1;
             bool findSector = false;
-            for (int i=1; i<ump_mask.x; i++)
+            bool startSearch = false;
+            for (int i=0; i<ump_mask.x; i++)
             {
                 int val = getv(ump_mask, i);
-                if (val == 0 && findSector == false)
+                if (startSearch == true && val == 0 && findSector == false)
                 {
                     sectorStart = i;
                     findSector = true;
-                } else if (val != 0 && findSector == true)
+                } else if (startSearch == true && val != 0 && findSector == true)
                 {
                     this->umpSectors.append(1.0*(sectorStart + (i-sectorStart)/2)/ump_mask.x);
                     sectorStart = -1;
                     findSector = false;
                     qDebug() << "ump_mask 0" << i << LOG_DATA;
+                } else if (startSearch == false && val == 1) {
+                    startSearch = true;
                 }
             }
 
@@ -1516,8 +1537,32 @@ void DrawerDP::Proc(QString fname)
 
         this->userRange = (1.0 * this->userf0max / this->userf0min) - 1;
 
-        this->secOctavData = new mglData(2);
-        this->secOctavData->a[1] = this->userRange;
+        this->secOctaves.append(this->userRange);
+        this->recordNumber = this->secOctaves.size();
+
+        this->secOctavesData = new mglData(this->secOctaves.size());
+        this->userRange = 0.0;
+        for(int i=0; i<this->secOctaves.size(); i++)
+        {
+            this->secOctavesData->a[i] = this->secOctaves.at(i);
+            this->userRange += this->secOctaves.at(i);
+        }
+        this->userRange /= this->secOctaves.size();
+        this->secOctavesLastData = new mglData(this->secOctaves.size());
+        this->secOctavesLastData->a[this->secOctaves.size()-1] = this->secOctaves.last();
+
+        if (this->secOctaves.size()>1)
+        {
+            this->secOctavData = new mglData(3);
+
+            double v = this->octavData->a[0];
+            delete this->octavData;
+            this->octavData = new mglData(3);
+            this->octavData->a[0] = v;
+        } else {
+            this->secOctavData = new mglData(2);
+        }
+        this->secOctavData->a[1] = this->userRange;        
         if(this->secOctavData->a[1] > OCTAVE_MAX_2) this->secOctavData->a[1] = OCTAVE_MAX_2;
 
         if(sptk_settings->dp->showF0)
@@ -1631,10 +1676,10 @@ void DrawerDP::Proc(QString fname)
 
         if (sptk_settings->dp->showF0 || !sptk_settings->dp->showDerivativeF0)
         {
-            vector sec_ump = copyv(pitch_smooth);
+            vector sec_ump_origin = copyv(pitch_smooth);
 
             makeUmp(
-                &sec_ump,
+                &sec_ump_origin,
                 &this->simple_data->d_mask,
                 this->simple_data->md_p,
                 this->simple_data->md_n,
@@ -1644,6 +1689,23 @@ void DrawerDP::Proc(QString fname)
                 sptk_settings->dp->useStripUmp,
                 sptk_settings->dp->ump_keep_ratio
             );
+            this->umpHistory.append(sec_ump_origin);
+            mglData sec_ump_origin_data(sec_ump_origin.x, sec_ump_origin.v);
+            sec_ump_origin_data.Norm();
+            this->umpDataHistory.append(sec_ump_origin_data);
+
+            vector sec_ump = zerov(sec_ump_origin.x);
+
+            for (int i=0; i<sec_ump_origin.x; i++)
+            {
+                double val = 0.0;
+                foreach (vector vec, umpHistory) {
+                    val += getv(vec, i);
+                }
+                val = val / umpHistory.size();
+                setv(sec_ump, i, val);
+                qDebug() << "sec_ump_origin " << sec_ump_origin.v[i] << " : " << sec_ump.v[i] << LOG_DATA;
+            }
 
             this->secUmpData = createMglData(sec_ump, this->secUmpData);
             this->secUmpData->Norm();
@@ -1693,8 +1755,6 @@ void DrawerDP::Proc(QString fname)
             }
 
             this->proximity_shape_mark = calculateMark(proximity_curve_shape, sptk_settings->dp->mark_level, sptk_settings->dp->mark_delimeter);
-
-            freev(sec_ump);
         }
 
         if (sptk_settings->dp->showDerivativeF0)

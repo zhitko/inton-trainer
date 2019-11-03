@@ -82,6 +82,7 @@ Drawer * GraphsEvalWindow::createNewDrawer(QString path)
     this->ui->openMetrics->hide();
     this->drawer->Proc(path);
     this->path = path;
+    this->ui->test_number->setText(QString::number(this->drawer->recordNumber));
 
     return this->drawer;
 }

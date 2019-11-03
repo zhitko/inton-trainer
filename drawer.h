@@ -34,6 +34,7 @@ public:
 
     bool stereo;
     bool showUMP;
+    int recordNumber = 0;
 
     virtual int getDataLenght();
     virtual int getDataSeconds();
