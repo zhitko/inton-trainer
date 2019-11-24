@@ -192,6 +192,7 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings(bool force)
         sptk_settings->dp->recordingMaxFiles = instance->ui->recordingMaxFiles->value();
 
         sptk_settings->dp->mark_delimeter = instance->ui->markDelimeter->value();
+        sptk_settings->dp->test_files_limit = instance->ui->testFilesLimit->value();
         sptk_settings->dp->mark_level = instance->ui->markLimit->value();
         sptk_settings->dp->relative_limit = instance->ui->relativeLimit->value();
         sptk_settings->dp->mark_labels = strdup(instance->ui->markLabels->text().toStdString().c_str());
@@ -359,6 +360,8 @@ void SettingsDialog::loadSettingsFrom(QString settings_path)
 
     if(settings.contains("dp/markDelimeter"))
         this->ui->markDelimeter->setValue(settings.value("dp/markDelimeter").toDouble());
+    if(settings.contains("dp/testFilesLimit"))
+        this->ui->testFilesLimit->setValue(settings.value("dp/testFilesLimit").toInt());
     if(settings.contains("dp/markLimit"))
         this->ui->markLimit->setValue(settings.value("dp/markLimit").toDouble());
     if(settings.contains("dp/relativeLimit"))
@@ -459,6 +462,7 @@ void SettingsDialog::saveSettings()
     settings.setValue("dp/custom_dp_use_cepstrum", this->ui->custom_dp_use_cepstrum->isChecked());
 
     settings.setValue("dp/markDelimeter", this->ui->markDelimeter->value());
+    settings.setValue("dp/testFilesLimit", this->ui->testFilesLimit->value());
     settings.setValue("dp/markLimit", this->ui->markLimit->value());
     settings.setValue("dp/relativeLimit", this->ui->relativeLimit->value());
     settings.setValue("dp/markLabels", this->ui->markLabels->text());

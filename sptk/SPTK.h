@@ -215,6 +215,7 @@ typedef struct _DP_SETTINGS {
     double mark_level;
     double relative_limit;
     double mark_delimeter;
+    int test_files_limit;
     char * mark_labels;
     int smooth_frame;
     int show_marks;

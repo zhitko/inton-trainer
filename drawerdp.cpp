@@ -226,9 +226,9 @@ int DrawerDP::Draw(mglGraph *gr)
         gr->MultiPlot(8, 12, 80, 3, 1, "#");
         gr->Puts(
             mglPoint(0,0),
-            QString("Template F0 min = %1, F0 max = %2").arg(this->f0min).arg(this->f0max).toLocal8Bit().data(),
+            QString("TEMPLATE: [F0min = %1, F0max = %2]").arg(this->f0min).arg(this->f0max).toLocal8Bit().data(),
             ":C",
-            20
+            18
         );
 
         if(!isCompare)
@@ -359,7 +359,7 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->MultiPlot(2, 15, 27, 1, 1, "#");
             gr->Puts(
                 mglPoint(0,0),
-                QString("User F0 min = %1, F0 max = %2").arg(this->userf0min).arg(this->userf0max).toLocal8Bit().data(),
+                QString("TEST: [F0min = %1, F0max = %2]").arg(this->userf0min).arg(this->userf0max).toLocal8Bit().data(),
                 ":C",
                 24
             );
@@ -387,17 +387,17 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->MultiPlot(8, 12, 80, 3, 1, "#");
             gr->Puts(
                 mglPoint(0,0),
-                QString("Template F0 min = %1, F0 max = %2").arg(this->f0min).arg(this->f0max).toLocal8Bit().data(),
+                QString("TEMPLATE: [F0min = %1, F0max = %2]").arg(this->f0min).arg(this->f0max).toLocal8Bit().data(),
                 ":C",
-                20
+                18
             );
 
             gr->MultiPlot(8, 12, 83, 3, 1, "#");
             gr->Puts(
                 mglPoint(0,0),
-                QString("User F0 min = %1, F0 max = %2").arg(this->userf0min).arg(this->userf0max).toLocal8Bit().data(),
+                QString("TEST: [F0min = %1, F0max = %2]").arg(this->userf0min).arg(this->userf0max).toLocal8Bit().data(),
                 ":C",
-                20
+                18
             );
 
             gr->MultiPlot(20, 12, 41, 4, 8, "#");
@@ -1538,6 +1538,10 @@ void DrawerDP::Proc(QString fname)
         this->userRange = (1.0 * this->userf0max / this->userf0min) - 1;
 
         this->secOctaves.append(this->userRange);
+        if (sptk_settings->dp->test_files_limit < this->secOctaves.size() && !this->secOctaves.isEmpty())
+        {
+            this->secOctaves.removeFirst();
+        }
         this->recordNumber = this->secOctaves.size();
 
         this->secOctavesData = new mglData(this->secOctaves.size());
@@ -1690,9 +1694,20 @@ void DrawerDP::Proc(QString fname)
                 sptk_settings->dp->ump_keep_ratio
             );
             this->umpHistory.append(sec_ump_origin);
+
+            if (sptk_settings->dp->test_files_limit < this->umpHistory.size() && !this->umpHistory.isEmpty())
+            {
+                this->umpHistory.removeFirst();
+            }
+
             mglData sec_ump_origin_data(sec_ump_origin.x, sec_ump_origin.v);
             sec_ump_origin_data.Norm();
             this->umpDataHistory.append(sec_ump_origin_data);
+
+            if (sptk_settings->dp->test_files_limit < this->umpDataHistory.size() && !this->umpHistory.isEmpty())
+            {
+                this->umpDataHistory.removeFirst();
+            }
 
             vector sec_ump = zerov(sec_ump_origin.x);
 
