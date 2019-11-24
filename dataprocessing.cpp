@@ -159,9 +159,8 @@ bool validateMask(vector mask)
     return valid;
 }
 
-vector getFileMask(WaveFile* waveFile, vector wave, int len, char marker = NULL)
+bool isFileMaskAvailable(WaveFile* waveFile)
 {
-    vector mask;
 
     ListChunk * listLablChunk = NULL;
     ListChunk * listLtxtChunk = NULL;
@@ -186,14 +185,21 @@ vector getFileMask(WaveFile* waveFile, vector wave, int len, char marker = NULL)
         }
     }
 
-    bool tryFileData = (waveFile->cueChunk != NULL)
-            && (littleEndianBytesToUInt16(waveFile->cueChunk->cuePointsCount) > 0)
-            && (listLtxtChunk != NULL)
-            && (listLtxtChunk->ltxtChunks != NULL)
-            && (listLtxtChunk->ltxtCount > 0)
-            && (listLablChunk != NULL)
-            && (listLablChunk->lablChunks != NULL)
-            && (listLablChunk->lablCount > 0);
+    return (waveFile->cueChunk != NULL)
+        && (littleEndianBytesToUInt16(waveFile->cueChunk->cuePointsCount) > 0)
+        && (listLtxtChunk != NULL)
+        && (listLtxtChunk->ltxtChunks != NULL)
+        && (listLtxtChunk->ltxtCount > 0)
+        && (listLablChunk != NULL)
+        && (listLablChunk->lablChunks != NULL)
+        && (listLablChunk->lablCount > 0);
+}
+
+vector getFileMask(WaveFile* waveFile, vector wave, int len, char marker = NULL)
+{
+    vector mask;
+
+    bool tryFileData = isFileMaskAvailable(waveFile);
 
     if (tryFileData)
     {
@@ -649,7 +655,8 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
 
     vector file_mask;
     WaveFile * procFile = waveFile;
-    if (sptk_settings->dp->auto_marking)
+    bool markout_available = isFileMaskAvailable(waveFile);
+    if (sptk_settings->dp->auto_marking || !markout_available)
     {
         procFile = selectMarkoutAlgorithm(data);
     }
