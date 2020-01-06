@@ -179,6 +179,8 @@ double setv(vector yr_vector, int index, double value)
 // cut vector and make a deep copy of a cutted
 vector cutv(vector yr_vector, int start_index, int end_index)
 {
+    if (end_index >= yr_vector.x) end_index = yr_vector.x - 1;
+    if (start_index < 0) start_index = 0;
     int nw_size = end_index-start_index;
     vector nw_vector = makev(nw_size);
     memcpy(nw_vector.v, &yr_vector.v[start_index], sizeof(double) * nw_size);

@@ -693,12 +693,38 @@ int DrawerDP::getDataSeconds()
 
 }
 
-ContinuousDP * DrawerDP::getDP(SimpleGraphData * dataSec)
+ContinuousDP * DrawerDP::getDP(SimpleGraphData * dataSec, bool ref)
 {
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
     qDebug() << "sptk_settings->dp->useForDP " << sptk_settings->dp->useForDP << LOG_DATA;
 
-    if (sptk_settings->dp->useForDP != DP_USE_MULTI)
+    if (ref)
+    {
+        qDebug() << "MultiDP " << LOG_DATA;
+        MultiDP * dp = new MultiDP(
+            dataSec->d_pitch.x,
+            this->simple_data->d_pitch.x,
+            sptk_settings->dp->continiusLimit
+        );
+
+        qDebug() << "sptk_settings->dp->multiUseNMP " << LOG_DATA;
+        dp->addNmp(
+            copyv(data_get_mask(dataSec)),
+            copyv(data_get_mask(this->simple_data)),
+            1.0
+        );
+
+        dp->applySettings(
+            sptk_settings->dp->continiusKH,
+            sptk_settings->dp->continiusKV,
+            sptk_settings->dp->continiusKD,
+            sptk_settings->dp->continiusKT
+        );
+
+        dp->calculate();
+
+        return dp;
+    } else if (sptk_settings->dp->useForDP != DP_USE_MULTI)
     {
 
         SpectrSignal * firstSignal;
@@ -915,7 +941,7 @@ void DrawerDP::reProc()
     }
 }
 
-void DrawerDP::Proc(QString fname)
+void DrawerDP::Proc(QString fname, bool ref)
 {
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
 
@@ -1260,79 +1286,118 @@ void DrawerDP::Proc(QString fname)
         this->secWaveData = createMglData(dataSec->d_full_wave, this->secWaveData);
         qDebug() << "waveData New Filled" << LOG_DATA;
 
-        qDebug() << "Start DP" << LOG_DATA;
+        vector pitch_cutted;
+        int startPos = 0;
+        int endPos = dataSec->d_full_wave.x;
+        intvector mapping;
+        MinMax mm;
 
-        ContinuousDP dp = *this->getDP(dataSec);
-
-        qDebug() << "Stop DP" << LOG_DATA;
-        vector errorVector = dp.getErrorVector();
-        int endPos = minv(errorVector);
-        this->errorMax = getv(errorVector, maxv(errorVector));
-        this->errorMin = getv(errorVector, endPos);
-        qDebug() << "errorVector " << errorVector.x << LOG_DATA;
-
-        vector timeVector = dp.getTimeVector();
-        qDebug() << "timeVector " << timeVector.x << LOG_DATA;
-
-        if (sptk_settings->dp->showError)
+        qDebug() << "DrawerDP::Proc ref" << ref << LOG_DATA;
+        if (!ref) // USE DP
         {
-            qDebug() << "showError" << LOG_DATA;
-            this->errorData = createMglData(errorVector, this->errorData);
-            this->errorData->Norm();
+            qDebug() << "Start DP" << LOG_DATA;
+
+            ContinuousDP dp = *this->getDP(dataSec, ref);
+
+            qDebug() << "Stop DP" << LOG_DATA;
+            vector errorVector = dp.getErrorVector();
+            endPos = minv(errorVector);
+            this->errorMax = getv(errorVector, maxv(errorVector));
+            this->errorMin = getv(errorVector, endPos);
+            qDebug() << "errorVector " << errorVector.x << LOG_DATA;
+
+            vector timeVector = dp.getTimeVector();
+            qDebug() << "timeVector " << timeVector.x << LOG_DATA;
+
+            if (sptk_settings->dp->showError)
+            {
+                qDebug() << "showError" << LOG_DATA;
+                this->errorData = createMglData(errorVector, this->errorData);
+                this->errorData->Norm();
+            }
+
+            if (sptk_settings->dp->showTime)
+            {
+                qDebug() << "showTime" << LOG_DATA;
+                this->timeData = createMglData(timeVector, this->timeData);
+                this->timeData->Norm();
+            }
+
+            startPos = endPos - getv(timeVector, endPos);
+            qDebug() << "endPos" << endPos << LOG_DATA;
+            qDebug() << "startPos" << startPos << LOG_DATA;
+            vector dpVector = zerov(errorVector.x);
+            setMark(&dpVector, startPos);
+            setMark(&dpVector, endPos);
+            this->dpData = createMglData(dpVector, this->dpData, true);
+            freev(dpVector);
+
+            freev(errorVector);
+
+            qDebug() << "getting mapping " << endPos << LOG_DATA;
+            mapping = dp.getMapping(endPos);
+
+            double marksScale = 1.0 * this->simple_data->d_full_wave.x / mapping.x;
+            qDebug() << "data->d_wave.x " << this->simple_data->d_full_wave.x << LOG_DATA;
+            qDebug() << "mapping " << mapping.x << LOG_DATA;
+            qDebug() << "marksScale " << marksScale << LOG_DATA;
+
+            vector pSecVector = zerov(timeVector.x);
+            vector nSecVector = zerov(timeVector.x);
+            vector tSecVector = zerov(timeVector.x);
+
+            freev(timeVector);
+
+            qDebug() << "len " << endPos - startPos << LOG_DATA;
+            qDebug() << "startPos " << startPos << LOG_DATA;
+            qDebug() << "endPos " << endPos << LOG_DATA;
+
+            getMark(&pSecVector, &this->simple_data->md_p, startPos, marksScale, &mapping);
+            getMark(&nSecVector, &this->simple_data->md_n, startPos, marksScale, &mapping);
+            getMark(&tSecVector, &this->simple_data->md_t, startPos, marksScale, &mapping);
+
+            this->pSecData = createMglData(pSecVector, this->pSecData, true);
+            this->nSecData = createMglData(nSecVector, this->nSecData, true);
+            this->tSecData = createMglData(tSecVector, this->tSecData, true);
+
+            freev(pSecVector);
+            freev(nSecVector);
+            freev(tSecVector);
+
+            pitch_cutted = cutv(dataSec->d_pitch, startPos, endPos);
+            applyMapping(&pitch_cutted, &mapping);
+
+            mm = applyMask(&pitch_cutted, &this->simple_data->d_mask);
+        } else { // DO NOT USE DP
+            sptk_settings->dp->ump_keep_ratio = false;
+
+            this->errorMax = 1;
+            this->errorMin = 1;
+
+            vector pSecVector = zerov(dataSec->d_full_wave.x);
+            vector nSecVector = zerov(dataSec->d_full_wave.x);
+            vector tSecVector = zerov(dataSec->d_full_wave.x);
+
+            getMark(&pSecVector, &dataSec->md_p);
+            getMark(&nSecVector, &dataSec->md_n);
+            getMark(&tSecVector, &dataSec->md_t);
+
+            this->pSecData = createMglData(pSecVector, this->pSecData, true);
+            this->nSecData = createMglData(nSecVector, this->nSecData, true);
+            this->tSecData = createMglData(tSecVector, this->tSecData, true);
+
+            pitch_cutted = copyv(dataSec->d_pitch);
+
+            mapping = zeroiv(dataSec->d_full_wave.x);
+            for (int i=0; i<mapping.x; i++)
+            {
+                mapping.v[i] = i;
+            }
+
+            mm = applyMask(&pitch_cutted, &dataSec->d_mask);
         }
 
-        if (sptk_settings->dp->showTime)
-        {
-            qDebug() << "showTime" << LOG_DATA;
-            this->timeData = createMglData(timeVector, this->timeData);
-            this->timeData->Norm();
-        }
 
-        int startPos = endPos - getv(timeVector, endPos);
-        qDebug() << "endPos" << endPos << LOG_DATA;
-        qDebug() << "startPos" << startPos << LOG_DATA;
-        vector dpVector = zerov(errorVector.x);
-        setMark(&dpVector, startPos);
-        setMark(&dpVector, endPos);
-        this->dpData = createMglData(dpVector, this->dpData, true);
-        freev(dpVector);
-
-        freev(errorVector);
-
-        qDebug() << "getting mapping " << endPos << LOG_DATA;
-        intvector mapping = dp.getMapping(endPos);
-
-        double marksScale = 1.0 * this->simple_data->d_full_wave.x / mapping.x;
-        qDebug() << "data->d_wave.x " << this->simple_data->d_full_wave.x << LOG_DATA;
-        qDebug() << "mapping " << mapping.x << LOG_DATA;
-        qDebug() << "marksScale " << marksScale << LOG_DATA;
-
-        vector pSecVector = zerov(timeVector.x);
-        vector nSecVector = zerov(timeVector.x);
-        vector tSecVector = zerov(timeVector.x);
-
-        freev(timeVector);
-
-        qDebug() << "len " << endPos - startPos << LOG_DATA;
-        qDebug() << "startPos " << startPos << LOG_DATA;
-        qDebug() << "endPos " << endPos << LOG_DATA;
-
-        getMark(&pSecVector, &this->simple_data->md_p, startPos, marksScale, &mapping);
-        getMark(&nSecVector, &this->simple_data->md_n, startPos, marksScale, &mapping);
-        getMark(&tSecVector, &this->simple_data->md_t, startPos, marksScale, &mapping);
-
-        this->pSecData = createMglData(pSecVector, this->pSecData, true);
-        this->nSecData = createMglData(nSecVector, this->nSecData, true);
-        this->tSecData = createMglData(tSecVector, this->tSecData, true);
-
-        freev(pSecVector);
-        freev(nSecVector);
-        freev(tSecVector);
-
-        vector pitch_cutted = cutv(dataSec->d_pitch, startPos, endPos);
-        applyMapping(&pitch_cutted, &mapping);
-
-        MinMax mm = applyMask(&pitch_cutted, &this->simple_data->d_mask);
         this->userf0max = mm.max;
         this->metrics = storeMetric(
             this->metrics,
@@ -1682,17 +1747,32 @@ void DrawerDP::Proc(QString fname)
         {
             vector sec_ump_origin = copyv(pitch_smooth);
 
-            makeUmp(
-                &sec_ump_origin,
-                &this->simple_data->d_mask,
-                this->simple_data->md_p,
-                this->simple_data->md_n,
-                this->simple_data->md_t,
-                mask_scale,
-                sptk_settings->dp->portLen,
-                sptk_settings->dp->useStripUmp,
-                sptk_settings->dp->ump_keep_ratio
-            );
+            if (!ref)
+            {
+                makeUmp(
+                    &sec_ump_origin,
+                    &this->simple_data->d_mask,
+                    this->simple_data->md_p,
+                    this->simple_data->md_n,
+                    this->simple_data->md_t,
+                    mask_scale,
+                    sptk_settings->dp->portLen,
+                    sptk_settings->dp->useStripUmp,
+                    sptk_settings->dp->ump_keep_ratio
+                );
+            } else {
+                makeUmp(
+                    &sec_ump_origin,
+                    &dataSec->d_mask,
+                    dataSec->md_p,
+                    dataSec->md_n,
+                    dataSec->md_t,
+                    mask_scale,
+                    sptk_settings->dp->portLen,
+                    sptk_settings->dp->useStripUmp,
+                    sptk_settings->dp->ump_keep_ratio
+                );
+            }
             this->umpHistory.append(sec_ump_origin);
 
             if (sptk_settings->dp->test_files_limit < this->umpHistory.size() && !this->umpHistory.isEmpty())
@@ -1724,10 +1804,12 @@ void DrawerDP::Proc(QString fname)
 
             this->secUmpData = createMglData(sec_ump, this->secUmpData);
             this->secUmpData->Norm();
+            qDebug() << "createMglData secUmpData" << LOG_DATA;
 
             vector ump;
             ump.x = this->umpData->nx;
             ump.v = this->umpData->a;
+            qDebug() << "ump vector" << LOG_DATA;
 
             this->proximity_curve_correlation = calculateCurvesSimilarityCorrelation(ump, sec_ump);
             this->metrics = storeMetric(
@@ -1735,24 +1817,28 @@ void DrawerDP::Proc(QString fname)
                 METRIC_PROXIMITY_CURVE_CORRELATION,
                 this->proximity_curve_correlation
             );
+            qDebug() << "METRIC_PROXIMITY_CURVE_CORRELATION" << LOG_DATA;
             this->proximity_curve_integral = calculateCurvesSimilarityAverageDistance(ump, sec_ump);
             this->metrics = storeMetric(
                 this->metrics,
                 METRIC_PROXIMITY_CURVE_INTEGRAL,
                 this->proximity_curve_integral
             );
+            qDebug() << "METRIC_PROXIMITY_CURVE_LOCAL" << LOG_DATA;
             this->proximity_curve_local = calculateCurvesSimilarityMaxLocalDistance(ump, sec_ump);
             this->metrics = storeMetric(
                 this->metrics,
                 METRIC_PROXIMITY_CURVE_LOCAL,
                 this->proximity_curve_local
             );
+            qDebug() << "METRIC_PROXIMITY_CURVE_LOCAL" << LOG_DATA;
             this->proximity_average = round((this->proximity_curve_correlation + this->proximity_curve_integral + this->proximity_curve_local) / 3.0);
             this->metrics = storeMetric(
                 this->metrics,
                 METRIC_PROXIMITY_AVERAGE,
                 this->proximity_average
             );
+            qDebug() << "METRIC_PROXIMITY_AVERAGE" << LOG_DATA;
 
             switch (sptk_settings->dp->errorType) {
             case 0:
@@ -1770,6 +1856,7 @@ void DrawerDP::Proc(QString fname)
             }
 
             this->proximity_shape_mark = calculateMark(proximity_curve_shape, sptk_settings->dp->mark_level, sptk_settings->dp->mark_delimeter);
+            qDebug() << "proximity_shape_mark" << LOG_DATA;
         }
 
         if (sptk_settings->dp->showDerivativeF0)
@@ -1844,12 +1931,16 @@ void DrawerDP::Proc(QString fname)
             METRIC_PROXIMITY_CURVE_SHAPE,
             this->proximity_curve_shape
         );
+        qDebug() << "METRIC_PROXIMITY_CURVE_SHAPE" << LOG_DATA;
 
         freev(pitch_cutted);
+        qDebug() << "freev pitch_cutted" << LOG_DATA;
         freev(pitch_smooth);
+        qDebug() << "freev pitch_smooth" << LOG_DATA;
 
         if(sptk_settings->dp->showA0)
         {
+            qDebug() << "showA0" << LOG_DATA;
             vector intensive = data_get_intensive_norm(dataSec);
             vector intensive_cutted = cutv(intensive, startPos, endPos);
             applyMapping(&intensive_cutted, &mapping);
@@ -1862,13 +1953,16 @@ void DrawerDP::Proc(QString fname)
 
         if(sptk_settings->dp->markoutType == MARKOUT_A0_INTEGRAL)
         {
+            qDebug() << "MARKOUT_A0_INTEGRAL" << LOG_DATA;
             vector intensive_smooth = cutv(data_get_intensive_smooth(dataSec), startPos, endPos);
+            qDebug() << "applyMapping" << LOG_DATA;
             applyMapping(&intensive_smooth, &mapping);
             this->secA0Smooth = createMglData(intensive_smooth, this->secA0Smooth);
             freev(intensive_smooth);
         }
 
         freeiv(mapping);
+        qDebug() << "freev mapping" << LOG_DATA;
 
         freeSimpleGraphData(dataSec);
         qDebug() << "New Data Processed" << LOG_DATA;

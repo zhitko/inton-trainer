@@ -75,12 +75,12 @@ GraphsEvalWindow::~GraphsEvalWindow()
 
 }
 
-Drawer * GraphsEvalWindow::createNewDrawer(QString path)
+Drawer * GraphsEvalWindow::createNewDrawer(QString path, bool ref)
 {
     this->ui->saveMetrics->show();
     this->ui->playRecordBtn->show();
     this->ui->openMetrics->hide();
-    this->drawer->Proc(path);
+    this->drawer->Proc(path, ref);
     this->path = path;
     this->ui->test_number->setText(QString::number(this->drawer->recordNumber));
 

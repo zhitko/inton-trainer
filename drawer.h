@@ -40,7 +40,7 @@ public:
     virtual int getDataSeconds();
 
     virtual int Draw(mglGraph *gr);
-    virtual void Proc(QString fname);
+    virtual void Proc(QString fname, bool ref = false);
     virtual void reProc();
     double calcResultMark(vector, vector);
 

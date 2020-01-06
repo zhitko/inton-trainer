@@ -30,7 +30,7 @@ struct SimpleGraphData{
     vector d_spec_norm;                 int b_spec_norm;
     vector d_cepstrum;                  int b_cepstrum;
     vector d_cepstrum_norm;             int b_cepstrum_norm;
-    vector d_mask;
+    vector d_mask;                      int b_mask;
 
     MaskData md_p;
     MaskData md_t;
@@ -48,6 +48,7 @@ vector data_get_intensive_cutted(SimpleGraphData * data);
 vector data_get_intensive_norm(SimpleGraphData * data);
 vector data_get_intensive_derivative(SimpleGraphData * data);
 vector data_get_intensive_smooth(SimpleGraphData * data);
+vector data_get_mask(SimpleGraphData * data);
 vector data_spectrum(SimpleGraphData * data);
 vector data_spectrum_norm(SimpleGraphData * data);
 vector data_cepstrum(SimpleGraphData * data);

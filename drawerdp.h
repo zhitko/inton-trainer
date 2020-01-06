@@ -13,7 +13,7 @@ public:
     virtual ~DrawerDP();
 
     virtual int Draw(mglGraph *gr);
-    void Proc(QString fname);
+    void Proc(QString fname, bool ref = false);
     virtual void reProc();
     virtual int getDataSeconds();
 
@@ -49,7 +49,7 @@ protected:
 
     SimpleGraphData * simple_data;
 
-    ContinuousDP * getDP(SimpleGraphData * dataSec);
+    ContinuousDP * getDP(SimpleGraphData * dataSec, bool ref);
 };
 
 #endif // DRAWERDP_H

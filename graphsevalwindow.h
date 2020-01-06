@@ -15,7 +15,7 @@ public:
     ~GraphsEvalWindow();
 
 protected:
-    virtual Drawer * createNewDrawer(QString path);
+    virtual Drawer * createNewDrawer(QString path, bool ref = false);
     QString templatePath;
     QString metricsFilePath;
 

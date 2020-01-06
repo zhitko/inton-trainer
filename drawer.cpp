@@ -169,7 +169,7 @@ void Drawer::reProc()
     this->Proc(this->fileName);
 }
 
-void Drawer::Proc(QString fname)
+void Drawer::Proc(QString fname, bool ref)
 {
     MathGLSettings * mathgl_settings = SettingsDialog::getMathGLSettings();
     SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();

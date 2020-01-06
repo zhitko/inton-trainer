@@ -29,7 +29,7 @@ public:
     explicit GraphsWindow(QWidget *parent = 0);
     explicit GraphsWindow(QString path, QWidget *parent = 0);
     ~GraphsWindow();
-    void drawFile(QString path);
+    void drawFile(QString path, bool ref = false);
 
 protected:
     Ui::GraphsWindow *ui;
@@ -42,7 +42,7 @@ protected:
     QTimer * resizeTimer;
     int k_graph, w_graph;
     void initUI();
-    virtual Drawer * createNewDrawer(QString path);
+    virtual Drawer * createNewDrawer(QString path, bool ref = false);
     void resizeEvent(QResizeEvent *event) override;
 
 signals:
@@ -60,7 +60,8 @@ public slots:
     void stopRecord(SoundRecorder *);
     void stopRecord();
     void startAutoRecord();
-    void openFile();
+    void openRefFile();
+    void openFile(bool ref = false);
 
     void fullFit();
     void playRecord();

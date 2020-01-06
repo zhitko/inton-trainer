@@ -108,7 +108,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Play recorded (test) file</string>
+           <string>Play sample</string>
           </property>
           <property name="icon">
            <iconset resource="icons.qrc">
@@ -199,6 +199,23 @@
          </layout>
         </item>
         <item>
+         <widget class="QPushButton" name="openRefFileBtn">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>40</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Open reference sample</string>
+          </property>
+          <property name="icon">
+           <iconset resource="icons.qrc">
+            <normaloff>:/icons/icons/file.png</normaloff>:/icons/icons/file.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="openFileBtn">
           <property name="minimumSize">
            <size>
@@ -214,7 +231,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Open test file</string>
+           <string>Open test sample</string>
           </property>
           <property name="icon">
            <iconset resource="icons.qrc">

@@ -80,6 +80,7 @@ void GraphsWindow::initUI()
     connect(this->ui->setRecordBtn, SIGNAL(clicked()), this, SLOT(startRecord()));
 
     connect(this->ui->openFileBtn, SIGNAL(clicked()), this, SLOT(openFile()));
+    connect(this->ui->openRefFileBtn, SIGNAL(clicked()), this, SLOT(openRefFile()));
 
     QMGL = new QMathGL(this);
     QMGL->autoResize = false;
@@ -109,11 +110,11 @@ void GraphsWindow::fullFit()
     this->QMGL->setSize(size.width()-5, size.height()-5);
 }
 
-void GraphsWindow::drawFile(QString path)
+void GraphsWindow::drawFile(QString path, bool ref)
 {
     qDebug() << "GraphsWindow::drawFile" << LOG_DATA;
     this->path = path;
-    this->drawer = this->createNewDrawer(path);
+    this->drawer = this->createNewDrawer(path, ref);
     this->w_graph = this->drawer->getDataLenght();
     this->QMGL->update();
 
@@ -121,7 +122,7 @@ void GraphsWindow::drawFile(QString path)
     connect(resizeTimer, SIGNAL(timeout()),this, SLOT(fullFit()));
 }
 
-Drawer * GraphsWindow::createNewDrawer(QString path)
+Drawer * GraphsWindow::createNewDrawer(QString path, bool ref)
 {
     Drawer * drawer = new Drawer();
     drawer->Proc(path);
@@ -137,6 +138,7 @@ void GraphsWindow::startAutoRecord()
     qDebug() << "GraphsWindow::startAutoRecord" << LOG_DATA;
     this->ui->setRecordBtn->setEnabled(false);
     this->ui->openFileBtn->setEnabled(false);
+    this->ui->openRefFileBtn->setEnabled(false);
 
     if (this->recorder) {
         this->recorder->deleteLater();
@@ -146,9 +148,27 @@ void GraphsWindow::startAutoRecord()
     this->recorder->startRecording();
 }
 
-void GraphsWindow::openFile()
+void GraphsWindow::openRefFile()
 {
-    QString initPath = QApplication::applicationDirPath() + DATA_PATH_TEST;
+    this->ui->openFileBtn->hide();
+    this->ui->showAutomatically->hide();
+    this->ui->showManually->setEnabled(false);
+    this->ui->showSource->hide();
+    this->ui->setRecordBtn->hide();
+    this->ui->showUMP->setEnabled(false);
+    this->openFile(true);
+}
+
+void GraphsWindow::openFile(bool ref)
+{
+    QString initPath;
+
+    if (ref)
+    {
+        initPath = this->path;
+    } else {
+        initPath = QApplication::applicationDirPath() + DATA_PATH_TEST;
+    }
 
     QString path = QFileDialog::getOpenFileName(this, tr("Open Record"), initPath, tr("WAV Files (*.wav)"));
 
@@ -156,7 +176,7 @@ void GraphsWindow::openFile()
 
     if (!path.isEmpty())
     {
-        this->drawFile(path);
+        this->drawFile(path, ref);
         qDebug() << "GraphsWindow::openFile length=" << w_graph << LOG_DATA;
     }
 }
@@ -174,6 +194,7 @@ void GraphsWindow::startRecord()
         qDebug() << "GraphsWindow::startRecord" << LOG_DATA;
         this->ui->setRecordBtn->setEnabled(false);
         this->ui->openFileBtn->setEnabled(false);
+        this->ui->openRefFileBtn->setEnabled(false);
         if (sptk_settings->dp->recordingType == 0) // Recording N sec
         {
             this->recorder = new TimeSoundRecorder(currentDevice, sizeof(short int), sptk_settings->dp->recordingSeconds);
@@ -181,6 +202,7 @@ void GraphsWindow::startRecord()
         {
             this->ui->setRecordBtn->setEnabled(true);
             this->ui->openFileBtn->setEnabled(true);
+            this->ui->openRefFileBtn->setEnabled(true);
             this->recorder = new SoundRecorder(currentDevice, sizeof(short int));
         } else if (sptk_settings->dp->recordingType == 2) // Recording by F0
         {
@@ -210,6 +232,7 @@ void GraphsWindow::stopRecord(SoundRecorder * recorder)
 
     this->ui->setRecordBtn->setEnabled(true);
     this->ui->openFileBtn->setEnabled(true);
+    this->ui->openRefFileBtn->setEnabled(true);
     qDebug() << "GraphsWindow::stopRecord UI changes" << LOG_DATA;
 
     char *data = NULL;

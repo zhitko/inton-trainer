@@ -482,6 +482,15 @@ vector data_get_pitch_log(SimpleGraphData * data)
     return data->d_pitch_log;
 }
 
+vector data_get_mask(SimpleGraphData * data)
+{
+    if (data->b_mask == 0)
+    {
+        // TODO
+    }
+    return data->d_mask;
+}
+
 vector data_get_pitch_derivative(SimpleGraphData * data)
 {
     if (data->b_pitch_derivative == 0)
@@ -566,6 +575,7 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
     SimpleGraphData * data = new SimpleGraphData();
     data->b_pitch = 0;
     data->b_pitch_log = 0;
+    data->b_mask = 0;
     data->b_pitch_derivative = 0;
     data->b_intensive = 0;
     data->b_intensive_cutted = 0;
@@ -674,6 +684,7 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
     vector mask = vector_smooth_mid(mask_and, 10);
     qDebug() << "::SimpleProcWave2Data mask" << LOG_DATA;
     data->d_mask = mask;
+    data->b_mask = 1;
 
     vector inverted_mask = vector_invert_mask(mask);
     qDebug() << "::SimpleProcWave2Data inverted_mask" << LOG_DATA;
@@ -783,7 +794,7 @@ void freeSimpleGraphData(SimpleGraphData * data)
     if (data->b_spec_norm == 1) freev(data->d_spec_norm);
     if (data->b_cepstrum == 1) freev(data->d_cepstrum);
     if (data->b_cepstrum_norm == 1) freev(data->d_cepstrum_norm);
-    freev(data->d_mask);
+    if (data->b_mask == 1) freev(data->d_mask);
 
     freeiv(data->md_p.pointsFrom);
     freeiv(data->md_p.pointsLength);
