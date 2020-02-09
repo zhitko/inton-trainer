@@ -567,6 +567,19 @@ vector data_get_intensive_smooth(SimpleGraphData * data)
     return data->d_intensive_smooth;
 }
 
+vector data_get_intensive_limit(SimpleGraphData * data)
+{
+    if (data->b_intensive_limit == 0)
+    {
+        SPTK_SETTINGS * sptk_settings = SettingsDialog::getSPTKsettings();
+        vector intensive = data_get_intensive_smooth(data);
+
+        data->d_intensive_limit = multv(intensive, sptk_settings->dp->markoutA0IntA0rel);
+        data->b_intensive_limit = 1;
+    }
+    return data->d_intensive_limit;
+}
+
 SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
 {
     qDebug() << "::SimpleProcWave2Data" << LOG_DATA;
@@ -581,6 +594,7 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
     data->b_intensive_cutted = 0;
     data->b_intensive_norm = 0;
     data->b_intensive_smooth = 0;
+    data->b_intensive_limit = 0;
     data->b_derivative_intensive_norm = 0;
     data->b_spec = 0;
     data->b_cepstrum = 0;
@@ -665,8 +679,8 @@ SimpleGraphData * SimpleProcWave2Data(QString fname, bool keepWaveData)
 
     vector file_mask;
     WaveFile * procFile = waveFile;
-    bool markout_available = isFileMaskAvailable(waveFile);
-    if (sptk_settings->dp->auto_marking || !markout_available)
+    data->is_markout_available = isFileMaskAvailable(waveFile);
+    if (sptk_settings->dp->auto_marking || !data->is_markout_available)
     {
         procFile = selectMarkoutAlgorithm(data);
     }

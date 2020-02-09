@@ -448,8 +448,8 @@ WaveFile * markOutFileByA0Integral(SimpleGraphData *data)
     vector intensive = data_get_intensive_norm(data);
     qDebug() << "intensive " << intensive.x << LOG_DATA;
 
-    vector intensive_smooth = data_get_intensive_smooth(data);
-    qDebug() << "intensive_smooth " << intensive_smooth.x << LOG_DATA;
+    vector intensive_limit = data_get_intensive_limit(data);
+    qDebug() << "intensive_limit " << intensive_limit.x << LOG_DATA;
 
     double scaleFactor = 1.0 * size / CHAR_BIT_RECORD / intensive.x;
     qDebug() << "scaleFactor " << scaleFactor << LOG_DATA;
@@ -470,7 +470,7 @@ WaveFile * markOutFileByA0Integral(SimpleGraphData *data)
     for (uint32_t i=0; i<intensive.x; i++)
     {
         intensive_value = getv(intensive, i);
-        smooth_value = getv(intensive_smooth, i);
+        smooth_value = getv(intensive_limit, i);
         if (gotIt == 0 && intensive_value > smooth_value && intensive_value > intensiveAbsLimit)
         {
             gotIt = 1;

@@ -200,6 +200,7 @@ SPTK_SETTINGS * SettingsDialog::getSPTKsettings(bool force)
         sptk_settings->dp->markoutA0limit = instance->ui->markoutA0limit->value();
 
         sptk_settings->dp->markoutA0IntA0abs = instance->ui->markoutA0IntA0abs->value();
+        sptk_settings->dp->markoutA0IntA0rel = instance->ui->markoutA0IntA0rel->value();
         sptk_settings->dp->markoutA0IntThN = instance->ui->markoutA0IntThN->value();
 
         sptk_settings->dp->markoutType = instance->ui->markoutType->currentIndex();
@@ -385,6 +386,8 @@ void SettingsDialog::loadSettingsFrom(QString settings_path)
         this->ui->markoutType->setCurrentIndex(settings.value("markout/markoutType").toInt());
     if(settings.contains("markoutA0Int/markoutA0IntA0abs"))
         this->ui->markoutA0IntA0abs->setValue(settings.value("markoutA0Int/markoutA0IntA0abs").toDouble());
+    if(settings.contains("markoutA0Int/markoutA0IntA0rel"))
+        this->ui->markoutA0IntA0rel->setValue(settings.value("markoutA0Int/markoutA0IntA0rel").toDouble());
     if(settings.contains("markoutA0Int/markoutA0IntThN"))
         this->ui->markoutA0IntThN->setValue(settings.value("markoutA0Int/markoutA0IntThN").toInt());
 }
@@ -477,6 +480,7 @@ void SettingsDialog::saveSettings()
 
     settings.setValue("markout/markoutType", this->ui->markoutType->currentIndex());
     settings.setValue("markoutA0Int/markoutA0IntA0abs", this->ui->markoutA0IntA0abs->value());
+    settings.setValue("markoutA0Int/markoutA0IntA0rel", this->ui->markoutA0IntA0rel->value());
     settings.setValue("markoutA0Int/markoutA0IntThN", this->ui->markoutA0IntThN->value());
 
     SettingsDialog::getSPTKsettings(true);

@@ -24,6 +24,7 @@ struct SimpleGraphData{
     vector d_intensive_cutted;          int b_intensive_cutted;
     vector d_intensive_norm;            int b_intensive_norm;
     vector d_intensive_smooth;          int b_intensive_smooth;
+    vector d_intensive_limit;           int b_intensive_limit;
     vector d_derivative_intensive_norm; int b_derivative_intensive_norm;
     vector d_spec_proc;
     vector d_spec;                      int b_spec;
@@ -35,6 +36,8 @@ struct SimpleGraphData{
     MaskData md_p;
     MaskData md_t;
     MaskData md_n;
+
+    bool is_markout_available;
 
     WaveFile * file_data;
 };
@@ -48,6 +51,7 @@ vector data_get_intensive_cutted(SimpleGraphData * data);
 vector data_get_intensive_norm(SimpleGraphData * data);
 vector data_get_intensive_derivative(SimpleGraphData * data);
 vector data_get_intensive_smooth(SimpleGraphData * data);
+vector data_get_intensive_limit(SimpleGraphData * data);
 vector data_get_mask(SimpleGraphData * data);
 vector data_spectrum(SimpleGraphData * data);
 vector data_spectrum_norm(SimpleGraphData * data);

@@ -398,7 +398,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-37</y>
             <width>520</width>
             <height>734</height>
            </rect>
@@ -959,9 +959,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-67</y>
             <width>504</width>
-            <height>778</height>
+            <height>813</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_11">
@@ -1450,20 +1450,37 @@
                        </property>
                       </widget>
                      </item>
-                     <item row="1" column="0">
+                     <item row="2" column="0">
                       <widget class="QLabel" name="automarkingA0IntThN">
                        <property name="text">
                         <string>Th N</string>
                        </property>
                       </widget>
                      </item>
-                     <item row="1" column="1">
+                     <item row="2" column="1">
                       <widget class="QSpinBox" name="markoutA0IntThN">
                        <property name="minimum">
                         <number>1</number>
                        </property>
                        <property name="value">
                         <number>30</number>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="0">
+                      <widget class="QLabel" name="label_40">
+                       <property name="text">
+                        <string>Th rel</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="1">
+                      <widget class="QDoubleSpinBox" name="markoutA0IntA0rel">
+                       <property name="singleStep">
+                        <double>0.010000000000000</double>
+                       </property>
+                       <property name="value">
+                        <double>1.000000000000000</double>
                        </property>
                       </widget>
                      </item>

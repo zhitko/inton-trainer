@@ -306,6 +306,15 @@ vector addv(vector v, double a)
     return addv;
 }
 
+vector multv(vector v, double a)
+{
+    vector multv = zerov(v.x);
+    for (int i=0; i<v.x; i++) {
+        setv(multv, i, getv(v, i) * a);
+    }
+    return multv;
+}
+
 // free the memory associated with the vector
 void freev(vector yr_vector) {
     if (yr_vector.v)

@@ -227,6 +227,7 @@ typedef struct _DP_SETTINGS {
 
     int markoutType;
     double markoutA0IntA0abs;
+    double markoutA0IntA0rel;
     int markoutA0IntThN;
 } DP_SETTINGS;
 

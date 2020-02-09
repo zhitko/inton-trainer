@@ -122,7 +122,8 @@ DP_SETTINGS *initDpSettings()
     dp->segmentsMinLength = 10;
     dp->markoutA0limit = 10;
     dp->markoutType = MARKOUT_A0_INTEGRAL;
-    dp->markoutA0IntA0abs = 10.0;
+    dp->markoutA0IntA0abs = 0.0;
+    dp->markoutA0IntA0rel = 1.0;
     dp->markoutA0IntThN = 5;
     return dp;
 }

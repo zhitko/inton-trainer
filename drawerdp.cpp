@@ -208,7 +208,7 @@ int DrawerDP::Draw(mglGraph *gr)
             ":C",
             24
         );
-    } else {
+    }else {
         gr->DefaultPlotParam();
 
         gr->MultiPlot(1, 36, 1, 1, 3, "#");
@@ -245,77 +245,97 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->Bars(*this->octavData, "r");
         }
 
-        if (sptk_settings->dp->showPlane) {
-            gr->MultiPlot(20, 12, 48, 8, 8, "#");
-            gr->Puts(mglPoint(-0.8, 2.6), "F0 (%)", ":C", 3);
-            gr->Puts(mglPoint(1.3, 0), "dF0 (%)", ":C", 3);
-            gr->SetRange('x', 0, 1);
+        if (sptk_settings->dp->auto_marking)
+        {
+            gr->MultiPlot(20, 12, 187, 13, 1, "#");
             gr->SetRange('y', 0, 1);
-            gr->SetTicks('y', 2);
-            gr->AddTick('y', 0.2, "20");
-            gr->AddTick('y', 0.4, "40");
-            gr->AddTick('y', 0.6, "60");
-            gr->AddTick('y', 0.8, "80");
-            gr->AddTick('y', 1.0, "100");
-            gr->Grid("x", "W", "");
-            gr->Grid("y", "W", "");
-            gr->Axis("y");
-            gr->Box();
+            gr->Plot(*waveData, "B");
+            gr->Plot(*pWaveData, "q9");
+            gr->Plot(*nWaveData, "k9");
+            gr->Plot(*tWaveData, "c9");
 
-            gr->Plot(*this->umpData, *this->umpDerivativeData, "-r4");
+            gr->MultiPlot(20, 12, 47, 13, 6, "#");
+            gr->SetRange('y', 0, 1);
+            gr->Grid("y", "W", "");
+            if(sptk_settings->dp->showF0) gr->Plot(*this->pitchData, "-r3");
+            if(sptk_settings->dp->showOriginalF0) gr->Plot(*this->pitchDataOriginal, "-r2");
+            gr->Plot(*pWaveData, "q2");
+            gr->Plot(*nWaveData, "k2");
+            gr->Plot(*tWaveData, "c2");
+
         } else {
-            gr->MultiPlot(20, 12, 47, 13, 8, "#");
-            gr->SetRange('y', 0, 1);
-            gr->SetTicks('y', 1./3.);
-            gr->Grid("y", "W", "");
-            gr->SetTicks('x', sptk_settings->dp->portLen);
-            gr->Grid("x", "W5-", "");
+            if (sptk_settings->dp->showPlane) {
+                gr->MultiPlot(20, 12, 48, 8, 8, "#");
+                gr->Puts(mglPoint(-0.8, 2.6), "F0 (%)", ":C", 3);
+                gr->Puts(mglPoint(1.3, 0), "dF0 (%)", ":C", 3);
+                gr->SetRange('x', 0, 1);
+                gr->SetRange('y', 0, 1);
+                gr->SetTicks('y', 2);
+                gr->AddTick('y', 0.2, "20");
+                gr->AddTick('y', 0.4, "40");
+                gr->AddTick('y', 0.6, "60");
+                gr->AddTick('y', 0.8, "80");
+                gr->AddTick('y', 1.0, "100");
+                gr->Grid("x", "W", "");
+                gr->Grid("y", "W", "");
+                gr->Axis("y");
+                gr->Box();
 
-            gr->Area(*this->umpMask, "{g9}");
-            gr->SetRange('x', 0, 1);
-            foreach (double p, this->umpSectors) {
-                gr->Line(mglPoint(p, 0), mglPoint(p, 1), "B2");
-            }
+                gr->Plot(*this->umpData, *this->umpDerivativeData, "-r4");
+            } else {
+                gr->MultiPlot(20, 12, 47, 13, 8, "#");
+                gr->SetRange('y', 0, 1);
+                gr->SetTicks('y', 1./3.);
+                gr->Grid("y", "W", "");
+                gr->SetTicks('x', sptk_settings->dp->portLen);
+                gr->Grid("x", "W5-", "");
 
-            if (sptk_settings->dp->showF0 || !sptk_settings->dp->showDerivativeF0)
-            {
-                gr->SetRange('x', 0, this->umpData->nx);
-                gr->Plot(*this->umpData, "-r4");
-            }
-            if (sptk_settings->dp->showDerivativeF0)
-            {
-                gr->SetRange('x', 0, this->umpDerivativeData->nx);
-                gr->Plot(*this->umpDerivativeData, "-m4");
-            }
-            if (sptk_settings->dp->showMeanValueUMP && sptk_settings->dp->showF0)
-            {
-                gr->SetRange('y', 0, 100);
-                gr->FPlot(QString::number(this->meanValueUMP).toLocal8Bit().data(), ";r4");
-            }
-            if (sptk_settings->dp->showMeanValueUMP && sptk_settings->dp->showDerivativeF0)
-            {
-                gr->SetRange('y', 0, 100);
-                gr->FPlot(QString::number(this->meanDerivativeValueUMP).toLocal8Bit().data(), ";m4");
-            }
-            if (sptk_settings->dp->showCenterGravityUMP && sptk_settings->dp->showF0)
-            {
-                gr->SetRanges(0,100,0,1);
-                gr->FPlot(QString::number(this->centricGravityUMP1).toLocal8Bit().data(), "t", "0", "ir4");
-                gr->SetRanges(0,100,0,1);
-                gr->FPlot(QString::number(this->centricGravityUMP2).toLocal8Bit().data(), "t", "0", "{dF198}r4");
-            }
-            if (sptk_settings->dp->showCenterGravityUMP && sptk_settings->dp->showDerivativeF0)
-            {
-                gr->SetRanges(0,100,0,1);
-                gr->FPlot(QString::number(this->centricGravityDerivativeUMP1).toLocal8Bit().data(), "t", "0", "im4");
-                gr->SetRanges(0,100,0,1);
-                gr->FPlot(QString::number(this->centricGravityDerivativeUMP2).toLocal8Bit().data(), "t", "0", "{dF198}m4");
-            }
+                gr->Area(*this->umpMask, "{g9}");
+                gr->SetRange('x', 0, 1);
+                foreach (double p, this->umpSectors) {
+                    gr->Line(mglPoint(p, 0), mglPoint(p, 1), "B2");
+                }
 
-            gr->MultiPlot(40, 12, 129, 12, 6, "#");
-            gr->Label('y', "_{low}", -1);
-            gr->Label('y', "_{medium}", 0);
-            gr->Label('y', "_{high}", 1);
+                if (sptk_settings->dp->showF0 || !sptk_settings->dp->showDerivativeF0)
+                {
+                    gr->SetRange('x', 0, this->umpData->nx);
+                    gr->Plot(*this->umpData, "-r4");
+                }
+                if (sptk_settings->dp->showDerivativeF0)
+                {
+                    gr->SetRange('x', 0, this->umpDerivativeData->nx);
+                    gr->Plot(*this->umpDerivativeData, "-m4");
+                }
+                if (sptk_settings->dp->showMeanValueUMP && sptk_settings->dp->showF0)
+                {
+                    gr->SetRange('y', 0, 100);
+                    gr->FPlot(QString::number(this->meanValueUMP).toLocal8Bit().data(), ";r4");
+                }
+                if (sptk_settings->dp->showMeanValueUMP && sptk_settings->dp->showDerivativeF0)
+                {
+                    gr->SetRange('y', 0, 100);
+                    gr->FPlot(QString::number(this->meanDerivativeValueUMP).toLocal8Bit().data(), ";m4");
+                }
+                if (sptk_settings->dp->showCenterGravityUMP && sptk_settings->dp->showF0)
+                {
+                    gr->SetRanges(0,100,0,1);
+                    gr->FPlot(QString::number(this->centricGravityUMP1).toLocal8Bit().data(), "t", "0", "ir4");
+                    gr->SetRanges(0,100,0,1);
+                    gr->FPlot(QString::number(this->centricGravityUMP2).toLocal8Bit().data(), "t", "0", "{dF198}r4");
+                }
+                if (sptk_settings->dp->showCenterGravityUMP && sptk_settings->dp->showDerivativeF0)
+                {
+                    gr->SetRanges(0,100,0,1);
+                    gr->FPlot(QString::number(this->centricGravityDerivativeUMP1).toLocal8Bit().data(), "t", "0", "im4");
+                    gr->SetRanges(0,100,0,1);
+                    gr->FPlot(QString::number(this->centricGravityDerivativeUMP2).toLocal8Bit().data(), "t", "0", "{dF198}m4");
+                }
+
+                gr->MultiPlot(40, 12, 129, 12, 6, "#");
+                gr->Label('y', "_{low}", -1);
+                gr->Label('y', "_{medium}", 0);
+                gr->Label('y', "_{high}", 1);
+            }
         }
     }
 
@@ -416,26 +436,44 @@ int DrawerDP::Draw(mglGraph *gr)
             gr->Bars(*this->secOctavesData, "b");
             gr->Bars(*this->secOctavesLastData, "k");
 
-            if (sptk_settings->dp->showPlane) {
-                gr->MultiPlot(20, 12, 48, 8, 8, "#");
-                gr->Puts(mglPoint(-0.8, 2.6), "F0 (%)", ":C", 3);
-                gr->Puts(mglPoint(1.3, 0), "dF0 (%)", ":C", 3);
-                gr->SetRange('x', 0, 1);
+            if (sptk_settings->dp->auto_marking)
+            {
+                gr->MultiPlot(20, 12, 187, 13, 1, "#");
                 gr->SetRange('y', 0, 1);
-                gr->SetTicks('y', 2);
-                gr->AddTick('y', 0.2, "20");
-                gr->AddTick('y', 0.4, "40");
-                gr->AddTick('y', 0.6, "60");
-                gr->AddTick('y', 0.8, "80");
-                gr->AddTick('y', 1.0, "100");
-                gr->Grid("x", "W", "");
-                gr->Grid("y", "W", "");
-                gr->Axis("y");
-                gr->Box();
+                gr->Plot(*waveData, "B");
+                gr->Plot(*pWaveData, "q9");
+                gr->Plot(*nWaveData, "k9");
+                gr->Plot(*tWaveData, "c9");
 
-                gr->Plot(*this->umpData, *this->umpDerivativeData, "-r4");
-                gr->Plot(*this->secUmpData, *this->secUmpDerivativeData, "-R5");
+                gr->MultiPlot(20, 12, 47, 13, 6, "#");
+                gr->SetRange('y', 0, 1);
+                gr->Grid("y", "W", "");
+                if(sptk_settings->dp->showF0) gr->Plot(*this->secPitchData, "-R4");
+                if(sptk_settings->dp->showF0) gr->Plot(*this->pitchData, "-r3");
+                gr->Plot(*pWaveData, "q2");
+                gr->Plot(*nWaveData, "k2");
+                gr->Plot(*tWaveData, "c2");
             } else {
+                if (sptk_settings->dp->showPlane) {
+                    gr->MultiPlot(20, 12, 48, 8, 8, "#");
+                    gr->Puts(mglPoint(-0.8, 2.6), "F0 (%)", ":C", 3);
+                    gr->Puts(mglPoint(1.3, 0), "dF0 (%)", ":C", 3);
+                    gr->SetRange('x', 0, 1);
+                    gr->SetRange('y', 0, 1);
+                    gr->SetTicks('y', 2);
+                    gr->AddTick('y', 0.2, "20");
+                    gr->AddTick('y', 0.4, "40");
+                    gr->AddTick('y', 0.6, "60");
+                    gr->AddTick('y', 0.8, "80");
+                    gr->AddTick('y', 1.0, "100");
+                    gr->Grid("x", "W", "");
+                    gr->Grid("y", "W", "");
+                    gr->Axis("y");
+                    gr->Box();
+
+                    gr->Plot(*this->umpData, *this->umpDerivativeData, "-r4");
+                    gr->Plot(*this->secUmpData, *this->secUmpDerivativeData, "-R5");
+                } else {
                 gr->MultiPlot(20, 12, 46, 13, 8, "#");
                 gr->SetRange('y', 0, 1);
                 gr->SetTicks('y', 1./3.);
@@ -507,6 +545,7 @@ int DrawerDP::Draw(mglGraph *gr)
                 gr->Label('y', "_{low}", -1);
                 gr->Label('y', "_{medium}", 0);
                 gr->Label('y', "_{high}", 1);
+            }
             }
         }
     }
@@ -679,8 +718,6 @@ double calculateMark(double value, double level, double count)
     }
     return mark;
 }
-
-
 
 int DrawerDP::getDataSeconds()
 {
@@ -1266,7 +1303,7 @@ void DrawerDP::Proc(QString fname, bool ref)
 
         if(sptk_settings->dp->markoutType == MARKOUT_A0_INTEGRAL)
         {
-            this->A0Smooth = createMglData(data_get_intensive_smooth(this->simple_data), this->A0Smooth);
+            this->A0Smooth = createMglData(data_get_intensive_limit(this->simple_data), this->A0Smooth);
         }
 
         qDebug() << "intensiveData Filled" << LOG_DATA;
@@ -1954,7 +1991,7 @@ void DrawerDP::Proc(QString fname, bool ref)
         if(sptk_settings->dp->markoutType == MARKOUT_A0_INTEGRAL)
         {
             qDebug() << "MARKOUT_A0_INTEGRAL" << LOG_DATA;
-            vector intensive_smooth = cutv(data_get_intensive_smooth(dataSec), startPos, endPos);
+            vector intensive_smooth = cutv(data_get_intensive_limit(dataSec), startPos, endPos);
             qDebug() << "applyMapping" << LOG_DATA;
             applyMapping(&intensive_smooth, &mapping);
             this->secA0Smooth = createMglData(intensive_smooth, this->secA0Smooth);
